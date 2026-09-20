@@ -1,0 +1,11 @@
+{
+  "name": "tinkoff-ui-kit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "UI kit based on the Tinkoff (T-Bank) design language — recreated, systematized and improved",
+  "packageManager": "pnpm@11.20.0",
+  "scripts": {},
+  "engines": {
+    "node": ">=20"
+  }
+}

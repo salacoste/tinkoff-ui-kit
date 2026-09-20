@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+build/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# --- impeccable-ignore-start ---
+# Ephemeral impeccable output (keep config.json, design.json, surfaces/, critique/)
+.impeccable/tmp/
+.impeccable/cache/
+.critique/
+# --- impeccable-ignore-end ---
+
+# Tooling state
+*.log
+coverage/
+.playwright/
+
+# OMC / Claude Code runtime state (skills, agents, settings.json stay tracked)
+.omc/
+.claude/state/
+.claude/sessions/
+
