@@ -45,3 +45,6 @@ coverage/
 .claude/state/
 .claude/sessions/
 
+
+# BMAD runtime render snapshots (regenerated per skill invocation)
+_bmad/render/
