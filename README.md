@@ -14,5 +14,6 @@ and improve on the original.
 | [impeccable](https://impeccable.style) | Design skills + anti-pattern detector (61 rules, hooks on every UI edit) |
 | [transitions.dev](https://transitions.dev) | Copy-paste UI transitions (CSS / React) + agent skill |
 | [inspo MCP](https://github.com/Nutlope/inspo) | 832 real production sites as design references for the agent |
+| [playwright-cli](https://github.com/microsoft/playwright-cli) | Browser automation: reference capture, a11y/dark-mode verification, E2E (no browser MCP by design) |
 
 See `CLAUDE.md` for workflows and commands.
