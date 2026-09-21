@@ -1,5 +1,5 @@
 [core]
-project_name = "tinkoff-ui"
+project_name = "tinkoff-ui-kit"
 output_folder = "{project-root}/_bmad-output"
 
 [modules.bmm]
