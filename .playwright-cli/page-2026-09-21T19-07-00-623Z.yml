@@ -1,0 +1,1047 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - dialog "Баннер согласия использования cookies" [ref=e4]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - text: Мы используем
+          - link "Согласие на обработку данных" [ref=e8] [cursor=pointer]:
+            - /url: https://www.tbank.ru/privacy/
+            - text: куки
+          - text: ", чтобы делать сайт удобным для вас"
+        - button "Принять использование файлов cookie" [ref=e9] [cursor=pointer]:
+          - generic [ref=e10]: Хорошо
+    - banner [ref=e13]:
+      - generic [ref=e15]:
+        - link "Пропустить навигацию" [ref=e16] [cursor=pointer]:
+          - /url: "#skip-link-anchor"
+        - navigation "Основное меню" [ref=e17]:
+          - link [ref=e18] [cursor=pointer]:
+            - /url: /
+            - img "Т-Банк" [ref=e19]
+          - list [ref=e21]:
+            - listitem [ref=e22]:
+              - list [ref=e24]:
+                - listitem [ref=e25]:
+                  - link "Частным лицам" [ref=e26] [cursor=pointer]:
+                    - /url: /
+                - listitem:
+                  - button "Меню Частным лицам"
+            - listitem [ref=e28]:
+              - list [ref=e30]:
+                - listitem [ref=e31]:
+                  - link "Бизнесу" [ref=e32] [cursor=pointer]:
+                    - /url: /business/
+                - listitem:
+                  - button "Меню Бизнесу"
+            - listitem [ref=e34]:
+              - list [ref=e36]:
+                - listitem [ref=e37]:
+                  - link "Премиум" [ref=e38] [cursor=pointer]:
+                    - /url: /tinkoff-premium/
+                - listitem:
+                  - button "Меню Премиум"
+            - listitem [ref=e40]:
+              - list [ref=e42]:
+                - listitem [ref=e43]:
+                  - link "Еще" [ref=e44] [cursor=pointer]:
+                    - /url: /about/
+                - listitem:
+                  - button "Меню Еще"
+          - button "Поиск" [ref=e48] [cursor=pointer]
+          - generic [ref=e55]:
+            - button [aria-hidden] [ref=e56]:
+              - generic [ref=e57]: Личный кабинет
+            - button "Личный кабинет"
+    - generic [ref=e72]:
+      - link [ref=e75] [cursor=pointer]:
+        - /url: /cards/debit-cards/tinkoff-black/?internal_source=home_main_block
+        - generic [ref=e76]:
+          - heading [level=1] [ref=e79]:
+            - paragraph [ref=e80]: Дебетовая карта, которую рекомендуют ваши друзья
+          - strong [ref=e82]:
+            - paragraph [ref=e83]: Кэшбэк рублями до 30%, переводы клиентам Т-Банка без комиссии
+      - heading [level=4] [ref=e86]:
+        - link "Оформить дебетовую карту Т-Банка" [ref=e87] [cursor=pointer]:
+          - /url: /cards/debit-cards/tinkoff-black/?internal_source=home_main_block_button#form
+          - generic [ref=e88]: Оформить карту
+    - list [ref=e96]:
+      - listitem [ref=e97] [cursor=pointer]:
+        - link [ref=e98]:
+          - /url: /cards/debit-cards/?internal_source=home_icon
+          - paragraph [ref=e103]: Дебетовые карты
+      - listitem [ref=e104] [cursor=pointer]:
+        - link [ref=e105]:
+          - /url: /cards/credit-cards/?internal_source=home_icon
+          - paragraph [ref=e110]: Кредитные карты
+      - listitem [ref=e111] [cursor=pointer]:
+        - link [ref=e112]:
+          - /url: /loans/?internal_source=home_icon
+          - paragraph [ref=e117]: Кредиты
+      - listitem [ref=e118] [cursor=pointer]:
+        - link [ref=e119]:
+          - /url: /tinkoff-premium/?internal_source=home_icon
+          - paragraph [ref=e124]: Premium
+      - listitem [ref=e125] [cursor=pointer]:
+        - link [ref=e126]:
+          - /url: /savings/deposit/?internal_source=home_icon
+          - paragraph [ref=e131]: Вклады
+      - listitem [ref=e132] [cursor=pointer]:
+        - link [ref=e133]:
+          - /url: /invest/?internal_source=home_icon
+          - paragraph [ref=e138]: Инвестиции
+      - listitem [ref=e139] [cursor=pointer]:
+        - link [ref=e140]:
+          - /url: /mobile-operator/?internal_source=home_icon
+          - paragraph [ref=e145]: Сим-карта
+      - listitem [ref=e146] [cursor=pointer]:
+        - link [ref=e147]:
+          - /url: /insurance/?internal_source=home_icon
+          - paragraph [ref=e152]: Страхование
+      - listitem [ref=e153] [cursor=pointer]:
+        - link [ref=e154]:
+          - /url: /travel/?internal_source=home_icon
+          - paragraph [ref=e159]: Путешествия
+      - listitem [ref=e160] [cursor=pointer]:
+        - link [ref=e161]:
+          - /url: /business/?internal_source=home_icon
+          - paragraph [ref=e166]: Всё для бизнеса
+    - link "Акционные предложения в честь 20-летия банка" [ref=e167] [cursor=pointer]:
+      - /url: https://20let.tbank.ru/2006/
+    - heading [level=2] [ref=e173]:
+      - paragraph [ref=e174]: Управляйте финансами с выгодой в Т‑Банке
+    - generic [ref=e175]:
+      - tablist [ref=e179]:
+        - tab "Дебетовая карта" [selected] [ref=e180] [cursor=pointer]
+        - tab "Кредитная карта" [ref=e182] [cursor=pointer]
+        - tab "Вклад" [ref=e184] [cursor=pointer]
+      - generic [ref=e194]:
+        - generic [ref=e198]:
+          - generic [ref=e199]:
+            - heading "Дебетовая карта Black" [level=5] [ref=e204]
+            - img "Дизайн карты" [ref=e209]
+          - generic [ref=e221]:
+            - generic [ref=e222]: Оформление без паспорта
+            - generic [ref=e223]: Будет нужен при получении карты
+        - generic [ref=e224]:
+          - generic [ref=e226]:
+            - generic [ref=e227]:
+              - generic [ref=e228]: Уже заполнено
+              - generic [ref=e229]: 5%
+            - progressbar [ref=e231]
+          - generic [ref=e237]:
+            - heading "Выберите дизайн карты" [level=5] [ref=e244]
+            - generic [ref=e249]:
+              - radio [checked] [ref=e250] [cursor=pointer]
+              - radio [ref=e252] [cursor=pointer]
+              - radio [ref=e254] [cursor=pointer]
+              - radio [ref=e256] [cursor=pointer]
+              - radio [ref=e258] [cursor=pointer]
+              - radio [ref=e260] [cursor=pointer]
+            - combobox "Выберите повышенный кэшбэк (четыре категории)" [ref=e265] [cursor=pointer]:
+              - generic [ref=e270]:
+                - generic [ref=e271]: Выберите повышенный кэшбэк (четыре категории)
+                - button "Open" [ref=e280]
+            - generic [ref=e292]:
+              - generic [ref=e293]:
+                - generic [ref=e294]: Фамилия, имя и отчество*
+                - generic [ref=e297]:
+                  - text: Иванов Алексей Петрович
+                  - combobox "Фамилия, имя и отчество" [ref=e300]
+              - generic [ref=e301]: +20%
+            - generic [ref=e309]:
+              - generic [ref=e315]:
+                - generic [ref=e316]: Мобильный телефон*
+                - generic [ref=e319]:
+                  - text: +7 (921) 123-45-67
+                  - textbox "Мобильный телефон" [ref=e322]
+              - generic [ref=e330]:
+                - generic [ref=e331]: Электронная почта
+                - generic [ref=e334]:
+                  - text: ivan@domain.ru
+                  - combobox "Электронная почта" [ref=e337]
+            - generic [ref=e343]:
+              - generic [ref=e344]: Дата рождения*
+              - generic [ref=e347]:
+                - text: 01.08.1977
+                - textbox "Дата рождения" [ref=e350]
+            - generic [ref=e353]:
+              - paragraph [ref=e359]: Гражданство РФ?
+              - group [ref=e362]:
+                - generic [ref=e363] [cursor=pointer]:
+                  - radio "Гражданство РФ? Да" [checked] [ref=e365]
+                  - generic [ref=e366]: Да
+                - generic [ref=e367] [cursor=pointer]:
+                  - radio "Гражданство РФ? Нет" [ref=e369]
+                  - generic [ref=e370]: Нет
+            - generic [ref=e378] [cursor=pointer]:
+              - checkbox "Соглашаюсь получать рекламу про кешбэк, повышенный процент и выгодные предложения" [ref=e381]
+              - generic [ref=e385]:
+                - text: Соглашаюсь получать рекламу про кешбэк, повышенный процент и
+                - link "выгодные предложения" [ref=e386]:
+                  - /url: https://cdn.tbank.ru/static/documents/conditions-consent-receive-advertising-and-promotional-mailings-via-telecommunication-networks.pdf
+            - generic [ref=e387]:
+              - generic [ref=e391]:
+                - text: Заполняя форму, я принимаю
+                - link "условия передачи информации и использования карты до встречи" [ref=e392] [cursor=pointer]:
+                  - /url: https://www.tbank.ru/static/documents/757a6e6b-9ffb-4be2-a9e6-262c89d20af1.pdf
+              - button "Продолжить" [ref=e396] [cursor=pointer]
+    - heading [level=2] [ref=e404]:
+      - paragraph [ref=e405]: Рекомендуемые продукты
+    - generic [ref=e408]:
+      - note [ref=e409]:
+        - generic [ref=e411]:
+          - generic [ref=e412]:
+            - link [ref=e416] [cursor=pointer]:
+              - /url: /cards/credit-cards/tinkoff-platinum/?internal_source=home_slider_block
+              - generic [ref=e417]:
+                - heading [level=3] [ref=e419]:
+                  - paragraph [ref=e420]: Кредитная карта «Платинум»
+                - paragraph [ref=e423]: До 1 000 000 ₽ на любые покупки и 120 дней без процентов за погашение картой кредитов других банков
+            - link "Оформить кредитную карту Платинум" [ref=e427] [cursor=pointer]:
+              - /url: /cards/credit-cards/tinkoff-platinum/?internal_source=home_slider_block_button#form
+              - generic [ref=e428]: Оформить карту
+          - generic [ref=e431]:
+            - link [ref=e435] [cursor=pointer]:
+              - /url: /invest/account/?internal_source=home_slider_block
+              - generic [ref=e436]:
+                - heading [level=3] [ref=e438]:
+                  - paragraph [ref=e439]: Т‑Инвестиции
+                - paragraph [ref=e442]: Понятные тарифы и удобное приложение
+            - link "Стать инвестором" [ref=e446] [cursor=pointer]:
+              - /url: /invest/account/?internal_source=home_slider_block_button#form
+      - note [ref=e450]:
+        - generic [ref=e452]:
+          - generic [ref=e453]:
+            - link "Оформить сим‑карту Т‑Мобайла" [ref=e457] [cursor=pointer]:
+              - /url: /mobile-operator/?internal_source=home_slider_block
+              - generic [ref=e458]:
+                - heading [level=3] [ref=e460]:
+                  - paragraph [ref=e461]: Хватит на всё с Т‑Мобайлом
+                - paragraph [ref=e464]: 50 ГБ и 1 200 минут за 390 ₽ в месяц
+            - link "Оформить сим-карту Т-Мобайла" [ref=e468] [cursor=pointer]:
+              - /url: /mobile-operator/?internal_source=home_slider_block_button#form
+              - generic [ref=e469]: Оформить сим‑карту
+          - generic [ref=e472]:
+            - link [ref=e476] [cursor=pointer]:
+              - /url: /savings/deposit/?internal_source=home_slider_block
+              - generic [ref=e477]:
+                - heading [level=3] [ref=e479]:
+                  - paragraph [ref=e480]: Вклады
+                - paragraph [ref=e483]: Откройте вклад с пополнением и частичным изъятием. Каждый месяц получайте проценты на карту или вклад
+            - link "Открыть вклад" [ref=e487] [cursor=pointer]:
+              - /url: /savings/deposit/?internal_source=home_slider_block_button#form
+          - generic [ref=e491]:
+            - link [ref=e495] [cursor=pointer]:
+              - /url: /insurance/osago/?internal_source=home_slider_block
+              - generic [ref=e496]:
+                - heading [level=3] [ref=e498]:
+                  - paragraph [ref=e499]: Страхование ОСАГО
+                - paragraph [ref=e502]: Электронный полис с онлайн-калькулятором и скидками (КБМ) за безаварийность
+            - link "Рассчитать стоимость ОСАГО" [ref=e506] [cursor=pointer]:
+              - /url: /insurance/osago/?internal_source=home_slider_block_button#form
+              - generic [ref=e507]: Рассчитать стоимость
+    - link "Все продукты" [ref=e515] [cursor=pointer]:
+      - /url: /new-product/?internal_source=home_new_product
+    - heading [level=2] [ref=e523]:
+      - paragraph [ref=e524]: Более 55 млн клиентов выбрали Т‑Банк
+    - application [ref=e525]:
+      - generic [ref=e527]:
+        - heading [level=3] [ref=e531]:
+          - paragraph [ref=e532]: Мобильное приложение Т‑Банка
+        - paragraph [ref=e535]: Проверяйте баланс, оплачивайте услуги, получайте помощь в чате 24/7
+        - generic [ref=e536]:
+          - link "Скачать приложение Т-Банка для Android" [ref=e538] [cursor=pointer]:
+            - /url: /apps/android-bank/?internal_source=tbankHome_heroApp
+          - link "Скачать приложение Т-Банка для IOS" [ref=e547] [cursor=pointer]:
+            - /url: /apps/ios-bank/?internal_source=tbankHome_heroApp
+    - heading [level=2] [ref=e557]:
+      - paragraph [ref=e558]: Сервисы и услуги
+    - list [ref=e559]:
+      - generic [ref=e561]:
+        - listitem [ref=e563]:
+          - generic [ref=e567]:
+            - generic [ref=e568] [cursor=pointer]
+            - heading "Курсы валют" [level=3] [ref=e570]
+            - paragraph [ref=e573]: Перевод между своими счетами, оплата услуг и снятие наличных в сервисах Т‑Банка
+          - link "Смотреть курсы валют" [ref=e576] [cursor=pointer]:
+            - /url: /about/exchange/?internal_source=home_services
+            - text: Смотреть
+        - listitem [ref=e578]:
+          - generic [ref=e582]:
+            - generic [ref=e583] [cursor=pointer]
+            - heading "Снятие наличных" [level=3] [ref=e585]
+            - paragraph [ref=e588]: В банкоматах Т‑Банка без комиссии. И без карты, если у вас смартфон
+          - link "Найти банкомат для снятия наличных" [ref=e591] [cursor=pointer]:
+            - /url: /maps/atm/?partner=tcs&internal_source=home_services
+            - text: Найти банкомат
+        - listitem [ref=e593]:
+          - generic [ref=e597]:
+            - generic [ref=e598] [cursor=pointer]
+            - heading [level=3] [ref=e600]:
+              - paragraph [ref=e601]: Переводы и пополнения
+            - paragraph [ref=e604]: С карты на карту или на счет Т‑Банка
+          - link "Перейти к переводам и пополнениям" [ref=e607] [cursor=pointer]:
+            - /url: /cardtocard/?internal_source=home_services
+            - text: Пополнить или перевести
+    - note [ref=e608]:
+      - generic [ref=e610]:
+        - generic [ref=e611]:
+          - generic [ref=e614]:
+            - generic [ref=e615] [cursor=pointer]
+            - heading [level=3] [ref=e616]:
+              - paragraph [ref=e617]: Приведи друга
+            - paragraph [ref=e620]: До 10 000 ₽ за рекомендации друзьям
+          - link "Подробнее про приведи друга" [ref=e624] [cursor=pointer]:
+            - /url: /mybank/bonuses/friends/?internal_source=home_mgm_master
+            - generic [ref=e625]: Подробнее
+        - generic [ref=e628]:
+          - generic [ref=e631]:
+            - generic [ref=e632] [cursor=pointer]
+            - heading [level=3] [ref=e633]:
+              - paragraph [ref=e634]: T‑Pay — оплата в одно касание
+            - paragraph [ref=e637]: "Всё как вы привыкли: легко, надежно и с сохранением кэшбэка"
+          - link "Попробовать T‑Pay" [ref=e641] [cursor=pointer]:
+            - /url: /t-pay/?internal_source=home_t-pay
+            - generic [ref=e642]: Попробовать
+    - heading [level=2] [ref=e649]:
+      - paragraph [ref=e650]: Актуально сейчас
+    - list [ref=e651]:
+      - generic [ref=e653]:
+        - listitem [ref=e655]:
+          - generic [ref=e656]:
+            - generic [ref=e657] [cursor=pointer]
+            - heading [level=4] [ref=e659]:
+              - paragraph [ref=e660]: Откройте Хоккейный вклад в Т‑Банке
+            - paragraph [ref=e662]: И участвуйте в розыгрыше призов — билетов на матчи КХЛ и не только
+          - heading [level=4] [ref=e664]:
+            - link "Читать про розыгрыш призов при открытии хоккейного вклада в Т-Банке" [ref=e665] [cursor=pointer]:
+              - /url: /finance/blog/hockey/?internal_source=home_actual_tiles
+              - text: Читать
+        - listitem [ref=e667]:
+          - generic [ref=e668]:
+            - generic [ref=e669] [cursor=pointer]
+            - heading [level=4] [ref=e671]:
+              - paragraph [ref=e672]: Как получить налоговый вычет по ПДС
+            - paragraph [ref=e674]: Рассказываем, как вернуть часть вложенных денег
+          - heading [level=4] [ref=e676]:
+            - link "Читать про условия получения налогового вычета по программе долгосрочных сбережений" [ref=e677] [cursor=pointer]:
+              - /url: /finance/blog/pds-tax-deduction/?internal_source=home_actual_tiles
+              - text: Читать
+        - listitem [ref=e679]:
+          - generic [ref=e680]:
+            - generic [ref=e681] [cursor=pointer]
+            - heading [level=4] [ref=e683]:
+              - paragraph [ref=e684]: Как работает подписка на Каско
+            - paragraph [ref=e686]: Оплачиваете раз в месяц, а защита — как в годовом полисе
+          - heading [level=4] [ref=e688]:
+            - link "Читать про условия подписки на Каско" [ref=e689] [cursor=pointer]:
+              - /url: /insurance/blog/kasko-subscription/?internal_source=home_actual_tiles
+              - text: Читать
+    - link "Больше статей" [ref=e695] [cursor=pointer]:
+      - /url: /blog/?internal_source=home_actual_tiles
+    - heading [level=2] [ref=e703]:
+      - paragraph [ref=e704]: Работа и развитие
+    - note [ref=e705]:
+      - generic [ref=e707]:
+        - generic [ref=e708]:
+          - generic [ref=e711]:
+            - generic [ref=e712] [cursor=pointer]
+            - paragraph [ref=e714]: Вакансии
+            - paragraph [ref=e717]: В вашем или любом другом городе
+          - link "Смотреть вакансии" [ref=e721] [cursor=pointer]:
+            - /url: /career/?internal_source=main_tbank
+        - generic [ref=e725]:
+          - generic [ref=e728]:
+            - generic [ref=e729] [cursor=pointer]
+            - paragraph [ref=e731]: Т‑Образование
+            - paragraph [ref=e734]: Учебные курсы и оплачиваемые программы развития
+          - link "Подробнее про Т-Образование" [ref=e738] [cursor=pointer]:
+            - /url: https://education.tbank.ru/?internal_source=main_tbank
+            - generic [ref=e739]: Подробнее
+    - generic [ref=e745]:
+      - generic [ref=e746]:
+        - generic [ref=e747] [cursor=pointer]
+        - heading [level=2] [ref=e749]:
+          - paragraph [ref=e750]: Как на самом деле пользоваться кредиткой
+        - paragraph [ref=e753]: Т—Ж
+      - link "Читать про использование кредитки" [ref=e756] [cursor=pointer]:
+        - /url: https://t-j.ru/win/?internal_source=main_tbank
+        - generic [ref=e757]: Читать
+    - heading [level=2] [ref=e765]:
+      - paragraph [ref=e766]: Дополнительно
+    - list [ref=e767]:
+      - generic [ref=e769]:
+        - listitem [ref=e771]:
+          - generic [ref=e775]:
+            - generic [ref=e776] [cursor=pointer]
+            - paragraph [ref=e779]: Помощь
+            - paragraph [ref=e782]: Отвечаем на вопросы по всем продуктам
+          - link "Перейти в раздел помощи" [ref=e785] [cursor=pointer]:
+            - /url: /help/?internal_source=home
+            - text: Подробнее
+        - listitem [ref=e787]:
+          - generic [ref=e791]:
+            - generic [ref=e792] [cursor=pointer]
+            - paragraph [ref=e795]: Т‑Банк Отзывы
+            - paragraph [ref=e798]: Выбирайте продукты Т‑Банк, магазины, рестораны, сервисы и бренды на основе реальных отзывов
+          - link "Читать отзывы Т-Банка" [ref=e801] [cursor=pointer]:
+            - /url: /reviews/?internal_source=home
+            - text: Подробнее
+    - contentinfo "Футер" [ref=e802]:
+      - navigation "Ещё полезные сервисы от T‑Банка" [ref=e806]:
+        - list [ref=e807]:
+          - listitem [ref=e808]:
+            - generic [ref=e809]: Частным лицам
+            - list [ref=e810]:
+              - listitem [ref=e811]:
+                - link "Банк" [ref=e812] [cursor=pointer]:
+                  - /url: /finance/
+                - list [ref=e813]:
+                  - listitem [ref=e814]:
+                    - link "Дебетовые карты" [ref=e815] [cursor=pointer]:
+                      - /url: /cards/debit-cards/
+                  - listitem [ref=e816]:
+                    - link "Премиум" [ref=e817] [cursor=pointer]:
+                      - /url: /tinkoff-premium/
+                  - listitem [ref=e818]:
+                    - link "Иностранцам" [ref=e819] [cursor=pointer]:
+                      - /url: /cards/debit-cards/tinkoff-black/foreign/
+                  - listitem [ref=e820]:
+                    - link "Кредитные карты" [ref=e821] [cursor=pointer]:
+                      - /url: /cards/credit-cards/
+                  - listitem [ref=e822]:
+                    - link "Кредит наличными" [ref=e823] [cursor=pointer]:
+                      - /url: /loans/cash-loan/
+                  - listitem [ref=e824]:
+                    - link "Рефинансирование" [ref=e825] [cursor=pointer]:
+                      - /url: /loans/refinance/
+                  - listitem [ref=e826]:
+                    - link "Автокредит" [ref=e827] [cursor=pointer]:
+                      - /url: /loans/auto-loan/
+                  - listitem [ref=e828]:
+                    - link "Вклады" [ref=e829] [cursor=pointer]:
+                      - /url: /savings/deposit/
+                  - listitem [ref=e830]:
+                    - link "Накопительный счет" [ref=e831] [cursor=pointer]:
+                      - /url: /savings/saving-account/
+                  - listitem [ref=e832]:
+                    - link "Подписка Pro" [ref=e833] [cursor=pointer]:
+                      - /url: /pro/
+                  - listitem [ref=e834]:
+                    - link "Private" [ref=e835] [cursor=pointer]:
+                      - /url: /private/
+                  - listitem [ref=e836]:
+                    - link "Долями" [ref=e837] [cursor=pointer]:
+                      - /url: /dolyame/
+                  - listitem [ref=e838]:
+                    - link "Ипотека" [ref=e839] [cursor=pointer]:
+                      - /url: /mortgage/
+              - listitem [ref=e840]:
+                - link "Город" [ref=e841] [cursor=pointer]:
+                  - /url: /gorod/
+                - list [ref=e842]:
+                  - listitem [ref=e843]:
+                    - link "Доставка продуктов" [ref=e844] [cursor=pointer]:
+                      - /url: /gorod/grocery/
+                  - listitem [ref=e845]:
+                    - link "Афиша" [ref=e846] [cursor=pointer]:
+                      - /url: /gorod/afisha/
+                  - listitem [ref=e847]:
+                    - link "Топливо" [ref=e848] [cursor=pointer]:
+                      - /url: /gorod/fuel/
+                  - listitem [ref=e849]:
+                    - link "Т‑Авто" [ref=e850] [cursor=pointer]:
+                      - /url: /auto/catalog/
+                  - listitem [ref=e851]:
+                    - link "Игры" [ref=e852] [cursor=pointer]:
+                      - /url: /gorod/games/
+                  - listitem [ref=e853]:
+                    - link "Отслеживание посылок" [ref=e854] [cursor=pointer]:
+                      - /url: /gorod/tracking/
+                  - listitem [ref=e855]:
+                    - link "Блог Города" [ref=e856] [cursor=pointer]:
+                      - /url: /gorod/blog/
+              - listitem [ref=e857]:
+                - link "Инвестиции" [ref=e858] [cursor=pointer]:
+                  - /url: /invest/
+                - list [ref=e859]:
+                  - listitem [ref=e860]:
+                    - link "Инвестиционный счет" [ref=e861] [cursor=pointer]:
+                      - /url: /invest/account/
+                  - listitem [ref=e862]:
+                    - link "ИИС" [ref=e863] [cursor=pointer]:
+                      - /url: /invest/iis/
+                  - listitem [ref=e864]:
+                    - link "Премиум" [ref=e865] [cursor=pointer]:
+                      - /url: /tinkoff-premium/invest/
+                  - listitem [ref=e866]:
+                    - link "Трейдинг" [ref=e867] [cursor=pointer]:
+                      - /url: /invest/trader/
+                  - listitem [ref=e868]:
+                    - link "Терминал" [ref=e869] [cursor=pointer]:
+                      - /url: /invest/web-terminal/
+                  - listitem [ref=e870]:
+                    - link "Маржинальная торговля" [ref=e871] [cursor=pointer]:
+                      - /url: /invest/promo/margin/
+                  - listitem [ref=e872]:
+                    - link "Инвестиционные турниры" [ref=e873] [cursor=pointer]:
+                      - /url: /invest/promo/tournaments/
+                  - listitem [ref=e874]:
+                    - link "Акции" [ref=e875] [cursor=pointer]:
+                      - /url: /invest/stocks/
+                  - listitem [ref=e876]:
+                    - link "Валюты" [ref=e877] [cursor=pointer]:
+                      - /url: /invest/currencies/
+                  - listitem [ref=e878]:
+                    - link "Фонды" [ref=e879] [cursor=pointer]:
+                      - /url: /invest/etfs/
+                  - listitem [ref=e880]:
+                    - link "Облигации" [ref=e881] [cursor=pointer]:
+                      - /url: /invest/bonds/
+                  - listitem [ref=e882]:
+                    - link "Фьючерсы" [ref=e883] [cursor=pointer]:
+                      - /url: /invest/futures/
+                  - listitem [ref=e884]:
+                    - link "Золотые слитки" [ref=e885] [cursor=pointer]:
+                      - /url: /invest/promo/gold/
+                  - listitem [ref=e886]:
+                    - link "Цифровые финансовые активы" [ref=e887] [cursor=pointer]:
+                      - /url: /invest/promo/dfa/
+                  - listitem [ref=e888]:
+                    - link "Стратегии" [ref=e889] [cursor=pointer]:
+                      - /url: /invest/strategies/
+                  - listitem [ref=e890]:
+                    - link "Первичные размещения" [ref=e891] [cursor=pointer]:
+                      - /url: /invest/promo/new-placements/
+                  - listitem [ref=e892]:
+                    - link "Долгосрочные сбережения" [ref=e893] [cursor=pointer]:
+                      - /url: /pension/
+                  - listitem [ref=e894]:
+                    - link "Академия инвестиций" [ref=e895] [cursor=pointer]:
+                      - /url: /invest/education/
+              - listitem [ref=e896]:
+                - link "Мобильная связь" [ref=e897] [cursor=pointer]:
+                  - /url: /mobile-operator/
+                - list [ref=e898]:
+                  - listitem [ref=e899]:
+                    - link "Сим‑карта" [ref=e900] [cursor=pointer]:
+                      - /url: /mobile-operator/sim/
+                  - listitem [ref=e901]:
+                    - link "eSIM" [ref=e902] [cursor=pointer]:
+                      - /url: /mobile-operator/sim/esim/
+                  - listitem [ref=e903]:
+                    - link "Тарифы" [ref=e904] [cursor=pointer]:
+                      - /url: /mobile-operator/tariffs/
+                  - listitem [ref=e905]:
+                    - link "Перенос номера" [ref=e906] [cursor=pointer]:
+                      - /url: /mobile-operator/sim/mnp/
+                  - listitem [ref=e907]:
+                    - link "Роуминг" [ref=e908] [cursor=pointer]:
+                      - /url: /mobile-operator/roaming/
+                  - listitem [ref=e909]:
+                    - link "Красивые номера" [ref=e910] [cursor=pointer]:
+                      - /url: /mobile-operator/sim/numbers/
+                  - listitem [ref=e911]:
+                    - link "Запись звонков" [ref=e912] [cursor=pointer]:
+                      - /url: /mobile-operator/features/call-recording/
+                  - listitem [ref=e913]:
+                    - link "Виртуальный номер" [ref=e914] [cursor=pointer]:
+                      - /url: /mobile-operator/features/virtual/
+                  - listitem [ref=e915]:
+                    - link "Базовый Секретарь" [ref=e916] [cursor=pointer]:
+                      - /url: /mobile-operator/features/secretary/
+                  - listitem [ref=e917]:
+                    - link "Кто звонил" [ref=e918] [cursor=pointer]:
+                      - /url: /oleg/who-called/
+                  - listitem [ref=e919]:
+                    - link "Защитим или вернем деньги" [ref=e920] [cursor=pointer]:
+                      - /url: /mobile-operator/features/fraud-protection/
+              - listitem [ref=e921]:
+                - link "Страхование" [ref=e922] [cursor=pointer]:
+                  - /url: /insurance/
+                - list [ref=e923]:
+                  - listitem [ref=e924]:
+                    - link "ОСАГО" [ref=e925] [cursor=pointer]:
+                      - /url: /insurance/osago/
+                  - listitem [ref=e926]:
+                    - link "Каско" [ref=e927] [cursor=pointer]:
+                      - /url: /insurance/kasko/
+                  - listitem [ref=e928]:
+                    - link "Каско по подписке" [ref=e929] [cursor=pointer]:
+                      - /url: /insurance/kasko/subscription/
+                  - listitem [ref=e930]:
+                    - link "Путешествия за границу" [ref=e931] [cursor=pointer]:
+                      - /url: /insurance/travel/
+                  - listitem [ref=e932]:
+                    - link "Путешествия по России" [ref=e933] [cursor=pointer]:
+                      - /url: /insurance/travel/russia/
+                  - listitem [ref=e934]:
+                    - link "Ипотека" [ref=e935] [cursor=pointer]:
+                      - /url: /insurance/mortgage/
+                  - listitem [ref=e936]:
+                    - link "Квартира" [ref=e937] [cursor=pointer]:
+                      - /url: /insurance/property/
+                  - listitem [ref=e938]:
+                    - link "Здоровье" [ref=e939] [cursor=pointer]:
+                      - /url: /insurance/health/
+                  - listitem [ref=e940]:
+                    - link "Блог Страхования" [ref=e941] [cursor=pointer]:
+                      - /url: /insurance/blog/
+              - listitem [ref=e942]:
+                - link "Путешествия" [ref=e943] [cursor=pointer]:
+                  - /url: /travel/
+                - list [ref=e944]:
+                  - listitem [ref=e945]:
+                    - link "Авиабилеты" [ref=e946] [cursor=pointer]:
+                      - /url: /travel/flights/
+                  - listitem [ref=e947]:
+                    - link "Отели" [ref=e948] [cursor=pointer]:
+                      - /url: /travel/hotels/new/
+                  - listitem [ref=e949]:
+                    - link "Туры" [ref=e950] [cursor=pointer]:
+                      - /url: /travel/tours/
+                  - listitem [ref=e951]:
+                    - link "Поезда" [ref=e952] [cursor=pointer]:
+                      - /url: /travel/trains/
+          - listitem [ref=e953]:
+            - generic [ref=e954]: ИП и бизнесу
+            - list [ref=e955]:
+              - listitem [ref=e956]:
+                - link "Малый бизнес" [ref=e957] [cursor=pointer]:
+                  - /url: /business/
+                - list [ref=e958]:
+                  - listitem [ref=e959]:
+                    - link "Расчетный счет" [ref=e960] [cursor=pointer]:
+                      - /url: /business/account/
+                  - listitem [ref=e961]:
+                    - link "Бизнес-консультация" [ref=e962] [cursor=pointer]:
+                      - /url: /business/registration/business-support/
+                  - listitem [ref=e963]:
+                    - link "Регистрация ИП" [ref=e964] [cursor=pointer]:
+                      - /url: /business/registration-ip/
+                  - listitem [ref=e965]:
+                    - link "Регистрация ООО" [ref=e966] [cursor=pointer]:
+                      - /url: /business/registration-ooo/
+                  - listitem [ref=e967]:
+                    - link "Эквайринг" [ref=e968] [cursor=pointer]:
+                      - /url: /business/payments/
+                  - listitem [ref=e969]:
+                    - link "Кредиты" [ref=e970] [cursor=pointer]:
+                      - /url: /business/credit/
+                  - listitem [ref=e971]:
+                    - link "Госзакупки" [ref=e972] [cursor=pointer]:
+                      - /url: /business/procurement/
+                  - listitem [ref=e973]:
+                    - link "Продажи" [ref=e974] [cursor=pointer]:
+                      - /url: /business/sales/
+                  - listitem [ref=e975]:
+                    - link "Бухгалтерия" [ref=e976] [cursor=pointer]:
+                      - /url: /business/accounting/
+                  - listitem [ref=e977]:
+                    - link "Бизнес-карта" [ref=e978] [cursor=pointer]:
+                      - /url: /business/business-card/
+                  - listitem [ref=e979]:
+                    - link "Депозиты" [ref=e980] [cursor=pointer]:
+                      - /url: /business/deposites/
+                  - listitem [ref=e981]:
+                    - link "Рассрочки" [ref=e982] [cursor=pointer]:
+                      - /url: /business/loans/
+                  - listitem [ref=e983]:
+                    - link "Проверка контрагентов" [ref=e984] [cursor=pointer]:
+                      - /url: /business/contractor/
+                  - listitem [ref=e985]:
+                    - link "Бонусы для бизнеса" [ref=e986] [cursor=pointer]:
+                      - /url: /business/partners/
+                  - listitem [ref=e987]:
+                    - link "Топливо для бизнеса" [ref=e988] [cursor=pointer]:
+                      - /url: /business/fuel/
+                  - listitem [ref=e989]:
+                    - link "Лизинг" [ref=e990] [cursor=pointer]:
+                      - /url: /business/leasing/
+              - listitem [ref=e991]:
+                - link "Прием онлайн‑платежей" [ref=e992] [cursor=pointer]:
+                  - /url: /business/online-payments/
+                - list [ref=e993]:
+                  - listitem [ref=e994]:
+                    - link "Интернет-эквайринг" [ref=e995] [cursor=pointer]:
+                      - /url: /business/online-payments/internet-acquiring/
+                  - listitem [ref=e996]:
+                    - link "Облачные кассы" [ref=e997] [cursor=pointer]:
+                      - /url: /business/online-payments/cashreg/
+                  - listitem [ref=e998]:
+                    - link "Выставление счетов" [ref=e999] [cursor=pointer]:
+                      - /url: /business/online-payments/bills/
+                  - listitem [ref=e1000]:
+                    - link "Безналичные чаевые" [ref=e1001] [cursor=pointer]:
+                      - /url: /business/online-payments/tips/
+                  - listitem [ref=e1002]:
+                    - link "Массовые выплаты для бизнеса" [ref=e1003] [cursor=pointer]:
+                      - /url: /business/online-payments/payouts/
+                  - listitem [ref=e1004]:
+                    - link "Отраслевые решения" [ref=e1005] [cursor=pointer]:
+                      - /url: /business/online-payments/industries/
+                  - listitem [ref=e1006]:
+                    - link "Оплата по QR‑коду" [ref=e1007] [cursor=pointer]:
+                      - /url: /business/online-payments/qr/
+                  - listitem [ref=e1008]:
+                    - link "Безопасная сделка" [ref=e1009] [cursor=pointer]:
+                      - /url: /business/online-payments/multi-calculation-service/
+              - listitem [ref=e1010]:
+                - link "Технологии от Т‑Банка" [ref=e1011] [cursor=pointer]:
+                  - /url: /software/
+                - list [ref=e1012]:
+                  - listitem [ref=e1013]:
+                    - link "Речевая аналитика" [ref=e1014] [cursor=pointer]:
+                      - /url: /software/speech-analytics/
+                  - listitem [ref=e1015]:
+                    - link "Распознавание и синтез речи VoiceKit" [ref=e1016] [cursor=pointer]:
+                      - /url: /software/voicekit/
+                  - listitem [ref=e1017]:
+                    - link "Платформа наблюдаемости Sage" [ref=e1018] [cursor=pointer]:
+                      - /url: /software/sage/
+                  - listitem [ref=e1019]:
+                    - link "Бесплатная онлайн-доска Unidraw" [ref=e1020] [cursor=pointer]:
+                      - /url: https://unidraw.io/
+              - listitem [ref=e1021]:
+                - link "Средний и крупный бизнес" [ref=e1022] [cursor=pointer]:
+                  - /url: /corporate/
+                - list [ref=e1023]:
+                  - listitem [ref=e1024]:
+                    - link "Корпорациям" [ref=e1025] [cursor=pointer]:
+                      - /url: /enterprise/
+                  - listitem [ref=e1026]:
+                    - link "Расчетный счет" [ref=e1027] [cursor=pointer]:
+                      - /url: /corporate/account/
+                  - listitem [ref=e1028]:
+                    - link "Сервисы для выплат" [ref=e1029] [cursor=pointer]:
+                      - /url: /corporate/payout/
+                  - listitem [ref=e1030]:
+                    - link "Торговый эквайринг" [ref=e1031] [cursor=pointer]:
+                      - /url: /corporate/acquiring/
+                  - listitem [ref=e1032]:
+                    - link "Кредиты" [ref=e1033] [cursor=pointer]:
+                      - /url: /corporate/credit/
+                  - listitem [ref=e1034]:
+                    - link "Депозиты" [ref=e1035] [cursor=pointer]:
+                      - /url: /corporate/deposites/
+                  - listitem [ref=e1036]:
+                    - link "ВЭД" [ref=e1037] [cursor=pointer]:
+                      - /url: /corporate/currency/
+                  - listitem [ref=e1038]:
+                    - link "Госзакупки" [ref=e1039] [cursor=pointer]:
+                      - /url: /corporate/procurement/
+                  - listitem [ref=e1040]:
+                    - link "Бизнес-решения" [ref=e1041] [cursor=pointer]:
+                      - /url: /corporate/business-solutions/
+                  - listitem [ref=e1042]:
+                    - link "T‑Bank Data" [ref=e1043] [cursor=pointer]:
+                      - /url: /data/
+                  - listitem [ref=e1044]:
+                    - link "T‑ID" [ref=e1045] [cursor=pointer]:
+                      - /url: /corporate/business-solutions/open-api/t-id/
+                  - listitem [ref=e1046]:
+                    - link "Лизинг" [ref=e1047] [cursor=pointer]:
+                      - /url: /business/leasing/
+                  - listitem [ref=e1048]:
+                    - link "Автодилеры" [ref=e1049] [cursor=pointer]:
+                      - /url: /business/industry-solutions/car-dealership/
+              - listitem [ref=e1050]:
+                - link "T‑Bank eCommerce" [ref=e1051] [cursor=pointer]:
+                  - /url: /business/ecommerce/
+                - list [ref=e1052]:
+                  - listitem [ref=e1053]:
+                    - link "Счет для селлеров" [ref=e1054] [cursor=pointer]:
+                      - /url: /business/marketplace/
+                  - listitem [ref=e1055]:
+                    - link "Кредиты для селлеров" [ref=e1056] [cursor=pointer]:
+                      - /url: /business/credit/sellers/
+                  - listitem [ref=e1057]:
+                    - link "Условия для крупных селлеров" [ref=e1058] [cursor=pointer]:
+                      - /url: /corporate/m-sellers/
+                  - listitem [ref=e1059]:
+                    - link "Т‑Бизнес Клуб" [ref=e1060] [cursor=pointer]:
+                      - /url: /corporate/t-business-club/
+                  - listitem [ref=e1061]:
+                    - link "Селлер" [ref=e1062] [cursor=pointer]:
+                      - /url: /business/seller/
+                  - listitem [ref=e1063]:
+                    - link "Бухгалтерия для селлеров" [ref=e1064] [cursor=pointer]:
+                      - /url: /business/accounting/marketplace/
+                  - listitem [ref=e1065]:
+                    - link "Регистрация бизнеса для селлеров" [ref=e1066] [cursor=pointer]:
+                      - /url: /business/registration/marketplace/
+                  - listitem [ref=e1067]:
+                    - link "Редактор карточек для маркетплейсов" [ref=e1068] [cursor=pointer]:
+                      - /url: /business/seller/ai-tool/
+          - listitem [ref=e1069]:
+            - generic [ref=e1070]: Еще от Т‑Банка
+            - list [ref=e1071]:
+              - listitem [ref=e1072]:
+                - link "Полезное" [ref=e1073] [cursor=pointer]:
+                  - /url: /about/
+                - list [ref=e1074]:
+                  - listitem [ref=e1075]:
+                    - link "T‑Pay" [ref=e1076] [cursor=pointer]:
+                      - /url: /t-pay/
+                  - listitem [ref=e1077]:
+                    - link "Вход с T‑ID" [ref=e1078] [cursor=pointer]:
+                      - /url: /t-id/
+                  - listitem [ref=e1079]:
+                    - link "Идентификация с T‑ID" [ref=e1080] [cursor=pointer]:
+                      - /url: /t-id/identification/
+                  - listitem [ref=e1081]:
+                    - link "Платежи" [ref=e1082] [cursor=pointer]:
+                      - /url: /payments/
+                  - listitem [ref=e1083]:
+                    - link "Переводы на карту" [ref=e1084] [cursor=pointer]:
+                      - /url: /cardtocard/
+                  - listitem [ref=e1085]:
+                    - link "Биометрия" [ref=e1086] [cursor=pointer]:
+                      - /url: /bio/
+                  - listitem [ref=e1087]:
+                    - link "Отзывы" [ref=e1088] [cursor=pointer]:
+                      - /url: /reviews/
+                  - listitem [ref=e1089]:
+                    - link "Мерч Т‑Банка" [ref=e1090] [cursor=pointer]:
+                      - /url: /shop/
+                  - listitem [ref=e1091]:
+                    - link "Промокоды" [ref=e1092] [cursor=pointer]:
+                      - /url: https://promokod.tbank.ru/
+                  - listitem [ref=e1093]:
+                    - link "Партнерская программа" [ref=e1094] [cursor=pointer]:
+                      - /url: https://partners.tbank.ru/
+                  - listitem [ref=e1095]:
+                    - link "Сервис по возврату денег" [ref=e1096] [cursor=pointer]:
+                      - /url: /refund/
+                  - listitem [ref=e1097]:
+                    - link "Т‑Образование" [ref=e1098] [cursor=pointer]:
+                      - /url: /education/
+                  - listitem [ref=e1099]:
+                    - link "Курс добра" [ref=e1100] [cursor=pointer]:
+                      - /url: /charity/
+                  - listitem [ref=e1101]:
+                    - link "Бизнес-глоссарий" [ref=e1102] [cursor=pointer]:
+                      - /url: /business/glossary/
+                  - listitem [ref=e1103]:
+                    - link "Т‑Бизнес секреты" [ref=e1104] [cursor=pointer]:
+                      - /url: https://secrets.tbank.ru/
+                  - listitem [ref=e1105]:
+                    - link "Т—Ж" [ref=e1106] [cursor=pointer]:
+                      - /url: https://t-j.ru/
+                  - listitem [ref=e1107]:
+                    - link "Т‑Блог" [ref=e1108] [cursor=pointer]:
+                      - /url: /blog/
+                  - listitem [ref=e1109]:
+                    - link "Помощь" [ref=e1110] [cursor=pointer]:
+                      - /url: /help/
+              - listitem [ref=e1111]:
+                - link "Карьера" [ref=e1112] [cursor=pointer]:
+                  - /url: /career/
+                - list [ref=e1113]:
+                  - listitem [ref=e1114]:
+                    - link "Работа в ИТ" [ref=e1115] [cursor=pointer]:
+                      - /url: /career/it/about/
+                  - listitem [ref=e1116]:
+                    - link "Бизнес и процессы" [ref=e1117] [cursor=pointer]:
+                      - /url: /career/back-office/
+                  - listitem [ref=e1118]:
+                    - link "Работа с клиентами" [ref=e1119] [cursor=pointer]:
+                      - /url: /career/service/
+      - generic [ref=e1121]:
+        - generic [ref=e1122]:
+          - generic [ref=e1123]:
+            - list [ref=e1124]:
+              - listitem [ref=e1125]:
+                - link "О Т-Банке" [ref=e1126] [cursor=pointer]:
+                  - /url: /about/
+              - listitem [ref=e1131]:
+                - link "Новости" [ref=e1132] [cursor=pointer]:
+                  - /url: /about/news/
+              - listitem [ref=e1137]:
+                - link "Блог" [ref=e1138] [cursor=pointer]:
+                  - /url: /blog/
+              - listitem [ref=e1143]:
+                - link "Работа" [ref=e1144] [cursor=pointer]:
+                  - /url: /career/
+              - listitem [ref=e1149]:
+                - link "Точки пополнения" [ref=e1150] [cursor=pointer]:
+                  - /url: /maps/payment/?partner=TINKOFF
+              - listitem [ref=e1155]:
+                - link "Банкоматы" [ref=e1156] [cursor=pointer]:
+                  - /url: /maps/atm/?partner=tcs
+              - listitem [ref=e1161]:
+                - link "Курсы валют" [ref=e1162] [cursor=pointer]:
+                  - /url: /about/exchange/
+              - listitem [ref=e1167]:
+                - link "Контакты" [ref=e1168] [cursor=pointer]:
+                  - /url: /contacts/
+              - listitem [ref=e1173]:
+                - link "Помощь" [ref=e1174] [cursor=pointer]:
+                  - /url: /help/
+              - listitem [ref=e1179]:
+                - link "Обращение в банк" [ref=e1180] [cursor=pointer]:
+                  - /url: /complaint/
+              - listitem [ref=e1185]:
+                - link "Безопасность" [ref=e1186] [cursor=pointer]:
+                  - /url: /secure/
+              - listitem [ref=e1191]:
+                - link "Для инвесторов" [ref=e1192] [cursor=pointer]:
+                  - /url: https://t-technologies.ru/
+            - generic [ref=e1197]:
+              - generic [ref=e1198]:
+                - link "Бесплатно для звонков по России 8 800 333-33-33" [ref=e1199] [cursor=pointer]:
+                  - /url: tel:88003333333
+                  - text: 8 800 333-33-33
+                - generic [ref=e1200]: Бесплатно для звонков по России
+              - generic [ref=e1201]:
+                - link "Короткий номер 999" [ref=e1202] [cursor=pointer]:
+                  - /url: tel:999
+                  - text: "999"
+                - generic [ref=e1203]: Короткий номер
+          - generic [ref=e1204]:
+            - generic [ref=e1206]:
+              - paragraph [ref=e1207]:
+                - text: На информационном ресурсе применяются
+                - link "рекомендательные технологии" [ref=e1208] [cursor=pointer]:
+                  - /url: https://cdn.tbank.ru/static/documents/rules-use-recommendation-technologies.pdf
+                - text: . При применении информационных технологий предоставления информации осуществляется сбор, систематизация и анализ сведений, относящихся к предпочтениям пользователей сети «Интернет», находящихся на территории Российской Федерации.
+              - paragraph [ref=e1209]: Пример расчета условий носит исключительно информационный характер, а также не является публичной офертой.
+              - paragraph [ref=e1210]: Услуги лизинга оказывает ООО «Т‑Лизинг».
+              - paragraph [ref=e1211]: Селлер — продавец на маркетплейсе.
+              - paragraph [ref=e1212]: Сервис «Долями» предоставляется ООО «Т‑Покупки».
+              - paragraph [ref=e1213]:
+                - text: Рост среднего чека с рассрочками — до 40%. Источник —
+                - link "исследование Тинькофф Кредит Брокера" [ref=e1214] [cursor=pointer]:
+                  - /url: /about/news/26012022-tinkoff-research-how-installment-and-loan-help-increase-average-check-by-40-percent/
+                - text: в декабре 2021 года среди более 1 000 компаний-клиентов за период с подключения сервиса по ноябрь 2021 года.
+              - paragraph [ref=e1215]: Сервис выплат самозанятым предоставляется ООО «Джаст Лук».
+              - paragraph [ref=e1216]: За оформление карты с дизайном банк может взимать плату, размер которой устанавливается банком и доводится до клиента до подачи заявки на выпуск либо перевыпуск карты в мобильном банке или интернет-банке. Плата взимается в дату подачи клиентом указанной заявки в рублях РФ или эквиваленте в валюте картсчета по курсу банка России на дату взимания платы. Плата не взимается при выпуске карты с дизайном при заключении договора расчетной карты, а также при перевыпуске карты с дизайном, ранее оформленной с таким же дизайном.
+              - paragraph [ref=e1217]: Лимит бесплатных переводов до 3 700 000 ₽ доступен при подключении сервиса Premium и двух пакетов «Физлицам — без комиссии». Сумма складывается из переводов на кредитные и дебетовые карты Т-Банка
+            - list [ref=e1218]:
+              - listitem [ref=e1219]:
+                - link "Центр раскрытия корпоративной информации" [ref=e1220] [cursor=pointer]:
+                  - /url: http://www.e-disclosure.ru/portal/company.aspx?id=2989
+              - listitem [ref=e1222]:
+                - link "Информация о процентных ставках по договорам банковского вклада с физическими лицами" [ref=e1223] [cursor=pointer]:
+                  - /url: /about/documents/#psv
+              - listitem [ref=e1225]:
+                - link "Раскрытие информации профессиональным участником рынка ценных бумаг" [ref=e1226] [cursor=pointer]:
+                  - /url: /about/documents/disclosure/
+              - listitem [ref=e1228]:
+                - link "Новости об изменении условий продуктов и сервисов Банка" [ref=e1229] [cursor=pointer]:
+                  - /url: /about/terms-changes-news/
+              - listitem [ref=e1231]:
+                - link "Карта сайта" [ref=e1232] [cursor=pointer]:
+                  - /url: /about/sitemap/
+              - listitem [ref=e1234]:
+                - link "Мониторинг работы Т-Банка" [ref=e1235] [cursor=pointer]:
+                  - /url: http://status.tbank.ru/
+              - listitem [ref=e1237]:
+                - link "Ограничения Дистанционного обслуживания" [ref=e1238] [cursor=pointer]:
+                  - /url: https://cdn.tbank.ru/static/documents/remote-service-limitations.pdf
+              - listitem [ref=e1240]:
+                - link "Удаленная идентификация" [ref=e1241] [cursor=pointer]:
+                  - /url: /cards/debit-cards/tinkoff-black/form/
+              - listitem [ref=e1243]:
+                - link "Декларация соответствия условий труда государственным нормативным требованиям охраны труда АО «ТБанк»" [ref=e1244] [cursor=pointer]:
+                  - /url: https://cdn.tbank.ru/static/pages/files/137e64fb-629c-4d82-9e6e-43f323221a57.pdf
+              - listitem [ref=e1246]:
+                - link "Информация о продолжительности операционного времени" [ref=e1247] [cursor=pointer]:
+                  - /url: https://cdn.tbank.ru/static/documents/docs-operating-time-receiving-executing-customer-orders.pdf
+              - listitem [ref=e1249]:
+                - link "Автомобили Haval" [ref=e1250] [cursor=pointer]:
+                  - /url: /auto/haval/
+              - listitem [ref=e1252]:
+                - link "Сообщить о коррупции" [ref=e1253] [cursor=pointer]:
+                  - /url: https://nemolchi.t-technologies.ru/
+              - listitem [ref=e1255]:
+                - link "Комплаенс для партнеров" [ref=e1256] [cursor=pointer]:
+                  - /url: /compliance/partners/
+              - listitem [ref=e1258]:
+                - link "Тарифы Платинум" [ref=e1259] [cursor=pointer]:
+                  - /url: /cards/credit-cards/tinkoff-platinum/tariffs/
+              - listitem [ref=e1261]:
+                - link "Программа лояльности Платинум" [ref=e1262] [cursor=pointer]:
+                  - /url: https://cdn.tbank.ru/static/documents/loyalty-program-platinum.pdf
+              - listitem [ref=e1264]:
+                - link "Общие условия программ лояльности" [ref=e1265] [cursor=pointer]:
+                  - /url: https://cdn.tbank.ru/static/documents/cards-loyalty-programs.pdf
+              - listitem [ref=e1267]:
+                - link "Безопасное использование банковской карты" [ref=e1268] [cursor=pointer]:
+                  - /url: https://cdn.tbank.ru/static/documents/secure-instr-card-security.pdf
+              - listitem [ref=e1270]:
+                - link "Общие условия договора потребительского кредита" [ref=e1271] [cursor=pointer]:
+                  - /url: https://cdn.tbank.ru/static/documents/general-terms-conditions-consumer-credit-agreement-kubyshka.pdf
+              - listitem [ref=e1273]:
+                - link "Тарифы по продукту «СмартВклад»" [ref=e1274] [cursor=pointer]:
+                  - /url: https://cdn.tbank.ru/static/documents/deposit-smartdeposit-multi_3_0.pdf
+              - listitem [ref=e1276]:
+                - link "Тарифный план Black" [ref=e1277] [cursor=pointer]:
+                  - /url: https://cdn.tbank.ru/static/documents/debit-tariffs-tps_3_0.pdf
+              - listitem [ref=e1279]:
+                - link "Документы для лизингополучателей" [ref=e1280] [cursor=pointer]:
+                  - /url: /business/leasing/documents/
+              - listitem [ref=e1282]:
+                - link "Условия комплексного банковского обслуживания" [ref=e1283] [cursor=pointer]:
+                  - /url: https://cdn.tbank.ru/static/documents/43d45d85-75f9-4b72-9e53-e976b765be7f.pdf
+              - listitem [ref=e1285]:
+                - link "Тарифы расчетно-кассового обслуживания" [ref=e1286] [cursor=pointer]:
+                  - /url: https://cdn.tbank.ru/static/documents/business-tariffs-all.pdf
+              - listitem [ref=e1288]:
+                - link "Перечень операций, приравненных к снятию наличных" [ref=e1289] [cursor=pointer]:
+                  - /url: https://cdn.tbank.ru/static/documents/docs-operations-list-with-other-credit-institution.pdf
+              - listitem [ref=e1291]:
+                - link "Условия оборотного кредита" [ref=e1292] [cursor=pointer]:
+                  - /url: https://cdn.tbank.ru/static/documents/business-tariff-revolving-loan-1_0-pre-approved.pdf
+              - listitem [ref=e1294]:
+                - link "Оферта сервиса «Селлер»" [ref=e1295] [cursor=pointer]:
+                  - /url: https://cdn.tbank.ru/static/documents/docs-terms-of-use-tinkoff-seller-platform.pdf
+              - listitem [ref=e1297]:
+                - link "Условия акции «Селлер S — бесплатно»" [ref=e1298] [cursor=pointer]:
+                  - /url: https://cdn.tbank.ru/static/documents/promo-tinkoff-seller-free.pdf
+              - listitem [ref=e1300]:
+                - link "Условия кредитования" [ref=e1301] [cursor=pointer]:
+                  - /url: https://cdn.tbank.ru/static/documents/business-docs-list-lending-terms.pdf
+              - listitem [ref=e1303]:
+                - link "Договор присоединения" [ref=e1304] [cursor=pointer]:
+                  - /url: https://cdn.tbank.ru/static/documents/business-agreement-on-joining-the-customer-loan-program-for-legal-entities.pdf
+              - listitem [ref=e1306]:
+                - link "Рамочный договор поручения по приобретению и оплате товаров, работ и услуг" [ref=e1307] [cursor=pointer]:
+                  - /url: https://static.dolyame.ru/static/dolyame/dolyame_contract.pdf
+              - listitem [ref=e1309]:
+                - link "Договор об организации сервиса приобретения товаров, работ и услуг" [ref=e1310] [cursor=pointer]:
+                  - /url: https://static.dolyame.ru/static/dolyame/oferta.pdf
+              - listitem [ref=e1312]:
+                - link "Договор на подключение к сервису" [ref=e1313] [cursor=pointer]:
+                  - /url: https://cdn.tbank.ru/static/documents/378addb8-b40a-4fcf-8bdd-fdcc410f1322.pdf
+              - listitem [ref=e1315]:
+                - link "Договор об осуществлении расчетов по переводам, совершаемым в сети Интернет" [ref=e1316] [cursor=pointer]:
+                  - /url: https://cdn.tbank.ru/static/documents/oferta-standard-internet-acquiring.pdf
+              - listitem [ref=e1318]:
+                - link "Политика обработки персональных данных Т‑Банка" [ref=e1319] [cursor=pointer]:
+                  - /url: https://cdn.tbank.ru/static/documents/e4f5df1b-5401-4091-b6ca-8af82e27ed4b.pdf
+        - generic [ref=e1321]:
+          - paragraph [ref=e1324]: © 2006—2026, АО «ТБанк», официальный сайт, универсальная лицензия ЦБ РФ № 2673
+          - list [ref=e1325]:
+            - listitem [ref=e1326]:
+              - link "Пульс" [ref=e1327] [cursor=pointer]:
+                - /url: https://www.tbank.ru/invest/social/profile/tbank_news/
+            - listitem [ref=e1332]:
+              - link "ВК" [ref=e1333] [cursor=pointer]:
+                - /url: https://vk.com/tbank/
+            - listitem [ref=e1337]:
+              - link "MAX" [ref=e1338] [cursor=pointer]:
+                - /url: https://max.ru/tbank
+            - listitem [ref=e1342]:
+              - link "Telegram" [ref=e1343] [cursor=pointer]:
+                - /url: https://t.me/tbank/
+            - listitem [ref=e1347]:
+              - link "Одноклассники" [ref=e1348] [cursor=pointer]:
+                - /url: https://ok.ru/tbank/
+  - iframe
+  - generic:
+    - generic:
+      - list
+  - generic:
+    - generic:
+      - list
