@@ -1,0 +1,12 @@
+/**
+ * @tk-kit/tokens — global stylesheet.
+ *
+ * Placeholder. The `--tk-*` token layers land in Story 1.2:
+ * light theme on `:root`, dark theme on `[data-theme="dark"]`.
+ * The `:host` selector keeps the same custom properties usable inside shadow roots.
+ */
+:host,
+:root {
+  /* Removed in Story 1.2 when real tokens replace this scaffold marker. */
+  --tk-scaffold-placeholder: initial;
+}

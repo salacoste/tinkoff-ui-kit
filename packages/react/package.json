@@ -1,0 +1,33 @@
+{
+  "name": "@tk-kit/react",
+  "version": "0.0.0",
+  "private": true,
+  "description": "React adapters for tinkoff-ui-kit — wrappers generated from the Custom Elements Manifest of @tk-kit/components via @lit/react. Placeholder scaffold; wrappers land from Story 1.7.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build && tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@lit/react": "1.0.8",
+    "@tk-kit/components": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "19.3.0"
+  }
+}

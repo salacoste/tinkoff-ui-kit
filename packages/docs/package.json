@@ -1,0 +1,13 @@
+{
+  "name": "@tk-kit/docs",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Docs surface for tinkoff-ui-kit — Storybook skeleton with theming and the unofficial disclaimer. Placeholder only; Storybook lands in Story 1.5.",
+  "type": "module",
+  "scripts": {
+    "test": "node -e \"console.log('@tk-kit/docs placeholder suite — Storybook lands in Story 1.5')\""
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

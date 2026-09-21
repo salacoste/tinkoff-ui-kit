@@ -1,0 +1,33 @@
+.t-reason { position: relative; overflow: hidden; }
+.t-reason-viewport {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  /* Edge fades are a mask, not painted gradients, so the card
+     background can be anything. */
+  -webkit-mask-image: linear-gradient(
+    transparent 0,
+    black var(--reason-fade),
+    black calc(100% - var(--reason-fade)),
+    transparent 100%);
+  mask-image: linear-gradient(
+    transparent 0,
+    black var(--reason-fade),
+    black calc(100% - var(--reason-fade)),
+    transparent 100%);
+}
+.t-reason-scroll {
+  position: absolute;
+  left: 0;
+  right: 0;
+  transform: translateY(0);
+  will-change: transform;
+}
+/* JS drives the tween:
+     scroll.style.transition = 'transform var(--reason-step) var(--reason-ease)';
+     scroll.style.transform  = 'translateY(-' + offset + 'px)';
+   and wraps the offset by one copy's height with transition: none. */
+
+@media (prefers-reduced-motion: reduce) {
+  .t-reason-scroll { transition: none !important; transform: none !important; }
+}

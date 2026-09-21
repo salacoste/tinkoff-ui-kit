@@ -3,9 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "description": "UI kit based on the Tinkoff (T-Bank) design language — recreated, systematized and improved",
-  "packageManager": "pnpm@11.20.0",
-  "scripts": {},
+  "packageManager": "pnpm@12.5.1",
+  "type": "module",
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test && vitest run",
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "@custom-elements-manifest/analyzer": "0.11.0",
+    "@types/node": "26.6.2",
+    "@typescript/native": "npm:typescript@7.0.2",
+    "eslint": "10.11.0",
+    "typescript": "npm:@typescript/typescript6@6.0.2",
+    "typescript-eslint": "8.70.1",
+    "vite": "8.3.0",
+    "vitest": "5.0.1"
   }
 }
