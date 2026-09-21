@@ -11,10 +11,12 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    }
+    },
+    "./CONVENTIONS.md": "./CONVENTIONS.md"
   },
   "files": [
-    "dist"
+    "dist",
+    "CONVENTIONS.md"
   ],
   "scripts": {
     "build": "vite build && tsc -p tsconfig.json",
