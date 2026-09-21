@@ -52,4 +52,21 @@ describe('token-pipeline drift (spec 1.2 review)', () => {
     expect(mutated, 'mutation did not apply — the rounded: anchor moved').not.toBe(original);
     expect(() => renderArtifacts(mutated)).toThrow();
   });
+
+  it('renderer fails loudly on a dark palette key with no mapping entry (spec 1.3, negative self-check)', () => {
+    const original = readFileSync(DESIGN_MD, 'utf8');
+    const mutated = original.replace(
+      "  dark-tint-charcoal: '#333333'",
+      "  dark-tint-charcoal: '#333333'\n  dark-foo: '#123456'",
+    );
+    expect(mutated, 'mutation did not apply — the dark-tint-charcoal anchor moved').not.toBe(original);
+    expect(() => renderArtifacts(mutated)).toThrow(/dark-foo/);
+  });
+
+  it('renderer fails loudly when a dark override targets a missing light semantic (spec 1.3, negative self-check)', () => {
+    const original = readFileSync(DESIGN_MD, 'utf8');
+    const mutated = original.replace("  text-muted: '#959BA4'\n", '');
+    expect(mutated, 'mutation did not apply — the text-muted anchor moved').not.toBe(original);
+    expect(() => renderArtifacts(mutated)).toThrow(/--tk-color-text-muted/);
+  });
 });

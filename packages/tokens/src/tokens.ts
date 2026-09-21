@@ -52,6 +52,30 @@ export const colorTokens = {
   '--tk-color-tint-mint': '#E2F1EC',
   '--tk-color-tint-beige': '#F5EFE6',
   '--tk-color-tint-charcoal': '#333333',
+  '--tk-color-link': '#1771E6',
+  '--tk-color-error': '#E01F19',
+  '--tk-color-error-on-field': '#D3120E',
+} as const;
+
+/** Dark-layer color tokens — the semantic overrides re-declared on `[data-theme="dark"]` (sources: DESIGN.md `dark-*` palette; `border-strong` derived). Not spread into `tokens`: the light layer stays the single name registry. */
+export const darkColorTokens = {
+  '--tk-color-surface-base': '#1A1A1A',
+  '--tk-color-surface-muted': '#222222',
+  '--tk-color-surface-field': '#FFFFFF1A',
+  '--tk-color-border-default': '#FFFFFF24',
+  '--tk-color-border-strong': '#FFFFFF3D',
+  '--tk-color-text-primary': '#FFFFFF',
+  '--tk-color-text-secondary': '#FFFFFFB3',
+  '--tk-color-text-muted': '#FFFFFF80',
+  '--tk-color-focus-ring': '#66A3FF',
+  '--tk-color-link': '#66A3FF',
+  '--tk-color-error': '#FF7B74',
+  '--tk-color-link-on-tint': '#66A3FF',
+  '--tk-color-error-on-field': '#FF7B74',
+  '--tk-color-tint-gray': '#242424',
+  '--tk-color-tint-bluegray': '#1E242C',
+  '--tk-color-tint-mint': '#1C2A26',
+  '--tk-color-tint-beige': '#2A2620',
 } as const;
 
 /** Typography tokens — per-slot size/weight/leading/tracking plus the family slots (values: DESIGN.md `typography`). */

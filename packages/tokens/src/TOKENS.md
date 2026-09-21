@@ -5,10 +5,10 @@ GENERATED FILE — DO NOT EDIT. Regenerate with `pnpm gen:tokens`.
 - Source of truth: `_bmad-output/planning-artifacts/ux-designs/ux-tinkoff-ui-kit-2026-09-21/DESIGN.md` frontmatter — blocks `colors`, `typography`, `rounded`, `spacing`, `shadows`, `motion`.
 - The `components:` frontmatter block is consumer spec prose — never rendered.
 - The z-scale is scaffold mechanics, not an extraction (own section below).
-- Dark values (the `dark-*` color entries) are **not** part of the light layer — Story 1.3 emits the dark layer on `[data-theme="dark"]` (see "Deferred to the dark layer").
-- `[ASSUMPTION]` flags ship with their values (DESIGN.md body marks them); they are resolved by Stories 3.6/5.6, never silently dropped.
+- The `dark-*` color entries are the palette SOURCE for the dark layer (see "Dark layer") — never emitted as `--tk-color-dark-*` custom properties.
+- `[ASSUMPTION]` flags ship with their values (DESIGN.md body marks them); they are resolved by Stories 3.6/5.4/5.6, never silently dropped.
 
-Light layer: **128 tokens** on `:host, :root` (colors 42, typography 42, radius 7, spacing 14, shadows 6, motion 11, z-scale 6).
+Light layer: **131 tokens** on `:host, :root` (colors 45, typography 42, radius 7, spacing 14, shadows 6, motion 11, z-scale 6) plus the dark layer: **17 semantic overrides + 6 shadow-none re-declarations** on `[data-theme="dark"]`.
 
 ## Colors
 
@@ -58,6 +58,9 @@ Light entries from the `colors` block: brand/ink/gray/lightblue/functional scale
 | `--tk-color-tint-mint` | `#E2F1EC` | [ASSUMPTION] vision-inventory estimate pending build-time capture verification — resolved by Stories 3.6/5.6. DESIGN.md Colors. |
 | `--tk-color-tint-beige` | `#F5EFE6` | [ASSUMPTION] vision-inventory estimate pending build-time capture verification — resolved by Stories 3.6/5.6. DESIGN.md Colors. |
 | `--tk-color-tint-charcoal` | `#333333` |  |
+| `--tk-color-link` | `#1771E6` | Semantic alias — `blue-100`, added in Story 1.3: components consume semantics, not scales (AD-2/AD-3), and the dark layer needs a semantic name to override (`dark-link`). DESIGN.md Colors (TextLink). |
+| `--tk-color-error` | `#E01F19` | Semantic alias — `red-100`, added in Story 1.3 alongside `link` so both themes expose error semantics (the dark layer overrides it with `dark-error`). DESIGN.md Colors. |
+| `--tk-color-error-on-field` | `#D3120E` | AA addition — `red-200` for errors on field/muted surfaces (red-100 = 4.22:1 on surface-field and 4.40:1 on surface-muted — both fail 4.5:1; red-200 passes). Mirrors the link-on-tint precedent. DESIGN.md Colors. |
 
 ## Typography
 
@@ -217,25 +220,46 @@ Not a DESIGN.md extraction. Stacking order is fixed by AD-12 usage: z-order come
 | `--tk-z-modal` | `500` | modal dialogs (focus-trapped) |
 | `--tk-z-toast` | `600` | toasts — transient, above modals |
 
-## Deferred to the dark layer (Story 1.3)
+## Dark layer (Story 1.3)
 
-These DESIGN.md `colors` entries are dark-theme palette values; the light layer intentionally does not render them. **Override model:** the dark layer re-declares the SEMANTIC names (`--tk-color-surface-base`, `--tk-color-surface-muted`, `--tk-color-text-primary`, …) on `[data-theme="dark"]`; the `dark-*` keys below are the palette SOURCE for that mapping, never the consumed names — components always reference semantic tokens, never `--tk-color-dark-*`. The `dark-tint-*` values are first-pass `[ASSUMPTION]` in DESIGN.md — their flags land with that layer.
+Setting `data-theme="dark"` on `<html>` re-resolves every SEMANTIC color token — zero markup/class/inline-style changes (AD-3). **Override model:** the dark layer re-declares semantic names only, sourced from the `dark-*` palette keys below; the `dark-*` keys are the palette SOURCE, never the consumed names — components always reference semantic tokens, never `--tk-color-dark-*` (enforced: generation aborts on any unconsumed `dark-*` key). Typography / radius / spacing / motion / z are theme-invariant — the `:host, :root` rules above stay the single source. Theme switch adds no transition (0ms default; an optional 150ms cross-fade is consumer-side, applied on the consumer surface — never in the token layer).
 
-- `--tk-color-dark-base`
-- `--tk-color-dark-surface-1`
-- `--tk-color-dark-surface-2`
-- `--tk-color-dark-surface-3`
-- `--tk-color-dark-elevated`
-- `--tk-color-dark-border`
-- `--tk-color-dark-text-primary`
-- `--tk-color-dark-text-secondary`
-- `--tk-color-dark-text-muted`
-- `--tk-color-dark-field`
-- `--tk-color-dark-link`
-- `--tk-color-dark-error`
-- `--tk-color-dark-focus-ring`
-- `--tk-color-dark-tint-gray`
-- `--tk-color-dark-tint-bluegray`
-- `--tk-color-dark-tint-mint`
-- `--tk-color-dark-tint-beige`
-- `--tk-color-dark-tint-charcoal`
+| Token | Light | Dark | Source | Notes |
+| --- | --- | --- | --- | --- |
+| `--tk-color-surface-base` | `#FFFFFF` | `#1A1A1A` | `colors.dark-base` |  |
+| `--tk-color-surface-muted` | `#F5F5F6` | `#222222` | `colors.dark-surface-1` |  |
+| `--tk-color-surface-field` | `#ECF1F7` | `#FFFFFF1A` | `colors.dark-field` |  |
+| `--tk-color-border-default` | `#E7E8EA` | `#FFFFFF24` | `colors.dark-border` |  |
+| `--tk-color-border-strong` | `#CBCFD3` | `#FFFFFF3D` | derived | Derived — DESIGN.md defines no dark border-strong; `#FFFFFF3D` = dark-border `#FFFFFF24` (24-hex ≈ 14% white) lifted +12% toward opaque. Story 1.3 scaffolding decision, not an extraction. |
+| `--tk-color-text-primary` | `#333333` | `#FFFFFF` | `colors.dark-text-primary` |  |
+| `--tk-color-text-secondary` | `#616871` | `#FFFFFFB3` | `colors.dark-text-secondary` |  |
+| `--tk-color-text-muted` | `#959BA4` | `#FFFFFF80` | `colors.dark-text-muted` |  |
+| `--tk-color-focus-ring` | `#1771E6` | `#66A3FF` | `colors.dark-focus-ring` |  |
+| `--tk-color-link` | `#1771E6` | `#66A3FF` | `colors.dark-link` |  |
+| `--tk-color-error` | `#E01F19` | `#FF7B74` | `colors.dark-error` |  |
+| `--tk-color-link-on-tint` | `#1464CC` | `#66A3FF` | `colors.dark-link` | Alias — dark reuses `dark-link` (the light-only on-tint step exists because blue-100 fails on light fields). |
+| `--tk-color-error-on-field` | `#D3120E` | `#FF7B74` | `colors.dark-error` | Alias — dark reuses `dark-error` (the light-only on-field step exists because red-100 fails on light field/muted surfaces). |
+| `--tk-color-tint-gray` | `#F5F5F6` | `#242424` | `colors.dark-tint-gray` | [ASSUMPTION] first-pass dark tint — darken toward L≈16–20% keeping hue; refinement owned by Story 5.4. DESIGN.md Colors. |
+| `--tk-color-tint-bluegray` | `#ECF1F7` | `#1E242C` | `colors.dark-tint-bluegray` | [ASSUMPTION] first-pass dark tint — darken toward L≈16–20% keeping hue; refinement owned by Story 5.4. DESIGN.md Colors. |
+| `--tk-color-tint-mint` | `#E2F1EC` | `#1C2A26` | `colors.dark-tint-mint` | [ASSUMPTION] first-pass dark tint — darken toward L≈16–20% keeping hue; refinement owned by Story 5.4. DESIGN.md Colors. |
+| `--tk-color-tint-beige` | `#F5EFE6` | `#2A2620` | `colors.dark-tint-beige` | [ASSUMPTION] first-pass dark tint — darken toward L≈16–20% keeping hue; refinement owned by Story 5.4. DESIGN.md Colors. |
+
+### Theme invariants
+
+These semantics keep their light values in dark — no override is emitted:
+
+- `--tk-color-text-on-primary` — yellow keeps ink text in dark (DESIGN.md Colors)
+- `--tk-color-tint-charcoal` — charcoal tint is theme-invariant (DESIGN.md Colors)
+
+### Tonal elevation
+
+All six `--tk-shadow-*` tokens collapse to `none` in dark: hierarchy comes from tonal surface steps instead of shadows (DESIGN.md Elevation & Depth). Per-component exceptions use the `--tk-<component>-<slot>` grammar — never this layer. `--tk-color-surface-muted` carries tonal step 1 (`dark-surface-1`); steps 2/3/elevated are deferred below until their consuming components land.
+
+### Deferred dark palette keys
+
+Accounted-for `dark-*` keys with no token-layer emission yet (adding a `dark-*` key without an entry here aborts generation — no silent drops):
+
+- `colors.dark-surface-2` — tonal elevation step 2 — no semantic consumer yet; emitted when overlay/component stories define raised dark surface slots (Epic 2 overlays / Story 5.4 refinement), never as --tk-color-dark-*
+- `colors.dark-surface-3` — tonal elevation step 3 — DESIGN.md reserves it for Modal-in-dark ("dark theme tonal step 3"); emitted when Modal lands, never as --tk-color-dark-*
+- `colors.dark-elevated` — highest tonal step — reserved for elevated dark chrome; emitted when its consuming component lands, never as --tk-color-dark-*
+- `colors.dark-tint-charcoal` — theme-invariant — charcoal equals the light value (equality asserted at generation); no dark override is emitted

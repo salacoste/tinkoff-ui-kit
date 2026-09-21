@@ -1,5 +1,6 @@
 /**
- * @tk-kit/tokens — light token layer (generated).
+ * @tk-kit/tokens — token layers (generated): light on `:host, :root`,
+ * dark semantic overrides on `[data-theme="dark"]` (Story 1.3).
  *
  * DO NOT EDIT BY HAND — regenerate with `pnpm gen:tokens`.
  * Source of truth: _bmad-output/planning-artifacts/ux-designs/ux-tinkoff-ui-kit-2026-09-21/DESIGN.md
@@ -10,7 +11,7 @@
  * zero hard-coded values outside this package).
  */
 
-/* Colors — DESIGN.md `colors` (light entries; the `dark-*` entries are reserved for the Story 1.3 dark layer). */
+/* Colors — DESIGN.md `colors` light entries (scales, AA-adjusted semantics, tints) plus the scaffold `link`/`error` semantic aliases; the `dark-*` entries feed the dark layer below. */
 :host,
 :root {
   --tk-color-yellow-100: #FFDD2D;
@@ -61,6 +62,12 @@
   /* [ASSUMPTION] vision-inventory estimate pending build-time capture verification — resolved by Stories 3.6/5.6. DESIGN.md Colors. */
   --tk-color-tint-beige: #F5EFE6;
   --tk-color-tint-charcoal: #333333;
+  /* Semantic alias — `blue-100`, added in Story 1.3: components consume semantics, not scales (AD-2/AD-3), and the dark layer needs a semantic name to override (`dark-link`). DESIGN.md Colors (TextLink). */
+  --tk-color-link: #1771E6;
+  /* Semantic alias — `red-100`, added in Story 1.3 alongside `link` so both themes expose error semantics (the dark layer overrides it with `dark-error`). DESIGN.md Colors. */
+  --tk-color-error: #E01F19;
+  /* AA addition — `red-200` for errors on field/muted surfaces (red-100 = 4.22:1 on surface-field and 4.40:1 on surface-muted — both fail 4.5:1; red-200 passes). Mirrors the link-on-tint precedent. DESIGN.md Colors. */
+  --tk-color-error-on-field: #D3120E;
 }
 
 /* Typography — DESIGN.md `typography`. No text-transform lives in tokens: caps render uppercase at usage per DESIGN.md. */
@@ -202,9 +209,50 @@
   --tk-z-toast: 600;
 }
 
+/* Dark theme (Story 1.3) — semantic color overrides. Sourced from the DESIGN.md `dark-*` palette per the frozen 1.3 mapping; `dark-*` keys are the palette SOURCE, never emitted as `--tk-color-dark-*`. Theme switch adds no transition (0ms; an optional 150ms cross-fade is consumer-side). */
+:host([data-theme="dark"]),
+:root[data-theme="dark"] {
+  --tk-color-surface-base: #1A1A1A;
+  --tk-color-surface-muted: #222222;
+  --tk-color-surface-field: #FFFFFF1A;
+  --tk-color-border-default: #FFFFFF24;
+  /* Derived — DESIGN.md defines no dark border-strong; `#FFFFFF3D` = dark-border `#FFFFFF24` (24-hex ≈ 14% white) lifted +12% toward opaque. Story 1.3 scaffolding decision, not an extraction. */
+  --tk-color-border-strong: #FFFFFF3D;
+  --tk-color-text-primary: #FFFFFF;
+  --tk-color-text-secondary: #FFFFFFB3;
+  --tk-color-text-muted: #FFFFFF80;
+  --tk-color-focus-ring: #66A3FF;
+  --tk-color-link: #66A3FF;
+  --tk-color-error: #FF7B74;
+  /* Alias — dark reuses `dark-link` (the light-only on-tint step exists because blue-100 fails on light fields). */
+  --tk-color-link-on-tint: #66A3FF;
+  /* Alias — dark reuses `dark-error` (the light-only on-field step exists because red-100 fails on light field/muted surfaces). */
+  --tk-color-error-on-field: #FF7B74;
+  /* [ASSUMPTION] first-pass dark tint — darken toward L≈16–20% keeping hue; refinement owned by Story 5.4. DESIGN.md Colors. */
+  --tk-color-tint-gray: #242424;
+  /* [ASSUMPTION] first-pass dark tint — darken toward L≈16–20% keeping hue; refinement owned by Story 5.4. DESIGN.md Colors. */
+  --tk-color-tint-bluegray: #1E242C;
+  /* [ASSUMPTION] first-pass dark tint — darken toward L≈16–20% keeping hue; refinement owned by Story 5.4. DESIGN.md Colors. */
+  --tk-color-tint-mint: #1C2A26;
+  /* [ASSUMPTION] first-pass dark tint — darken toward L≈16–20% keeping hue; refinement owned by Story 5.4. DESIGN.md Colors. */
+  --tk-color-tint-beige: #2A2620;
+}
+
 /*
- * Dark theme layering hook — Story 1.3 emits the dark layer on
- * `[data-theme="dark"]` from the `dark-*` DESIGN.md entries; this light
- * layer is the base it overrides. Theme switching is an attribute change on
- * <html> — zero markup/class/inline-style changes (AD-3).
+ * Theme invariants — intentionally absent from the dark rule above:
+ * --tk-color-text-on-primary and --tk-color-tint-charcoal keep their light
+ * values (yellow keeps ink text in dark; charcoal stays — DESIGN.md Colors,
+ * equality asserted at generation). Typography / radius / spacing / motion /
+ * z are theme-invariant too — single source in the :host, :root rules.
  */
+
+/* Dark theme — tonal elevation (DESIGN.md Elevation & Depth): shadows collapse to `none`; hierarchy comes from tonal surface steps. Per-component exceptions use the `--tk-<component>-<slot>` grammar, never this layer. */
+:host([data-theme="dark"]),
+:root[data-theme="dark"] {
+  --tk-shadow-default: none;
+  --tk-shadow-hover: none;
+  --tk-shadow-modal: none;
+  --tk-shadow-popover: none;
+  --tk-shadow-dropdown: none;
+  --tk-shadow-tooltip: none;
+}

@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @tk-kit/tokens — generation pipeline (Story 1.2, AD-3).
+ * @tk-kit/tokens — generation pipeline (Stories 1.2–1.3, AD-3).
  *
  * DESIGN.md frontmatter is the sole source of truth for token values. This module
  * parses it with a real YAML parser and renders three committed artifacts:
  *
  *   src/tokens.css — the light `--tk-*` layer on `:host, :root` (shadow-root usable)
+ *                    plus the dark layer on `:host([data-theme="dark"]),
+ *                    :root[data-theme="dark"]` (Story 1.3)
  *   src/tokens.ts  — typed token name/value maps for programmatic access
  *   src/TOKENS.md  — the canonical listing (value, source block, assumption flags,
- *                    z-scale + motion-mapping rationale)
+ *                    z-scale + motion-mapping rationale, dark override table)
  *
  * The render step is a pure, importable function (`renderArtifacts(designText)`);
  * the CLI below is a thin wrapper that reads DESIGN.md and writes the files.
@@ -21,8 +23,10 @@
  * - Loud failures: anything unexpected aborts rendering (thrown Error from the
  *   pure function; exit 1 from the CLI) instead of being guessed around.
  * - The `components:` frontmatter block is consumer spec prose — never rendered.
- * - `dark-*` color entries belong to the Story 1.3 dark layer — never rendered
- *   into the light layer (only listed as deferred in TOKENS.md).
+ * - `dark-*` color entries are the palette SOURCE for the dark layer's semantic
+ *   overrides — never emitted as `--tk-color-dark-*` custom properties, never
+ *   rendered into the light layer. Every `dark-*` key must be consumed by
+ *   DARK_OVERRIDES or DARK_DEFERRED or generation aborts (no silent drops).
  * - Never hand-edit the artifacts; change DESIGN.md and regenerate.
  */
 import { readFileSync, realpathSync, writeFileSync } from 'node:fs';
@@ -121,11 +125,25 @@ const assertValue = (value, at) => {
   );
 };
 
-/** Colors: scales + light semantic aliases + card tints; `dark-*` keys defer to Story 1.3. */
+/**
+ * Scaffold semantic aliases — `link`/`error` exist as semantic names in BOTH
+ * themes (Story 1.3): components consume semantics, not scales (AD-2/AD-3
+ * discipline), and the dark layer could not override a name the light layer
+ * never declares. `error-on-field` mirrors the link-on-tint precedent for the
+ * error scale: red-100 fails AA on field/muted surfaces, red-200 carries them.
+ * Values alias the extracted functional scales; every alias carries a
+ * TOKEN_NOTES annotation and is equality-checked in assertAnnotationConsistency.
+ */
+const LIGHT_SEMANTIC_ALIASES = [
+  { name: '--tk-color-link', scale: 'blue-100' },
+  { name: '--tk-color-error', scale: 'red-100' },
+  { name: '--tk-color-error-on-field', scale: 'red-200' },
+];
+
+/** Colors: scales + light semantic aliases + card tints; `dark-*` keys feed the dark layer. */
 function colorsModel(colors) {
   assertNonEmptyMapping(colors, 'colors');
   const entries = [];
-  const deferred = [];
   for (const [key, value] of Object.entries(colors)) {
     assertKey(key, `colors.${key}`);
     assert(
@@ -133,13 +151,203 @@ function colorsModel(colors) {
       `colors.${key}: expected a hex color string, got ${JSON.stringify(value)}`,
     );
     assertValue(value, `colors.${key}`);
-    if (key.startsWith('dark-')) {
-      deferred.push(`--tk-color-${key}`);
-    } else {
+    if (!key.startsWith('dark-')) {
       entries.push({ name: `--tk-color-${key}`, value });
     }
   }
-  return { entries, deferred, byKey: colors };
+  for (const alias of LIGHT_SEMANTIC_ALIASES) {
+    assert(
+      alias.scale in colors,
+      `LIGHT_SEMANTIC_ALIASES: '${alias.name}' aliases scale '${alias.scale}' which does not exist in colors — update the alias after a DESIGN.md rename`,
+    );
+    entries.push({ name: alias.name, value: colors[alias.scale] });
+  }
+  return { entries, byKey: colors };
+}
+
+// ---------------------------------------------------------------------------
+// Dark layer model (Story 1.3) — `dark-*` palette keys → semantic overrides
+// ---------------------------------------------------------------------------
+
+/**
+ * DARK_OVERRIDES — the dark layer re-declares SEMANTIC names only, sourced from
+ * the DESIGN.md `dark-*` palette (spec 1.3 mapping, frozen after approval):
+ * tonal surfaces replacing shadows, white-alpha text trio, dark link/error/
+ * focus, derived dark tints. The `dark-*` keys are the palette SOURCE — never
+ * emitted as `--tk-color-dark-*`. `border-strong` is the one derived value:
+ * DESIGN.md defines no dark border-strong, so `#FFFFFF3D` lifts dark-border
+ * (24-hex ≈ 14% white) +12% toward opaque — anchored by an assert below.
+ */
+const DARK_OVERRIDES = [
+  { name: '--tk-color-surface-base', source: 'dark-base' },
+  { name: '--tk-color-surface-muted', source: 'dark-surface-1' },
+  { name: '--tk-color-surface-field', source: 'dark-field' },
+  { name: '--tk-color-border-default', source: 'dark-border' },
+  { name: '--tk-color-border-strong', source: 'dark-border', derived: '#FFFFFF3D' },
+  { name: '--tk-color-text-primary', source: 'dark-text-primary' },
+  { name: '--tk-color-text-secondary', source: 'dark-text-secondary' },
+  { name: '--tk-color-text-muted', source: 'dark-text-muted' },
+  { name: '--tk-color-focus-ring', source: 'dark-focus-ring' },
+  { name: '--tk-color-link', source: 'dark-link' },
+  { name: '--tk-color-error', source: 'dark-error' },
+  { name: '--tk-color-link-on-tint', source: 'dark-link' },
+  { name: '--tk-color-error-on-field', source: 'dark-error' },
+  { name: '--tk-color-tint-gray', source: 'dark-tint-gray' },
+  { name: '--tk-color-tint-bluegray', source: 'dark-tint-bluegray' },
+  { name: '--tk-color-tint-mint', source: 'dark-tint-mint' },
+  { name: '--tk-color-tint-beige', source: 'dark-tint-beige' },
+];
+
+/**
+ * dark-* palette keys deliberately NOT emitted by this layer — every key must
+ * still be accounted for here or generation aborts (no silent drops). The tonal
+ * steps get semantic homes when their consuming stories land; dark-tint-charcoal
+ * is the documented charcoal invariant (asserted equal to the light value).
+ */
+const DARK_DEFERRED = new Map([
+  [
+    'dark-surface-2',
+    'tonal elevation step 2 — no semantic consumer yet; emitted when overlay/component stories define raised dark surface slots (Epic 2 overlays / Story 5.4 refinement), never as --tk-color-dark-*',
+  ],
+  [
+    'dark-surface-3',
+    'tonal elevation step 3 — DESIGN.md reserves it for Modal-in-dark ("dark theme tonal step 3"); emitted when Modal lands, never as --tk-color-dark-*',
+  ],
+  [
+    'dark-elevated',
+    'highest tonal step — reserved for elevated dark chrome; emitted when its consuming component lands, never as --tk-color-dark-*',
+  ],
+  [
+    'dark-tint-charcoal',
+    'theme-invariant — charcoal equals the light value (equality asserted at generation); no dark override is emitted',
+  ],
+]);
+
+/** Semantic names deliberately NOT re-declared in dark — they keep their light values. */
+const DARK_INVARIANTS = [
+  { name: '--tk-color-text-on-primary', why: 'yellow keeps ink text in dark (DESIGN.md Colors)' },
+  { name: '--tk-color-tint-charcoal', why: 'charcoal tint is theme-invariant (DESIGN.md Colors)' },
+];
+
+/**
+ * Dark-layer design-intent annotations — rendered as comments in the dark block
+ * and the Notes column of the TOKENS.md dark table. Facts stated here are
+ * anchored by asserts in darkLayerModel so annotations cannot drift.
+ */
+const DARK_TOKEN_NOTES = new Map([
+  [
+    '--tk-color-border-strong',
+    'Derived — DESIGN.md defines no dark border-strong; `#FFFFFF3D` = dark-border `#FFFFFF24` (24-hex ≈ 14% white) lifted +12% toward opaque. Story 1.3 scaffolding decision, not an extraction.',
+  ],
+  [
+    '--tk-color-link-on-tint',
+    'Alias — dark reuses `dark-link` (the light-only on-tint step exists because blue-100 fails on light fields).',
+  ],
+  [
+    '--tk-color-error-on-field',
+    'Alias — dark reuses `dark-error` (the light-only on-field step exists because red-100 fails on light field/muted surfaces).',
+  ],
+  [
+    '--tk-color-tint-gray',
+    '[ASSUMPTION] first-pass dark tint — darken toward L≈16–20% keeping hue; refinement owned by Story 5.4. DESIGN.md Colors.',
+  ],
+  [
+    '--tk-color-tint-bluegray',
+    '[ASSUMPTION] first-pass dark tint — darken toward L≈16–20% keeping hue; refinement owned by Story 5.4. DESIGN.md Colors.',
+  ],
+  [
+    '--tk-color-tint-mint',
+    '[ASSUMPTION] first-pass dark tint — darken toward L≈16–20% keeping hue; refinement owned by Story 5.4. DESIGN.md Colors.',
+  ],
+  [
+    '--tk-color-tint-beige',
+    '[ASSUMPTION] first-pass dark tint — darken toward L≈16–20% keeping hue; refinement owned by Story 5.4. DESIGN.md Colors.',
+  ],
+]);
+
+/**
+ * Validate the dark mapping against the parsed colors and the light-layer
+ * names, then materialize the override list. Loud failures (spec 1.3 I/O
+ * matrix): an unconsumed `dark-*` key aborts naming the key; a mapped semantic
+ * name missing from the light layer aborts (the dark layer re-declares names,
+ * it never introduces them).
+ */
+function darkLayerModel(colors, lightNames) {
+  const light = new Set(lightNames);
+  const sources = new Set();
+  const targeted = new Set();
+  const overrides = DARK_OVERRIDES.map((entry) => {
+    assert(
+      !targeted.has(entry.name),
+      `DARK_OVERRIDES: '${entry.name}' is targeted twice — one override per semantic name`,
+    );
+    targeted.add(entry.name);
+    assert(
+      colors[entry.source] !== undefined,
+      `DARK_OVERRIDES: '${entry.name}' sources '${entry.source}' which does not exist in colors — update the mapping after a DESIGN.md rename`,
+    );
+    sources.add(entry.source);
+    assert(
+      light.has(entry.name),
+      `DARK_OVERRIDES targets '${entry.name}' which the light layer does not declare — the dark layer re-declares semantic names, it never introduces them`,
+    );
+    if (entry.derived !== undefined) {
+      assert(
+        HEX_RE.test(entry.derived),
+        `DARK_OVERRIDES: derived value ${JSON.stringify(entry.derived)} for '${entry.name}' is not a hex color — derived overrides go through the same grammar as palette values`,
+      );
+    }
+    return { name: entry.name, value: entry.derived ?? colors[entry.source], source: entry.source, derived: entry.derived };
+  });
+  // Derivation anchor: border-strong #FFFFFF3D is derived FROM dark-border — if
+  // the input ever changes, generation aborts so the derivation is revisited.
+  assert(
+    colors['dark-border'] === '#FFFFFF24',
+    `DARK_OVERRIDES border-strong derivation is anchored on dark-border '#FFFFFF24' but found ${JSON.stringify(colors['dark-border'])} — re-derive '#FFFFFF3D' (or its successor) and update the annotation`,
+  );
+  const deferred = [];
+  for (const key of Object.keys(colors)) {
+    if (!key.startsWith('dark-')) continue;
+    if (sources.has(key) || DARK_DEFERRED.has(key)) continue;
+    fail(
+      `colors.${key}: dark palette key is not consumed — add it to DARK_OVERRIDES or DARK_DEFERRED deliberately (no silent drops)`,
+    );
+  }
+  for (const key of DARK_DEFERRED.keys()) {
+    assert(
+      colors[key] !== undefined,
+      `DARK_DEFERRED: '${key}' does not exist in colors — stale deferral entry after a DESIGN.md rename`,
+    );
+    assert(
+      !sources.has(key),
+      `DARK_DEFERRED lists '${key}' which DARK_OVERRIDES also consumes — a dark palette key gets exactly one disposition (override OR deferral), not both`,
+    );
+    deferred.push(key);
+  }
+  for (const invariant of DARK_INVARIANTS) {
+    assert(
+      light.has(invariant.name),
+      `DARK_INVARIANTS references '${invariant.name}' which the light layer does not declare — update the invariant list`,
+    );
+    assert(
+      !targeted.has(invariant.name),
+      `DARK_INVARIANTS lists '${invariant.name}' which DARK_OVERRIDES also targets — an invariant cannot be overridden`,
+    );
+  }
+  // Charcoal invariant cross-check (DESIGN.md Colors): dark-tint-charcoal
+  // documents that charcoal equals the light value — if that ever changes, the
+  // no-override disposition above is stale and generation must abort.
+  assert(
+    colors['dark-tint-charcoal'] === colors['tint-charcoal'],
+    `dark-tint-charcoal (${colors['dark-tint-charcoal']}) no longer equals tint-charcoal (${colors['tint-charcoal']}) — the DESIGN.md charcoal invariant changed; revisit DARK_DEFERRED/DARK_INVARIANTS`,
+  );
+  for (const name of DARK_TOKEN_NOTES.keys()) {
+    assert(
+      targeted.has(name),
+      `DARK_TOKEN_NOTES references '${name}' which the dark layer does not override — update the annotations`,
+    );
+  }
+  return { overrides, deferred, invariants: DARK_INVARIANTS };
 }
 
 /** Typography: per-slot size/weight (+leading/tracking when declared) + family slots. */
@@ -304,6 +512,18 @@ const TOKEN_NOTES = new Map([
     'AA addition — `blue-200` for links on tinted/field surfaces (blue-100 = 4.07:1 on field, fails). DESIGN.md Colors.',
   ],
   [
+    '--tk-color-link',
+    'Semantic alias — `blue-100`, added in Story 1.3: components consume semantics, not scales (AD-2/AD-3), and the dark layer needs a semantic name to override (`dark-link`). DESIGN.md Colors (TextLink).',
+  ],
+  [
+    '--tk-color-error',
+    'Semantic alias — `red-100`, added in Story 1.3 alongside `link` so both themes expose error semantics (the dark layer overrides it with `dark-error`). DESIGN.md Colors.',
+  ],
+  [
+    '--tk-color-error-on-field',
+    'AA addition — `red-200` for errors on field/muted surfaces (red-100 = 4.22:1 on surface-field and 4.40:1 on surface-muted — both fail 4.5:1; red-200 passes). Mirrors the link-on-tint precedent. DESIGN.md Colors.',
+  ],
+  [
     '--tk-color-text-muted',
     'Restricted: placeholder/disabled/non-essential text only — `#959BA4` fails AA for body text. DESIGN.md Colors.',
   ],
@@ -341,6 +561,13 @@ function assertAnnotationConsistency(model, allNames) {
   expectAlias('text-secondary', 'gray-600');
   expectAlias('focus-ring', 'blue-100');
   expectAlias('link-on-tint', 'blue-200');
+  for (const alias of LIGHT_SEMANTIC_ALIASES) {
+    const rendered = model.colors.entries.find((entry) => entry.name === alias.name);
+    assert(
+      rendered !== undefined && rendered.value === colors[alias.scale],
+      `TOKEN_NOTES drift: semantic alias '${alias.name}' no longer equals scale '${alias.scale}' (${colors[alias.scale]}) — update the annotation`,
+    );
+  }
   for (const name of TOKEN_NOTES.keys()) {
     assert(
       allNames.includes(name),
@@ -362,10 +589,25 @@ function cssRule(comment, declarations) {
   return lines.join('\n');
 }
 
-function declarationLines(entries) {
+/**
+ * Dark-layer rule — same shape as cssRule but the selectors only match under
+ * `data-theme="dark"`: `:root[data-theme="dark"]` flips the document (attribute
+ * on <html>), `:host([data-theme="dark"])` lets a shadow host carry the theme
+ * context; custom properties then inherit into every shadow tree.
+ */
+function darkRule(comment, declarations) {
+  const lines = [];
+  if (comment) lines.push(`/* ${comment} */`);
+  lines.push(':host([data-theme="dark"]),', ':root[data-theme="dark"] {');
+  lines.push(...declarations);
+  lines.push('}');
+  return lines.join('\n');
+}
+
+function declarationLines(entries, notes = TOKEN_NOTES) {
   const lines = [];
   for (const { name, value } of entries) {
-    const note = TOKEN_NOTES.get(name);
+    const note = notes.get(name);
     if (note) lines.push(`  /* ${note} */`);
     lines.push(`  ${name}: ${value};`);
   }
@@ -380,12 +622,13 @@ const FONT_SLOT_COMMENT = [
   '     whole value: re-include the fallback stack. */',
 ].join('\n');
 
-function renderCss(model) {
+function renderCss(model, dark) {
   const parts = [];
   parts.push(
     [
       '/**',
-      ' * @tk-kit/tokens — light token layer (generated).',
+      ' * @tk-kit/tokens — token layers (generated): light on `:host, :root`,',
+      ' * dark semantic overrides on `[data-theme="dark"]` (Story 1.3).',
       ' *',
       ' * DO NOT EDIT BY HAND — regenerate with `pnpm gen:tokens`.',
       ' * Source of truth: _bmad-output/planning-artifacts/ux-designs/ux-tinkoff-ui-kit-2026-09-21/DESIGN.md',
@@ -399,7 +642,7 @@ function renderCss(model) {
   );
   parts.push(
     cssRule(
-      'Colors — DESIGN.md `colors` (light entries; the `dark-*` entries are reserved for the Story 1.3 dark layer).',
+      'Colors — DESIGN.md `colors` light entries (scales, AA-adjusted semantics, tints) plus the scaffold `link`/`error` semantic aliases; the `dark-*` entries feed the dark layer below.',
       declarationLines(model.colors.entries),
     ),
   );
@@ -447,14 +690,30 @@ function renderCss(model) {
     ),
   );
   parts.push(
+    darkRule(
+      'Dark theme (Story 1.3) — semantic color overrides. Sourced from the DESIGN.md `dark-*` palette per the frozen 1.3 mapping; `dark-*` keys are the palette SOURCE, never emitted as `--tk-color-dark-*`. Theme switch adds no transition (0ms; an optional 150ms cross-fade is consumer-side).',
+      declarationLines(
+        dark.overrides.map(({ name, value }) => ({ name, value })),
+        DARK_TOKEN_NOTES,
+      ),
+    ),
+  );
+  parts.push(
     [
       '/*',
-      ' * Dark theme layering hook — Story 1.3 emits the dark layer on',
-      ' * `[data-theme="dark"]` from the `dark-*` DESIGN.md entries; this light',
-      ' * layer is the base it overrides. Theme switching is an attribute change on',
-      ' * <html> — zero markup/class/inline-style changes (AD-3).',
+      ' * Theme invariants — intentionally absent from the dark rule above:',
+      ' * --tk-color-text-on-primary and --tk-color-tint-charcoal keep their light',
+      ' * values (yellow keeps ink text in dark; charcoal stays — DESIGN.md Colors,',
+      ' * equality asserted at generation). Typography / radius / spacing / motion /',
+      ' * z are theme-invariant too — single source in the :host, :root rules.',
       ' */',
     ].join('\n'),
+  );
+  parts.push(
+    darkRule(
+      'Dark theme — tonal elevation (DESIGN.md Elevation & Depth): shadows collapse to `none`; hierarchy comes from tonal surface steps. Per-component exceptions use the `--tk-<component>-<slot>` grammar, never this layer.',
+      model.shadows.map(({ name }) => `  ${name}: none;`),
+    ),
   );
   return `${parts.join('\n\n')}\n`;
 }
@@ -472,9 +731,14 @@ function tsMap(constName, doc, entries) {
   ].join('\n');
 }
 
-function renderTs(model) {
+function renderTs(model, dark) {
   const maps = [
     tsMap('colorTokens', 'Color tokens — scales, light semantic aliases, card tints (values: DESIGN.md `colors`).', model.colors.entries),
+    tsMap(
+      'darkColorTokens',
+      'Dark-layer color tokens — the semantic overrides re-declared on `[data-theme="dark"]` (sources: DESIGN.md `dark-*` palette; `border-strong` derived). Not spread into `tokens`: the light layer stays the single name registry.',
+      dark.overrides,
+    ),
     tsMap(
       'typographyTokens',
       'Typography tokens — per-slot size/weight/leading/tracking plus the family slots (values: DESIGN.md `typography`).',
@@ -525,8 +789,8 @@ function renderTs(model) {
 
 const DESIGN_MD_PATH = '_bmad-output/planning-artifacts/ux-designs/ux-tinkoff-ui-kit-2026-09-21/DESIGN.md';
 
-function mdTable(rows) {
-  const table = [['Token', 'Value', 'Notes'], ['---', '---', '---'], ...rows];
+function mdTable(rows, header = ['Token', 'Value', 'Notes']) {
+  const table = [header, header.map(() => '---'), ...rows];
   return table.map((row) => `| ${row.join(' | ')} |`).join('\n');
 }
 
@@ -538,7 +802,7 @@ function noteOf(entry) {
   return [TOKEN_NOTES.get(entry.name), entry.note].filter(Boolean).join(' ');
 }
 
-function renderMd(model) {
+function renderMd(model, dark) {
   const { colors, typography, radius, space, shadows, motion, z } = model;
   const counts = [
     ['colors', colors.entries.length],
@@ -557,12 +821,12 @@ function renderMd(model) {
     `- Source of truth: \`${DESIGN_MD_PATH}\` frontmatter — blocks \`colors\`, \`typography\`, \`rounded\`, \`spacing\`, \`shadows\`, \`motion\`.`,
     '- The `components:` frontmatter block is consumer spec prose — never rendered.',
     '- The z-scale is scaffold mechanics, not an extraction (own section below).',
-    '- Dark values (the `dark-*` color entries) are **not** part of the light layer — Story 1.3 emits the dark layer on `[data-theme="dark"]` (see "Deferred to the dark layer").',
-    '- `[ASSUMPTION]` flags ship with their values (DESIGN.md body marks them); they are resolved by Stories 3.6/5.6, never silently dropped.',
+    '- The `dark-*` color entries are the palette SOURCE for the dark layer (see "Dark layer") — never emitted as `--tk-color-dark-*` custom properties.',
+    '- `[ASSUMPTION]` flags ship with their values (DESIGN.md body marks them); they are resolved by Stories 3.6/5.4/5.6, never silently dropped.',
     '',
   );
   lines.push(
-    `Light layer: **${total} tokens** on \`:host, :root\` (${counts.map(([block, count]) => `${block} ${count}`).join(', ')}).`,
+    `Light layer: **${total} tokens** on \`:host, :root\` (${counts.map(([block, count]) => `${block} ${count}`).join(', ')}) plus the dark layer: **${dark.overrides.length} semantic overrides + ${shadows.length} shadow-none re-declarations** on \`[data-theme="dark"]\`.`,
     '',
   );
 
@@ -632,12 +896,44 @@ function renderMd(model) {
   );
   lines.push(mdTable(z.map(({ name, value, layer }) => [mdCode(name), mdCode(value), layer])), '');
 
-  lines.push('## Deferred to the dark layer (Story 1.3)', '');
+  lines.push('## Dark layer (Story 1.3)', '');
   lines.push(
-    'These DESIGN.md `colors` entries are dark-theme palette values; the light layer intentionally does not render them. **Override model:** the dark layer re-declares the SEMANTIC names (`--tk-color-surface-base`, `--tk-color-surface-muted`, `--tk-color-text-primary`, …) on `[data-theme="dark"]`; the `dark-*` keys below are the palette SOURCE for that mapping, never the consumed names — components always reference semantic tokens, never `--tk-color-dark-*`. The `dark-tint-*` values are first-pass `[ASSUMPTION]` in DESIGN.md — their flags land with that layer.',
+    'Setting `data-theme="dark"` on `<html>` re-resolves every SEMANTIC color token — zero markup/class/inline-style changes (AD-3). **Override model:** the dark layer re-declares semantic names only, sourced from the `dark-*` palette keys below; the `dark-*` keys are the palette SOURCE, never the consumed names — components always reference semantic tokens, never `--tk-color-dark-*` (enforced: generation aborts on any unconsumed `dark-*` key). Typography / radius / spacing / motion / z are theme-invariant — the `:host, :root` rules above stay the single source. Theme switch adds no transition (0ms default; an optional 150ms cross-fade is consumer-side, applied on the consumer surface — never in the token layer).',
     '',
   );
-  lines.push(colors.deferred.map((name) => `- \`${name}\``).join('\n'), '');
+  const lightValues = new Map(colors.entries.map(({ name, value }) => [name, value]));
+  lines.push(
+    mdTable(
+      dark.overrides.map(({ name, value, source, derived }) => [
+        mdCode(name),
+        mdCode(lightValues.get(name) ?? ''),
+        mdCode(value),
+        derived ? 'derived' : mdCode(`colors.${source}`),
+        DARK_TOKEN_NOTES.get(name) ?? '',
+      ]),
+      ['Token', 'Light', 'Dark', 'Source', 'Notes'],
+    ),
+    '',
+  );
+  lines.push('### Theme invariants', '');
+  lines.push(
+    'These semantics keep their light values in dark — no override is emitted:',
+    '',
+    ...dark.invariants.map(({ name, why }) => `- \`${name}\` — ${why}`),
+    '',
+  );
+  lines.push('### Tonal elevation', '');
+  lines.push(
+    'All six `--tk-shadow-*` tokens collapse to `none` in dark: hierarchy comes from tonal surface steps instead of shadows (DESIGN.md Elevation & Depth). Per-component exceptions use the `--tk-<component>-<slot>` grammar — never this layer. `--tk-color-surface-muted` carries tonal step 1 (`dark-surface-1`); steps 2/3/elevated are deferred below until their consuming components land.',
+    '',
+  );
+  lines.push('### Deferred dark palette keys', '');
+  lines.push(
+    'Accounted-for `dark-*` keys with no token-layer emission yet (adding a `dark-*` key without an entry here aborts generation — no silent drops):',
+    '',
+    ...dark.deferred.map((key) => `- \`colors.${key}\` — ${DARK_DEFERRED.get(key)}`),
+    '',
+  );
   return lines.join('\n');
 }
 
@@ -674,11 +970,14 @@ export function renderArtifacts(designText) {
     duplicates.length === 0,
     `duplicate token names after renames: ${[...new Set(duplicates)].join(', ')} — DESIGN.md keys collide under the emission grammar`,
   );
+  // Dark mapping validates before annotation consistency so its specific
+  // failure modes (unconsumed key, missing light target) name the culprit.
+  const dark = darkLayerModel(model.colors.byKey, allNames);
   assertAnnotationConsistency(model, allNames);
   return {
-    tokensCss: renderCss(model),
-    tokensTs: renderTs(model),
-    tokensMd: renderMd(model),
+    tokensCss: renderCss(model, dark),
+    tokensTs: renderTs(model, dark),
+    tokensMd: renderMd(model, dark),
   };
 }
 
@@ -695,6 +994,6 @@ if (isDirectRun) {
   writeFileSync(OUT_TS, artifacts.tokensTs);
   writeFileSync(OUT_MD, artifacts.tokensMd);
   console.log(
-    'gen:tokens: rendered light-layer artifacts -> src/tokens.css, src/tokens.ts, src/TOKENS.md',
+    'gen:tokens: rendered light + dark layer artifacts -> src/tokens.css, src/tokens.ts, src/TOKENS.md',
   );
 }
