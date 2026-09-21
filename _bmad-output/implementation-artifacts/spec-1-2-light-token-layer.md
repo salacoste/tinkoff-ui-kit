@@ -66,8 +66,8 @@ context:
 - [x] `packages/tokens/scripts/generate.mjs` -- parse the DESIGN.md YAML frontmatter (all token blocks — colors, shadows, motion, typography, rounded, spacing — live between the `---` fences; the `components:` block is NOT emitted, it is consumer spec prose); emit `src/tokens.css` (light layer), `src/tokens.ts` (typed token name/value maps), `src/TOKENS.md` (canonical listing: every token, value, source block, assumption flags, z-scale + motion-mapping rationale) -- the pipeline
 - [x] `packages/tokens/src/tokens.css` + `tokens.ts` + `TOKENS.md` -- generated, committed -- the artifacts
 - [x] `packages/tokens/package.json` -- add `gen:tokens` script; export `./TOKENS.md` — developer entry points
-- [ ] root `package.json` -- add `gen:tokens` forwarding script -- convenience
-- [ ] `tests/zero-hardcoded.test.ts` -- scan packages/{components,react,docs}/src/**/*.{ts,tsx,css} for hex/rgb(a)/hsl color literals and `z-index` declarations (with a negative self-check on synthesized strings; tokens package excluded) -- FR-1 guard
+- [x] root `package.json` -- add `gen:tokens` forwarding script -- convenience
+- [x] `tests/zero-hardcoded.test.ts` -- scan packages/{components,react,docs}/src/**/*.{ts,tsx,css} for hex/rgb(a)/hsl color literals and `z-index` declarations (with a negative self-check on synthesized strings; tokens package excluded) -- FR-1 guard
 - [x] `packages/tokens/src/index.ts` -- re-export token TS maps; keep the CSS import -- programmatic access
 
 **Acceptance Criteria:**
