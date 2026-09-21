@@ -107,6 +107,8 @@ the user-confirmed priority; external metrics like stars/downloads are explicitl
 - Native mobile patterns (iOS/Android) — web only
 - Data visualization: charts, diagrams, dashboards
 - Complex business widgets (e.g., full payment forms as packaged features)
+- Other T-Bank/Tinkoff domains beyond tinkoff.ru — the reference base expands to additional
+  domains the maintainer will designate after v1 completes
 - Stack decision — deliberately deferred to the architecture phase (bmad-architecture), not
   chosen in this brief
 
@@ -115,6 +117,7 @@ the user-confirmed priority; external metrics like stars/downloads are explicitl
 If v1 lands, tinkoff-ui-kit becomes the default starting point for Russian-speaking fintech web
 projects that want recognizable, trustworthy aesthetics without sacrificing accessibility — and a
 reference example of building a design system from a live product with an automated quality
-pipeline. From there it can grow into a fuller catalogue (fintech blocks, marketing sections)
-driven by real adoption, staying true to its source: an unofficial, open, improved edition of
-a design language people already trust.
+pipeline. From there the reference base grows beyond tinkoff.ru to the other T-Bank domains the
+maintainer designates (each added with the same capture-and-improve pipeline), the catalogue
+deepens (fintech blocks, marketing sections) driven by real adoption, and the kit stays true to
+its source: an unofficial, open, improved edition of a design language people already trust.
