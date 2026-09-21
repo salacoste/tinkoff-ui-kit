@@ -18,3 +18,6 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-1-3-dark-token-layer.md`
   summary: Decide + document token-loading model for shadow consumers (document-level sheet + inheritance vs shadow adoption) and the `:host` cascade trap
   evidence: tokens.css declares light values on `:host` — if a sheet is adopted INSIDE a shadow root while the document is themed dark, host-level light declarations beat inherited dark values (edge-case review 1.3); owned by Stories 1.5/1.7 where real consumers first appear
+- source_spec: `_bmad-output/implementation-artifacts/spec-1-5-storybook-skeleton.md`
+  summary: Add a monospace font slot (--tk-font-mono) to the token system when the first code-rendering surface needs it
+  evidence: docs code samples currently render in --tk-font-body because no mono slot exists (1.5 review); token addition is a DESIGN.md governance change — fold into a later story that owns a code surface (docs completion 5.5 or a code component)

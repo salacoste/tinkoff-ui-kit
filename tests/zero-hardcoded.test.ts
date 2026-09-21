@@ -5,12 +5,13 @@ import { describe, expect, it } from 'vitest';
 
 /**
  * FR-1 zero-hard-coded guard (spec 1.2): only @tk-kit/tokens emits raw values.
- * Sources under packages/{components,react,docs}/src must not contain color
- * literals (hex, rgb()/rgba(), hsl()/hsla()) or z-index declarations with
- * non-token values — everything flows through var(--tk-*) custom properties so
- * theming crosses shadow boundaries (AD-2) and the token pipeline stays the
- * single source of values (AD-3). The tokens package itself is excluded by
- * design: its generated artifacts are where raw values live.
+ * Sources under the per-package scan roots (packages/{components,react}/src,
+ * packages/docs/{src,.storybook}) must not contain color literals (hex,
+ * rgb()/rgba(), hsl()/hsla()) or z-index declarations with non-token values —
+ * everything flows through var(--tk-*) custom properties so theming crosses
+ * shadow boundaries (AD-2) and the token pipeline stays the single source of
+ * values (AD-3). The tokens package itself is excluded by design: its
+ * generated artifacts are where raw values live.
  *
  * Detector precision rules:
  * - Comment mentions are not values — comments are stripped first, preserving
@@ -22,18 +23,32 @@ import { describe, expect, it } from 'vitest';
  *   are token consumption, not literals, and pass.
  *
  * Walk tripwires keep the scan non-vacuous: a known package with zero scanned
- * files fails (docs is the documented placeholder exception until Story 1.5),
- * an unknown directory under packages/ fails, and a style-bearing file with an
- * unscanned extension (.scss/.less/.html/.vue/.svelte/.jsx/.mdx) inside a
- * scanned src/ fails — it would otherwise escape this guard entirely.
+ * non-declaration files fails, an unknown directory under packages/ fails, and
+ * a style-bearing file with an unscanned extension
+ * (.scss/.less/.html/.vue/.svelte/.jsx/.mdx) inside a scanned root fails — it
+ * would otherwise escape this guard entirely.
+ *
+ * Known blind spot (documented, deliberate): FR-1's letter covers color,
+ * radius, shadow, font, and z-index literals — NOT lengths. Hard-coded px
+ * paddings/sizes/widths are not flagged; authored surfaces should still prefer
+ * the --tk-space-* and --tk-text-* tokens where a value is semantically
+ * spacing or type scale. Extending the detector to lengths is a future
+ * hardening decision, not part of FR-1 as frozen.
  */
 
 const REPO_ROOT = fileURLToPath(new URL('..', import.meta.url));
 
-/** Package sources in scope. tokens is excluded — it IS the raw-value layer. */
-const SCANNED_PACKAGES = ['packages/components', 'packages/react', 'packages/docs'] as const;
-/** Placeholder packages allowed to have an empty src scan (docs gets a Storybook src/ in Story 1.5). */
-const EMPTY_SCAN_ALLOWLIST = new Set(['packages/docs']);
+/**
+ * Per-package scan roots (tokens is excluded — it IS the raw-value layer).
+ * Docs scans its Storybook config dir alongside src: the preview decorator CSS
+ * lives in .storybook/ and must not sit outside the enforcement net (review
+ * finding: a hex in disclaimerStyles shipped green).
+ */
+const SCAN_ROOTS: Readonly<Record<string, readonly string[]>> = {
+  'packages/components': ['src'],
+  'packages/react': ['src'],
+  'packages/docs': ['src', '.storybook'],
+};
 const SCANNED_EXTENSION = /\.(ts|tsx|css)$/;
 /** Style-bearing extensions the scanner does NOT read — finding one in a scanned src/ is a tripwire. */
 const UNSCANNED_STYLE_EXTENSION = /\.(scss|less|html|vue|svelte|jsx|mdx)$/;
@@ -98,7 +113,7 @@ function* walkSources(dir: string, extension: RegExp = SCANNED_EXTENSION): Gener
   try {
     entries = readdirSync(dir);
   } catch {
-    return; // package has no src/ yet (docs until Story 1.5) — nothing to scan
+    return; // package has no src/ yet — nothing to scan
   }
   for (const entry of entries.sort()) {
     const full = join(dir, entry);
@@ -119,22 +134,24 @@ function* walkSources(dir: string, extension: RegExp = SCANNED_EXTENSION): Gener
 describe('FR-1 zero-hard-coded values (spec 1.2)', () => {
   it('components/react/docs sources contain no color or z-index literals', () => {
     const violations: string[] = [];
-    for (const packageDir of SCANNED_PACKAGES) {
-      for (const filePath of walkSources(join(REPO_ROOT, packageDir, 'src'))) {
-        violations.push(...violationsIn(readFileSync(filePath, 'utf8'), filePath));
+    for (const [packageDir, roots] of Object.entries(SCAN_ROOTS)) {
+      for (const root of roots) {
+        for (const filePath of walkSources(join(REPO_ROOT, packageDir, root))) {
+          violations.push(...violationsIn(readFileSync(filePath, 'utf8'), filePath));
+        }
       }
     }
     expect(violations).toEqual([]);
   });
 
-  it('scans a non-empty file set per package (vacuous-walk guard)', () => {
-    for (const packageDir of SCANNED_PACKAGES) {
-      const files = [...walkSources(join(REPO_ROOT, packageDir, 'src'))];
-      if (EMPTY_SCAN_ALLOWLIST.has(packageDir)) {
-        expect(files.length, `${packageDir}: allowed-empty placeholder, but grew a src/ — drop the allowlist entry`).toBeLessThan(2);
-        continue;
-      }
-      expect(files.length, `vacuous scan: no files found under ${packageDir}/src — the guard covers nothing`).toBeGreaterThan(0);
+  it('scans a non-empty non-declaration file set per package (vacuous-walk guard)', () => {
+    for (const [packageDir, roots] of Object.entries(SCAN_ROOTS)) {
+      const files = roots.flatMap((root) => [...walkSources(join(REPO_ROOT, packageDir, root))]);
+      const realSources = files.filter((filePath) => !filePath.endsWith('.d.ts'));
+      expect(
+        realSources.length,
+        `vacuous scan: no non-declaration files found under ${packageDir}/${roots.join('|')} — a lone .d.ts satisfies nothing`,
+      ).toBeGreaterThan(0);
     }
   });
 
@@ -151,14 +168,16 @@ describe('FR-1 zero-hard-coded values (spec 1.2)', () => {
         unknown.push(`packages/${entry}`);
       }
     }
-    expect(unknown, 'unknown package directories must join SCANNED_PACKAGES or be removed (AD-4)').toEqual([]);
+    expect(unknown, 'unknown package directories must join SCAN_ROOTS or be removed (AD-4)').toEqual([]);
   });
 
   it('scanned sources contain no style-bearing files with unscanned extensions', () => {
     const offenders: string[] = [];
-    for (const packageDir of SCANNED_PACKAGES) {
-      for (const filePath of walkSources(join(REPO_ROOT, packageDir, 'src'), UNSCANNED_STYLE_EXTENSION)) {
-        offenders.push(`${filePath}: style-bearing file outside the scanned extensions — extend the guard or remove the file`);
+    for (const [packageDir, roots] of Object.entries(SCAN_ROOTS)) {
+      for (const root of roots) {
+        for (const filePath of walkSources(join(REPO_ROOT, packageDir, root), UNSCANNED_STYLE_EXTENSION)) {
+          offenders.push(`${filePath}: style-bearing file outside the scanned extensions — extend the guard or remove the file`);
+        }
       }
     }
     expect(offenders).toEqual([]);

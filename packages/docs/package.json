@@ -2,12 +2,27 @@
   "name": "@tk-kit/docs",
   "version": "0.0.0",
   "private": true,
-  "description": "Docs surface for tinkoff-ui-kit — Storybook skeleton with theming and the unofficial disclaimer. Placeholder only; Storybook lands in Story 1.5.",
+  "description": "Docs surface for tinkoff-ui-kit — Storybook 10 skeleton with a light/dark theme toolbar toggle, token-driven stories and the unofficial-study disclaimer (Story 1.5).",
   "type": "module",
   "scripts": {
-    "test": "node -e \"console.log('@tk-kit/docs placeholder suite — Storybook lands in Story 1.5')\""
+    "predev": "pnpm --filter @tk-kit/tokens build",
+    "dev": "storybook dev -p 6006",
+    "prebuild": "pnpm --filter @tk-kit/tokens build",
+    "build": "storybook build --output-dir dist && tsc -p tsconfig.json --noEmit",
+    "test": "node -e \"console.log('@tk-kit/docs: Storybook skeleton green placeholder — component stories land from Story 1.7')\""
   },
   "engines": {
     "node": ">=20"
+  },
+  "dependencies": {
+    "@tk-kit/components": "workspace:*",
+    "@tk-kit/react": "workspace:*",
+    "@tk-kit/tokens": "workspace:*"
+  },
+  "devDependencies": {
+    "@storybook/addon-a11y": "10.6.0",
+    "@storybook/web-components-vite": "10.6.0",
+    "lit": "3.3.3",
+    "storybook": "10.6.0"
   }
 }

@@ -39,6 +39,8 @@ coverage/
 .playwright-cli/*
 !.playwright-cli/tbank-home-full.png
 !.playwright-cli/page-2026-09-21T19-07-00-623Z.yml
+# per-story verification captures — the directory is whitelisted once, files land in it freely
+!.playwright-cli/verify/
 
 # OMC / Claude Code runtime state (skills, agents, settings.json stay tracked)
 .omc/

@@ -1,6 +1,7 @@
 packages:
   - 'packages/*'
 allowBuilds:
+  esbuild: true
   rs-module-lexer: true
 minimumReleaseAgeExclude:
   - '@typescript-eslint/eslint-plugin@8.70.1'

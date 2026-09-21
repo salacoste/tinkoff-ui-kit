@@ -29,8 +29,22 @@ const AD4_MATRIX: Record<string, readonly string[]> = {
   'packages/tokens': [],
   'packages/components': ['@tk-kit/tokens'],
   'packages/react': ['@tk-kit/components'],
-  // docs may import every kit package; it has no src/ yet (placeholder until Story 1.5).
+  // docs may import every kit package (AD-4).
   'packages/docs': ['@tk-kit/react', '@tk-kit/components', '@tk-kit/tokens'],
+};
+
+/**
+ * Per-package scan roots — this vitest suite is the ONE net covering docs
+ * .storybook (chosen over an eslint glob so the boundary rules live in a
+ * single place; eslint keeps no docs-specific restriction). The Storybook
+ * config dir imports workspace packages (preview.ts pulls the tokens sheet)
+ * and must not sit outside the matrix walk.
+ */
+const SCAN_ROOTS: Record<string, readonly string[]> = {
+  'packages/tokens': ['src'],
+  'packages/components': ['src'],
+  'packages/react': ['src'],
+  'packages/docs': ['src', '.storybook'],
 };
 
 const SPECIFIER_PATTERNS: readonly RegExp[] = [
@@ -135,7 +149,7 @@ function* walkSources(dir: string): Generator<string> {
   try {
     entries = readdirSync(dir);
   } catch {
-    return; // package has no src/ yet (docs until Story 1.5) — nothing to scan
+    return; // package has no src/ yet — nothing to scan
   }
   for (const entry of entries.sort()) {
     const full = join(dir, entry);
@@ -168,8 +182,10 @@ describe('AD-4 import boundaries (spec 1.1, matrix row 2)', () => {
   it('committed sources contain no forbidden cross-package imports', () => {
     const violations: string[] = [];
     for (const [packageDir, allowed] of Object.entries(AD4_MATRIX)) {
-      for (const filePath of walkSources(join(REPO_ROOT, packageDir, 'src'))) {
-        violations.push(...violationsIn(readFileSync(filePath, 'utf8'), filePath, packageDir, allowed));
+      for (const root of SCAN_ROOTS[packageDir]!) {
+        for (const filePath of walkSources(join(REPO_ROOT, packageDir, root))) {
+          violations.push(...violationsIn(readFileSync(filePath, 'utf8'), filePath, packageDir, allowed));
+        }
       }
     }
     if (violations.length > 0) {
