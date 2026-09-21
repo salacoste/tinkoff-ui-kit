@@ -2,7 +2,7 @@
   "name": "@tk-kit/tokens",
   "version": "0.0.0",
   "private": true,
-  "description": "Design tokens for tinkoff-ui-kit — --tk-* custom property layers (light on :root, dark on [data-theme=\"dark\"]). Placeholder scaffold; the token system lands in Story 1.2.",
+  "description": "Design tokens for tinkoff-ui-kit — the extracted --tk-* custom property system. Light layer on :host/:root (dark layer on [data-theme=\"dark\"] lands in Story 1.3). Generated from DESIGN.md: pnpm gen:tokens.",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -12,16 +12,22 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./tokens.css": "./dist/index.css"
+    "./tokens.css": "./dist/index.css",
+    "./TOKENS.md": "./src/TOKENS.md"
   },
   "files": [
-    "dist"
+    "dist",
+    "src/TOKENS.md"
   ],
   "scripts": {
     "build": "vite build && tsc -p tsconfig.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "gen:tokens": "node scripts/generate.mjs"
   },
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "yaml": "^2.9.1"
   }
 }

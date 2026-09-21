@@ -9,7 +9,9 @@
     "build": "pnpm -r build",
     "test": "pnpm -r test && vitest run",
     "lint": "eslint .",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "gen:tokens": "pnpm --filter @tk-kit/tokens gen:tokens",
+    "check:tokens-drift": "pnpm gen:tokens && git diff --exit-code -- packages/tokens && test -z \"$(git status --porcelain -- packages/tokens/src packages/tokens/scripts)\""
   },
   "engines": {
     "node": ">=20"
