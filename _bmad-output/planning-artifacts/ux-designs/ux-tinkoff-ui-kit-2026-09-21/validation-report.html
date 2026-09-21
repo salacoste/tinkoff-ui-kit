@@ -1,0 +1,64 @@
+<!doctype html><html><head><meta charset='utf-8'><title>UX Validation Report — tinkoff-ui-kit</title><style>body{font:15px/1.6 -apple-system,sans-serif;max-width:880px;margin:40px auto;padding:0 20px;color:#333}h1,h2{color:#000}h2{border-bottom:2px solid #FFDD2D;padding-bottom:6px;margin-top:32px}li{margin:4px 0}code{background:#F5F5F6;padding:1px 5px;border-radius:4px;font-size:13px}.fixed{color:#168821;font-weight:600}em{color:#79818C}</style></head><body>
+<h1>Validation Report — tinkoff-ui-kit UX spines</h1>
+<ul>
+<li><strong>DESIGN.md:</strong> <code>_bmad-output/planning-artifacts/ux-designs/ux-tinkoff-ui-kit-2026-09-21/DESIGN.md</code></li>
+<li><strong>EXPERIENCE.md:</strong> <code>_bmad-output/planning-artifacts/ux-designs/ux-tinkoff-ui-kit-2026-09-21/EXPERIENCE.md</code></li>
+<li><strong>Run at:</strong> 2026-09-21</li>
+<li><strong>Status:</strong> findings applied — report reflects the gate run; re-run overwrites</li>
+</ul>
+<h2>Overall verdict</h2>
+<p>Rubric walker: <strong>strong, near-finalize-ready contract</strong> — 19/19 components dual-covered, canonical</p>
+<p>shape both spines, accurate UJ/FR/OQ citation, all <code>{path.to.token}</code> refs resolve after fixes.</p>
+<p>The two blocking gaps (motion/shadow tokens unpromoted from <code>.working/</code>) were data promotion and</p>
+<p>are fixed in the spines.</p>
+<p>Accessibility reviewer: behavioral floor strong and APG-aligned, but the initial &quot;both themes</p>
+<p>verified AA&quot; claim was <strong>false</strong> — 2 critical / 3 high contrast failures, all token-level, all</p>
+<p>now fixed (semantic overrides + dark link/error/focus tokens + redundant yellow indicators).</p>
+<p>Computed ratios recorded in DESIGN.md Colors.</p>
+<p>PRD reconciliation: 5 gaps — FR-9/10 anchoring, FR-11 docs disclaimer, OQ-2 font</p>
+<p>recommendation, bilingual scope addition, dark-tint-charcoal — all folded in.</p>
+<h2>Category verdicts</h2>
+<ul>
+<li>Flow coverage — strong</li>
+<li>Token completeness — adequate → strong after fixes (motion/shadows promoted)</li>
+<li>Component coverage — strong (19/19)</li>
+<li>State coverage — adequate → strong after docs-site states added</li>
+<li>Visual reference coverage — thin → adequate after reference anchors linked</li>
+<li>Bloat &amp; overspecification — strong</li>
+<li>Inheritance discipline — adequate (minor name drift fixed: Badge/Chip)</li>
+<li>Shape fit — strong</li>
+<li>Accessibility — not-ready → fixed (see AA table in DESIGN.md)</li>
+</ul>
+<h2>Findings by severity</h2>
+<h3>Critical (2) — accessibility, FIXED</h3>
+<ul>
+<li>text-secondary #79818C failed 4.5:1 everywhere (3.94:1 white) → overridden to gray-600 #616871</li>
+<li>Dark theme had no AA link/error variants (blue-100 3.76:1 on dark-base) → dark-link #66A3FF, dark-error #FF7B74</li>
+</ul>
+<h3>High (5) — FIXED</h3>
+<ul>
+<li>Motion tokens referenced but undefined → <code>motion:</code> frontmatter block added</li>
+<li>Shadow tokens named, 1/6 valued → <code>shadows:</code> block added (all six)</li>
+<li>blue-100 links on tints 4.07–4.24:1 → link-on-tint blue-200</li>
+<li>Yellow active indicators 1.34:1 vs 3:1 (1.4.11) → indicators always redundant with text weight/contrast</li>
+<li>Ink focus rings invisible on ink surfaces → unified blue focus-ring token (light+dark)</li>
+</ul>
+<h3>Medium (4) — FIXED</h3>
+<ul>
+<li>Contrast targets not numeric → AA table with computed ratios in DESIGN.md Colors</li>
+<li>Docs-site surfaces lacked states → cold-load/empty-search row added</li>
+<li>Fidelity capture unlinked → Reference anchors block in DESIGN.md Components</li>
+<li>FR-9/10 quality regime unanchored → anchored in EXPERIENCE.md Foundation</li>
+</ul>
+<h3>Low (8) — FIXED (representative)</h3>
+<ul>
+<li>Flow 1 now names Input; fontFamily inheritance noted; textTransform moved out of token;</li>
+</ul>
+<p>  dark-tint-charcoal added; Badge→Badge/Chip aligned; Select aria-selected; Toast API deferred to FR-3</p>
+<h2>Reviewer files</h2>
+<ul>
+<li><code>review-rubric.md</code> — full rubric walk</li>
+<li><code>review-a11y.md</code> — accessibility specialist pass with computed ratios</li>
+<li><code>reconcile-prd.md</code> — PRD reconciliation</li>
+</ul>
+</body></html>
