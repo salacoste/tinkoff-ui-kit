@@ -7,8 +7,10 @@ capture `.playwright-cli/tbank-home-full.png` (1280×9221).
 ## Kit renders
 
 - `kit-render-variants.png` — story `components-button--variants-and-sizes` (light,
-  static docs build, 2026-09-22). DOM-measured: hero 56 / card 48 / compact element
-  box 44 with a 32px visual pill (6px structural host padding — 44px target floor).
+  static docs build, 2026-09-22). DOM-measured: hero 56 / card 48 / compact 44px
+  CLICKABLE box with a 32px visual pill (the native button fills the whole 44px box;
+  the pill is painted on its ::before, inset 6px block-axis — shadow hit-tests at
+  +3px and +41px land on the button itself, so the effective target is the full 44px).
 - `dark-inverse-hover.png` — story `components-button--theming`, dark theme, pointer
   resting on the base-panel Inverse button.
 

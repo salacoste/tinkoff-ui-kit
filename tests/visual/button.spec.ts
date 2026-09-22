@@ -47,18 +47,21 @@ test('loading freezes the rendered button width (real layout)', async ({ page })
   expect(widths.widthBefore).toBeGreaterThan(0);
 });
 
-test('compact: 44px element box with a 32px visual pill (target floor)', async ({ page }) => {
+test('compact: 44px CLICKABLE box (every pixel) with a 32px visual pill', async ({ page }) => {
   await page.goto(buildStoryUrl('components-button--variants-and-sizes', 'light'));
   await waitForStorySettled(page);
   const box = await page.evaluate(() => {
     const measure = (selector: string): number =>
       (document.querySelector(selector) as HTMLElement | null)?.offsetHeight ?? -1;
     const el = document.querySelector("tk-button[size='compact']") as HTMLElement | null;
-    const pill = el?.shadowRoot?.querySelector('.button') as HTMLElement | null;
-    if (!el || !pill) return null;
+    const button = el?.shadowRoot?.querySelector('.button') as HTMLElement | null;
+    if (!el || !button) return null;
+    const pseudo = getComputedStyle(button, '::before');
     return {
       elementHeight: el.offsetHeight,
-      pillHeight: pill.offsetHeight,
+      buttonHeight: button.offsetHeight,
+      pillInsetTop: pseudo.top,
+      pillInsetBottom: pseudo.bottom,
       heroHeight: measure("tk-button[size='hero']"),
       cardHeight: measure("tk-button[size='card']"),
     };
@@ -66,8 +69,12 @@ test('compact: 44px element box with a 32px visual pill (target floor)', async (
   expect(box).not.toBeNull();
   expect(box?.heroHeight).toBe(56);
   expect(box?.cardHeight).toBe(48);
-  // The 44px floor lives on the ELEMENT (6px structural block padding + pill),
-  // the faithful 32px pill stays the visual.
+  // The 44px floor is the CLICKABLE box: the native button fills the whole
+  // element box, so every pixel of the 44px target is interactive.
   expect(box?.elementHeight).toBe(44);
-  expect(box?.pillHeight).toBe(32);
+  expect(box?.buttonHeight).toBe(44);
+  // The faithful 32px pill is the VISUAL, painted on the button's ::before
+  // inset 6px block-axis inside the box (44 − 2×6 = 32).
+  expect(box?.pillInsetTop).toBe('6px');
+  expect(box?.pillInsetBottom).toBe('6px');
 });
