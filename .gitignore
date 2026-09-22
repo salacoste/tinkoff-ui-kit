@@ -54,3 +54,8 @@ playwright-report/
 
 # BMAD runtime render snapshots (regenerated per skill invocation)
 _bmad/render/
+
+# Local licensed fonts — never published (docs preview picks them up via import.meta.glob)
+packages/docs/src/local-fonts/*
+!packages/docs/src/local-fonts/README.md
+!packages/docs/src/local-fonts/local-fonts.example.css

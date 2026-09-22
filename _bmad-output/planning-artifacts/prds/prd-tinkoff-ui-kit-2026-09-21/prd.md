@@ -365,6 +365,7 @@ revisit after v1 adoption.
 
 ## 8. Open Questions
 
+0. **RESOLVED 2026-09-22 (maintainer decisions, addendum).** OQ-2 fonts: token stacks carry the reference's exact family names from live extraction (dsHeading≡TinkoffSans, haas/dsText≡Neue Haas Unica W1G, pragmatica in the body fallback) with Inter (latin+cyrillic) as the open default; the fonts are proprietary/commercial (T-Bank asset / Monotype / ParaType) and are NOT bundled — bundling even renamed was rejected as copyright infringement; consumers with licensed files self-host them (auto-pickup via the exact family names, or private aliases via the gitignored docs local-fonts mechanism). OQ-3 names: pillkit-{tokens,components,react,docs} (verified free on npm); tk- element prefix and --tk-* tokens stay permanently. OQ-4: docs language Russian (code/API English).
 1. **OQ-1 — Dark theme palette.** The Reference Site is light-only; the dark palette must be
    designed (UX phase) within brand constraints. Phase-blocker for FR-2 UX work.
 2. **OQ-2 — Brand font strategy.** The reference uses a proprietary brand typeface the kit cannot

@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import type { Decorator, Preview } from '@storybook/web-components-vite';
 import { html } from 'lit';
 
@@ -7,6 +8,10 @@ import { html } from 'lit';
 // leave Cyrillic glyphs on the system stack). The visual harness pins its own
 // locally-served Inter (tests/visual/inject.ts) and stays deterministic.
 import '@fontsource/inter/latin-400.css';
+
+// Local licensed fonts (gitignored, never published): picked up automatically
+// when packages/docs/src/local-fonts/local-fonts.css exists. See that folder's README.
+import.meta.glob('../src/local-fonts/local-fonts.css', { eager: true });
 import '@fontsource/inter/latin-500.css';
 import '@fontsource/inter/latin-700.css';
 import '@fontsource/inter/cyrillic-400.css';

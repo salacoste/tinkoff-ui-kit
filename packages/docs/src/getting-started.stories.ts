@@ -178,6 +178,17 @@ pnpm add pillkit-components pillkit-react pillkit-tokens --workspace</code></pre
         </li>
       </ol>
 
+      <p>
+        <strong>Точные шрифты локально.</strong> Если у вас есть лицензионные
+        woff2 — положите их в
+        <code>packages/docs/src/local-fonts/</code> (папка gitignored: в
+        публичный пакет ничего не попадает) по шаблону
+        <code>local-fonts.example.css</code> — доки будут рендериться
+        пиксельно близко к референсу на вашей машине. Шаблон поддерживает и
+        канонические family-имена (авто-подхват), и приватные псевдонимы.
+        Подробности — в README той папки.
+      </p>
+
       <h2>API компонентов</h2>
       <p>
         Каждый компонент следует контракту кита — пропсы, события,

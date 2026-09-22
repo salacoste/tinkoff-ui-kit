@@ -1,0 +1,56 @@
+/* Шаблон. Скопируй в local-fonts.css (gitignored) и положи лицензионные woff2 рядом.
+   Два режима — выбери один:
+
+   РЕЖИМ A (проще): канонические family-имена → токен-слоты подхватят автоматически,
+   ни одной правки токенов не нужно.
+
+   РЕЖИМ B (свои имена, напр. DaytonaSans/DaytonaPragma): объяви @font-face со своим
+   family-именем и переопредели слоты в конце файла (он грузится ПОСЛЕ tokens.css —
+   выигрывает каскад). Псевдонимы легальны: имя — interoperability; лицензия нужна
+   на сами файлы. */
+
+/* ---------- РЕЖИМ A: раскомментируй как есть ----------
+@font-face {
+  font-family: "Neue Haas Unica W1G";
+  src: url("./NeueHaasUnicaW1G-Regular.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Neue Haas Unica W1G";
+  src: url("./NeueHaasUnicaW1G-Medium.woff2") format("woff2");
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Neue Haas Unica W1G";
+  src: url("./NeueHaasUnicaW1G-Bold.woff2") format("woff2");
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+---------------------------------------------------------- */
+
+/* ---------- РЕЖИМ B: свои имена (Daytona) ----------
+@font-face {
+  font-family: "DaytonaSans";
+  src: url("./NeueHaasUnicaW1G-Regular.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "DaytonaSans";
+  src: url("./NeueHaasUnicaW1G-Medium.woff2") format("woff2");
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "DaytonaSans";
+  src: url("./NeueHaasUnicaW1G-Bold.woff2") format("woff2");
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "DaytonaPragma";
+  src: url("./Pragmatica-Regular.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+
+:root {
+  --tk-font-heading: DaytonaSans, Inter, -apple-system, system-ui, sans-serif;
+  --tk-font-body: DaytonaSans, DaytonaPragma, Inter, -apple-system, system-ui, sans-serif;
+}
+---------------------------------------------------------- */
