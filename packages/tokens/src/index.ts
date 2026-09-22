@@ -1,8 +1,8 @@
 /**
- * @tk-kit/tokens — design token package for tinkoff-ui-kit.
+ * pillkit-tokens — design token package for tinkoff-ui-kit.
  *
  * Programmatic access to the token system: typed name/value maps generated from
- * DESIGN.md (`./tokens.js`). Styles ship as the `@tk-kit/tokens/tokens.css`
+ * DESIGN.md (`./tokens.js`). Styles ship as the `pillkit-tokens/tokens.css`
  * export: the side-effect import below pulls the light `--tk-*` layer through
  * bundlers that consume this source, while the built library extracts the CSS
  * to dist/index.css and strips the import from dist JS — stylesheet consumers

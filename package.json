@@ -10,11 +10,11 @@
     "test": "pnpm -r test && vitest run",
     "lint": "eslint .",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test:visual": "pnpm --filter @tk-kit/docs build && node tests/visual/run.mjs",
-    "test:visual:update": "pnpm --filter @tk-kit/docs build && playwright test --update-snapshots",
-    "gen": "pnpm --filter @tk-kit/components gen:manifest && pnpm --filter @tk-kit/react gen:wrappers",
+    "test:visual": "pnpm --filter pillkit-docs build && node tests/visual/run.mjs",
+    "test:visual:update": "pnpm --filter pillkit-docs build && playwright test --update-snapshots",
+    "gen": "pnpm --filter pillkit-components gen:manifest && pnpm --filter pillkit-react gen:wrappers",
     "check:gen": "pnpm gen && git diff --exit-code -- packages/components/custom-elements.json packages/react/src/generated && test -z \"$(git status --porcelain -- packages/components/custom-elements.json packages/react/src/generated)\"",
-    "gen:tokens": "pnpm --filter @tk-kit/tokens gen:tokens",
+    "gen:tokens": "pnpm --filter pillkit-tokens gen:tokens",
     "check:tokens-drift": "pnpm gen:tokens && git diff --exit-code -- packages/tokens && test -z \"$(git status --porcelain -- packages/tokens/src packages/tokens/scripts)\""
   },
   "engines": {

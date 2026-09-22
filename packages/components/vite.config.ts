@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 
 // Lib-mode build with dependencies externalized. Workspace-linked deps are NOT
 // auto-externalized by Vite lib mode, so the AD-4 edges are listed explicitly:
-// `lit`/`lit-html` (dependencies) and the future `@tk-kit/tokens` workspace dep
+// `lit`/`lit-html` (dependencies) and the future `pillkit-tokens` workspace dep
 // stay external imports in the output — never bundled.
 export default defineConfig({
   build: {
@@ -14,7 +14,7 @@ export default defineConfig({
     outDir: 'dist',
     emptyOutDir: true,
     rollupOptions: {
-      external: [/^(lit|lit-html)(\/|$)/, /^@lit(-labs)?\//, /^@tk-kit\//],
+      external: [/^(lit|lit-html)(\/|$)/, /^@lit(-labs)?\//, /^pillkit-/],
     },
   },
 });

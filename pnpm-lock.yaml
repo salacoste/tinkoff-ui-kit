@@ -218,13 +218,16 @@ importers:
 
   packages/docs:
     dependencies:
-      '@tk-kit/components':
+      '@fontsource/inter':
+        specifier: 5.3.0
+        version: 5.3.0
+      pillkit-components:
         specifier: workspace:*
         version: link:../components
-      '@tk-kit/react':
+      pillkit-react:
         specifier: workspace:*
         version: link:../react
-      '@tk-kit/tokens':
+      pillkit-tokens:
         specifier: workspace:*
         version: link:../tokens
     devDependencies:
@@ -246,7 +249,7 @@ importers:
       '@lit/react':
         specifier: 1.0.8
         version: 1.0.8(@types/react@19.3.0)
-      '@tk-kit/components':
+      pillkit-components:
         specifier: workspace:*
         version: link:../components
       react:

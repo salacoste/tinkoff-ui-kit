@@ -9,15 +9,18 @@ import { colorTokens, motionTokens, shadowTokens, tokens, typographyTokens, zTok
  * pin the values downstream stories build against (AA overrides, font slots,
  * z-scale, motion durations).
  */
-describe('@tk-kit/tokens generated maps', () => {
+describe('pillkit-tokens generated maps', () => {
   it('ships the AA-overridden text-secondary, not the extracted #79818C', () => {
     expect(colorTokens['--tk-color-text-secondary']).toBe('#616871');
   });
 
-  it('emits both font family slots with the DESIGN.md fallback stack', () => {
-    const stack = '-apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif';
-    expect(typographyTokens['--tk-font-heading']).toBe(stack);
-    expect(typographyTokens['--tk-font-body']).toBe(stack);
+  it('emits both font family slots with the faithful DESIGN.md stacks (OQ-2, 2026-09-22)', () => {
+    const heading =
+      'dsHeading, TinkoffSans, Inter, -apple-system, system-ui, "Segoe UI", "Helvetica Neue", sans-serif';
+    const body =
+      'haas, "Neue Haas Unica W1G", pragmatica, Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif';
+    expect(typographyTokens['--tk-font-heading']).toBe(heading);
+    expect(typographyTokens['--tk-font-body']).toBe(body);
   });
 
   it('keeps caps-s tracking separate (no text-transform in tokens)', () => {
@@ -76,7 +79,7 @@ describe('@tk-kit/tokens generated maps', () => {
  * colors/shadows is ever re-declared (typography/radius/spacing/motion/z are
  * theme-invariant — single source in the light layer).
  */
-describe('@tk-kit/tokens dark layer (Story 1.3)', () => {
+describe('pillkit-tokens dark layer (Story 1.3)', () => {
   const css = readFileSync(new URL('./tokens.css', import.meta.url), 'utf8');
   const darkStart = css.indexOf(':host([data-theme="dark"])');
   const darkSection = darkStart === -1 ? '' : css.slice(darkStart);

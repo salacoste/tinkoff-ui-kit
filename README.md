@@ -2,49 +2,50 @@
 
 [![CI](https://github.com/salacoste/tinkoff-ui-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/salacoste/tinkoff-ui-kit/actions/workflows/ci.yml)
 
-CI gates every push/PR with the full chain: `lint` → `typecheck` → `build` →
+CI проверяет каждый push/PR полной цепочкой: `lint` → `typecheck` → `build` →
 `test` (unit + gen/tokens drift + zero-hardcoded + import boundaries + preview +
-contrast) → `test:visual` (compare mode vs committed cross-platform baselines,
-axe in both themes) → impeccable design detector over changed UI files;
-visual diffs are uploaded as artifacts on failure.
+contrast) → `test:visual` (режим сравнения с закоммиченными кроссплатформенными
+baseline, axe в обеих темах) → impeccable design-детектор по изменённым UI-файлам;
+визуальные диффы при падении выгружаются как артефакты.
 
-UI kit based on the Tinkoff (T-Bank) design language — recreated, systematized and improved.
+UI kit на основе дизайн-языка Тинькофф (Т-Банка) — воссоздание, систематизация и улучшение.
 
-An internal study project: we take the existing site as the design reference, extract its
-design system (colors, typography, spacing, components), rebuild it as a proper UI kit,
-and improve on the original.
+Учебный проект: существующий сайт берётся как дизайн-референс, из него извлекается
+дизайн-система (цвета, типографика, отступы, компоненты), и она пересобирается в
+настоящий UI kit, улучшающий оригинал.
 
-> **Unofficial study project.** tinkoff-ui-kit is an independent recreation of the
-> Tinkoff (T-Bank) design language, built for study purposes only. It is not affiliated
-> with, endorsed by, or connected to T-Bank / TCS Holding. No T-Bank trademarks are used
-> in the published output, and the reference site serves purely as a design reference.
+> **Неофициальный учебный проект.** pillkit (tinkoff-ui-kit) — независимое воссоздание
+> дизайн-языка Тинькофф (Т-Банка) исключительно в учебных целях. Проект не аффилирован
+> с Т-Банком / ТКС Холдинг, не одобрен ими и никак с ними не связан; товарные знаки
+> Т-Банка в публикуемом результате не используются, а сайт-референс служит только
+> источником дизайн-эталона.
 
-**Status:** in development — the pnpm workspace (`packages/{tokens,components,react,docs}`)
-is scaffolded on the architecture-spine stack (TypeScript 7 strict, Vite lib mode, Lit 3
-core with React adapters, Vitest); the token system and components land next (Epic 1).
+**Статус:** в разработке — pnpm-воркспейс (`packages/{tokens,components,react,docs}`)
+разворачивается на стеке architecture-spine (TypeScript 7 strict, Vite lib mode, Lit 3
+ядро с React-адаптерами, Vitest); система токенов и компоненты — следующими (Epic 1).
 
-## Workspace
+## Воркспейс
 
-| Package | Role |
+| Пакет | Роль |
 |---|---|
-| `@tk-kit/tokens` | Design tokens — `--tk-*` custom property layers (Story 1.2) |
-| `@tk-kit/components` | Lit custom elements core (Story 1.7+) |
-| `@tk-kit/react` | React wrappers generated from the Custom Elements Manifest (Story 1.7+) |
-| `@tk-kit/docs` | Docs surface — Storybook skeleton (Story 1.5) |
-| `tests/` | Committed import-boundary + build-isolation guards for the AD-4 matrix (run in `pnpm test`) |
-| `transitions/` | Vendored transitions.dev recipes (raw `t-*.css` + `_root.css`) — motion source for Story 1.2 |
+| `pillkit-tokens` | Дизайн-токены — слои custom properties `--tk-*` (Story 1.2) |
+| `pillkit-components` | Ядро на Lit custom elements (Story 1.7+) |
+| `pillkit-react` | React-обёртки, генерируемые из Custom Elements Manifest (Story 1.7+) |
+| `pillkit-docs` | Документация — Storybook-скелет (Story 1.5) |
+| `tests/` | Закоммиченные гарантии import-boundary + build-isolation для матрицы AD-4 (запускаются в `pnpm test`) |
+| `transitions/` | Вендорные рецепты transitions.dev (сырые `t-*.css` + `_root.css`) — источник моушна для Story 1.2 |
 
 ```bash
-pnpm install && pnpm build && pnpm test   # green baseline
+pnpm install && pnpm build && pnpm test   # зелёный baseline
 pnpm lint                                 # typescript-eslint + AD-4 import boundaries
-pnpm typecheck                            # TS 7 over root surfaces (tests/, config files)
+pnpm typecheck                            # TS 7 по корневым поверхностям (tests/, конфиги)
 ```
 
 pnpm 12.5.1 arrives via the `packageManager` field + corepack — a machine with a local
 pnpm 11.x needs no manual upgrade. `pnpm-lock.yaml` is intentionally a two-document
 YAML stream written by pnpm 12; do not "clean" it into a single document.
 
-## Toolchain
+## Инструменты
 
 | Tool | Purpose |
 |---|---|
@@ -54,4 +55,4 @@ YAML stream written by pnpm 12; do not "clean" it into a single document.
 | [inspo MCP](https://github.com/Nutlope/inspo) | 832 real production sites as design references for the agent |
 | [playwright-cli](https://github.com/microsoft/playwright-cli) | Browser automation: reference capture, a11y/dark-mode verification, E2E (no browser MCP by design) |
 
-See `CLAUDE.md` for workflows and commands.
+Workflows и команды — в `CLAUDE.md`.

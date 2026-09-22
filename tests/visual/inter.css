@@ -2,16 +2,17 @@
  * Deterministic test font for the visual harness (spec 1.6) — injected by
  * tests/visual/inject.ts AFTER page load, so it lands last in the cascade.
  *
- * The kit's font slots default to a system stack (the reference brand font is
- * proprietary and intentionally not bundled — a consumer points the slots at
- * their own font, Inter recommended). System stacks raster differently across
- * machines, so the harness pins BOTH slots to Inter, served LOCALLY by
+ * The kit's font slots carry the faithful stacks (their proprietary family
+ * names first, Inter the open default — OQ-2, 2026-09-22; the reference brand
+ * fonts are never bundled). Those stacks raster differently across machines,
+ * so the harness pins BOTH slots to Inter, served LOCALLY by
  * tests/visual/serve.mjs from node_modules/@fontsource/inter — no network
  * fetch, same bytes on every run.
  *
  * Weights: 400/500 (body + bold variants) and 500/700 (headings) cover every
- * --tk-text-* weight in the token sheet. Latin subset only — the docs surface
- * is English.
+ * --tk-text-* weight in the token sheet. Latin + cyrillic subsets — the docs
+ * copy is Russian (OQ-4), and latin alone would leave Cyrillic glyphs rastering
+ * from the system stack (nondeterministic across machines).
  */
 @font-face {
   font-family: 'Inter';
@@ -35,6 +36,30 @@
   font-weight: 700;
   font-display: block;
   src: url('/inter/files/inter-latin-700-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('/inter/files/inter-cyrillic-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: block;
+  src: url('/inter/files/inter-cyrillic-500-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+  src: url('/inter/files/inter-cyrillic-700-normal.woff2') format('woff2');
 }
 
 /*

@@ -1,5 +1,5 @@
 /**
- * @tk-kit/tokens — token layers (generated): light on `:host, :root`,
+ * pillkit-tokens — token layers (generated): light on `:host, :root`,
  * dark semantic overrides on `[data-theme="dark"]` (Story 1.3).
  *
  * DO NOT EDIT BY HAND — regenerate with `pnpm gen:tokens`.
@@ -114,13 +114,17 @@
   --tk-text-caps-s-weight: 500;
   --tk-text-caps-s-tracking: 1px;
 
-  /* Font family slots — the first family position is the consumer brand-font
-     slot (OQ-2: the reference's dsHeading/dsText are proprietary and never
-     bundled). Point it at a licensed brand font or a metric-compatible open
-     alternative — recommended default: Inter. A slot override replaces the
-     whole value: re-include the fallback stack. */
-  --tk-font-heading: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif;
-  --tk-font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif;
+  /* Font family slots — faithful stacks from the live @font-face extraction
+     (2026-09-22, cdn.tbank.ru/frontend-libraries/npm/react-kit-font/1.0.0):
+     dsHeading = TinkoffSans (heading), haas/dsText = Neue Haas Unica W1G
+     (body), pragmatica = ParaType. All proprietary/commercial — the kit
+     does NOT bundle them (PRD §5.1): consumers with licensed files register
+     @font-face under those exact family names and the kit auto-picks them
+     up with zero config. Default open fallback: Inter (closest open
+     grotesk). A slot override replaces the whole value: re-include the
+     fallback stack. */
+  --tk-font-heading: dsHeading, TinkoffSans, Inter, -apple-system, system-ui, "Segoe UI", "Helvetica Neue", sans-serif;
+  --tk-font-body: haas, "Neue Haas Unica W1G", pragmatica, Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 /* Radius — DESIGN.md `rounded` (pill register for controls, marketing registers for cards). */

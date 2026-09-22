@@ -1,5 +1,5 @@
 {
-  "name": "@tk-kit/tokens",
+  "name": "pillkit-tokens",
   "version": "0.0.0",
   "private": true,
   "description": "Design tokens for tinkoff-ui-kit — the extracted --tk-* custom property system. Light layer on :host/:root, dark layer (Story 1.3) on [data-theme=\"dark\"] semantic overrides. Generated from DESIGN.md: pnpm gen:tokens.",

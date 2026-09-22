@@ -1,4 +1,4 @@
-# @tk-kit/tokens — canonical token listing
+# pillkit-tokens — canonical token listing
 
 GENERATED FILE — DO NOT EDIT. Regenerate with `pnpm gen:tokens`.
 
@@ -68,7 +68,7 @@ Per-slot tokens from the `typography` block: `--tk-text-<slot>-size` / `-weight`
 
 | Token | Value | Notes |
 | --- | --- | --- |
-| `--tk-text-heading-1-size` | `50px` | first family is a consumer-supplied brand-font slot (OQ-2) |
+| `--tk-text-heading-1-size` | `50px` | OQ-2 resolved 2026-09-22 — faithful heading stack, their family names first, Inter default (see Typography body) |
 | `--tk-text-heading-1-weight` | `700` |  |
 | `--tk-text-heading-1-leading` | `1.1` |  |
 | `--tk-text-heading-2-size` | `44px` |  |
@@ -113,15 +113,15 @@ Per-slot tokens from the `typography` block: `--tk-text-<slot>-size` / `-weight`
 
 | Token | Value | Notes |
 | --- | --- | --- |
-| `--tk-font-heading` | `-apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif` |  |
-| `--tk-font-body` | `-apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif` |  |
+| `--tk-font-heading` | `dsHeading, TinkoffSans, Inter, -apple-system, system-ui, "Segoe UI", "Helvetica Neue", sans-serif` |  |
+| `--tk-font-body` | `haas, "Neue Haas Unica W1G", pragmatica, Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif` |  |
 
-The first family of each slot is the **consumer brand-font slot** (OQ-2 — the reference's `dsHeading`/`dsText` are proprietary and never bundled). Point it at a licensed brand font or a metric-compatible open alternative; recommended default: **Inter**. Heading and body slots share DESIGN.md's single fallback stack and are overridden independently.
+Faithful stacks from the live @font-face extraction (2026-09-22, `cdn.tbank.ru/frontend-libraries/npm/react-kit-font/1.0.0`): heading `dsHeading` = `TinkoffSans`, body `haas`/`dsText` = `Neue Haas Unica W1G` (+ `pragmatica`). All proprietary/commercial — TinkoffSans is a T-Bank asset, Neue Haas Unica W1G is Monotype, pragmatica is ParaType — so the kit does **not** bundle them (PRD §5.1). Consumers with licensed files register `@font-face` under those exact family names and the kit auto-picks them up with zero config; the default open fallback is **Inter** (closest open grotesk). The two slots are overridden independently.
 
 Override recipe (custom properties cascade and inherit — declare on `body`/your app root, or any later or higher-specificity declaration):
 
 ```css
-:root { --tk-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif; }
+:root { --tk-font-body: Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif; }
 ```
 
 An override replaces the whole value: re-include the fallback stack so the DESIGN.md fallbacks stay preserved.

@@ -14,7 +14,7 @@ export default defineConfig({
     outDir: 'dist',
     emptyOutDir: true,
     rollupOptions: {
-      external: [/^@tk-kit\//, /^lit($|\/)/, /^lit-html$/, /^@lit\//],
+      external: [/^pillkit-/, /^lit($|\/)/, /^lit-html$/, /^@lit\//],
     },
   },
 });

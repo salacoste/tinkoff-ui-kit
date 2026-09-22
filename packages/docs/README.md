@@ -1,4 +1,4 @@
-# @tk-kit/docs
+# pillkit-docs
 
 Storybook 10 docs surface for tinkoff-ui-kit — theme-toggle skeleton with the
 unofficial-study disclaimer (Story 1.5). Web-components renderer only; the
@@ -6,11 +6,11 @@ component stories composed here ship with the components package (Story 1.7).
 
 ## Scripts
 
-- `pnpm --filter @tk-kit/docs dev` — Storybook dev server on port **6006**
-- `pnpm --filter @tk-kit/docs build` — static build to `dist/` + typecheck
+- `pnpm --filter pillkit-docs dev` — Storybook dev server on port **6006**
+- `pnpm --filter pillkit-docs build` — static build to `dist/` + typecheck
 
-Both scripts build `@tk-kit/tokens` first (`predev`/`prebuild`): the preview
-imports `@tk-kit/tokens/tokens.css`, which resolves to the tokens package's
+Both scripts build `pillkit-tokens` first (`predev`/`prebuild`): the preview
+imports `pillkit-tokens/tokens.css`, which resolves to the tokens package's
 `dist/index.css` — a gitignored build artifact that does not exist on a fresh
 clone until that build runs.
 

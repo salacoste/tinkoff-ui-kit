@@ -127,21 +127,23 @@ const meta: Meta<ButtonArgs> = {
     variant: {
       control: 'radio',
       options: ['primary', 'secondary', 'inverse'],
-      description: 'Visual variant — literal union (CONVENTIONS §2).',
+      description: 'Визуальный вариант — строковое union-значение (CONVENTIONS §2).',
     },
     size: {
       control: 'radio',
       options: ['hero', 'card', 'compact'],
       description:
-        'Height scale: hero 56 / card 48 / compact 32 padded to the 44px target floor.',
+        'Шкала высот: hero 56 / card 48 / compact 32 с добивкой до порога кликабельности 44px.',
     },
     loading: {
       control: 'boolean',
-      description: 'In-place spinner; width frozen; clicks do not activate; aria-busy.',
+      description:
+        'Спиннер на месте; ширина зафиксирована; клики не активируют кнопку; aria-busy.',
     },
     disabled: {
       control: 'boolean',
-      description: '40% opacity, no pointer events, aria-disabled; wins over loading.',
+      description:
+        'Прозрачность 40%, без pointer-событий, aria-disabled; побеждает loading.',
     },
   },
   parameters: { layout: 'fullscreen' },
@@ -152,15 +154,15 @@ export default meta;
 type Story = StoryObj<ButtonArgs>;
 
 export const Playground: Story = {
-  name: 'Playground',
+  name: 'Песочница',
   render: (args) => html`
     ${canvasStyles}
     <main class="tkbtn-canvas">
       <h1>Button</h1>
       <p class="tkbtn-note">
-        Pill control in the Tinkoff register. Flip the toolbar Theme control — every
-        surface below restyles through inherited <code>var(--tk-*)</code> tokens with
-        zero markup changes.
+        Pill-контроль в регистре Тинькоффа. Переключите контрол Theme в тулбаре —
+        все поверхности ниже перестраиваются через унаследованные
+        <code>var(--tk-*)</code> токены без единой правки разметки.
       </p>
       ${button('Продолжить', args)}
     </main>
@@ -168,14 +170,14 @@ export const Playground: Story = {
 };
 
 export const VariantsAndSizes: Story = {
-  name: 'Variants × sizes',
+  name: 'Варианты и размеры',
   render: () => html`
     ${canvasStyles}
     <main class="tkbtn-canvas">
-      <h1>Variants × sizes</h1>
+      <h1>Варианты и размеры</h1>
       <p class="tkbtn-note">
-        One primary per view cluster is consumer discipline (EXPERIENCE.md Button row) —
-        the kit ships the variants; pages spend the yellow.
+        Один primary на визуальный кластер — дисциплина потребителя (строка Button
+        в EXPERIENCE.md): кит поставляет варианты, а жёлтый расходуют страницы.
       </p>
       ${(['hero', 'card', 'compact'] as const).map(
         (size) => html`
@@ -194,25 +196,26 @@ export const VariantsAndSizes: Story = {
 };
 
 export const States: Story = {
-  name: 'States',
+  name: 'Состояния',
   render: () => html`
     ${canvasStyles}
     <main class="tkbtn-canvas">
-      <h1>States</h1>
+      <h1>Состояния</h1>
       <p class="tkbtn-note">
-        Loading freezes the button width (the label stays for screen readers behind the
-        spinner, <code>aria-busy</code> announces the state) and clicks do not activate.
-        Disabled is 40% opacity with no pointer events and <code>aria-disabled</code>.
-        Precedence: <code>disabled</code> + <code>loading</code> together render disabled
-        semantics; the spinner may still show.
+        Loading фиксирует ширину кнопки (подпись остаётся для скринридеров за
+        спиннером, состояние объявляется через <code>aria-busy</code>), клики не
+        активируют кнопку. Disabled — прозрачность 40%, без pointer-событий, с
+        <code>aria-disabled</code>. Приоритет: <code>disabled</code> +
+        <code>loading</code> вместе дают семантику disabled; спиннер может
+        отображаться и дальше.
       </p>
       <div class="tkbtn-row">
-        <figure>${button('Rest', {})}<figcaption>rest</figcaption></figure>
-        <figure>${button('Loading', { loading: true })}<figcaption>loading</figcaption></figure>
-        <figure>${button('Disabled', { disabled: true })}<figcaption>disabled</figcaption></figure>
+        <figure>${button('Обычная', {})}<figcaption>покой</figcaption></figure>
+        <figure>${button('Загрузка', { loading: true })}<figcaption>loading</figcaption></figure>
+        <figure>${button('Недоступна', { disabled: true })}<figcaption>disabled</figcaption></figure>
         <figure>
-          ${button('Both', { loading: true, disabled: true })}
-          <figcaption>loading + disabled (disabled wins)</figcaption>
+          ${button('Обе', { loading: true, disabled: true })}
+          <figcaption>loading + disabled (побеждает disabled)</figcaption>
         </figure>
       </div>
     </main>
@@ -220,43 +223,43 @@ export const States: Story = {
 };
 
 export const Interaction: Story = {
-  name: 'Interaction (hover / press / focus)',
+  name: 'Взаимодействие (hover / press / focus)',
   render: () => html`
     ${canvasStyles}
     <main class="tkbtn-canvas">
-      <h1>Interaction</h1>
+      <h1>Взаимодействие</h1>
       <p class="tkbtn-note">
-        Hover steps the primary fill one token (yellow-100 → yellow-200) at 150ms;
-        press steps again (yellow-300) at 75ms — a color step, never a scale. The focus
-        ring is the unified 2px <code>--tk-color-focus-ring</code> outline, offset 2px,
-        and is never removed. All durations come from
-        <code>--tk-motion-*</code> tokens and collapse to 0ms under
-        <code>prefers-reduced-motion</code>. These states are transient — hover, press
-        and Tab through the buttons below.
+        Hover сдвигает заливку primary на один токен (yellow-100 → yellow-200) за
+        150ms; нажатие — ещё на шаг (yellow-300) за 75ms: шаг цвета, но никогда
+        масштаб. Focus-кольцо — единый контур 2px <code>--tk-color-focus-ring</code>
+        со сдвигом 2px, оно никогда не убирается. Все длительности приходят из
+        токенов <code>--tk-motion-*</code> и схлопываются до 0ms при
+        <code>prefers-reduced-motion</code>. Эти состояния переходящие — наведите,
+        нажмите и протабьтесь по кнопкам ниже.
       </p>
       <div class="tkbtn-row">
-        ${button('Hover me', { variant: 'primary', size: 'hero' })}
-        ${button('Press me', { variant: 'primary', size: 'hero' })}
-        ${button('Tab to me', { variant: 'secondary', size: 'hero' })}
-        ${button('Me too', { variant: 'inverse', size: 'hero' })}
+        ${button('Наведите на меня', { variant: 'primary', size: 'hero' })}
+        ${button('Нажмите на меня', { variant: 'primary', size: 'hero' })}
+        ${button('Перейдите по Tab', { variant: 'secondary', size: 'hero' })}
+        ${button('И на меня тоже', { variant: 'inverse', size: 'hero' })}
       </div>
     </main>
   `,
 };
 
 export const LongLabel: Story = {
-  name: 'Long label',
+  name: 'Длинная подпись',
   render: () => html`
     ${canvasStyles}
     <main class="tkbtn-canvas">
-      <h1>Long label</h1>
+      <h1>Длинная подпись</h1>
       <p class="tkbtn-note">
-        Reference buttons are single-line: the label never wraps. Unconstrained, the
-        button grows with its text. Under a consumer-constrained width the label
-        truncates with an ellipsis VISUALLY only — the slotted light-DOM text stays
-        complete, so the accessible name keeps the full string (inspect the
-        accessibility tree below the canvas). Constrain the button, not the label,
-        when you need this behavior.
+        Кнопки референса однострочные: подпись никогда не переносится. Без
+        ограничений кнопка растёт вместе с текстом. При ограниченной потребителем
+        ширине подпись усекается с многоточием только ВИЗУАЛЬНО — слоттированный
+        light-DOM текст остаётся полным, поэтому доступное имя сохраняет всю строку
+        (проверьте дерево доступности под канвасом). Ограничивайте кнопку, а не
+        подпись, когда нужно такое поведение.
       </p>
       <div class="tkbtn-row tkbtn-row--column">
         <tk-button variant="primary" size="hero">
@@ -273,15 +276,15 @@ export const LongLabel: Story = {
 };
 
 export const WithIcon: Story = {
-  name: 'Icon slot',
+  name: 'Слот для иконки',
   render: () => html`
     ${canvasStyles}
     <main class="tkbtn-canvas">
-      <h1>Icon slot</h1>
+      <h1>Слот для иконки</h1>
       <p class="tkbtn-note">
-        The optional <code>slot="icon"</code> renders LEFT of the label; the default
-        slot is the label (CONVENTIONS §5). Decorative icons should carry
-        <code>aria-hidden</code> — the label alone names the button.
+        Необязательный <code>slot="icon"</code> рендерится СЛЕВА от подписи;
+        слот по умолчанию — подпись (CONVENTIONS §5). Декоративные иконки
+        должны нести <code>aria-hidden</code> — кнопку называет только подпись.
       </p>
       <div class="tkbtn-row">
         <tk-button variant="primary" size="hero">
@@ -344,18 +347,19 @@ export const WithIcon: Story = {
 };
 
 export const Theming: Story = {
-  name: 'Theming',
+  name: 'Темизация',
   render: () => html`
     ${canvasStyles}
     <main class="tkbtn-canvas">
-      <h1>Theming</h1>
+      <h1>Темизация</h1>
       <p class="tkbtn-note">
-        Buttons theme by inheritance only — flip the toolbar Theme control
-        (<code>data-theme="dark"</code> on the preview root). Primary keeps ink text on
-        yellow in both themes; secondary and inverse re-resolve through surface/ink
-        semantic tokens (secondary lifts onto the dark surface with its hairline, inverse
-        inverts to a light pill); shadows collapse to <code>none</code> in dark per the
-        token layer.
+        Кнопки темизуются только наследованием — переключите контрол Theme в
+        тулбаре (<code>data-theme="dark"</code> на корне превью). Primary сохраняет
+        чернильный текст на жёлтом в обеих темах; secondary и inverse
+        переразрешаются через семантические токены surface/ink (secondary
+        поднимается на тёмную поверхность со своей волосяной линией, inverse
+        инвертируется в светлую пилюлю); тени в тёмной теме схлопываются в
+        <code>none</code> по токеновому слою.
       </p>
       <section class="tkbtn-panel tkbtn-panel--base">
         <div class="tkbtn-row">
@@ -381,53 +385,54 @@ export const Theming: Story = {
 };
 
 export const Accessibility: Story = {
-  name: 'Accessibility',
+  name: 'Доступность',
   render: () => html`
     ${canvasStyles}
     <main class="tkbtn-canvas">
-      <h1>Accessibility</h1>
+      <h1>Доступность</h1>
       <p class="tkbtn-note">
-        <code>tk-button</code> renders a native <code>&lt;button&gt;</code> — role, name
-        and Space/Enter activation come by construction. States are announced
-        (<code>aria-disabled</code>, <code>aria-busy</code>); the loading label is kept
-        for screen readers behind the spinner. The compact 32px button pads its effective
-        target to the 44px floor (EXPERIENCE.md A11y Floor) — hover is never the only
-        path; every action has touch and keyboard parity.
+        <code>tk-button</code> рендерит нативный <code>&lt;button&gt;</code> — роль,
+        имя и активация по Space/Enter получаются самой конструкцией. Состояния
+        объявляются (<code>aria-disabled</code>, <code>aria-busy</code>); подпись в
+        состоянии loading сохраняется для скринридеров за спиннером. Компактная
+        кнопка 32px добивает эффективную цель до порога 44px (EXPERIENCE.md A11y
+        Floor) — hover никогда не единственный путь; у каждого действия есть
+        паритет касания и клавиатуры.
       </p>
-      <h2>Keyboard-only checklist</h2>
+      <h2>Чек-лист: только с клавиатуры</h2>
       <table>
         <thead>
-          <tr><th>Key</th><th>Expected</th></tr>
+          <tr><th>Клавиша</th><th>Ожидаемое поведение</th></tr>
         </thead>
         <tbody>
           <tr>
             <td><code>Tab</code> / <code>Shift+Tab</code></td>
             <td>
-              Moves focus to / away from the button; the 2px focus ring
-              (<code>--tk-color-focus-ring</code>, offset 2px) is visible whenever the
-              button is keyboard-focused and is never removed.
+              Переносит фокус на кнопку / убирает с неё; кольцо фокуса 2px
+              (<code>--tk-color-focus-ring</code>, offset 2px) видно всегда, когда
+              кнопка в фокусе с клавиатуры, и никогда не убирается.
             </td>
           </tr>
           <tr>
             <td><code>Enter</code></td>
-            <td>Activates the button (native activation); no activation while loading or disabled.</td>
+            <td>Активирует кнопку (нативная активация); в состояниях loading и disabled активации нет.</td>
           </tr>
           <tr>
             <td><code>Space</code></td>
-            <td>Activates the button (native activation); no activation while loading or disabled.</td>
+            <td>Активирует кнопку (нативная активация); в состояниях loading и disabled активации нет.</td>
           </tr>
           <tr>
-            <td>Screen reader</td>
+            <td>Скринридер</td>
             <td>
-              Announces the label, and <code>disabled</code> / <code>busy</code> states
-              when set — the accessible name never disappears during loading.
+              Объявляет подпись и состояния <code>disabled</code> / <code>busy</code>,
+              когда они заданы, — доступное имя никогда не исчезает во время loading.
             </td>
           </tr>
         </tbody>
       </table>
       <div class="tkbtn-row">
-        ${button('Keyboard target', { variant: 'primary', size: 'hero' })}
-        ${button('Compact 44px floor', { variant: 'secondary', size: 'compact' })}
+        ${button('Цель для клавиатуры', { variant: 'primary', size: 'hero' })}
+        ${button('Compact: порог 44px', { variant: 'secondary', size: 'compact' })}
       </div>
     </main>
   `,

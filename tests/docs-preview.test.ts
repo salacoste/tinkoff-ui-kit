@@ -49,7 +49,7 @@ describe('docs preview runtime (spec 1.5 review)', () => {
     const container = renderTo(withDisclaimer(stubStory, ctx({ theme: 'light' })) as ReturnType<typeof stubStory>);
     expect(container.querySelector('.tk-docs-disclaimer')).not.toBeNull();
     expect(container.textContent?.replace(/\s+/g, ' ')).toContain(
-      'Not affiliated with, endorsed by, or sponsored by T-Bank',
+      'Не аффилирован с Т-Банком и не одобрен им',
     );
     // The wrapped story content survives.
     expect(container.textContent).toContain('stub');

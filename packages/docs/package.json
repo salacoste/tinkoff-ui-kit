@@ -1,23 +1,24 @@
 {
-  "name": "@tk-kit/docs",
+  "name": "pillkit-docs",
   "version": "0.0.0",
   "private": true,
   "description": "Docs surface for tinkoff-ui-kit — Storybook 10 skeleton with a light/dark theme toolbar toggle, token-driven stories and the unofficial-study disclaimer (Story 1.5).",
   "type": "module",
   "scripts": {
-    "predev": "pnpm --filter @tk-kit/tokens build",
+    "predev": "pnpm --filter pillkit-tokens build",
     "dev": "storybook dev -p 6006",
-    "prebuild": "pnpm --filter @tk-kit/tokens build",
+    "prebuild": "pnpm --filter pillkit-tokens build",
     "build": "storybook build --output-dir dist && tsc -p tsconfig.json --noEmit",
-    "test": "node -e \"console.log('@tk-kit/docs: docs surface verified via build + the visual/axe harness (pnpm test:visual); component stories live in packages/components/src')\""
+    "test": "node -e \"console.log('pillkit-docs: docs surface verified via build + the visual/axe harness (pnpm test:visual); component stories live in packages/components/src')\""
   },
   "engines": {
     "node": ">=20"
   },
   "dependencies": {
-    "@tk-kit/components": "workspace:*",
-    "@tk-kit/react": "workspace:*",
-    "@tk-kit/tokens": "workspace:*"
+    "@fontsource/inter": "5.3.0",
+    "pillkit-components": "workspace:*",
+    "pillkit-react": "workspace:*",
+    "pillkit-tokens": "workspace:*"
   },
   "devDependencies": {
     "@storybook/addon-a11y": "10.6.0",

@@ -1,5 +1,5 @@
 /**
- * @tk-kit/components — Lit custom elements core package for tinkoff-ui-kit.
+ * pillkit-components — Lit custom elements core package for tinkoff-ui-kit.
  *
  * One directory per component under `src/<name>/`; this entry re-exports the
  * public surface of every component. The Custom Elements Manifest

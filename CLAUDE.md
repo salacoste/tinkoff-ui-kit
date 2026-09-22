@@ -14,13 +14,16 @@ PRD context; the user triggers BMAD planning himself. Never pick a stack or scaf
   CONVENTIONS.md (all pilot decisions resolved), Storybook 10.6 docs w/ theme toggle + disclaimer,
   Playwright visual harness (0.015, story auto-discovery, axe both themes), tk-button pilot
   (CEM→@lit/react gen pipeline), GitHub Actions CI green (full gate chain incl. detector)
-- Packages: `@tk-kit/{tokens,components,react,docs}` (private names; publish names = OQ-3).
+- Packages: `pillkit-{tokens,components,react,docs}` (npm names resolved at OQ-3, verified free; still
+  `private: true` until first publish). The `tk-` element prefix and `--tk-*` properties are KEPT
+  (OQ-3 decision — generic abbreviation, zero trademark collision).
   Scripts: `pnpm build|test|lint|typecheck|gen|check:gen|test:visual|test:visual:update|check:tokens-drift`
 - **Lit on this stack requires `experimentalDecorators: true`** (vite8/rolldown drops TC39
   decorators silently) — do not "fix" this
 - Next per epics.md: **Epic 2** (capture pack 2.0 → Input 2.1 = React/overlay API FREEZE →
   overlay controller → forms → composed form walkthrough), then E3 content, E4 overlays, E5 release
-- Maintainer queue: OQ-2 font pick, OQ-3 npm names, OQ-4 docs language, ratify bounce-easing
+- Maintainer queue: ~~OQ-2 font pick, OQ-3 npm names, OQ-4 docs language~~ (all resolved
+  2026-09-22 — faithful font stacks + Inter default; pillkit-* names; docs RU), ratify bounce-easing
   detector ignore, batch-confirm provisional visual baselines; deferred-work.md tracks the rest
 
 ## Toolchain (installed & configured)

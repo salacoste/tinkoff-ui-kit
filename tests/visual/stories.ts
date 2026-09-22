@@ -45,7 +45,7 @@ export function readStoryIds(distDir: string = DOCS_DIST_DIR): string[] {
     raw = readFileSync(indexPath, 'utf8');
   } catch {
     throw new Error(
-      `Visual harness: story index not found at ${indexPath}. The suite tests the BUILT docs bundle — build it first: pnpm --filter @tk-kit/docs build (or just run pnpm test:visual, which builds it).`,
+      `Visual harness: story index not found at ${indexPath}. The suite tests the BUILT docs bundle — build it first: pnpm --filter pillkit-docs build (or just run pnpm test:visual, which builds it).`,
     );
   }
   let index: StoryIndexFile;

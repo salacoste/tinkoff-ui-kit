@@ -37,7 +37,7 @@ STALE bundle, and you would baseline yesterday's pixels. Prefer
 must call Playwright directly (e.g. to target a single story), build first:
 
 ```sh
-pnpm --filter @tk-kit/docs build && pnpm exec playwright test -g "tokens--swatches"
+pnpm --filter pillkit-docs build && pnpm exec playwright test -g "tokens--swatches"
 ```
 
 `test:visual` is **deliberately NOT wired into `pnpm test`** — CI runs it as
@@ -62,11 +62,13 @@ threshold meaningful (FR-10, AD-8):
   caught mid-flight. `toHaveScreenshot` additionally passes `animations: 'disabled'`.
 - **`colorScheme: 'light'`** — the kit themes itself via `data-theme` tokens,
   not the OS scheme; the OS input is pinned anyway.
-- **Inter as the deterministic test font** — the kit's font slots default to a
-  system stack (the reference brand font is proprietary and deliberately
-  unbundled), and system stacks raster differently per machine. `inject.ts`
+- **Inter as the deterministic test font** — the kit's font slots carry the
+  faithful stacks (the reference brand fonts are proprietary and deliberately
+  unbundled; Inter is the open default), and fallback resolution rasterizes
+  differently per machine. `inject.ts`
   injects `inter.css` after load: `@font-face`s for the exact weights the type
-  scale uses (400/500/700, latin subset) served **locally** from
+  scale uses (400/500/700, latin + cyrillic subsets — docs copy is Russian)
+  served **locally** from
   `node_modules/@fontsource/inter` by `serve.mjs` (no network fetch), plus a
   `:root` / `:root[data-theme='dark']` override of `--tk-font-heading` and
   `--tk-font-body`. The suite then awaits `document.fonts.load()` for each
@@ -123,7 +125,7 @@ a human side-by-side against the site capture, attached to the baseline PR.
    `pnpm test:visual:update`, review the written PNGs, commit them in the same
    change as the story. To re-approve a single story instead of the whole
    suite, target it by title with `-g`:
-   `pnpm --filter @tk-kit/docs build && pnpm exec playwright test --update-snapshots -g "tokens--swatches"`.
+   `pnpm --filter pillkit-docs build && pnpm exec playwright test --update-snapshots -g "tokens--swatches"`.
    A story id in `index.json` with no baseline fails the suite naming the
    story — absence is loud, never silent.
 2. **Removing a story = removing its baselines:** delete the story's baseline

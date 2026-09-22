@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 /**
- * FR-1 zero-hard-coded guard (spec 1.2): only @tk-kit/tokens emits raw values.
+ * FR-1 zero-hard-coded guard (spec 1.2): only pillkit-tokens emits raw values.
  * Sources under the per-package scan roots (packages/{components,react}/src,
  * packages/docs/{src,.storybook}) must not contain color literals (hex,
  * rgb()/rgba(), hsl()/hsla()) or z-index declarations with non-token values —

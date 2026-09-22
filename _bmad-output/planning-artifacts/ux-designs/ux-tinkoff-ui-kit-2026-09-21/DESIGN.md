@@ -3,7 +3,7 @@ name: tinkoff-ui-kit
 description: Open-source recreation of the T-Bank (ex-Tinkoff) consumer web design language — yellow-black, pill-shaped, pastel-carded — as a token-first component kit with an authored dark theme.
 status: final
 created: 2026-09-21
-updated: 2026-09-21
+updated: 2026-09-22
 sources:
   - ../../prds/prd-tinkoff-ui-kit-2026-09-21/prd.md
   - ../../briefs/brief-tinkoff-ui-kit-2026-09-21/brief.md
@@ -96,20 +96,20 @@ motion:
   duration-slow: 500ms
   duration-slowest: 700ms
 typography:
-  heading-1: { fontSize: 50px, fontWeight: '700', lineHeight: '1.1', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif', note: 'first family is a consumer-supplied brand-font slot (OQ-2)' }
-  heading-2: { fontSize: 44px, fontWeight: '700', lineHeight: '1.15', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif' }
-  heading-3: { fontSize: 36px, fontWeight: '500', lineHeight: '1.2', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif' }
-  heading-4: { fontSize: 28px, fontWeight: '500', lineHeight: '1.25', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif' }
-  heading-5: { fontSize: 24px, fontWeight: '500', lineHeight: '1.3', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif' }
-  heading-6: { fontSize: 20px, fontWeight: '500', lineHeight: '1.35', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif' }
-  body-l: { fontSize: 17px, fontWeight: '400', lineHeight: '1.5' }
-  body-m: { fontSize: 15px, fontWeight: '400', lineHeight: '1.5' }
-  body-s: { fontSize: 13px, fontWeight: '400', lineHeight: '1.5' }
-  body-xs: { fontSize: 12px, fontWeight: '400', lineHeight: '1.45', letterSpacing: 0.4px }
-  body-l-bold: { fontSize: 17px, fontWeight: '500' }
-  body-m-bold: { fontSize: 15px, fontWeight: '500' }
-  body-s-bold: { fontSize: 13px, fontWeight: '500' }
-  caps-s: { fontSize: 12px, fontWeight: '500', letterSpacing: 1px, note: 'rendered uppercase — see Typography body' }
+  heading-1: { fontSize: 50px, fontWeight: '700', lineHeight: '1.1', fontFamily: 'dsHeading, TinkoffSans, Inter, -apple-system, system-ui, "Segoe UI", "Helvetica Neue", sans-serif', note: 'OQ-2 resolved 2026-09-22 — faithful heading stack, their family names first, Inter default (see Typography body)' }
+  heading-2: { fontSize: 44px, fontWeight: '700', lineHeight: '1.15', fontFamily: 'dsHeading, TinkoffSans, Inter, -apple-system, system-ui, "Segoe UI", "Helvetica Neue", sans-serif' }
+  heading-3: { fontSize: 36px, fontWeight: '500', lineHeight: '1.2', fontFamily: 'dsHeading, TinkoffSans, Inter, -apple-system, system-ui, "Segoe UI", "Helvetica Neue", sans-serif' }
+  heading-4: { fontSize: 28px, fontWeight: '500', lineHeight: '1.25', fontFamily: 'dsHeading, TinkoffSans, Inter, -apple-system, system-ui, "Segoe UI", "Helvetica Neue", sans-serif' }
+  heading-5: { fontSize: 24px, fontWeight: '500', lineHeight: '1.3', fontFamily: 'dsHeading, TinkoffSans, Inter, -apple-system, system-ui, "Segoe UI", "Helvetica Neue", sans-serif' }
+  heading-6: { fontSize: 20px, fontWeight: '500', lineHeight: '1.35', fontFamily: 'dsHeading, TinkoffSans, Inter, -apple-system, system-ui, "Segoe UI", "Helvetica Neue", sans-serif' }
+  body-l: { fontSize: 17px, fontWeight: '400', lineHeight: '1.5', fontFamily: 'haas, "Neue Haas Unica W1G", pragmatica, Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif' }
+  body-m: { fontSize: 15px, fontWeight: '400', lineHeight: '1.5', fontFamily: 'haas, "Neue Haas Unica W1G", pragmatica, Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif' }
+  body-s: { fontSize: 13px, fontWeight: '400', lineHeight: '1.5', fontFamily: 'haas, "Neue Haas Unica W1G", pragmatica, Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif' }
+  body-xs: { fontSize: 12px, fontWeight: '400', lineHeight: '1.45', letterSpacing: 0.4px, fontFamily: 'haas, "Neue Haas Unica W1G", pragmatica, Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif' }
+  body-l-bold: { fontSize: 17px, fontWeight: '500', fontFamily: 'haas, "Neue Haas Unica W1G", pragmatica, Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif' }
+  body-m-bold: { fontSize: 15px, fontWeight: '500', fontFamily: 'haas, "Neue Haas Unica W1G", pragmatica, Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif' }
+  body-s-bold: { fontSize: 13px, fontWeight: '500', fontFamily: 'haas, "Neue Haas Unica W1G", pragmatica, Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif' }
+  caps-s: { fontSize: 12px, fontWeight: '500', letterSpacing: 1px, fontFamily: 'haas, "Neue Haas Unica W1G", pragmatica, Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif', note: 'rendered uppercase — see Typography body' }
 rounded:
   xs: 4px
   sm: 8px
@@ -261,13 +261,15 @@ PRD improvement axis, fidelity checks cover visuals, not ratios):
 
 ## Typography
 
-The reference ships two proprietary stacks — `dsHeading`/`dsText` (design-system layer) and
-`haas`/`pragmatica` (marketing body). The kit cannot bundle them (OQ-2). Typography tokens
-therefore declare the reference's own fallback stack, with the first family a
-**consumer-supplied brand-font slot**: consumers point it at a licensed brand font or a
-metric-compatible open alternative — recommended default: **Inter** (open grotesk, closest
-mass-market register to the reference's geometric sans; final pick confirmed at build). The ramp
-itself is extracted exactly:
+Font stacks are the **faithful stacks from the live @font-face extraction** (2026-09-22,
+`cdn.tbank.ru/frontend-libraries/npm/react-kit-font/1.0.0`): heading `dsHeading` ≡ `TinkoffSans`,
+body `haas`/`dsText` ≡ `Neue Haas Unica W1G` (+ `pragmatica` in the computed body stack). All of
+them are proprietary/commercial — TinkoffSans is a T-Bank asset, Neue Haas Unica W1G is Monotype,
+pragmatica is ParaType — so the kit does **not** bundle them (PRD §5.1). Consumers holding
+licensed files register `@font-face` under those exact family names and the kit picks them up
+with zero configuration (the family names lead both slots); the default open fallback is
+**Inter** (closest open grotesk to the reference's register). The ramp itself is extracted
+exactly:
 
 - Headings h1–h6: 50/44/36/28/24/20px; weight 700 (h1–h2) and 500 (h3–h6)
 - Body l/m/s/xs: 17/15/13/12px at 400; bold variants at 500 (never 600+)

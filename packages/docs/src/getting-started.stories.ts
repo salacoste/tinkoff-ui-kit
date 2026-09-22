@@ -107,81 +107,93 @@ export default meta;
 type Story = StoryObj;
 
 export const Page: Story = {
-  name: 'Getting started',
+  name: 'Начало работы',
   render: () => html`
     ${pageStyles}
     <main class="tkgs">
-      <h1>tinkoff-ui-kit</h1>
+      <h1>pillkit</h1>
       <p class="tkgs-disclaimer" role="note">
-        <strong>Unofficial study project.</strong> tinkoff-ui-kit is an
-        independent design-study recreation of the Tinkoff (T-Bank) design
-        language. Not affiliated with, endorsed by, or sponsored by T-Bank; no
-        T-Bank trademarks are used. A disclaimer banner is also pinned above
-        every story.
+        <strong>Неофициальный учебный проект.</strong> pillkit — независимое
+        воссоздание дизайна Т-Банка (экс-Тинькофф) в учебных целях. Не
+        аффилирован с Т-Банком и не одобрен им; товарные знаки Т-Банка не
+        используются. Такой же дисклеймер закреплён над каждой историей.
       </p>
 
-      <h2>Install</h2>
+      <h2>Установка</h2>
       <p>
-        The packages are not published yet — <code>npm install @tk-kit/…</code>
-        arrives with the first publish (Story 5.7). Until then the workable
-        path is a pnpm workspace link from a checkout of this repository:
+        Пакеты ещё не опубликованы — <code>npm install pillkit-…</code>
+        появится вместе с первым релизом (Story 5.7). До этого рабочий путь —
+        pnpm-линк воркспейса из checkout'а этого репозитория:
       </p>
       <pre><code>git clone ${REPO_URL}
 cd my-app && pnpm init
-# add the kit checkout to your pnpm workspace (pnpm-workspace.yaml):
+# добавьте checkout кита в свой pnpm-workspace.yaml:
 #   packages:
 #     - .
 #     - ../tinkoff-ui-kit/packages/*
-pnpm add @tk-kit/components @tk-kit/react @tk-kit/tokens --workspace</code></pre>
+pnpm add pillkit-components pillkit-react pillkit-tokens --workspace</code></pre>
       <p>
-        The link pins <code>workspace:*</code>, so the kit builds and updates
-        alongside your app. Components are Lit custom elements
-        (<code>tk-*</code>); the React wrappers are generated from the component
-        manifest (see <code>Button</code> from <code>@tk-kit/react</code>).
+        Линк закрепляет <code>workspace:*</code> — кит собирается и обновляется
+        вместе с приложением. Компоненты — Lit custom elements
+        (<code>tk-*</code>); React-обёртки генерируются из манифеста
+        компонентов (см. <code>Button</code> из <code>pillkit-react</code>).
       </p>
 
-      <h2>Theming</h2>
+      <h2>Темизация</h2>
       <ol>
         <li>
-          Load the token sheet once at the <strong>document level</strong> — it
-          cascades from <code>&lt;html&gt;</code>, and components inherit the
-          resolved custom properties into their shadow roots:
-          <pre><code>import '@tk-kit/tokens/tokens.css';</code></pre>
-          Do not adopt this sheet inside a shadow root: the light layer declares
-          values on <code>:host</code>, which would then beat the inherited dark
-          values when the document is themed dark (the shadow-adoption trap).
+          Подключите токеновый лист один раз на уровне
+          <strong>документа</strong> — он каскадом спускается с
+          <code>&lt;html&gt;</code>, а компоненты наследуют разрешённые custom
+          properties в свои shadow root:
+          <pre><code>import 'pillkit-tokens/tokens.css';</code></pre>
+          Не внедряйте этот лист внутрь shadow root: светлый слой объявляет
+          значения на <code>:host</code> — они перебьют унаследованные тёмные
+          значения, когда документ переключён в тёмную тему (ловушка
+          shadow-адопции).
         </li>
         <li>
-          Switch themes by setting the attribute on the document root — zero
-          markup, class, or inline-style changes inside the app:
+          Темы переключаются атрибутом на корне документа — без правок разметки,
+          классов и inline-стилей внутри приложения:
           <pre><code>&lt;html data-theme="dark"&gt;</code></pre>
-          Try it with the Theme control in the Storybook toolbar.
+          Попробуйте контрол Theme в тулбаре Storybook.
         </li>
         <li>
-          Point the brand-font slot at your font — the reference brand font is
-          proprietary and intentionally not bundled. A slot override replaces
-          the whole value, so re-include a fallback stack (Inter is the
-          recommended default):
-          <pre><code>:root { --tk-font-heading: Inter, sans-serif; --tk-font-body: Inter, sans-serif; }</code></pre>
+          Шрифты: слоты несут точные стеки из живой @font-face-выгрузки сайта
+          Т-Банка (2026-09-22) — заголовки
+          <code>dsHeading</code>/<code>TinkoffSans</code>, текст
+          <code>haas</code>/<code>dsText</code> (= Neue Haas Unica W1G) с
+          <code>pragmatica</code> в стеке. Шрифты Т-Банка проприетарные
+          (TinkoffSans — актив Т-Банка, Neue Haas Unica W1G — Monotype,
+          pragmatica — ParaType), поэтому кит их НЕ бандлит (PRD §5.1).
+          Положите лицензированные файлы и объявите <code>@font-face</code> с
+          этими точными family-именами — кит подхватит их автоматически, без
+          какой-либо настройки. По умолчанию используется
+          <strong>Inter</strong> (ближайший открытый гротеск). Переопределение
+          слота заменяет значение целиком — повторно включите fallback-стек:
+          <pre><code>:root {
+  --tk-font-heading: Inter, sans-serif;
+  --tk-font-body: Inter, sans-serif;
+}</code></pre>
         </li>
       </ol>
 
-      <h2>Component API</h2>
+      <h2>API компонентов</h2>
       <p>
-        Every component follows the kit's API contract — props, events,
-        controlled/uncontrolled modes, slots, and theming grammar. See
-        <code>${CONVENTIONS_PATH}</code> in the
+        Каждый компонент следует контракту кита — пропсы, события,
+        controlled/uncontrolled-режимы, слоты и грамматика темизации. См.
+        <code>${CONVENTIONS_PATH}</code> в
         <a href="${REPO_URL}" target="_blank" rel="noreferrer noopener"
-          >kit repository</a
+          >репозитории кита</a
         >.
       </p>
 
       <p class="tkgs-status">
-        Pipeline status (Story 1.7): the first component — Button — is live
-        under Components, shipped through the full pipeline: Lit core, CEM
-        manifest, generated React wrapper, stories with axe checks in both
-        themes, and a (provisional) visual baseline. The temporary token-swatch
-        demo from the skeleton phase is gone.
+        Статус пайплайна (Story 1.7): первый компонент — Button — уже доступен
+        в разделе Components и прошёл весь конвейер: Lit-ядро, CEM-манифест,
+        сгенерированная React-обёртка, истории с axe-проверками в обеих темах и
+        (предварительный) визуальный baseline. Временное демо токенов-цветов из
+        скелетной фазы удалено.
       </p>
     </main>
   `,

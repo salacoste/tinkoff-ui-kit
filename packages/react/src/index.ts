@@ -1,8 +1,8 @@
 /**
- * @tk-kit/react — React adapters for tinkoff-ui-kit.
+ * pillkit-react — React adapters for tinkoff-ui-kit.
  *
  * Wrappers are GENERATED from the Custom Elements Manifest of
- * `@tk-kit/components` via `@lit/react`'s createComponent, driven by the
+ * `pillkit-components` via `@lit/react`'s createComponent, driven by the
  * owned event registry (`./event-map.js`). Regenerate with `pnpm gen`
  * (root); `pnpm check:gen` fails on unregenerated output. No behavior,
  * styling, or a11y logic lives in this package (AD-1) — the Lit core owns

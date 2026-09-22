@@ -1,6 +1,18 @@
 import type { Decorator, Preview } from '@storybook/web-components-vite';
 import { html } from 'lit';
-import '@tk-kit/tokens/tokens.css';
+
+// Inter — the kit's default open fallback (OQ-2) — bundled into the docs so
+// the site renders Inter without consumer setup. Latin + cyrillic subsets at
+// the weights the type scale uses (docs copy is Russian — latin alone would
+// leave Cyrillic glyphs on the system stack). The visual harness pins its own
+// locally-served Inter (tests/visual/inject.ts) and stays deterministic.
+import '@fontsource/inter/latin-400.css';
+import '@fontsource/inter/latin-500.css';
+import '@fontsource/inter/latin-700.css';
+import '@fontsource/inter/cyrillic-400.css';
+import '@fontsource/inter/cyrillic-500.css';
+import '@fontsource/inter/cyrillic-700.css';
+import 'pillkit-tokens/tokens.css';
 
 /**
  * Preview runtime (spec 1.5).
@@ -70,10 +82,10 @@ export const withDisclaimer: Decorator = (story, context) => {
   return html`
     ${disclaimerStyles}
     <aside class="tk-docs-disclaimer" role="note">
-      <strong>Unofficial study project.</strong> tinkoff-ui-kit is an independent
-      design-study recreation of the Tinkoff (T-Bank) design language. Not
-      affiliated with, endorsed by, or sponsored by T-Bank; no T-Bank trademarks
-      are used.
+      <strong>Неофициальный учебный проект.</strong> pillkit — независимое
+      воссоздание дизайна Т-Банка (экс-Тинькофф) в учебных целях. Не
+      аффилирован с Т-Банком и не одобрен им; товарные знаки Т-Банка не
+      используются.
     </aside>
     ${story(context)}
   `;

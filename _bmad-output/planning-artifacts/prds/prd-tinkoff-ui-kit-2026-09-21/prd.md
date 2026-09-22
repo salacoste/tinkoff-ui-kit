@@ -370,10 +370,16 @@ revisit after v1 adoption.
 2. **OQ-2 — Brand font strategy.** The reference uses a proprietary brand typeface the kit cannot
    bundle. Decide: font-token target stack + recommended open (ideally metric-compatible)
    alternative. Phase-relevant for FR-1 and fidelity perception.
+   *Resolved 2026-09-22: faithful stacks from the live @font-face extraction (their family names
+   first — auto-pickup for licensed hosts); proprietary fonts NOT bundled (§5.1); default fallback
+   Inter.*
 3. **OQ-3 — Package name.** Trademark-safe candidates to pick before npm publish; unofficial
    attribution lives in README, not the name.
+   *Resolved 2026-09-22: npm names `pillkit-{tokens,components,react,docs}` (verified free on npm);
+   `tk-` element prefix and `--tk-*` properties kept — closed.*
 4. **OQ-4 — Docs language.** RU, EN, or both for v1 (audience is RU-speaking market; OSS
    convention is EN).
+   *Resolved 2026-09-22: docs language RU for v1 (code/API/package names stay English).*
 5. **OQ-5 — Framework target.** React, Vue, or web components; decided in bmad-architecture.
    This PRD stays stack-agnostic. Phase-blocker for FR-3 concretization.
 6. **OQ-6 — Fidelity tolerance.** Pixel-exact vs. perceptual threshold for the automated

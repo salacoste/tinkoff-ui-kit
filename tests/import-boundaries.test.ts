@@ -14,8 +14,8 @@ import { describe, expect, it } from 'vitest';
  *   docs→{react, components, tokens}). Relative imports that resolve out of their
  *   package are mapped to the target package and checked against the same matrix.
  * - Row 3 (build isolation): reads the built `packages/react` artifact and asserts
- *   `@tk-kit/components` stayed external and no Lit source got bundled; also guards
- *   the `@tk-kit/tokens` `./tokens.css` export target (`dist/index.css`).
+ *   `pillkit-components` stayed external and no Lit source got bundled; also guards
+ *   the `pillkit-tokens` `./tokens.css` export target (`dist/index.css`).
  *
  * Build-artifact assumption: `pnpm build` precedes `pnpm test` — the AC command
  * chain is `pnpm install && pnpm build && pnpm test`. This suite reads `dist/` as
@@ -24,13 +24,13 @@ import { describe, expect, it } from 'vitest';
 
 const REPO_ROOT = fileURLToPath(new URL('..', import.meta.url));
 
-/** AD-4 allowed import directions: package dir -> allowed @tk-kit/* specifiers. */
+/** AD-4 allowed import directions: package dir -> allowed pillkit-* specifiers. */
 const AD4_MATRIX: Record<string, readonly string[]> = {
   'packages/tokens': [],
-  'packages/components': ['@tk-kit/tokens'],
-  'packages/react': ['@tk-kit/components'],
+  'packages/components': ['pillkit-tokens'],
+  'packages/react': ['pillkit-components'],
   // docs may import every kit package (AD-4).
-  'packages/docs': ['@tk-kit/react', '@tk-kit/components', '@tk-kit/tokens'],
+  'packages/docs': ['pillkit-react', 'pillkit-components', 'pillkit-tokens'],
 };
 
 /**
@@ -86,11 +86,10 @@ function extractModuleSpecifiers(source: string): string[] {
   return specifiers;
 }
 
-/** Base package name for a scoped @tk-kit specifier ('@tk-kit/x/y' -> '@tk-kit/x'). */
+/** Base package name for an unscoped pillkit specifier ('pillkit-x/y' -> 'pillkit-x'). */
 function workspacePackageOf(specifier: string): string | null {
-  if (!specifier.startsWith('@tk-kit/')) return null;
-  const segments = specifier.split('/');
-  return segments.length >= 2 ? `${segments[0]}/${segments[1]}` : null;
+  if (!specifier.startsWith('pillkit-')) return null;
+  return specifier.split('/')[0]!;
 }
 
 /**
@@ -117,7 +116,7 @@ function relativeEscapeViolation(
   if (targetDir === undefined) {
     return `${filePath}: relative import '${specifier}' leaves ${packageDir} and points outside the workspace`;
   }
-  const targetPackage = `@tk-kit/${targetDir.split('/')[1]}`;
+  const targetPackage = `pillkit-${targetDir.split('/')[1]}`;
   return allowed.includes(targetPackage)
     ? null
     : `${filePath}: relative import '${specifier}' resolves to ${targetPackage} (allowed: ${allowedList})`;
@@ -202,14 +201,14 @@ describe('AD-4 import boundaries (spec 1.1, matrix row 2)', () => {
     // Path is only used for specifier resolution — no file is created.
     const syntheticPath = join(REPO_ROOT, 'packages/tokens/src/__synthetic__.ts');
     const badSource = [
-      "import { x } from '@tk-kit/components';",
-      "export * from '@tk-kit/react/sub';",
-      "import '@tk-kit/docs';",
-      "const dynamic = () => import('@tk-kit/tokens');",
+      "import { x } from 'pillkit-components';",
+      "export * from 'pillkit-react/sub';",
+      "import 'pillkit-docs';",
+      "const dynamic = () => import('pillkit-tokens');",
       "import { r } from '../../react/src/index.js';",
       "import { fine } from 'lit';",
       "import './sibling.js';",
-      'const decoy = "import { fake } from \'@tk-kit/react\';";',
+      'const decoy = "import { fake } from \'pillkit-react\';";',
     ].join('\n');
     const found = violationsIn(badSource, syntheticPath, 'packages/tokens', AD4_MATRIX['packages/tokens']!);
     expect(found).toHaveLength(5);
@@ -218,9 +217,9 @@ describe('AD-4 import boundaries (spec 1.1, matrix row 2)', () => {
 });
 
 describe('react build isolation (spec 1.1, matrix row 3)', () => {
-  it('keeps @tk-kit/components as an external import/export specifier', () => {
+  it('keeps pillkit-components as an external import/export specifier', () => {
     const artifact = readBuiltArtifact('packages/react/dist/index.js');
-    expect(/from\s*['"]@tk-kit\/components['"]/.test(artifact)).toBe(true);
+    expect(/from\s*['"]pillkit-components['"]/.test(artifact)).toBe(true);
   });
 
   it('does not bundle Lit source', () => {

@@ -9,7 +9,7 @@
 //   components → tokens
 //   react      → components
 //   docs       → { react, components, tokens }
-// Both bare package imports (`@tk-kit/*`) and relative cross-package escapes
+// Both bare package imports (`pillkit-*`) and relative cross-package escapes
 // (`../../<pkg>/...` at any depth) are restricted. The lint regex for relative escapes
 // approximates by specifier shape; the precise path-resolution check lives in
 // tests/import-boundaries.test.ts (runs in `pnpm test`).
@@ -37,7 +37,7 @@ export default tseslint.config(
         {
           patterns: [
             {
-              group: ['@tk-kit/*', '@tk-kit/**'],
+              group: ['pillkit-*', 'pillkit-**'],
               message:
                 'AD-4 import boundary: tokens is the root of the dependency graph and may not import any workspace package (allowed directions: components→tokens, react→components, docs→{react, components, tokens}).',
             },
@@ -60,13 +60,13 @@ export default tseslint.config(
           patterns: [
             {
               group: [
-                '@tk-kit/react',
-                '@tk-kit/react/**',
-                '@tk-kit/docs',
-                '@tk-kit/docs/**',
+                'pillkit-react',
+                'pillkit-react/**',
+                'pillkit-docs',
+                'pillkit-docs/**',
               ],
               message:
-                'AD-4 import boundary: components may only import @tk-kit/tokens (allowed directions: components→tokens, react→components, docs→{react, components, tokens}).',
+                'AD-4 import boundary: components may only import pillkit-tokens (allowed directions: components→tokens, react→components, docs→{react, components, tokens}).',
             },
             {
               regex: '^(\\.\\./)+(react|docs)(/|$)',
@@ -87,13 +87,13 @@ export default tseslint.config(
           patterns: [
             {
               group: [
-                '@tk-kit/tokens',
-                '@tk-kit/tokens/**',
-                '@tk-kit/docs',
-                '@tk-kit/docs/**',
+                'pillkit-tokens',
+                'pillkit-tokens/**',
+                'pillkit-docs',
+                'pillkit-docs/**',
               ],
               message:
-                'AD-4 import boundary: react may only import @tk-kit/components (allowed directions: components→tokens, react→components, docs→{react, components, tokens}).',
+                'AD-4 import boundary: react may only import pillkit-components (allowed directions: components→tokens, react→components, docs→{react, components, tokens}).',
             },
             {
               regex: '^(\\.\\./)+(tokens|docs)(/|$)',

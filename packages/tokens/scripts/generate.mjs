@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * @tk-kit/tokens — generation pipeline (Stories 1.2–1.3, AD-3).
+ * pillkit-tokens — generation pipeline (Stories 1.2–1.3, AD-3).
  *
  * DESIGN.md frontmatter is the sole source of truth for token values. This module
  * parses it with a real YAML parser and renders three committed artifacts:
@@ -355,7 +355,8 @@ function typographyModel(typography) {
   assertNonEmptyMapping(typography, 'typography');
   const allowed = new Set(['fontSize', 'fontWeight', 'lineHeight', 'letterSpacing', 'fontFamily', 'note']);
   const entries = [];
-  const families = new Set();
+  const headingFamilies = new Set();
+  const bodyFamilies = new Set();
   for (const [slot, spec] of Object.entries(typography)) {
     assertKey(slot, `typography.${slot}`);
     assertMapping(spec, `typography.${slot}`);
@@ -401,19 +402,26 @@ function typographyModel(typography) {
         `typography.${slot}.fontFamily: expected a font stack string`,
       );
       assertValue(spec.fontFamily, `typography.${slot}.fontFamily`);
-      families.add(spec.fontFamily);
+      (slot.startsWith('heading-') ? headingFamilies : bodyFamilies).add(spec.fontFamily);
     }
   }
-  assert(
-    families.size === 1,
-    `expected one shared fallback stack across typography, found ${families.size} (${[...families].join(' | ')}) — wire heading/body stacks separately if DESIGN.md ever splits them`,
-  );
-  const fontFamilyStack = [...families][0];
+  // OQ-2 resolution (2026-09-22): DESIGN.md carries TWO faithful stacks — the
+  // heading slots share one, the body slots (body-*, caps-s) the other. Each
+  // group must agree internally; a slot drifting its stack aborts generation.
+  for (const [group, families] of [
+    ['heading', headingFamilies],
+    ['body', bodyFamilies],
+  ]) {
+    assert(
+      families.size === 1,
+      `expected one shared ${group} font stack across typography, found ${families.size} (${[...families].join(' | ')}) for ${group} slots — every ${group} slot must declare the same stack`,
+    );
+  }
   return {
     entries,
     fontSlots: [
-      { name: '--tk-font-heading', value: fontFamilyStack },
-      { name: '--tk-font-body', value: fontFamilyStack },
+      { name: '--tk-font-heading', value: [...headingFamilies][0] },
+      { name: '--tk-font-body', value: [...bodyFamilies][0] },
     ],
   };
 }
@@ -615,11 +623,15 @@ function declarationLines(entries, notes = TOKEN_NOTES) {
 }
 
 const FONT_SLOT_COMMENT = [
-  '  /* Font family slots — the first family position is the consumer brand-font',
-  "     slot (OQ-2: the reference's dsHeading/dsText are proprietary and never",
-  '     bundled). Point it at a licensed brand font or a metric-compatible open',
-  '     alternative — recommended default: Inter. A slot override replaces the',
-  '     whole value: re-include the fallback stack. */',
+  '  /* Font family slots — faithful stacks from the live @font-face extraction',
+  '     (2026-09-22, cdn.tbank.ru/frontend-libraries/npm/react-kit-font/1.0.0):',
+  '     dsHeading = TinkoffSans (heading), haas/dsText = Neue Haas Unica W1G',
+  '     (body), pragmatica = ParaType. All proprietary/commercial — the kit',
+  '     does NOT bundle them (PRD §5.1): consumers with licensed files register',
+  '     @font-face under those exact family names and the kit auto-picks them',
+  '     up with zero config. Default open fallback: Inter (closest open',
+  '     grotesk). A slot override replaces the whole value: re-include the',
+  '     fallback stack. */',
 ].join('\n');
 
 function renderCss(model, dark) {
@@ -627,7 +639,7 @@ function renderCss(model, dark) {
   parts.push(
     [
       '/**',
-      ' * @tk-kit/tokens — token layers (generated): light on `:host, :root`,',
+      ' * pillkit-tokens — token layers (generated): light on `:host, :root`,',
       ' * dark semantic overrides on `[data-theme="dark"]` (Story 1.3).',
       ' *',
       ' * DO NOT EDIT BY HAND — regenerate with `pnpm gen:tokens`.',
@@ -752,7 +764,7 @@ function renderTs(model, dark) {
   ];
   return [
     '/**',
-    ' * @tk-kit/tokens — typed token maps (generated).',
+    ' * pillkit-tokens — typed token maps (generated).',
     ' *',
     ' * DO NOT EDIT BY HAND — regenerate with `pnpm gen:tokens`.',
     ' * Source of truth: _bmad-output/planning-artifacts/ux-designs/ux-tinkoff-ui-kit-2026-09-21/DESIGN.md',
@@ -815,7 +827,7 @@ function renderMd(model, dark) {
   ];
   const total = counts.reduce((sum, [, count]) => sum + count, 0);
   const lines = [];
-  lines.push('# @tk-kit/tokens — canonical token listing', '');
+  lines.push('# pillkit-tokens — canonical token listing', '');
   lines.push('GENERATED FILE — DO NOT EDIT. Regenerate with `pnpm gen:tokens`.', '');
   lines.push(
     `- Source of truth: \`${DESIGN_MD_PATH}\` frontmatter — blocks \`colors\`, \`typography\`, \`rounded\`, \`spacing\`, \`shadows\`, \`motion\`.`,
@@ -843,12 +855,12 @@ function renderMd(model, dark) {
   lines.push('### Font family slots', '');
   lines.push(mdTable(typography.fontSlots.map(({ name, value }) => [mdCode(name), mdCode(value), ''])), '');
   lines.push(
-    "The first family of each slot is the **consumer brand-font slot** (OQ-2 — the reference's `dsHeading`/`dsText` are proprietary and never bundled). Point it at a licensed brand font or a metric-compatible open alternative; recommended default: **Inter**. Heading and body slots share DESIGN.md's single fallback stack and are overridden independently.",
+    'Faithful stacks from the live @font-face extraction (2026-09-22, `cdn.tbank.ru/frontend-libraries/npm/react-kit-font/1.0.0`): heading `dsHeading` = `TinkoffSans`, body `haas`/`dsText` = `Neue Haas Unica W1G` (+ `pragmatica`). All proprietary/commercial — TinkoffSans is a T-Bank asset, Neue Haas Unica W1G is Monotype, pragmatica is ParaType — so the kit does **not** bundle them (PRD §5.1). Consumers with licensed files register `@font-face` under those exact family names and the kit auto-picks them up with zero config; the default open fallback is **Inter** (closest open grotesk). The two slots are overridden independently.',
     '',
     'Override recipe (custom properties cascade and inherit — declare on `body`/your app root, or any later or higher-specificity declaration):',
     '',
     '```css',
-    ":root { --tk-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif; }",
+    ':root { --tk-font-body: Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif; }',
     '```',
     '',
     'An override replaces the whole value: re-include the fallback stack so the DESIGN.md fallbacks stay preserved.',

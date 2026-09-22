@@ -6,7 +6,7 @@ Every rule cites its source. The items the sources left undecided for the pilot 
 
 ## 1. Element & file naming
 
-- Custom element names: `tk-` prefix, kebab-case, one word per concept — `tk-button`, `tk-segmented-radio`, `tk-thumbnail-picker`. The prefix is revisited with OQ-3 before publishing. *(AD-4/Conventions)*
+- Custom element names: `tk-` prefix, kebab-case, one word per concept — `tk-button`, `tk-segmented-radio`, `tk-thumbnail-picker`. Prefix decision closed at OQ-3 — `tk-`/`--tk-*` stay permanently (generic abbreviation, zero trademark collision). *(AD-4/Conventions)*
 - One component per directory: `packages/components/src/<name>/` containing `index.ts` (element + re-exports), `<name>.css.ts` or styles module, `<name>.test.ts`, `<name>.story.ts`. *(AD-4 Conventions)*
 - Class names: `TkButton`, `TkSegmentedRadio` — PascalCase with the prefix.
 

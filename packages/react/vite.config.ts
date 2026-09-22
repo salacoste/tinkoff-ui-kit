@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 
 // Lib-mode build with dependencies externalized. Workspace-linked deps are NOT
 // auto-externalized by Vite lib mode, so they are listed explicitly:
-// `@tk-kit/components` (workspace dep), `@lit/react` (dependency) and `react`
+// `pillkit-components` (workspace dep), `@lit/react` (dependency) and `react`
 // (peer) stay external imports in the output — never bundled.
 export default defineConfig({
   build: {
@@ -14,7 +14,7 @@ export default defineConfig({
     outDir: 'dist',
     emptyOutDir: true,
     rollupOptions: {
-      external: [/^@tk-kit\//, /^@lit\//, /^react$/, /^react\//],
+      external: [/^pillkit-/, /^@lit\//, /^react$/, /^react\//],
     },
   },
 });

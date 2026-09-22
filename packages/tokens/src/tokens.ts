@@ -1,5 +1,5 @@
 /**
- * @tk-kit/tokens — typed token maps (generated).
+ * pillkit-tokens — typed token maps (generated).
  *
  * DO NOT EDIT BY HAND — regenerate with `pnpm gen:tokens`.
  * Source of truth: _bmad-output/planning-artifacts/ux-designs/ux-tinkoff-ui-kit-2026-09-21/DESIGN.md
@@ -120,8 +120,8 @@ export const typographyTokens = {
   '--tk-text-caps-s-size': '12px',
   '--tk-text-caps-s-weight': '500',
   '--tk-text-caps-s-tracking': '1px',
-  '--tk-font-heading': '-apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif',
-  '--tk-font-body': '-apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif',
+  '--tk-font-heading': 'dsHeading, TinkoffSans, Inter, -apple-system, system-ui, "Segoe UI", "Helvetica Neue", sans-serif',
+  '--tk-font-body': 'haas, "Neue Haas Unica W1G", pragmatica, Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif',
 } as const;
 
 /** Radius tokens (values: DESIGN.md `rounded`). */

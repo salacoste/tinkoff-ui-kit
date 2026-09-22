@@ -8,7 +8,7 @@ import { afterAll, describe, expect, it } from 'vitest';
 import { Button, EVENT_MAP } from './index.js';
 
 /**
- * @tk-kit/react generated surface. The wrapper imports `@tk-kit/components`
+ * pillkit-react generated surface. The wrapper imports `pillkit-components`
  * (built dist — the packages run in topological order under `pnpm -r test`)
  * and the pinned `@lit/react`; React itself resolves via the workspace peer
  * (19.3.0). The smoke test EXECUTES the wrapper through react-dom — the
@@ -37,7 +37,7 @@ const renderToContainer = async (element: React.ReactElement): Promise<HTMLEleme
   return container;
 };
 
-describe('@tk-kit/react', () => {
+describe('pillkit-react', () => {
   it('generates a Button wrapper for tk-button from the manifest', () => {
     // createComponent returns a React ForwardRefExoticComponent — an object
     // with the React forward_ref tag and a render function.

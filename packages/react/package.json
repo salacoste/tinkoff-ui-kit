@@ -1,8 +1,8 @@
 {
-  "name": "@tk-kit/react",
+  "name": "pillkit-react",
   "version": "0.0.0",
   "private": true,
-  "description": "React adapters for tinkoff-ui-kit — wrappers generated from the Custom Elements Manifest of @tk-kit/components via @lit/react (regenerate: pnpm gen).",
+  "description": "React adapters for tinkoff-ui-kit — wrappers generated from the Custom Elements Manifest of pillkit-components via @lit/react (regenerate: pnpm gen).",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@lit/react": "1.0.8",
-    "@tk-kit/components": "workspace:*"
+    "pillkit-components": "workspace:*"
   },
   "peerDependencies": {
     "react": "19.3.0"

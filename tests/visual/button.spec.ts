@@ -12,7 +12,7 @@ import { buildStoryUrl } from './stories';
  * Runs under the same pinned webServer/capture config as the visual suite
  * (playwright.config.ts) against the BUILT docs bundle — build first
  * (pnpm test:visual does; direct playwright calls need pnpm --filter
- * @tk-kit/docs build, same stale-dist rule as tests/visual/README.md).
+ * pillkit-docs build, same stale-dist rule as tests/visual/README.md).
  */
 
 /** Settle wait — same contract as visual.spec.ts (children or error display). */
