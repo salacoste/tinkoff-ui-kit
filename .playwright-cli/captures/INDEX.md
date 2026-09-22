@@ -18,6 +18,7 @@ ivan@domain.ru — placeholder-style values from the 2026-09-21 session profile)
 | `select-cashback.png` | **Select** (closed) | trigger «Выберите повышенный кэшбэк (четыре категории)» | same form |
 | `select-cashback-open.png` | **Select** (open menu) | same trigger after click — listbox «Выберите четыре категории»: 1% Все покупки, 5% Рестораны, 5% Аптеки, 5% Ozon.ru, 3% Пятёрочка, 5% Спорттовары, 5% Такси | same form, interaction state |
 | `checkbox-consent.png` | **Checkbox** | consent line «Соглашаюсь получать рекламу про кешбэк…» with inline link | same form |
+| `checkbox-consent-checked.png` | **Checkbox** (checked) | same consent line after checking the box — the Story 2.4 gap-close capture; method: fresh persistent session (the stale profile's service worker was redirecting to status.tbank-online.com — `delete-data`, reopen), trusted `check` on the native input via `input[type=checkbox] >> nth=1`, temp-id'd the wrapping label, `screenshot <selector> --hires` (DPR 1 → 536×38). Pixel-probed ground truth (ImageMagick): 16×16 box, fill exactly `#FFDD2D` (yellow-100), check glyph exactly `#333333` (ink-300) — the DESIGN.md frozen pairing confirmed; the 16 vs 20px box reading stays in the 2.0 flagged range (DESIGN 20px wins for the kit) | same form, interaction state |
 | `segmented-radio-citizenship.png` | **SegmentedRadio** | «Гражданство РФ?» Да/Нет pill group (Да checked) | same form |
 | `thumbnail-picker-card-design.png` | **ThumbnailPicker** | «Выберите дизайн карты» — 6 selectable card-design tiles (first checked) | same form |
 | `progress-bar-fill.png` | **ProgressBar** | «Уже заполнено 5%» progress strip | same form |
@@ -38,7 +39,10 @@ ivan@domain.ru — placeholder-style values from the 2026-09-21 session profile)
 
 ## Gaps
 
-1. **Checkbox — checked state not captured** (unchecked only; a checked-state reference needs one more interaction session — will be captured at Story 2.4 baseline time if needed). Notes:
+None open. (The Checkbox checked-state gap was closed at Story 2.4 — see the
+`checkbox-consent-checked.png` row above for the method and pixel-probe notes.)
+
+Residual notes:
 
 - «+30%» literal badge absent site-wide (homepage + form); the equivalent «+20%» field badge captured.
 - Tabs switcher lives on the homepage (not /cards as the spec guessed) — no extra navigation needed.

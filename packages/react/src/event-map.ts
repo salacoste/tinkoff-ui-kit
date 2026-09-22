@@ -39,5 +39,10 @@ export const EVENT_MAP: Readonly<Record<string, Readonly<TkKitElementEventMap>>>
     onValueChange: 'value-change',
     onOpenChange: 'open-change',
   },
+  // Story 2.4 — the boolean state channel (§4 contract on `checked`;
+  // `indeterminate` is visual-only and deliberately carries NO event).
+  'tk-checkbox': {
+    onCheckedChange: 'checked-change',
+  },
   // 'tk-button': none at v1 (native click serves activation).
 });

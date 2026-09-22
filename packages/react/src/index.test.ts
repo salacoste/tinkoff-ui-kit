@@ -5,7 +5,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import * as litReact from '@lit/react';
 import { afterAll, describe, expect, it, vi } from 'vitest';
 
-import { Button, EVENT_MAP, Input, Select } from './index.js';
+import { Button, Checkbox, EVENT_MAP, Input, Select } from './index.js';
 
 /**
  * pillkit-react generated surface. The wrapper imports `pillkit-components`
@@ -293,6 +293,99 @@ describe('pillkit-react', () => {
     expect(
       (el as Element).shadowRoot?.querySelector('.field__value')?.textContent,
     ).toContain('Такси');
+  });
+
+  // --- Story 2.4: tk-checkbox wrapper (mirrors the Input/Select smoke) -------
+
+  it("carries the story 2.4 registry entry: tk-checkbox's checked-change", () => {
+    expect(EVENT_MAP['tk-checkbox']).toEqual({ onCheckedChange: 'checked-change' });
+  });
+
+  it('renders <Checkbox> as tk-checkbox with element properties set through the wrapper', async () => {
+    const container = await renderToContainer(
+      React.createElement(Checkbox, { label: 'Соглашаюсь получать рекламу' }),
+    );
+    const el = container.querySelector('tk-checkbox');
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    expect((el as unknown as { label?: string }).label).toBe('Соглашаюсь получать рекламу');
+    const input = el?.shadowRoot?.querySelector('input');
+    expect(input, 'the native checkbox surface renders').not.toBeNull();
+    expect(input?.type).toBe('checkbox');
+  });
+
+  it('onCheckedChange receives the UNWRAPPED boolean — never the CustomEvent (AD-1)', async () => {
+    const handler = vi.fn();
+    const container = await renderToContainer(
+      React.createElement(Checkbox, { onCheckedChange: handler }),
+    );
+    const el = container.querySelector('tk-checkbox');
+    expect(el).not.toBeNull();
+
+    // Direct dispatch: detail { value } in, bare boolean out.
+    el?.dispatchEvent(
+      new CustomEvent('checked-change', { detail: { value: true }, composed: true, bubbles: true }),
+    );
+    expect(handler).toHaveBeenCalledTimes(1);
+    const payload = handler.mock.calls[0]?.[0];
+    expect(payload).toBe(true);
+    expect(typeof payload).toBe('boolean');
+
+    // Real toggle path: same unwrap through the element's own pipeline.
+    handler.mockClear();
+    const control = el?.shadowRoot?.querySelector('input');
+    control!.checked = true;
+    control!.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler.mock.calls[0]?.[0]).toBe(true);
+  });
+
+  it('Checkbox controlled mode: standard checked mapping, wrapper adds no clamping (boolean channel)', async () => {
+    let state = false;
+    const container = await renderToContainer(
+      React.createElement(Checkbox, {
+        checked: state,
+        onCheckedChange: (value: unknown) => {
+          expect(typeof value).toBe('boolean');
+          state = value as boolean;
+        },
+      }),
+    );
+    const root = roots[roots.length - 1];
+    const el = container.querySelector('tk-checkbox') as (Element & {
+      checked?: boolean;
+      updateComplete?: Promise<unknown>;
+    }) | null;
+    expect(el?.checked).toBe(false);
+
+    // Toggle: the event fires with the new state; the element's channel keeps
+    // the consumer value (strict) — the wrapper itself clamps nothing.
+    const control = el?.shadowRoot?.querySelector('input');
+    control!.checked = true;
+    control!.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
+    expect(state).toBe(true);
+    expect(el?.checked).toBe(false);
+
+    // The consumer's render answers: checked flows back.
+    await act(() => {
+      root.render(
+        React.createElement(Checkbox, {
+          checked: state,
+          onCheckedChange: (value: unknown) => {
+            state = value as boolean;
+          },
+        }),
+      );
+    });
+    expect(el?.checked).toBe(true);
+    expect(el?.shadowRoot?.querySelector('input')?.checked).toBe(true);
+
+    // Removing the checked prop releases the element (frozen §4 semantics)
+    // — seeded from the last controlled value.
+    await act(() => {
+      root.render(React.createElement(Checkbox, { label: 'Согласен' }));
+    });
+    expect(el?.checked).toBeUndefined();
+    expect(el?.shadowRoot?.querySelector('input')?.checked).toBe(true);
   });
 
   it('forwards refs through the HOC to the underlying elements (every wrapper is a forwardRef HOC)', async () => {
