@@ -163,7 +163,7 @@ pnpm add pillkit-components pillkit-react pillkit-tokens --workspace</code></pre
           отдельно-лицензированный актив (решение мейнтейнера, 2026-09-22) —
           <strong>DaytonaSans</strong> (переименованная Neue Haas Unica W1G,
           Monotype; уже в <code>packages/tokens/fonts/</code>) и
-          DaytonaPragma (Pragmatica, ParaType; файлы добавит мейнтейнер).
+          DaytonaPragma (Pragmatica, ParaType; веса 400/500/700).
           Они не покрываются MIT-лицензией пакета — см.
           <code>packages/tokens/fonts/LICENSE-FONTS.md</code>. Подключите
           <code>pillkit-tokens/daytona.css</code> рядом с

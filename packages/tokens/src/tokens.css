@@ -118,7 +118,7 @@
      The bundled licensed renames are the default: DaytonaSans = Neue Haas
      Unica W1G (renamed under the maintainer's Monotype license; ships in
      packages/tokens/fonts/ via pillkit-tokens/daytona.css), DaytonaPragma =
-     Pragmatica (ParaType; pending files). Separately-licensed assets, NOT
+     Pragmatica (ParaType; 400/500/700). Separately-licensed assets, NOT
      MIT — see fonts/LICENSE-FONTS.md. TinkoffSans (the site's heading font,
      dsHeading) stays proprietary/unavailable — DaytonaSans takes the heading
      role as the closest licensed grotesk. Open fallback: Inter. Consumers

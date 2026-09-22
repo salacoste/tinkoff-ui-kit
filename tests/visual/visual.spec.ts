@@ -117,6 +117,10 @@ for (const id of storyIds) {
     test(`axe: ${id} [${theme}]`, async ({ page }) => {
       await page.goto(buildStoryUrl(id, theme));
       await waitForStorySettled(page);
+      // Fonts must be settled BEFORE axe runs: color-contrast measured mid
+      // font-swap (fallback → brand metrics) produces one-off phantom
+      // violations (observed once on getting-started [dark], 2026-09-22).
+      await pinDeterministicFonts(page);
       // No story carries an axe exclusion (the 1.6 tokens-demo chip exclusion
       // died with the demo at Story 1.7) — every element of every story is
       // audited in both themes.
