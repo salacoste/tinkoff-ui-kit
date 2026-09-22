@@ -21,7 +21,30 @@
  *   export change still goes through `pnpm gen` + commit.
  * - `dev: true` keeps the dev-mode plugin set on (linking the definition
  *   entries to their declarations).
+ * - `plugins: [sortModulesPlugin]` — determinism fix (found at Story 2.5):
+ *   the analyzer's module list follows fast-glob's async enumeration order,
+ *   which is NOT stable across processes (observed: consecutive `cem analyze`
+ *   runs disagreed on module order — select↔segmented-radio/checkbox flipped —
+ *   so `check:gen` and tests/gen-drift.test.ts failed on byte drift with
+ *   identical sources). The plugin sorts `modules` by path in
+ *   packageLinkPhase (the pre-serialization hook), so EVERY invocation —
+ *   the package script, the root `pnpm gen`, and the drift test's direct
+ *   `cem analyze` exec — emits byte-identical output. This mirrors the
+ *   wrapper generator's own tag-name sort (same determinism contract, same
+ *   code-unit comparison — locale/ICU-independent).
  */
+
+/** Locale-independent comparator (code-unit), matching generate-wrappers.mjs. */
+const byPath = (a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0);
+
+const sortModulesPlugin = {
+  name: 'sort-manifest-modules',
+  // v0.11 hook payload: { customElementsManifest, context } (create.js).
+  packageLinkPhase({ customElementsManifest: manifest }) {
+    manifest?.modules?.sort(byPath);
+  },
+};
+
 export default {
   globs: [
     'src/**/*.ts',
@@ -32,4 +55,5 @@ export default {
   outdir: '.',
   litelement: true,
   dev: true,
+  plugins: [sortModulesPlugin],
 };

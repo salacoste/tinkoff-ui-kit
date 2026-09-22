@@ -5,7 +5,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import * as litReact from '@lit/react';
 import { afterAll, describe, expect, it, vi } from 'vitest';
 
-import { Button, Checkbox, EVENT_MAP, Input, Select } from './index.js';
+import { Button, Checkbox, EVENT_MAP, Input, SegmentedRadio, Select } from './index.js';
 
 /**
  * pillkit-react generated surface. The wrapper imports `pillkit-components`
@@ -386,6 +386,131 @@ describe('pillkit-react', () => {
     });
     expect(el?.checked).toBeUndefined();
     expect(el?.shadowRoot?.querySelector('input')?.checked).toBe(true);
+  });
+
+  // --- Story 2.5: tk-segmented-radio wrapper (mirrors the Input/Select smoke) --
+
+  it("carries the story 2.5 registry entry: tk-segmented-radio's value-change", () => {
+    expect(EVENT_MAP['tk-segmented-radio']).toEqual({ onValueChange: 'value-change' });
+  });
+
+  it('renders <SegmentedRadio> as tk-segmented-radio with element properties set through the wrapper', async () => {
+    const container = await renderToContainer(
+      React.createElement(SegmentedRadio, {
+        label: 'Гражданство РФ?',
+        defaultValue: 'yes',
+        options: [
+          { value: 'yes', label: 'Да' },
+          { value: 'no', label: 'Нет' },
+        ],
+      }),
+    );
+    const el = container.querySelector('tk-segmented-radio');
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    expect((el as unknown as { label?: string }).label).toBe('Гражданство РФ?');
+    expect((el as unknown as { options?: unknown[] }).options).toHaveLength(2);
+    const radios = (el as Element).shadowRoot?.querySelectorAll('input[type="radio"]');
+    expect(radios, 'the native radio group renders').toHaveLength(2);
+    expect((el as Element).shadowRoot?.querySelector('[role="radiogroup"]')).not.toBeNull();
+  });
+
+  it('onValueChange receives the UNWRAPPED string — never the CustomEvent (AD-1)', async () => {
+    const handler = vi.fn();
+    const container = await renderToContainer(
+      React.createElement(SegmentedRadio, {
+        onValueChange: handler,
+        options: [
+          { value: 'yes', label: 'Да' },
+          { value: 'no', label: 'Нет' },
+        ],
+      }),
+    );
+    const el = container.querySelector('tk-segmented-radio');
+    expect(el).not.toBeNull();
+
+    // Direct dispatch: detail { value } in, bare string out.
+    el?.dispatchEvent(
+      new CustomEvent('value-change', { detail: { value: 'no' }, composed: true, bubbles: true }),
+    );
+    expect(handler).toHaveBeenCalledTimes(1);
+    const payload = handler.mock.calls[0]?.[0];
+    expect(payload).toBe('no');
+    expect(typeof payload).toBe('string');
+
+    // Real selection path: same unwrap through the element's own pipeline
+    // (the change event the UA fires after a label-click/Space selection).
+    handler.mockClear();
+    const radios = (el as Element).shadowRoot?.querySelectorAll('input');
+    const second = radios?.[1] as HTMLInputElement | undefined;
+    second!.checked = true;
+    second!.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler.mock.calls[0]?.[0]).toBe('no');
+  });
+
+  it('SegmentedRadio controlled mode: standard value mapping, wrapper adds no clamping (string channel)', async () => {
+    const OPTIONS = [
+      { value: 'yes', label: 'Да' },
+      { value: 'no', label: 'Нет' },
+    ];
+    let state = 'yes';
+    const container = await renderToContainer(
+      React.createElement(SegmentedRadio, {
+        options: OPTIONS,
+        value: state,
+        onValueChange: (value: unknown) => {
+          expect(typeof value).toBe('string');
+          state = value as string;
+        },
+      }),
+    );
+    const root = roots[roots.length - 1];
+    const el = container.querySelector('tk-segmented-radio') as (Element & {
+      value?: string;
+      updateComplete?: Promise<unknown>;
+    }) | null;
+    expect(el?.value).toBe('yes');
+
+    // Select the second option through the element's own pipeline.
+    const radios = (el as Element).shadowRoot?.querySelectorAll('input');
+    const second = radios?.[1] as HTMLInputElement | undefined;
+    await act(() => {
+      second!.checked = true;
+      second!.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
+    });
+
+    // Strict: the event fired, the element's channel keeps the consumer value.
+    expect(state).toBe('no');
+    expect(el?.value).toBe('yes');
+
+    // The consumer's render answers: value flows back.
+    await act(() => {
+      root.render(
+        React.createElement(SegmentedRadio, {
+          options: OPTIONS,
+          value: state,
+          onValueChange: (value: unknown) => {
+            state = value as string;
+          },
+        }),
+      );
+    });
+    expect(el?.value).toBe('no');
+    const checked = [...((el as Element).shadowRoot?.querySelectorAll('input') ?? [])].find(
+      (input) => input.checked,
+    );
+    expect(checked?.value).toBe('no');
+
+    // Removing the value prop releases the element (frozen §4 semantics)
+    // — seeded from the last controlled value.
+    await act(() => {
+      root.render(React.createElement(SegmentedRadio, { options: OPTIONS, label: 'Гражданство РФ?' }));
+    });
+    expect(el?.value).toBeUndefined();
+    const seeded = [...((el as Element).shadowRoot?.querySelectorAll('input') ?? [])].find(
+      (input) => input.checked,
+    );
+    expect(seeded?.value).toBe('no');
   });
 
   it('forwards refs through the HOC to the underlying elements (every wrapper is a forwardRef HOC)', async () => {

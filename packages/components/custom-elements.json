@@ -4,221 +4,6 @@
   "modules": [
     {
       "kind": "javascript-module",
-      "path": "src/index.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "*",
-          "declaration": {
-            "name": "*",
-            "module": "src/button/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "*",
-          "declaration": {
-            "name": "*",
-            "module": "src/checkbox/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "*",
-          "declaration": {
-            "name": "*",
-            "module": "src/input/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "*",
-          "declaration": {
-            "name": "*",
-            "module": "src/select/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "mountOverlay",
-          "declaration": {
-            "name": "mountOverlay",
-            "module": "./overlays/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "lockBodyScroll",
-          "declaration": {
-            "name": "lockBodyScroll",
-            "module": "./overlays/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "computeFloatingPosition",
-          "declaration": {
-            "name": "computeFloatingPosition",
-            "module": "./overlays/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "positionFloating",
-          "declaration": {
-            "name": "positionFloating",
-            "module": "./overlays/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "enqueueToast",
-          "declaration": {
-            "name": "enqueueToast",
-            "module": "./overlays/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "trapFocus",
-          "declaration": {
-            "name": "trapFocus",
-            "module": "./overlays/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "TkOverlayHandle",
-          "declaration": {
-            "name": "TkOverlayHandle",
-            "module": "./overlays/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "TkOverlayLayer",
-          "declaration": {
-            "name": "TkOverlayLayer",
-            "module": "./overlays/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "TkOverlayMountStrategy",
-          "declaration": {
-            "name": "TkOverlayMountStrategy",
-            "module": "./overlays/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "TkScrollLockHandle",
-          "declaration": {
-            "name": "TkScrollLockHandle",
-            "module": "./overlays/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "TkComputeOptions",
-          "declaration": {
-            "name": "TkComputeOptions",
-            "module": "./overlays/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "TkFloatingPosition",
-          "declaration": {
-            "name": "TkFloatingPosition",
-            "module": "./overlays/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "TkPlacement",
-          "declaration": {
-            "name": "TkPlacement",
-            "module": "./overlays/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "TkPositionFloatingOptions",
-          "declaration": {
-            "name": "TkPositionFloatingOptions",
-            "module": "./overlays/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "TkPositioningHandle",
-          "declaration": {
-            "name": "TkPositioningHandle",
-            "module": "./overlays/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "TkRect",
-          "declaration": {
-            "name": "TkRect",
-            "module": "./overlays/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "TkViewport",
-          "declaration": {
-            "name": "TkViewport",
-            "module": "./overlays/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "TkToastHandle",
-          "declaration": {
-            "name": "TkToastHandle",
-            "module": "./overlays/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "TkToastOptions",
-          "declaration": {
-            "name": "TkToastOptions",
-            "module": "./overlays/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "TkFocusTrapHandle",
-          "declaration": {
-            "name": "TkFocusTrapHandle",
-            "module": "./overlays/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "TkFocusTrapOptions",
-          "declaration": {
-            "name": "TkFocusTrapOptions",
-            "module": "./overlays/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "TkInitialFocusTarget",
-          "declaration": {
-            "name": "TkInitialFocusTarget",
-            "module": "./overlays/index.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/button/button.css.ts",
       "declarations": [
         {
@@ -839,6 +624,229 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/button/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/checkbox/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/input/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/segmented-radio/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/select/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "mountOverlay",
+          "declaration": {
+            "name": "mountOverlay",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "lockBodyScroll",
+          "declaration": {
+            "name": "lockBodyScroll",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "computeFloatingPosition",
+          "declaration": {
+            "name": "computeFloatingPosition",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "positionFloating",
+          "declaration": {
+            "name": "positionFloating",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "enqueueToast",
+          "declaration": {
+            "name": "enqueueToast",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "trapFocus",
+          "declaration": {
+            "name": "trapFocus",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkOverlayHandle",
+          "declaration": {
+            "name": "TkOverlayHandle",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkOverlayLayer",
+          "declaration": {
+            "name": "TkOverlayLayer",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkOverlayMountStrategy",
+          "declaration": {
+            "name": "TkOverlayMountStrategy",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkScrollLockHandle",
+          "declaration": {
+            "name": "TkScrollLockHandle",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkComputeOptions",
+          "declaration": {
+            "name": "TkComputeOptions",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkFloatingPosition",
+          "declaration": {
+            "name": "TkFloatingPosition",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkPlacement",
+          "declaration": {
+            "name": "TkPlacement",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkPositionFloatingOptions",
+          "declaration": {
+            "name": "TkPositionFloatingOptions",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkPositioningHandle",
+          "declaration": {
+            "name": "TkPositioningHandle",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkRect",
+          "declaration": {
+            "name": "TkRect",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkViewport",
+          "declaration": {
+            "name": "TkViewport",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkToastHandle",
+          "declaration": {
+            "name": "TkToastHandle",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkToastOptions",
+          "declaration": {
+            "name": "TkToastOptions",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkFocusTrapHandle",
+          "declaration": {
+            "name": "TkFocusTrapHandle",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkFocusTrapOptions",
+          "declaration": {
+            "name": "TkFocusTrapOptions",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkInitialFocusTarget",
+          "declaration": {
+            "name": "TkInitialFocusTarget",
+            "module": "./overlays/index.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/input/index.ts",
       "declarations": [],
       "exports": [
@@ -1299,6 +1307,469 @@
           "declaration": {
             "name": "TkInput",
             "module": "src/input/input.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/segmented-radio/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/segmented-radio/segmented-radio.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/segmented-radio/segmented-radio.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "segmentedRadioStyles",
+          "default": "css` :host { display: block; max-width: 100%; } /* Disabled group (EXPERIENCE State Patterns): 40% opacity, no pointer events at the host boundary. The inner inputs keep aria-disabled (focusable — the button-pilot pattern); the change guard reverts any keyboard flip, so nothing ever emits or commits while disabled. */ :host([disabled]) { opacity: 0.4; pointer-events: none; } /* Group label — Input's always-visible label pattern verbatim (the spec's «mirroring Input's label pattern» instruction; the reference's 24px label→pill gap is the page's own spacing rhythm, not the field's). A SPAN, not a clickable <label for>: the association would concatenate the group text onto the tab-stop option's accessible name (see the class doc) — so no pointer affordance either. */ .label { display: block; margin: 0 0 var(--tk-space-8); font-family: var(--tk-font-body); font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-bold-weight); line-height: var(--tk-text-body-m-leading); color: var(--tk-color-text-primary); } /* --- The pill track: one continuous radius-full bar (DESIGN.md's frozen shape), tinted with the field language so the WHITE selected segment reads as the solid fill DESIGN demands. 4px inset gives the segment surface its stadium breathing room (48px pill inside 56px track). --- */ .track { box-sizing: border-box; display: flex; gap: var(--tk-space-4); width: 100%; height: 56px; padding: var(--tk-space-4); border-radius: var(--tk-segmented-radio-radius, var(--tk-radius-full)); background: var(--tk-segmented-radio-fill, var(--tk-color-surface-field)); } /* The native label IS the segment's hit frame: input + surface inside one label gives click-to-select and the accessible name (the option label) for free — the 2.4 pattern. */ .segment { position: relative; flex: 1 1 0; display: block; min-width: 0; cursor: pointer; } /* The invisible native radio covers the whole segment (≥44×44 target: * 48px tall × half the track wide) — the visual surface is its sibling. */ .segment__input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; padding: 0; opacity: 0; cursor: pointer; -webkit-appearance: none; appearance: none; } /* Segment surface — the pill visual. UNSELECTED: transparent (the tinted track shows through — the spec's «unselected segments = transparent text»). SELECTED: surface-base SOLID fill + inset border-default hairline (the probe's white+hairline reading; inset box-shadow so the hairline never shifts layout). Text left, dot right — both 16px insets per the probe. */ .segment__surface { box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; gap: var(--tk-space-8); height: 100%; padding-inline: var(--tk-space-16); border-radius: var(--tk-segmented-radio-radius, var(--tk-radius-full)); font-family: var(--tk-font-body); font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-weight); line-height: var(--tk-text-body-m-leading); color: var(--tk-segmented-radio-text, var(--tk-color-text-primary)); transition: background-color var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-standard), box-shadow var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-standard); } /* Hover (unselected only): ONE token step at 150ms — the EXPERIENCE State Patterns row; the token layer collapses the duration to 0ms under prefers-reduced-motion. The selected segment keeps its solid fill. TOKEN CHOICE (theme-branch-free, AD-3 — review fix): surface-muted, the surface axis's own one-step neighbor of surface-field in BOTH theme layers (light #F5F5F6 over #ECF1F7; dark #222222 over the translucent #FFFFFF1A field ≈ #2E2E2E effective — a step darker). The scale-only alternative (lightblue-200) is defined in the LIGHT layer only: in dark it stays #E4EBF3 under #FFFFFF text ≈1.2:1 (fails AA), and re-basing the token layer is a DESIGN.md edit this story can't make. AA on the step: light #333 on #F5F5F6 = 12.6:1; dark #FFFFFF on #222222 = 15.7:1. */ .segment__input:not(:checked):hover + .segment__surface { background: var(--tk-color-surface-muted); } /* Selected: SOLID white fill + hairline — the probe-resolved reading. */ .segment__input:checked + .segment__surface { background: var(--tk-segmented-radio-segment-fill, var(--tk-color-surface-base)); box-shadow: inset 0 0 0 1px var(--tk-color-border-default); } /* Unified focus ring — 2px token ring, offset 2px, never removed: drawn on the VISIBLE segment surface (the invisible input owns :focus-visible; the sibling selector bridges — the checkbox pattern). */ .segment__input:focus-visible + .segment__surface { outline: 2px solid var(--tk-color-focus-ring); outline-offset: 2px; } /* Long option labels truncate visually (ellipsis); the accessible name keeps the full string. */ .segment__text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } /* --- The dot indicator (DESIGN: «+ dot indicator»): Ø24 yellow-100 with an ink-300 Ø12 center when selected (probe-exact); the Ø24 surface-base ghost circle when unselected (the reference's flat #EEF1F5 circle, re-based to the track's own surface family). Decorative — the checked state itself announces from the native radio. --- */ .segment__dot { position: relative; flex: none; width: 24px; height: 24px; border-radius: var(--tk-radius-full); background: var(--tk-segmented-radio-dot-idle, var(--tk-color-surface-base)); transition: background-color var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-standard); } .segment__input:checked + .segment__surface .segment__dot { background: var(--tk-segmented-radio-dot-fill, var(--tk-color-yellow-100)); } .segment__input:checked + .segment__surface .segment__dot::before { content: ''; position: absolute; inset: 6px; border-radius: var(--tk-radius-full); background: var(--tk-segmented-radio-dot-center, var(--tk-color-ink-300)); } /* Disabled option (aria-disabled keeps it focusable — the pilot pattern): text-muted copy, no hover whisper, default cursor. Selectability is guarded in segmented-radio.ts, never by pointer tricks alone. */ .segment__input[aria-disabled='true'] + .segment__surface { color: var(--tk-color-text-muted); cursor: default; } .segment__input[aria-disabled='true']:hover + .segment__surface { background: transparent; } `",
+          "description": "tk-segmented-radio styles — tokens only (FR-1), zero theme branches (AD-3).\n\nVisual spec: DESIGN.md `components.segmentedRadio` («Pill track,\n{rounded.full}; selected segment solid fill + dot indicator») + the 2.5\nPIXEL PROBE of `.playwright-cli/captures/segmented-radio-citizenship.png`\n(536×113, recorded in .playwright-cli/verify/segmented-radio/NOTES.md),\nwhich resolved the two flagged ambiguities:\n\n- TRACK VS PILLS: the reference control is TWO SEPARATE white stadium\n  pills (258×56 each, 20px apart). DESIGN.md freezes the ONE pill track\n  shape for the kit and DESIGN wins over captures — so the track is one\n  continuous radius-full bar, and the probe's white+hairline reading\n  feeds the SELECTED SEGMENT surface instead.\n- SELECTED FILL (the «gray fill vs white+border» ambiguity): the probe\n  pins BOTH reference pills to WHITE fill (#FFFFFF, pure rows inside the\n  border ring) with an identical 1px #E1E3E4 hairline on each — not a gray\n  fill, not an accent. Nearest token pair: surface-base + border-default.\n  Mapped into the frozen track architecture: tinted track (surface-field,\n  the field language) + selected segment = surface-base SOLID fill with an\n  inset border-default hairline — «selected segment solid fill» per DESIGN.\n- DOT: yellow-100 Ø24 with an ink-300 Ø12 center dot, right-aligned with\n  a 16px inset, vertically centered (probe bboxes). Unselected ghost\n  circle: Ø24 flat #EEF1F5 ≈ surface-field — inside the tinted track the\n  surface-base ghost is the analogous «empty radio well» (it is also the\n  selected-segment fill family, so the ghost reads as where the pill\n  lands); documented as the probe-derived judgment call.\n- HEIGHT: 56px outer (probe: border rows y=56..111) — the spec's\n  «44-48px» vision reading corrected by pixels; the 4px track inset\n  yields a 48px segment surface.\n\nPer-component custom properties (`--tk-segmented-radio-*`, CONVENTIONS §6;\nsame-slot-same-role vs `--tk-input-*`/`--tk-select-*` — the field-surface\nrole is `fill`, mirroring `--tk-input-fill`/`--tk-select-fill`), each\nconsumed WITH its token default:\n- `--tk-segmented-radio-fill`         track fill         (default surface-field)\n- `--tk-segmented-radio-segment-fill` selected fill      (default surface-base)\n- `--tk-segmented-radio-dot-fill`     selected dot fill  (default yellow-100)\n- `--tk-segmented-radio-dot-center`   dot center         (default ink-300)\n- `--tk-segmented-radio-dot-idle`     ghost circle fill  (default surface-base)\n- `--tk-segmented-radio-text`         segment text       (default text-primary)\n- `--tk-segmented-radio-radius`       track/segment radius (default radius-full)\n\nKnown structural (non-token) values, flagged per the flag-don't-invent rule:\n- the 56px track height (capture-measured; the Input literal's sibling);\n- the 4px track inset (derives the 48px segment pill ≥44px target floor);\n- the Ø24 dot / Ø12 center (capture-measured icon metrics);\n- the 16px segment inline padding (capture-measured text/dot inset)."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "segmentedRadioStyles",
+          "declaration": {
+            "name": "segmentedRadioStyles",
+            "module": "src/segmented-radio/segmented-radio.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/segmented-radio/segmented-radio.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-segmented-radio — Да/Нет pill group (Story 2.5), the form's binary gate.\n\nSTATEFUL API — the §4 contract frozen at 2.1 (Input PR), inherited verbatim\nwith a string channel (tk-select's exact mirror): `value` strict-controlled\n(renders exactly `value`; selecting emits `value-change` and applies\nnothing locally — the native radios keep their live flip until the\nelement's next update, the same caret-sanity mirror as tk-input/checkbox),\n`defaultValue` seeds uncontrolled (later changes ignored), releasing\n`value` goes uncontrolled seeded from the last controlled value.\n«Exactly one selected ever» holds by construction: the native radio group\nis exclusive, `updated()` re-syncs every input to the single value in\nforce, and zero selected is the valid pre-selection state (native radio\nsemantics — the matrix's «nothing selected → Tab enters at the first\nnon-disabled option» row).\n\nARIA TECHNIQUE (the 2.4 pattern, per the spec's Design Notes): the native\nshadow `<input type=\"radio\">` group stays THE interaction/announcement\nsurface — Space, label-click, form association and checked/unchecked\nannouncements all come native; the track carries `role=\"radiogroup\"` with\nits accessible name from the visible `label` (aria-labelledby). The label\nelement is deliberately a SPAN, not a clickable `<label for>`: the Input\nmold's label[for] association does not transfer to radio groups — pointing\n`for` at the tab-stop radio makes Chromium CONCATENATE the group text onto\nthat one option's accessible name («Гражданство РФ? Да» while «Нет» stays\nbare — probed live, 2026-09-22), an asymmetric rename that follows the\nroving tab stop; the group is named by aria-labelledby and each option by\nits wrapping segment label, so the span carries no pointer affordance it\ndoes not own. A disabled\ngroup marks the RADIOGROUP itself `aria-disabled` (alongside every input):\nAT announces the whole group as unavailable, and the 40%-opacity label —\nWCAG-exempt as inactive-component text — rides the same disabled-label\nexemption axe gives native fields (probed: a bare dimmed label with no\ndisabled association fails the color-contrast gate; the aria-disabled\ngroup + labelledby pair passes). Arrow keys\nare wired EXPLICITLY (preventDefault + own move): native radio arrow\nbehavior in shadow roots is UA-consistent, but the strict-controlled\ncontract needs the element to own the move-select pipeline in every\nengine. Arrows move WITHIN the group (Left/Up = previous, Right/Down =\nnext, WRAPPING — the spec's noted pick) and SELECTION FOLLOWS FOCUS\n(radio semantics). Home/End are deliberately absent (EXPERIENCE's letter:\narrows only — the spec's noted pick). Space is never intercepted (native:\nselects, no-op when already selected); Enter selects explicitly (the\nspec's test-letter «Space/Enter select») with form-submit suppressed.\nTab is never intercepted — the roving tabindex (selected option 0, others\n−1; first non-disabled when nothing selected) makes Tab enter the group\nat the selected option and leave naturally.\n\nFORM PARTICIPATION (2.4's ratified amendment — the kit's form pattern):\nthe host declares `formAssociated` and mirrors the entry through\nElementInternals (`setFormValue`): the selected option's value under the\nhost's reflected `name`, nothing when unselected. The shadow radios never\nsubmit (Chromium's form-owner walk stops at the shadow root — probed\n2026-09-22, see checkbox); their `name` (host `name` when set, else a\nper-instance unique group id) exists for radio grouping and direct-DOM\nconsumers only.\n\nSSR-compat (AD-10): rendered via Lit templates only; the imperative native\nre-sync lives in `updated()`, never at construction.",
+          "name": "TkSegmentedRadio",
+          "members": [
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "true",
+              "description": "FORM ASSOCIATION (2.4's ratified amendment): the host mirrors the\nsubmission entry through ElementInternals — exactly what a native radio\ngroup would submit: the selected option's value under the host's\nreflected `name`, no entry when unselected. The shadow radios stay the\ninteraction/announcement surface; only submission rides the internals.\nFeature-guarded: environments without ElementInternals (happy-dom) skip\nthe mirror — wiring is unit-pinned, the live FormData row is proven in\ntests/visual/segmented-radio.spec.ts (chromium)."
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Visible group label above the track — the group's accessible name.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Controlled value channel — STRICT semantics (frozen at 2.1, string\nmirror of tk-select): the element renders exactly this (the matching\noption is the selected segment); selecting emits `value-change` and\napplies nothing locally. Property-only (`attribute: false`); non-strings\nset via JS clamp to their string form; null/undefined after control\nRELEASES to uncontrolled seeded from the last controlled value."
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Initial value for the UNCONTROLLED mode; ignored after the first update.",
+              "attribute": "default-value"
+            },
+            {
+              "kind": "field",
+              "name": "options",
+              "type": {
+                "text": "TkSegmentedRadioOption[]"
+              },
+              "default": "[]",
+              "description": "The v1 data shape — array of { value, label, disabled? }; property-only (object data never reflects)."
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disabled group: 40% opacity, no pointer events, aria-disabled (kept focusable).",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Pass-through: the control's form name. REFLECTS — the ElementInternals\nform mirror reads the HOST's name content attribute for the entry's name\n(and the shadow radios carry the same value for direct-DOM consumers).",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "#uncontrolledValue",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Live uncontrolled state (the truth whenever `value` is not provided)."
+            },
+            {
+              "kind": "field",
+              "name": "#lastControlledValue",
+              "privacy": "private",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Last string ever provided through the controlled channel — the seed on release."
+            },
+            {
+              "kind": "field",
+              "name": "#isControlled",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the controlled channel has ever supplied a value."
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private",
+              "type": {
+                "text": "ElementInternals | null"
+              },
+              "readonly": true,
+              "default": "null",
+              "description": "ElementInternals form mirror — null where unsupported (happy-dom)."
+            },
+            {
+              "kind": "field",
+              "name": "#uniqueId",
+              "privacy": "private",
+              "type": {
+                "text": "string | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#nextId",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "static": true,
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#id",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveOptions",
+              "privacy": "private",
+              "type": {
+                "text": "TkSegmentedRadioOption[]"
+              },
+              "description": "Options with null/undefined clamped to the empty list (null-tolerant props).",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveValue",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "description": "The value in force: exactly `value` when controlled, the internal state otherwise.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#groupName",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "description": "The radio group name the shadow inputs share: the host `name` when the\nconsumer set one (direct-DOM parity, the checkbox pattern), else a\nper-instance unique id. Radio grouping is computed per tree — each\ninstance's shadow root is its own tree — so instances never cross-group.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#tabStopIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "description": "Where Tab enters the group (roving tabindex): the option matching the\nvalue in force; when nothing is selected, the FIRST non-disabled option;\nnull for an empty (or all-disabled) group — an inert track no Tab can\nstop on."
+            },
+            {
+              "kind": "method",
+              "name": "#syncNativeChecked",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "target",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Sets every shadow radio's checkedness to `checked = (value === target)` — idempotent, fires nothing."
+            },
+            {
+              "kind": "method",
+              "name": "#radioInputs",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLInputElement[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncFormValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Mirrors the submission entry through ElementInternals — the selected value, no entry when unselected."
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Native reset parity: form.reset() restores the default selection\n(defaultValue semantics — the initial-value contract, again). The\ncontrolled channel is consumer-owned and untouched."
+            },
+            {
+              "kind": "method",
+              "name": "#emitValueChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "`detail: { value }` with the unwrapped string; composed + bubbles (CONVENTIONS §3)."
+            },
+            {
+              "kind": "method",
+              "name": "#commit",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The selection pipeline (arrows, Enter, Space and label-click all arrive\nhere): uncontrolled commits the internal state; both modes emit.\nControlled applies nothing locally — the native group keeps its live\nflip until the element's next update reverts it to exactly `value` (the\nfrozen strict contract). `#syncNativeChecked` keeps the moved option's\nNATIVE checkedness live in every mode (the arrow path preventDefaults\nthe UA's own move, so the element paints the flip itself)."
+            },
+            {
+              "kind": "method",
+              "name": "#selectIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Selects option `index`: disabled segments never select (guarded by every path that lands here too)."
+            },
+            {
+              "kind": "method",
+              "name": "#stepEnabled",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "from",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "direction",
+                  "type": {
+                    "text": "1 | -1"
+                  }
+                }
+              ],
+              "description": "Next/previous ENABLED option from `from`, WRAPPING (the spec's noted pick). Null when none exists."
+            },
+            {
+              "kind": "method",
+              "name": "#handleKeydown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "Arrow navigation (EXPERIENCE SegmentedRadio row): Left/Up = previous,\nRight/Down = next, WRAPPING, disabled options SKIPPED, selection FOLLOWS\nfocus (moving selects). Every HANDLED key (arrows, Enter) is\npreventDefaulted BEFORE any disabled exit — the UA's own radio-arrow move\n(which roves focus even inside a disabled group, verified live in\nchromium) must never run; the element owns these keys in every state and\nevery engine. Enter selects the focused option (suppressing form submit\nfrom disabled groups too); Space is left native (selects, no-op when\nalready selected); Tab/Home/End pass through untouched."
+            },
+            {
+              "kind": "method",
+              "name": "#handleChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "The change pipeline (native label-click and Space both arrive here — no\ncustom key handling exists for either, the platform owns them): disabled\ngroup or disabled option reverts the native flip and emits nothing;\notherwise the full #commit pipeline runs. An already-selected radio\nfires no native change at all — the no-op comes native."
+            }
+          ],
+          "events": [
+            {
+              "name": "value-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "`{ value: string }` with the unwrapped newly selected option value; composed, bubbles."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Visible group label above the track — the group's accessible name.",
+              "name": "label",
+              "fieldName": "label"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Initial value for the UNCONTROLLED mode; ignored after the first update.",
+              "name": "default-value",
+              "fieldName": "defaultValue"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disabled group: 40% opacity, no pointer events, aria-disabled (kept focusable).",
+              "name": "disabled",
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Pass-through: the control's form name. REFLECTS — the ElementInternals\nform mirror reads the HOST's name content attribute for the entry's name\n(and the shadow radios carry the same value for direct-DOM consumers).",
+              "name": "name",
+              "fieldName": "name"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-segmented-radio",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkSegmentedRadio",
+          "declaration": {
+            "name": "TkSegmentedRadio",
+            "module": "src/segmented-radio/segmented-radio.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-segmented-radio",
+          "declaration": {
+            "name": "TkSegmentedRadio",
+            "module": "src/segmented-radio/segmented-radio.ts"
           }
         }
       ]

@@ -44,5 +44,11 @@ export const EVENT_MAP: Readonly<Record<string, Readonly<TkKitElementEventMap>>>
   'tk-checkbox': {
     onCheckedChange: 'checked-change',
   },
+  // Story 2.5 — the string state channel (§4 contract on `value`, the same
+  // mapping tk-input/tk-select carry; demanded mechanically by
+  // tests/event-map-completeness.test.ts).
+  'tk-segmented-radio': {
+    onValueChange: 'value-change',
+  },
   // 'tk-button': none at v1 (native click serves activation).
 });

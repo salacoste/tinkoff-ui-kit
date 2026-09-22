@@ -2,4 +2,5 @@
 export * from './button.js';
 export * from './checkbox.js';
 export * from './input.js';
+export * from './segmented-radio.js';
 export * from './select.js';
