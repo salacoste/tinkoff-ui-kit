@@ -9,3 +9,34 @@
  */
 export * from './button/index.js';
 export * from './input/index.js';
+// Overlays — the shared controller module (Story 2.2), NOT an element: no
+// wrapper is generated for it (CONVENTIONS §9 binds floating components to
+// consume these capabilities; AD-12). Selective exports by design: only the
+// capability functions and their types; module-internal constants (container
+// and stack ids, the max-visible count) stay inside src/overlays/.
+export {
+  mountOverlay,
+  lockBodyScroll,
+  computeFloatingPosition,
+  positionFloating,
+  enqueueToast,
+  trapFocus,
+} from './overlays/index.js';
+export type {
+  TkOverlayHandle,
+  TkOverlayLayer,
+  TkOverlayMountStrategy,
+  TkScrollLockHandle,
+  TkComputeOptions,
+  TkFloatingPosition,
+  TkPlacement,
+  TkPositionFloatingOptions,
+  TkPositioningHandle,
+  TkRect,
+  TkViewport,
+  TkToastHandle,
+  TkToastOptions,
+  TkFocusTrapHandle,
+  TkFocusTrapOptions,
+  TkInitialFocusTarget,
+} from './overlays/index.js';

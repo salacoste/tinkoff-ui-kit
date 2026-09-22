@@ -74,7 +74,7 @@ Every rule cites its source. The items the sources left undecided for the pilot 
 
 - **Declarative-first.** An overlay surface (Select's menu, Modal, Tooltip, the Navbar drawer) is a normal element in the DOM tree whose open state is the `open` attribute/property plus an `open-change` event (`detail: { value: boolean }`, composed, bubbles — the §3 shapes). Content lives in SLOTS; the consumer owns the open state and composes the surface like any other element.
 - **Imperative helpers ONLY for inherently imperative surfaces.** Toast (fire-and-forget notifications with nothing in the consumer's tree) may ship programmatic `show`/`dismiss` helpers — built on the SAME elements and events, never a parallel API. This is the only sanctioned imperative pattern.
-- **The controller owns the mechanics (AD-12).** Mounting (top-layer with fallback), scroll-lock (refcounted), positioning/flip, stacking, and focus-trap/restore live in the story-2.2 overlay controller and are CONSUMED, never reimplemented, by overlay components. `z-order` only via `--tk-z-*`.
+- **The controller owns the mechanics (AD-12).** Mounting (top-layer with fallback), scroll-lock (refcounted), positioning/flip, stacking, and focus-trap/restore live in the story-2.2 overlay controller and are CONSUMED, never reimplemented, by overlay components. `z-order` only via `--tk-z-*`. Implemented in `packages/components/src/overlays/` (Story 2.2 — its module header carries the capability→clause map and the mounting support matrix).
 - The overlay controller (2.2) and Modal/Tooltip/Toast (E4) CONFORM to this contract; deviations require the exception log below.
 
 ### Exception log

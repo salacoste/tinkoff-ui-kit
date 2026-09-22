@@ -22,6 +22,182 @@
             "name": "*",
             "module": "src/input/index.js"
           }
+        },
+        {
+          "kind": "js",
+          "name": "mountOverlay",
+          "declaration": {
+            "name": "mountOverlay",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "lockBodyScroll",
+          "declaration": {
+            "name": "lockBodyScroll",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "computeFloatingPosition",
+          "declaration": {
+            "name": "computeFloatingPosition",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "positionFloating",
+          "declaration": {
+            "name": "positionFloating",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "enqueueToast",
+          "declaration": {
+            "name": "enqueueToast",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "trapFocus",
+          "declaration": {
+            "name": "trapFocus",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkOverlayHandle",
+          "declaration": {
+            "name": "TkOverlayHandle",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkOverlayLayer",
+          "declaration": {
+            "name": "TkOverlayLayer",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkOverlayMountStrategy",
+          "declaration": {
+            "name": "TkOverlayMountStrategy",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkScrollLockHandle",
+          "declaration": {
+            "name": "TkScrollLockHandle",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkComputeOptions",
+          "declaration": {
+            "name": "TkComputeOptions",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkFloatingPosition",
+          "declaration": {
+            "name": "TkFloatingPosition",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkPlacement",
+          "declaration": {
+            "name": "TkPlacement",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkPositionFloatingOptions",
+          "declaration": {
+            "name": "TkPositionFloatingOptions",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkPositioningHandle",
+          "declaration": {
+            "name": "TkPositioningHandle",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkRect",
+          "declaration": {
+            "name": "TkRect",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkViewport",
+          "declaration": {
+            "name": "TkViewport",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkToastHandle",
+          "declaration": {
+            "name": "TkToastHandle",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkToastOptions",
+          "declaration": {
+            "name": "TkToastOptions",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkFocusTrapHandle",
+          "declaration": {
+            "name": "TkFocusTrapHandle",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkFocusTrapOptions",
+          "declaration": {
+            "name": "TkFocusTrapOptions",
+            "module": "./overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkInitialFocusTarget",
+          "declaration": {
+            "name": "TkInitialFocusTarget",
+            "module": "./overlays/index.js"
+          }
         }
       ]
     },
