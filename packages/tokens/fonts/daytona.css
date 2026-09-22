@@ -1,0 +1,55 @@
+/**
+ * pillkit-tokens — bundled brand fonts (Daytona family).
+ *
+ * SEPARATELY LICENSED ASSETS — these @font-face files are NOT covered by the
+ * package's MIT license. DaytonaSans is a licensed rename of Neue Haas Unica W1G
+ * (Monotype); DaytonaPragma will be a licensed rename of Pragmatica (ParaType).
+ * Usage and redistribution are governed by the agreements held by the
+ * maintainer — see LICENSE-FONTS.md next to this file.
+ *
+ * Import alongside the token sheet:
+ *   import 'pillkit-tokens/tokens.css';
+ *   import 'pillkit-tokens/daytona.css';
+ * The token font slots lead with the Daytona families, so importing this sheet
+ * is all it takes to render the kit in its brand fonts.
+ */
+
+/* DaytonaSans — Neue Haas Unica W1G (Monotype), renamed under license.
+ * Weight 600 file is the source's Bold cut — the reference site itself maps
+ * this file to font-weight 600 (SemiBold). */
+@font-face {
+  font-family: 'DaytonaSans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./DaytonaSans-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'DaytonaSans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./DaytonaSans-500.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'DaytonaSans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('./DaytonaSans-600.woff2') format('woff2');
+}
+
+/* DaytonaPragma — Pragmatica (ParaType), renamed under license.
+ * файлы предоставит мейнтейнер (лицензия ParaType) — раскомментировать при
+ * появлении DaytonaPragma-400.woff2
+ *
+ * @font-face {
+ *   font-family: 'DaytonaPragma';
+ *   font-style: normal;
+ *   font-weight: 400;
+ *   font-display: swap;
+ *   src: url('./DaytonaPragma-400.woff2') format('woff2');
+ * }
+ */

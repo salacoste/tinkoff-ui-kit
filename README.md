@@ -45,6 +45,18 @@ pnpm 12.5.1 arrives via the `packageManager` field + corepack — a machine with
 pnpm 11.x needs no manual upgrade. `pnpm-lock.yaml` is intentionally a two-document
 YAML stream written by pnpm 12; do not "clean" it into a single document.
 
+## Шрифты
+
+Кит бандлит лицензированные **DaytonaSans** (переименованная Neue Haas Unica W1G,
+Monotype — лицензия на использование и переименование у мейнтейнера) как
+отдельно-лицензированный актив: файлы лежат в `packages/tokens/fonts/`,
+подключаются одним импортом `import 'pillkit-tokens/daytona.css'` рядом с
+`tokens.css`. **DaytonaPragma** (Pragmatica, ParaType) добавляется файлами
+мейнтейнера по той же схеме. Эти шрифты **не покрываются MIT-лицензией пакета** —
+условия использования регулируются договорами мейнтейнера, см.
+[`packages/tokens/fonts/LICENSE-FONTS.md`](packages/tokens/fonts/LICENSE-FONTS.md);
+оригинальные уведомления об авторских правах сохранены внутри файлов.
+
 ## Инструменты
 
 | Tool | Purpose |

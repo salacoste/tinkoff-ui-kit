@@ -1,0 +1,103 @@
+/*
+ * Deterministic test fonts for the visual harness (spec 1.6) — injected by
+ * tests/visual/inject.ts AFTER page load, so it lands last in the cascade.
+ * Renamed from inter.css when the pin target moved from Inter to the bundled
+ * licensed DaytonaSans (maintainer license decision, 2026-09-22).
+ *
+ * The kit's font slots are Daytona-first (DaytonaSans = renamed Neue Haas
+ * Unica W1G — separately licensed, NOT MIT; see packages/tokens/fonts/
+ * LICENSE-FONTS.md). The harness pins BOTH slots to locally-served DaytonaSans
+ * with Inter as the loaded fallback: `packages/tokens/fonts` is mounted at
+ * /daytona and `node_modules/@fontsource/inter` at /inter by
+ * tests/visual/serve.mjs — no network fetch, same bytes on every run.
+ *
+ * DaytonaSans weights: 400/500/600 (the bundled set; the site itself maps the
+ * Bold file to weight 600). Inter stays at 400/500/700 (latin + cyrillic —
+ * docs copy is Russian, OQ-4) as the open fallback, including weight 700 for
+ * the h1/h2 heading slots, whose 700 requests resolve to DaytonaSans' 600
+ * face deterministically (closest-weight matching inside the family).
+ */
+@font-face {
+  font-family: 'DaytonaSans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('/daytona/DaytonaSans-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'DaytonaSans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: block;
+  src: url('/daytona/DaytonaSans-500.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'DaytonaSans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: block;
+  src: url('/daytona/DaytonaSans-600.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('/inter/files/inter-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: block;
+  src: url('/inter/files/inter-latin-500-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+  src: url('/inter/files/inter-latin-700-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('/inter/files/inter-cyrillic-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: block;
+  src: url('/inter/files/inter-cyrillic-500-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+  src: url('/inter/files/inter-cyrillic-700-normal.woff2') format('woff2');
+}
+
+/*
+ * Slot override. The token sheet declares the slots on `:root` (and its dark
+ * layer on `:root[data-theme=dark]` — fonts are not themed, but match both
+ * selector shapes so the override can never lose the cascade in either theme).
+ * Injected stylesheets land after the app's, so equal specificity wins.
+ * Inter stays in the stack as the loaded fallback.
+ */
+:root,
+:root[data-theme='dark'] {
+  --tk-font-heading: DaytonaSans, Inter, sans-serif;
+  --tk-font-body: DaytonaSans, Inter, sans-serif;
+}

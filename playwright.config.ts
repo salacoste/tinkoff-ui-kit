@@ -10,22 +10,26 @@ import { defineConfig } from 'playwright/test';
  * - colorScheme 'light' — the kit themes itself via `data-theme` tokens, NOT the
  *   OS scheme; pinning the OS side removes one more input
  * - font determinism — handled per-story by tests/visual/inject.ts, which
- *   overrides both --tk-font-* slots to locally-served Inter (see inter.css)
+ *   overrides both --tk-font-* slots to locally-served DaytonaSans (the
+ *   bundled licensed rename of Neue Haas Unica W1G; Inter the loaded fallback
+ *   — see fonts.css)
  * - font rasterization — chromium launch args below (hinting off, no LCD
  *   subpixel AA) make the SAME woff2 raster identically on macOS and Linux
  *   (Story 1.8: unflagged CoreText vs FreeType differed by a measured 2–3%,
  *   tripping the 1.5% threshold on text-heavy stories)
  *
  * The webServer mounts the BUILT docs bundle (packages/docs/dist) plus the
- * @fontsource/inter files on one fixed port via tests/visual/serve.mjs — zero
+ * DaytonaSans font files (packages/tokens/fonts) and @fontsource/inter on one
+ * fixed port via tests/visual/serve.mjs — zero
  * network fetches during capture. `pnpm test:visual` builds docs first.
  *
  * Baselines live in the per-spec snapshots directory under tests/visual/
  * (single baselines root), named via `snapshotPathTemplate` WITHOUT the
  * `{platform}` placeholder (Story 1.8, closing the 1.6 defer): baselines are
  * `{arg}-{projectName}.png`, so the same committed files compare on every OS —
- * the pinned capture env (fixed viewport/DSF, reduced motion, local Inter,
- * animations disabled) is what makes pixels comparable cross-platform. The
+ * the pinned capture env (fixed viewport/DSF, reduced motion, locally served
+ * DaytonaSans/Inter, animations disabled) is what makes pixels comparable
+ * cross-platform. The
  * `{-projectName}` key stays so a second browser project would get its own
  * baselines instead of silently overwriting chromium's. Baseline workflow:
  * tests/visual/README.md.
@@ -78,8 +82,9 @@ export default defineConfig({
   projects: [
     // Chromium only in v1 (spec); viewport/DSF/motion come from `use` above.
     // Launch args pin FONT RASTERIZATION (Story 1.8): macOS CoreText and Linux
-    // FreeType hint/antialias the same Inter woff2 differently enough to trip
-    // the 1.5% threshold (measured 2–3% on text-heavy stories). Hinting off +
+    // FreeType hint/antialias the same woff2 (DaytonaSans/Inter) differently
+    // enough to trip the 1.5% threshold (measured 2–3% on text-heavy stories).
+    // Hinting off +
     // no LCD subpixel AA normalizes glyph rendering cross-platform WITHOUT
     // touching the threshold — the gate stays exactly as tight.
     {

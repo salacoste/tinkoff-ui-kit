@@ -12,8 +12,8 @@ the baseline workflow (AD-8).
 | `visual.spec.ts` | The suite — one visual test + one axe test per story × theme, generated from `index.json` |
 | `button.spec.ts` | Component LAYOUT assertions only Playwright can make (loading width-freeze with real layout; compact 44px element box vs 32px pill) — same webServer, same built bundle |
 | `stories.ts` / `stories.test.ts` | Story discovery + theme-URL builder, and its vitest unit tests (`*.test.ts` belongs to vitest; Playwright runs `*.spec.ts` only) |
-| `inter.css` / `inject.ts` | Font determinism — both `--tk-font-*` slots overridden to locally-served Inter |
-| `serve.mjs` | Zero-dep static server mounting `packages/docs/dist` at `/` and `@fontsource/inter` at `/inter` (started by `playwright.config.ts` `webServer`) |
+| `fonts.css` / `inject.ts` | Font determinism — both `--tk-font-*` slots overridden to locally-served DaytonaSans (bundled licensed rename of Neue Haas Unica W1G; Inter the loaded fallback) |
+| `serve.mjs` | Zero-dep static server mounting `packages/docs/dist` at `/`, `packages/tokens/fonts` at `/daytona` and `@fontsource/inter` at `/inter` (started by `playwright.config.ts` `webServer`) |
 | `run.mjs` | `test:visual` runner — portable baseline preflight: any baseline PNG present → compare mode; none → `--update-snapshots` |
 | `visual.spec.ts-snapshots/` | **Committed baselines** — the initial truth, never regenerated silently |
 
@@ -46,8 +46,8 @@ Baseline names are **platform-neutral** (Story 1.8, closing the 1.6 defer):
 `playwright.config.ts` pins `snapshotPathTemplate` without the `{platform}`
 placeholder, so baselines are `<arg>-chromium.png` and the SAME committed files
 compare on macOS and the Linux CI runner — the pinned capture environment
-above (fixed viewport/DSF, reduced motion, locally-served Inter, animations
-disabled) is what makes cross-platform pixels comparable. The `{-projectName}`
+above (fixed viewport/DSF, reduced motion, locally-served DaytonaSans/Inter,
+animations disabled) is what makes cross-platform pixels comparable. The `{-projectName}`
 key is kept so a second browser project would get its own baselines instead of
 overwriting chromium's.
 
@@ -62,20 +62,23 @@ threshold meaningful (FR-10, AD-8):
   caught mid-flight. `toHaveScreenshot` additionally passes `animations: 'disabled'`.
 - **`colorScheme: 'light'`** — the kit themes itself via `data-theme` tokens,
   not the OS scheme; the OS input is pinned anyway.
-- **Inter as the deterministic test font** — the kit's font slots carry the
-  faithful stacks (the reference brand fonts are proprietary and deliberately
-  unbundled; Inter is the open default), and fallback resolution rasterizes
-  differently per machine. `inject.ts`
-  injects `inter.css` after load: `@font-face`s for the exact weights the type
-  scale uses (400/500/700, latin + cyrillic subsets — docs copy is Russian)
-  served **locally** from
-  `node_modules/@fontsource/inter` by `serve.mjs` (no network fetch), plus a
+- **DaytonaSans as the deterministic test font, Inter the loaded fallback** —
+  the kit's font slots are Daytona-first (DaytonaSans is the bundled licensed
+  rename of Neue Haas Unica W1G — separately licensed, NOT MIT, see
+  `packages/tokens/fonts/LICENSE-FONTS.md`), and stack resolution would
+  otherwise raster differently per machine. `inject.ts`
+  injects `fonts.css` after load: `@font-face`s for DaytonaSans (weights
+  400/500/600 — the bundled set) served **locally** from
+  `packages/tokens/fonts` mounted at `/daytona` by `serve.mjs` (no network
+  fetch), plus Inter (400/500/700, latin + cyrillic subsets — docs copy is
+  Russian) from `node_modules/@fontsource/inter` as the loaded fallback, and a
   `:root` / `:root[data-theme='dark']` override of `--tk-font-heading` and
-  `--tk-font-body`. The suite then awaits `document.fonts.load()` for each
-  weight and `document.fonts.ready` before capture.
+  `--tk-font-body` to `DaytonaSans, Inter, sans-serif`. The suite then awaits
+  `document.fonts.load()` for each weight of BOTH families and
+  `document.fonts.ready` before capture.
 - **Normalized font rasterization** (Story 1.8) — chromium launch args
   `--font-render-hinting=none --disable-lcd-text` (playwright.config.ts): the
-  same Inter woff2 otherwise rasters differently under macOS CoreText vs Linux
+  same woff2 (DaytonaSans/Inter) otherwise rasters differently under macOS CoreText vs Linux
   FreeType hinting/subpixel AA — measured 2–3% pixel diff on text-heavy
   stories, tripping the 1.5% threshold on CI. With hinting off and LCD text
   disabled, the committed baselines compare identically on both platforms;

@@ -68,7 +68,7 @@ Per-slot tokens from the `typography` block: `--tk-text-<slot>-size` / `-weight`
 
 | Token | Value | Notes |
 | --- | --- | --- |
-| `--tk-text-heading-1-size` | `50px` | OQ-2 resolved 2026-09-22 — faithful heading stack, their family names first, Inter default (see Typography body) |
+| `--tk-text-heading-1-size` | `50px` | Daytona-first stack — bundled licensed renames are the default (maintainer agreements, 2026-09-22; see Typography body) |
 | `--tk-text-heading-1-weight` | `700` |  |
 | `--tk-text-heading-1-leading` | `1.1` |  |
 | `--tk-text-heading-2-size` | `44px` |  |
@@ -113,10 +113,10 @@ Per-slot tokens from the `typography` block: `--tk-text-<slot>-size` / `-weight`
 
 | Token | Value | Notes |
 | --- | --- | --- |
-| `--tk-font-heading` | `dsHeading, TinkoffSans, Inter, -apple-system, system-ui, "Segoe UI", "Helvetica Neue", sans-serif` |  |
-| `--tk-font-body` | `haas, "Neue Haas Unica W1G", pragmatica, Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif` |  |
+| `--tk-font-heading` | `DaytonaSans, DaytonaPragma, Inter, -apple-system, system-ui, "Segoe UI", "Helvetica Neue", sans-serif` |  |
+| `--tk-font-body` | `DaytonaSans, DaytonaPragma, Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif` |  |
 
-Faithful stacks from the live @font-face extraction (2026-09-22, `cdn.tbank.ru/frontend-libraries/npm/react-kit-font/1.0.0`): heading `dsHeading` = `TinkoffSans`, body `haas`/`dsText` = `Neue Haas Unica W1G` (+ `pragmatica`). All proprietary/commercial — TinkoffSans is a T-Bank asset, Neue Haas Unica W1G is Monotype, pragmatica is ParaType — so the kit does **not** bundle them (PRD §5.1). Consumers with licensed files register `@font-face` under those exact family names and the kit auto-picks them up with zero config; the default open fallback is **Inter** (closest open grotesk). The two slots are overridden independently.
+Daytona-first stacks (maintainer license decision, 2026-09-22): the bundled licensed renames are the default. **DaytonaSans** = `Neue Haas Unica W1G` (renamed build, usage + renaming license from Monotype held by the maintainer) ships in `packages/tokens/fonts/` — import `pillkit-tokens/daytona.css` and the slots render it; **DaytonaPragma** = Pragmatica (ParaType, same arrangement) follows pending files. Both are separately-licensed assets, NOT covered by the package MIT license (`fonts/LICENSE-FONTS.md`). `TinkoffSans` (the site's heading font, `dsHeading`) remains proprietary/unavailable, so DaytonaSans takes the heading role as the closest licensed grotesk. Consumers self-hosting the originals override the slots with the family names first (recipe below, unchanged); the open fallback is **Inter**, then the site-mirroring system chain.
 
 Override recipe (custom properties cascade and inherit — declare on `body`/your app root, or any later or higher-specificity declaration):
 

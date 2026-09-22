@@ -3,7 +3,8 @@
 // network access:
 //
 //   /            -> packages/docs/dist        (the Storybook 10 static build)
-//   /inter/...   -> node_modules/@fontsource/inter  (the pinned test font files)
+//   /daytona/... -> packages/tokens/fonts    (the bundled licensed DaytonaSans files)
+//   /inter/...   -> node_modules/@fontsource/inter  (the open-fallback test font files)
 //
 // Started by playwright.config.ts `webServer` (never committed to long-running
 // use); Playwright polls webServer.url (/index.json) until it answers 2xx, then
@@ -22,8 +23,9 @@ if (!Number.isInteger(PORT) || PORT <= 0 || PORT > 65535) {
   process.exit(1);
 }
 
-/** Mount table — most specific prefix first ('/inter' before the catch-all '/'). */
+/** Mount table — most specific prefixes first, catch-all '/' last. */
 const ROUTES = [
+  { prefix: '/daytona', root: join(REPO_ROOT, 'packages', 'tokens', 'fonts') },
   { prefix: '/inter', root: join(REPO_ROOT, 'node_modules', '@fontsource', 'inter') },
   { prefix: '/', root: join(REPO_ROOT, 'packages', 'docs', 'dist') },
 ];
@@ -88,5 +90,5 @@ server.on('error', (error) => {
 });
 
 server.listen(PORT, '127.0.0.1', () => {
-  console.log(`visual harness server on http://127.0.0.1:${PORT} (docs dist + @fontsource/inter)`);
+  console.log(`visual harness server on http://127.0.0.1:${PORT} (docs dist + daytona fonts + @fontsource/inter)`);
 });

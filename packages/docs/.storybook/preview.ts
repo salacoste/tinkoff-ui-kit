@@ -2,11 +2,11 @@
 import type { Decorator, Preview } from '@storybook/web-components-vite';
 import { html } from 'lit';
 
-// Inter — the kit's default open fallback (OQ-2) — bundled into the docs so
-// the site renders Inter without consumer setup. Latin + cyrillic subsets at
+// Inter — the kit's open fallback — bundled into the docs so the site renders
+// it without consumer setup. Latin + cyrillic subsets at
 // the weights the type scale uses (docs copy is Russian — latin alone would
 // leave Cyrillic glyphs on the system stack). The visual harness pins its own
-// locally-served Inter (tests/visual/inject.ts) and stays deterministic.
+// locally-served fonts (tests/visual/inject.ts) and stays deterministic.
 import '@fontsource/inter/latin-400.css';
 
 // Local licensed fonts (gitignored, never published): picked up automatically
@@ -18,6 +18,11 @@ import '@fontsource/inter/cyrillic-400.css';
 import '@fontsource/inter/cyrillic-500.css';
 import '@fontsource/inter/cyrillic-700.css';
 import 'pillkit-tokens/tokens.css';
+// Daytona — the kit's bundled licensed renames (DaytonaSans = Neue Haas Unica
+// W1G under the maintainer's Monotype license; separately licensed, NOT MIT —
+// packages/tokens/fonts/LICENSE-FONTS.md). Docs render DaytonaSans by default;
+// Inter above stays as the open fallback.
+import 'pillkit-tokens/daytona.css';
 
 /**
  * Preview runtime (spec 1.5).

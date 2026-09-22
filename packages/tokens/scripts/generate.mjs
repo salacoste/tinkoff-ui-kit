@@ -623,15 +623,16 @@ function declarationLines(entries, notes = TOKEN_NOTES) {
 }
 
 const FONT_SLOT_COMMENT = [
-  '  /* Font family slots — faithful stacks from the live @font-face extraction',
-  '     (2026-09-22, cdn.tbank.ru/frontend-libraries/npm/react-kit-font/1.0.0):',
-  '     dsHeading = TinkoffSans (heading), haas/dsText = Neue Haas Unica W1G',
-  '     (body), pragmatica = ParaType. All proprietary/commercial — the kit',
-  '     does NOT bundle them (PRD §5.1): consumers with licensed files register',
-  '     @font-face under those exact family names and the kit auto-picks them',
-  '     up with zero config. Default open fallback: Inter (closest open',
-  '     grotesk). A slot override replaces the whole value: re-include the',
-  '     fallback stack. */',
+  '  /* Font family slots — Daytona-first (maintainer license decision, 2026-09-22).',
+  "     The bundled licensed renames are the default: DaytonaSans = Neue Haas",
+  "     Unica W1G (renamed under the maintainer's Monotype license; ships in",
+  '     packages/tokens/fonts/ via pillkit-tokens/daytona.css), DaytonaPragma =',
+  '     Pragmatica (ParaType; pending files). Separately-licensed assets, NOT',
+  "     MIT — see fonts/LICENSE-FONTS.md. TinkoffSans (the site's heading font,",
+  '     dsHeading) stays proprietary/unavailable — DaytonaSans takes the heading',
+  '     role as the closest licensed grotesk. Open fallback: Inter. Consumers',
+  '     self-hosting originals override the slots (recipe in TOKENS.md). A slot',
+  '     override replaces the whole value: re-include the fallback stack. */',
 ].join('\n');
 
 function renderCss(model, dark) {
@@ -855,7 +856,7 @@ function renderMd(model, dark) {
   lines.push('### Font family slots', '');
   lines.push(mdTable(typography.fontSlots.map(({ name, value }) => [mdCode(name), mdCode(value), ''])), '');
   lines.push(
-    'Faithful stacks from the live @font-face extraction (2026-09-22, `cdn.tbank.ru/frontend-libraries/npm/react-kit-font/1.0.0`): heading `dsHeading` = `TinkoffSans`, body `haas`/`dsText` = `Neue Haas Unica W1G` (+ `pragmatica`). All proprietary/commercial — TinkoffSans is a T-Bank asset, Neue Haas Unica W1G is Monotype, pragmatica is ParaType — so the kit does **not** bundle them (PRD §5.1). Consumers with licensed files register `@font-face` under those exact family names and the kit auto-picks them up with zero config; the default open fallback is **Inter** (closest open grotesk). The two slots are overridden independently.',
+    'Daytona-first stacks (maintainer license decision, 2026-09-22): the bundled licensed renames are the default. **DaytonaSans** = `Neue Haas Unica W1G` (renamed build, usage + renaming license from Monotype held by the maintainer) ships in `packages/tokens/fonts/` — import `pillkit-tokens/daytona.css` and the slots render it; **DaytonaPragma** = Pragmatica (ParaType, same arrangement) follows pending files. Both are separately-licensed assets, NOT covered by the package MIT license (`fonts/LICENSE-FONTS.md`). `TinkoffSans` (the site\'s heading font, `dsHeading`) remains proprietary/unavailable, so DaytonaSans takes the heading role as the closest licensed grotesk. Consumers self-hosting the originals override the slots with the family names first (recipe below, unchanged); the open fallback is **Inter**, then the site-mirroring system chain.',
     '',
     'Override recipe (custom properties cascade and inherit — declare on `body`/your app root, or any later or higher-specificity declaration):',
     '',

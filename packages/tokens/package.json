@@ -13,10 +13,12 @@
       "import": "./dist/index.js"
     },
     "./tokens.css": "./dist/index.css",
+    "./daytona.css": "./fonts/daytona.css",
     "./TOKENS.md": "./src/TOKENS.md"
   },
   "files": [
     "dist",
+    "fonts",
     "src/TOKENS.md"
   ],
   "scripts": {

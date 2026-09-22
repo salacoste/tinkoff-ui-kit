@@ -14,11 +14,11 @@ describe('pillkit-tokens generated maps', () => {
     expect(colorTokens['--tk-color-text-secondary']).toBe('#616871');
   });
 
-  it('emits both font family slots with the faithful DESIGN.md stacks (OQ-2, 2026-09-22)', () => {
+  it('emits both font family slots with the Daytona-first DESIGN.md stacks (maintainer license decision, 2026-09-22)', () => {
     const heading =
-      'dsHeading, TinkoffSans, Inter, -apple-system, system-ui, "Segoe UI", "Helvetica Neue", sans-serif';
+      'DaytonaSans, DaytonaPragma, Inter, -apple-system, system-ui, "Segoe UI", "Helvetica Neue", sans-serif';
     const body =
-      'haas, "Neue Haas Unica W1G", pragmatica, Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif';
+      'DaytonaSans, DaytonaPragma, Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif';
     expect(typographyTokens['--tk-font-heading']).toBe(heading);
     expect(typographyTokens['--tk-font-body']).toBe(body);
   });

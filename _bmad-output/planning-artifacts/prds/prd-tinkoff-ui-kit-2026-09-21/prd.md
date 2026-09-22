@@ -309,9 +309,14 @@ endorsed by T-Bank; no trademark use and no implication of official status anywh
 ### 5.1 Constraints and Guardrails
 
 - **Legal:** unofficial recreation; no T-Bank trademarks in published naming; no scraped
-  proprietary assets, code, or artwork. The Reference Site's proprietary brand font is NOT
-  bundled — the kit ships font tokens pointing to a consumer-supplied stack with a recommended
-  open alternative (strategy: OQ-2).
+  proprietary assets, code, or artwork. The two licensed commercial fonts ARE bundled as
+  renamed separately-licensed assets per maintainer agreements (2026-09-22): DaytonaSans
+  (renamed Neue Haas Unica W1G, Monotype license held by the maintainer) and DaytonaPragma
+  (renamed Pragmatica, ParaType; files to follow) — NOT covered by the package's MIT license
+  (see `packages/tokens/fonts/LICENSE-FONTS.md`; original copyright notices preserved inside
+  the files). The proprietary TinkoffSans (the reference's `dsHeading` brand font) remains
+  NOT bundled — its slot leads with DaytonaSans, the closest licensed grotesk (strategy:
+  OQ-2, as amended).
 - **Tooling (project contracts, CLAUDE.md):** pnpm only; Node >= 20; playwright-cli is the only
   browser automation tool; impeccable + transitions.dev + inspo MCP are the sanctioned
   design-quality toolchain.
@@ -365,7 +370,7 @@ revisit after v1 adoption.
 
 ## 8. Open Questions
 
-0. **RESOLVED 2026-09-22 (maintainer decisions, addendum).** OQ-2 fonts: token stacks carry the reference's exact family names from live extraction (dsHeading≡TinkoffSans, haas/dsText≡Neue Haas Unica W1G, pragmatica in the body fallback) with Inter (latin+cyrillic) as the open default; the fonts are proprietary/commercial (T-Bank asset / Monotype / ParaType) and are NOT bundled — bundling even renamed was rejected as copyright infringement; consumers with licensed files self-host them (auto-pickup via the exact family names, or private aliases via the gitignored docs local-fonts mechanism). OQ-3 names: pillkit-{tokens,components,react,docs} (verified free on npm); tk- element prefix and --tk-* tokens stay permanently. OQ-4: docs language Russian (code/API English).
+0. **RESOLVED 2026-09-22 (maintainer decisions, addendum).** OQ-2 fonts: token stacks carry the reference's exact family names from live extraction (dsHeading≡TinkoffSans, haas/dsText≡Neue Haas Unica W1G, pragmatica in the body fallback) with Inter (latin+cyrillic) as the open default; the fonts are proprietary/commercial (T-Bank asset / Monotype / ParaType) and are NOT bundled — bundling even renamed was rejected as copyright infringement; consumers with licensed files self-host them (auto-pickup via the exact family names, or private aliases via the gitignored docs local-fonts mechanism). OQ-3 names: pillkit-{tokens,components,react,docs} (verified free on npm); tk- element prefix and --tk-* tokens stay permanently. OQ-4: docs language Russian (code/API English). *Amended 2026-09-22 (later the same day, maintainer agreements executed): the maintainer now holds usage+renaming licenses from Monotype (Neue Haas Unica W1G) and ParaType (Pragmatica) — the two licensed fonts ARE bundled as renamed separately-licensed assets, DaytonaSans and DaytonaPragma (files pending), NOT covered by MIT (packages/tokens/fonts/LICENSE-FONTS.md), and the token stacks are Daytona-first; only the proprietary TinkoffSans (dsHeading) remains unbundled, its slot led by DaytonaSans. §5.1 amended accordingly.*
 1. **OQ-1 — Dark theme palette.** The Reference Site is light-only; the dark palette must be
    designed (UX phase) within brand constraints. Phase-blocker for FR-2 UX work.
 2. **OQ-2 — Brand font strategy.** The reference uses a proprietary brand typeface the kit cannot

@@ -159,17 +159,18 @@ pnpm add pillkit-components pillkit-react pillkit-tokens --workspace</code></pre
           Попробуйте контрол Theme в тулбаре Storybook.
         </li>
         <li>
-          Шрифты: слоты несут точные стеки из живой @font-face-выгрузки сайта
-          Т-Банка (2026-09-22) — заголовки
-          <code>dsHeading</code>/<code>TinkoffSans</code>, текст
-          <code>haas</code>/<code>dsText</code> (= Neue Haas Unica W1G) с
-          <code>pragmatica</code> в стеке. Шрифты Т-Банка проприетарные
-          (TinkoffSans — актив Т-Банка, Neue Haas Unica W1G — Monotype,
-          pragmatica — ParaType), поэтому кит их НЕ бандлит (PRD §5.1).
-          Положите лицензированные файлы и объявите <code>@font-face</code> с
-          этими точными family-именами — кит подхватит их автоматически, без
-          какой-либо настройки. По умолчанию используется
-          <strong>Inter</strong> (ближайший открытый гротеск). Переопределение
+          Шрифты: кит бандлит лицензированные переименованные шрифты как
+          отдельно-лицензированный актив (решение мейнтейнера, 2026-09-22) —
+          <strong>DaytonaSans</strong> (переименованная Neue Haas Unica W1G,
+          Monotype; уже в <code>packages/tokens/fonts/</code>) и
+          DaytonaPragma (Pragmatica, ParaType; файлы добавит мейнтейнер).
+          Они не покрываются MIT-лицензией пакета — см.
+          <code>packages/tokens/fonts/LICENSE-FONTS.md</code>. Подключите
+          <code>pillkit-tokens/daytona.css</code> рядом с
+          <code>tokens.css</code> — слоты уже ведут Daytona-семействами.
+          Проприетарный TinkoffSans (заголовочный шрифт сайта) недоступен —
+          DaytonaSans занимает его роль как ближайший лицензированный
+          гротеск; открытый fallback — <strong>Inter</strong>. Переопределение
           слота заменяет значение целиком — повторно включите fallback-стек:
           <pre><code>:root {
   --tk-font-heading: Inter, sans-serif;
@@ -186,7 +187,8 @@ pnpm add pillkit-components pillkit-react pillkit-tokens --workspace</code></pre
         <code>local-fonts.example.css</code> — доки будут рендериться
         пиксельно близко к референсу на вашей машине. Шаблон поддерживает и
         канонические family-имена (авто-подхват), и приватные псевдонимы.
-        Подробности — в README той папки.
+        Бандлимые DaytonaSans/DaytonaPragma этот шаг не требуют — они уже
+        в ките. Подробности — в README той папки.
       </p>
 
       <h2>API компонентов</h2>
