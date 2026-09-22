@@ -2,7 +2,7 @@
 
 **Status:** active (Story 1.4) · **Normative for:** every component PR · **Sources:** ARCHITECTURE-SPINE (AD-1…AD-12), EXPERIENCE.md, PRD FR-3. Where this file and code disagree, the code is wrong until either changes by PR.
 
-Every rule cites its source. The items the sources left undecided for the pilot are ALL resolved (Button pilot PR — see the "resolved at 1.7 pilot" notes in §2, §3, §5, §7) and frozen like every other rule. The 2.1 items in §4 remain open by design.
+Every rule cites its source. The items the sources left undecided for the pilot are ALL resolved (Button pilot PR — see the "resolved at 1.7 pilot" notes in §2, §3, §5, §7) and frozen like every other rule. The 2.1 items (§4 controlled/uncontrolled shapes, §9 React surface + overlay usage) are resolved by the Input PR — see the "frozen at 2.1" notes.
 
 ## 1. Element & file naming
 
@@ -28,10 +28,11 @@ Every rule cites its source. The items the sources left undecided for the pilot 
 
 ## 4. Controlled & uncontrolled
 
-- Every stateful component ships BOTH modes with identical semantics *(AD-5)*:
-  - **Uncontrolled:** internal state; consumer sets an initial value and listens to `<prop>-change`. The initial-value prop shape (`defaultValue`-style vs plain attribute) is `[OPEN — frozen at 2.1 (Input)]`.
-  - **Controlled:** consumer sets `value`; the component does not mutate it internally — it emits `<prop>-change` and renders the consumer's value. Behavior when a controlled value stops being provided is `[OPEN — frozen at 2.1 (Input)]`.
-- Controlled-mode semantics on the React surface are **frozen at Story 2.1 (Input)** — see §9. The spine's adversarial review explicitly left these semantics open until then.
+- Every stateful component ships BOTH modes with identical semantics *(AD-5)*. Both shapes below are **frozen at 2.1 — Input PR**; later components inherit them verbatim, deviations go through the §9 exception log:
+  - **Uncontrolled:** internal state; the initial value is the `defaultValue` prop (attribute `default-value`) — plain initial-value semantics, so changes after the first update are IGNORED. Consumer listens to `<prop>-change`. If both `value` and `defaultValue` are provided, `value` wins (controlled at first paint). *(resolved at 2.1 — Input PR)*
+  - **Controlled — STRICT:** consumer sets `value` (a property channel; it never reflects); the element renders EXACTLY `value` and mutates nothing internally — typing emits `<prop>-change` and applies nothing locally. For caret sanity the inner native control keeps its live text between updates and re-syncs to the value in force on the element's next update (mirroring how React wraps native inputs — consumers answering `<prop>-change` → setState get native-feeling behavior). *(resolved at 2.1 — Input PR)*
+  - **Release:** removing `value` (setting it to null/undefined) switches the element to uncontrolled, with the internal state SEEDED from the last controlled value. Setting `value` again resumes strict rendering. *(resolved at 2.1 — Input PR)*
+- On the React surface the wrapper applies the standard controlled mapping (`value` prop → element property, change event → handler with the unwrapped value — §3) and adds NO value-clamping logic of its own; strict revert is the element's job, not the wrapper's. *(frozen at 2.1 — Input PR; see §9)*
 
 ## 5. Slots
 
@@ -49,7 +50,7 @@ Every rule cites its source. The items the sources left undecided for the pilot 
 ## 7. TypeScript
 
 - Strict mode; public props/events typed with exported literal unions; no `any` in public surface. *(AD-6)*
-- Event payload types export as `Tk<PascalName>...Event`: `TkInputChangeEvent`, `TkSelectOpenEvent` — `Tk` + the PascalCase component name + the event stem. Named at the pilot; first concrete export lands with Input (2.1). *(resolved at 1.7 pilot)*
+- Event payload types export as `Tk<PascalName>...Event`: `TkInputChangeEvent`, `TkSelectOpenEvent` — `Tk` + the PascalCase component name + the event stem. Named at the pilot; first concrete export landed at 2.1 (`TkInputChangeEvent` in tk-input). *(resolved at 1.7 pilot)*
 
 ## 8. Accessibility & keyboard
 
@@ -62,6 +63,19 @@ Every rule cites its source. The items the sources left undecided for the pilot 
 
 - The **React-surface API** (prop style, controlled-mode semantics, unwrapped-value handlers) and the **overlay usage API** (imperative + declarative patterns for Modal/Toast) are decided and **FROZEN at Story 2.1 — the Input PR**. Not at a stateless component. *(AD-5)*
 - Later components conform to the frozen shapes. A deviation requires an entry in the exception log below with rationale and reviewer sign-off.
+
+### Frozen React-surface API (at 2.1 — Input PR)
+
+- Wrappers stay GENERATED from the CEM manifest via `@lit/react` (`pnpm gen`; §3), with kit custom events registered in the owned event-map (`'tk-input': { onValueChange: 'value-change' }` is the first entry).
+- Handlers receive the UNWRAPPED `value` — `detail: { value }` is unwrapped by the kit's wrapper runtime before the consumer's handler runs; the raw `CustomEvent` never reaches React code (AD-1). Payload-less kit events fall back to passing the event itself.
+- Controlled mode on the React surface is the standard `value` + change-handler mapping onto the element (§4 strict semantics, enforced by the element; the wrapper adds NO value-clamping logic).
+
+### Frozen overlay usage API (at 2.1 — Input PR; binds 2.2 and E4)
+
+- **Declarative-first.** An overlay surface (Select's menu, Modal, Tooltip, the Navbar drawer) is a normal element in the DOM tree whose open state is the `open` attribute/property plus an `open-change` event (`detail: { value: boolean }`, composed, bubbles — the §3 shapes). Content lives in SLOTS; the consumer owns the open state and composes the surface like any other element.
+- **Imperative helpers ONLY for inherently imperative surfaces.** Toast (fire-and-forget notifications with nothing in the consumer's tree) may ship programmatic `show`/`dismiss` helpers — built on the SAME elements and events, never a parallel API. This is the only sanctioned imperative pattern.
+- **The controller owns the mechanics (AD-12).** Mounting (top-layer with fallback), scroll-lock (refcounted), positioning/flip, stacking, and focus-trap/restore live in the story-2.2 overlay controller and are CONSUMED, never reimplemented, by overlay components. `z-order` only via `--tk-z-*`.
+- The overlay controller (2.2) and Modal/Tooltip/Toast (E4) CONFORM to this contract; deviations require the exception log below.
 
 ### Exception log
 

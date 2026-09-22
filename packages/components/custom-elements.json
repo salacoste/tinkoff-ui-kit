@@ -14,6 +14,14 @@
             "name": "*",
             "module": "src/button/index.js"
           }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/input/index.js"
+          }
         }
       ]
     },
@@ -238,6 +246,472 @@
           "declaration": {
             "name": "*",
             "module": "src/button/button.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/input/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/input/input.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/input/input.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "inputStyles",
+          "default": "css` :host { display: block; } /* Disabled (EXPERIENCE State Patterns): 40% opacity on the whole control, no pointer events at the host boundary. The inner input is aria-disabled + readonly (kept focusable — the aria-disabled pattern, same as the button pilot); typing emits nothing. */ :host([disabled]) { opacity: 0.4; pointer-events: none; } /* --- Label: static, always visible (EXPERIENCE: the placeholder never replaces the label — and Input has no animation by default, so no floating-label motion exists to reduce). --- */ .label { display: block; margin: 0 0 var(--tk-space-8); font-family: var(--tk-font-body); font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-bold-weight); line-height: var(--tk-text-body-m-leading); color: var(--tk-color-text-primary); cursor: pointer; } /* The required asterisk (reference: appended directly, same ink as the label). aria-hidden — required-ness is conveyed by aria-required on the input, so screen readers never hear a bare «*». */ .label__star { margin-inline-start: var(--tk-space-4); } /* --- Field box: the fill/radius/hairline live on the wrapper (not the native input) so the badge rides inside the same surface and the unified focus ring (below) draws around the WHOLE field. --- */ .field { box-sizing: border-box; display: flex; align-items: center; gap: var(--tk-space-8); width: 100%; /* DESIGN.md components.input literals — structural, no height/radius tokens exist. */ height: 52px; border: 1px solid var(--tk-color-border-default); border-radius: var(--tk-input-radius, var(--tk-radius-md)); background: var(--tk-input-fill, var(--tk-color-surface-field)); } /* Unified focus ring — 2px token ring, offset 2px, never removed. It draws on the FIELD box via :focus-within: text inputs match :focus-visible on every focus (mouse included), so the ring shows for both modalities and always wraps input + badge. The native input's own ring is suppressed ONLY as a dedup — the unified ring is present at that exact moment, so nothing is ever left ringless. */ .field:focus-within { outline: 2px solid var(--tk-color-focus-ring); outline-offset: 2px; } .field__control { flex: 1; min-width: 0; box-sizing: border-box; height: 100%; margin: 0; border: none; padding: 0; padding-inline-start: var(--tk-space-16); /* End padding applies with AND without a badge — overflowing text must never run flush against the field's right edge (with a badge the flex gap + badge margins add their own breathing room on top). */ padding-inline-end: var(--tk-space-16); background: transparent; font-family: var(--tk-font-body); font-size: var(--tk-text-body-l-size); line-height: var(--tk-text-body-l-leading); color: var(--tk-input-text, var(--tk-color-text-primary)); -webkit-appearance: none; appearance: none; } .field__control:focus-visible { /* Dedup only — see the :focus-within note above; the outline is never removed while no replacement is showing. */ outline: none; } .field__control::placeholder { color: var(--tk-input-placeholder, var(--tk-color-gray-500)); opacity: 1; } /* --- Badge slot: hidden until slotted content arrives (the slotchange flag toggles field--badge), then flush right inside the field. --- */ .field__badge { display: none; } .field--badge .field__badge { display: inline-flex; align-items: center; margin-inline-end: var(--tk-space-8); } /* The slotted chip itself: the reference's green pill. Inline styles on the slotted element still win (consumer escape hatch). */ .field--badge .field__badge ::slotted(*) { box-sizing: border-box; display: inline-flex; align-items: center; padding: var(--tk-space-4) var(--tk-space-8); border-radius: var(--tk-radius-full); background: var(--tk-color-green-100); font-family: var(--tk-font-body); font-size: var(--tk-text-body-xs-size); font-weight: var(--tk-text-body-s-bold-weight); line-height: var(--tk-text-body-xs-leading); letter-spacing: var(--tk-text-body-xs-tracking); /* INK-on-saturated-brand-fill, deliberately — NOT a generic \"text on green\" recipe. The token's NAME says \"on primary\" (its job: ink on yellow-100, the primary pairing); it is reused here ONLY because the reference's badge is the same class of saturated brand fill where ink passes AA (4.74:1) and white fails (2.66:1). Do not copy this pairing onto other fills blindly — check the contrast of the actual pair. */ color: var(--tk-color-text-on-primary); white-space: nowrap; } /* --- Error message (EXPERIENCE State Patterns): red message + icon, described-by wired in the template. error-on-field carries the pair in BOTH themes (red-200 in light, #FF7B74 in dark). Calm copy, no exclamation. --- */ .error { display: flex; align-items: flex-start; gap: var(--tk-space-4); margin: var(--tk-space-8) 0 0; font-family: var(--tk-font-body); font-size: var(--tk-text-body-s-size); line-height: var(--tk-text-body-s-leading); color: var(--tk-color-error-on-field); } /* Icon metrics are structural (16px box, 1.5px stroke) — no token counterpart. */ .error__icon { flex: none; width: 16px; height: 16px; margin-block-start: 0.5px; } `",
+          "description": "tk-input styles — tokens only (FR-1): every color, radius and duration\nconsumes a `var(--tk-*)` custom property inherited from the document-level\ntoken sheet. Zero theme branches: `[data-theme=\"dark\"]` re-resolves the same\ncustom properties (AD-3). The field never floats anything and sets no\nz-index (spec 2.1 Never) — overlays are story 2.2's controller, not this.\n\nVisual spec: DESIGN.md `components.input` (surface-field fill, radius-md,\nborder-default hairline, gray-500 placeholder, 52px height, focus-ring) +\nthe 2.0 capture pack's measured observations\n(.playwright-cli/captures/input-application-form.png: ~52px field, radius\n10–12px, flat fill, badge pill flush right, ~16px text inset).\n\nPer-component custom properties follow the `--tk-<component>-<slot>` grammar\n(CONVENTIONS §6; `--tk-input-fill` ≡ the future `--tk-select-fill`): each is\nconsumed WITH its token default as the fallback, so a consumer override on\nthe host or any ancestor wins by the cascade while the untouched field stays\ntoken-faithful. The v1 override-hook set is DELIBERATELY closed to these\nfour — border, focus ring, error and label colors are NOT hooks (the\n`--tk-color-*` token layer already restyles them across themes; opening\nper-component slots for them would fork the theming surface):\n- `--tk-input-fill`       field fill        (default surface-field)\n- `--tk-input-radius`     field radius      (default radius-md)\n- `--tk-input-text`       value text color  (default text-primary)\n- `--tk-input-placeholder` placeholder color (default gray-500, the DESIGN spec)\n\nKnown structural (non-token) values, flagged per the flag-don't-invent rule\n— the token sheet carries no counterpart:\n- field height 52px and the 1px hairline (DESIGN.md `components.input`\n  literals; button's 56/48/44 and its hairline are the same class);\n- the error icon's 16px box and 1.5px stroke (icon metrics, not a token);\n- the badge's own padding (a slotted-content default, sized to the\n  reference «+30%» chip).\n\nThe slotted badge paints as the reference chip: green-100 pill with INK text\n— not the capture's white-on-green. White on green-100 is 2.66:1 and fails\nAA for 12px text; ink (#333) on green-100 is 4.74:1 and passes, mirroring\nthe yellow-keeps-ink rule (the kit's documented AA-override axis). The\npairing is theme-invariant, like yellow."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "inputStyles",
+          "declaration": {
+            "name": "inputStyles",
+            "module": "src/input/input.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/input/input.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-input — the kit's first stateful component (Story 2.1), and the PR where\nthe React-surface and controlled/uncontrolled APIs are FROZEN\n(CONVENTIONS §4/§9, «frozen at 2.1 — Input PR»):\n\n- Uncontrolled initial value = `defaultValue` (attribute `default-value`);\n  changes after the first update are ignored (initial-value semantics).\n- Controlled = STRICT: the element renders exactly `value`; typing emits\n  `value-change` and applies nothing locally (the shadow `<input>` keeps its\n  live text for caret sanity and re-syncs on the next update — the Design\n  Notes contract, mirroring how React wraps native inputs).\n- Removing `value` releases to uncontrolled, seeded from the last\n  controlled value.\n\nBehavior (EXPERIENCE.md Input row): label AND placeholder both supported\n(placeholder never replaces the label — the label is a static element above\nthe field, Input has no animation by default); required marked with an\nasterisk + `aria-required`; inline badge slot announced AFTER the label;\nvalidation fires on blur; the message ties via `aria-describedby`; the error\nnever steals focus (it is heard on the next visit to the field).\n\nAccessible-name technique (implementer's pick, noted per the spec): the\ninner native input carries `aria-labelledby=\"…-label …-badge\"` — an explicit\nid-ref chain whose ORDER fixes the screen-reader tree as label → badge →\ninput. The visible `<label for>` stays as the fallback association and the\nclick target; when no label prop is set the placeholder names the field\n(native last-resort fallback).\n\nSSR-compat (AD-10): a native `<input>` in the shadow root, rendered via Lit\ntemplates; no imperative DOM at construction time (the value sync lives in\n`updated()`, the canonical Lit input pattern). Form association\n(ElementInternals) is NOT in v1 — noted as a limitation in the story docs.",
+          "name": "TkInput",
+          "slots": [
+            {
+              "description": "Inline badge inside the field, right-anchored (e.g. «+30%»); announced after the label.",
+              "name": "badge"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "types",
+              "static": true,
+              "readonly": true,
+              "default": "['text', 'email', 'tel', 'password', 'url', 'search']",
+              "type": {
+                "text": "['text', 'email', 'tel', 'password', 'url', 'search']"
+              },
+              "description": "Native input type whitelist (invalid runtime values clamp to `text`)."
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Visible label above the field (empty/absent = placeholder names the field).",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "In-field hint; never replaces the label (EXPERIENCE.md Input row).",
+              "attribute": "placeholder"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Controlled value channel — STRICT semantics (frozen at 2.1): the element\nrenders exactly this; typing emits `value-change` and applies nothing\nlocally. Property-only (`attribute: false`): a static attribute could\nnever update, so controlled-from-markup would be a trap. Non-string\nvalues set via JS clamp to their string form; removing the value\nreleases the field to uncontrolled, seeded from the last controlled\nvalue."
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Initial value for the UNCONTROLLED mode (frozen at 2.1): seeds the\ninternal state at the first update; later changes are ignored\n(initial-value semantics — mutating it after connect does nothing).",
+              "attribute": "default-value"
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Required: label asterisk + aria-required + the internal on-blur check.",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Consumer-driven error message: renders the error state immediately\n(overriding any internal error) and clears when the prop clears.\nEmpty string = no error.",
+              "attribute": "error"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disabled: 40% opacity, no pointer events, aria-disabled (wins over everything).",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Pass-through: the native input's name (typed whitelist group, spec 2.1).",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "TkInputType"
+              },
+              "default": "'text'",
+              "description": "Pass-through: native input type from the whitelist; invalid clamps to `text`.",
+              "attribute": "type",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "autocomplete",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Pass-through: the native input's autocomplete.",
+              "attribute": "autocomplete"
+            },
+            {
+              "kind": "field",
+              "name": "#uncontrolledValue",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Live uncontrolled state (the truth whenever `value` is not provided)."
+            },
+            {
+              "kind": "field",
+              "name": "#lastControlledValue",
+              "privacy": "private",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Last string ever provided through the controlled channel — the seed on release."
+            },
+            {
+              "kind": "field",
+              "name": "#isControlled",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the controlled channel has ever supplied a value."
+            },
+            {
+              "kind": "field",
+              "name": "#internalError",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Internal on-blur required error (null = none)."
+            },
+            {
+              "kind": "field",
+              "name": "#badgeSlotted",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the badge slot carries content (drives the labelledby chain + layout)."
+            },
+            {
+              "kind": "field",
+              "name": "#uniqueId",
+              "privacy": "private",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Per-instance id root for the aria id-ref chain (label → badge → described-by)."
+            },
+            {
+              "kind": "field",
+              "name": "#nextId",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "static": true,
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#id",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveValue",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "description": "The value in force: exactly `value` when controlled, the internal state otherwise.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#controlValue",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "description": "The shadow input's LIVE text ('' before the first render). Blur\nvalidation reads THIS, never `#effectiveValue`: a lagging controlled\nconsumer (typing emitted, `value` not yet re-applied) must not trip a\nfalse required error on a stale channel value.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#message",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "description": "The message in force: the consumer `error` prop overrides the internal\none. Null-tolerant — React conditional props (`error={cond || null}`)\nreach the element as null, which means \"absent\" here, never a crash.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#emitValueChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "`detail: { value }` with the unwrapped string; composed + bubbles (CONVENTIONS §3)."
+            },
+            {
+              "kind": "method",
+              "name": "#handleInput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "Typing: uncontrolled updates the internal state; both modes emit.\nControlled applies nothing locally. IME: input events with\n`isComposing` carry provisional composition text — skipped entirely (no\nstate commit, no emission); the input event that follows compositionend\ndelivers the committed text and emits normally."
+            },
+            {
+              "kind": "method",
+              "name": "#handleBlur",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Blur validation (EXPERIENCE.md: validation fires on blur): the required\ncheck sets/clears the INTERNAL error against the LIVE text (not the\ncontrolled channel — see `#controlValue`), and whitespace-only counts as\nempty. It never steals focus — the message is heard on the next visit\nvia `aria-describedby`."
+            },
+            {
+              "kind": "method",
+              "name": "#syncBadgeSlotted",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "optional": true,
+                  "type": {
+                    "text": "HTMLSlotElement"
+                  }
+                }
+              ],
+              "description": "Badge slot content detection (mirrors the button pilot's slot guard):\nchecked at firstUpdated — statically slotted badges are in the labelledby\nchain from the FIRST paint, not on the event's timing — and again on\nslotchange for content arriving later."
+            },
+            {
+              "kind": "method",
+              "name": "#handleBadgeSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "value-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "`{ value }` with the unwrapped new string; composed, bubbles."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Visible label above the field (empty/absent = placeholder names the field).",
+              "name": "label",
+              "fieldName": "label"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "In-field hint; never replaces the label (EXPERIENCE.md Input row).",
+              "name": "placeholder",
+              "fieldName": "placeholder"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Initial value for the UNCONTROLLED mode (frozen at 2.1): seeds the\ninternal state at the first update; later changes are ignored\n(initial-value semantics — mutating it after connect does nothing).",
+              "name": "default-value",
+              "fieldName": "defaultValue"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Required: label asterisk + aria-required + the internal on-blur check.",
+              "name": "required",
+              "default": "false",
+              "fieldName": "required"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Consumer-driven error message: renders the error state immediately\n(overriding any internal error) and clears when the prop clears.\nEmpty string = no error.",
+              "name": "error",
+              "fieldName": "error"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disabled: 40% opacity, no pointer events, aria-disabled (wins over everything).",
+              "name": "disabled",
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Pass-through: the native input's name (typed whitelist group, spec 2.1).",
+              "name": "name",
+              "fieldName": "name"
+            },
+            {
+              "type": {
+                "text": "TkInputType"
+              },
+              "description": "Pass-through: native input type from the whitelist; invalid clamps to `text`.",
+              "name": "type",
+              "default": "'text'",
+              "fieldName": "type"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Pass-through: the native input's autocomplete.",
+              "name": "autocomplete",
+              "fieldName": "autocomplete"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-input",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkInput",
+          "declaration": {
+            "name": "TkInput",
+            "module": "src/input/input.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-input",
+          "declaration": {
+            "name": "TkInput",
+            "module": "src/input/input.ts"
           }
         }
       ]
