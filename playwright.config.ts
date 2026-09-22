@@ -11,18 +11,35 @@ import { defineConfig } from 'playwright/test';
  *   OS scheme; pinning the OS side removes one more input
  * - font determinism — handled per-story by tests/visual/inject.ts, which
  *   overrides both --tk-font-* slots to locally-served Inter (see inter.css)
+ * - font rasterization — chromium launch args below (hinting off, no LCD
+ *   subpixel AA) make the SAME woff2 raster identically on macOS and Linux
+ *   (Story 1.8: unflagged CoreText vs FreeType differed by a measured 2–3%,
+ *   tripping the 1.5% threshold on text-heavy stories)
  *
  * The webServer mounts the BUILT docs bundle (packages/docs/dist) plus the
  * @fontsource/inter files on one fixed port via tests/visual/serve.mjs — zero
  * network fetches during capture. `pnpm test:visual` builds docs first.
  *
- * Baselines live in the Playwright default per-spec snapshots directory under
- * tests/visual/ (single baselines root). Baseline workflow: tests/visual/README.md.
+ * Baselines live in the per-spec snapshots directory under tests/visual/
+ * (single baselines root), named via `snapshotPathTemplate` WITHOUT the
+ * `{platform}` placeholder (Story 1.8, closing the 1.6 defer): baselines are
+ * `{arg}-{projectName}.png`, so the same committed files compare on every OS —
+ * the pinned capture env (fixed viewport/DSF, reduced motion, local Inter,
+ * animations disabled) is what makes pixels comparable cross-platform. The
+ * `{-projectName}` key stays so a second browser project would get its own
+ * baselines instead of silently overwriting chromium's. Baseline workflow:
+ * tests/visual/README.md.
  */
 const PORT = 6007;
 
 export default defineConfig({
   testDir: 'tests/visual',
+  // Platform-neutral baseline names (Story 1.8): the default template appends
+  // `-{platform}` (e.g. -darwin / -linux), which would fork the baseline set
+  // per OS. Dropping it (keeping the {-projectName} key) makes the committed
+  // baselines THE cross-platform truth; the pinned capture env above is what
+  // licenses that. Renaming regenerates nothing: the PNG bytes are unchanged.
+  snapshotPathTemplate: '{snapshotDir}/{testFileDir}/{testFileName}-snapshots/{arg}{-projectName}{ext}',
   // Pinned worker counts: 1 in CI (no raster contention on shared runners),
   // 2 locally — deliberate, reproducible parallelism for stitched captures.
   workers: process.env.CI ? 1 : 2,
@@ -60,6 +77,19 @@ export default defineConfig({
   },
   projects: [
     // Chromium only in v1 (spec); viewport/DSF/motion come from `use` above.
-    { name: 'chromium', use: { browserName: 'chromium' } },
+    // Launch args pin FONT RASTERIZATION (Story 1.8): macOS CoreText and Linux
+    // FreeType hint/antialias the same Inter woff2 differently enough to trip
+    // the 1.5% threshold (measured 2–3% on text-heavy stories). Hinting off +
+    // no LCD subpixel AA normalizes glyph rendering cross-platform WITHOUT
+    // touching the threshold — the gate stays exactly as tight.
+    {
+      name: 'chromium',
+      use: {
+        browserName: 'chromium',
+        launchOptions: {
+          args: ['--font-render-hinting=none', '--disable-lcd-text'],
+        },
+      },
+    },
   ],
 });

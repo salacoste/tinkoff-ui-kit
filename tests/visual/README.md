@@ -40,11 +40,16 @@ must call Playwright directly (e.g. to target a single story), build first:
 pnpm --filter @tk-kit/docs build && pnpm exec playwright test -g "tokens--swatches"
 ```
 
-`test:visual` is **deliberately NOT wired into `pnpm test`** — CI wiring is
-Story 1.8. It also runs only the chromium project (v1 scope). Note for 1.8:
-Playwright's default snapshot names carry a platform suffix (e.g.
-`-chromium-darwin`), so a Linux CI either captures its own baselines once or
-pins `snapshotPathTemplate` — decide when wiring CI, not ad hoc.
+`test:visual` is **deliberately NOT wired into `pnpm test`** — CI runs it as
+its own step (Story 1.8). It also runs only the chromium project (v1 scope).
+Baseline names are **platform-neutral** (Story 1.8, closing the 1.6 defer):
+`playwright.config.ts` pins `snapshotPathTemplate` without the `{platform}`
+placeholder, so baselines are `<arg>-chromium.png` and the SAME committed files
+compare on macOS and the Linux CI runner — the pinned capture environment
+above (fixed viewport/DSF, reduced motion, locally-served Inter, animations
+disabled) is what makes cross-platform pixels comparable. The `{-projectName}`
+key is kept so a second browser project would get its own baselines instead of
+overwriting chromium's.
 
 ## Pinned capture environment
 
@@ -66,6 +71,13 @@ threshold meaningful (FR-10, AD-8):
   `:root` / `:root[data-theme='dark']` override of `--tk-font-heading` and
   `--tk-font-body`. The suite then awaits `document.fonts.load()` for each
   weight and `document.fonts.ready` before capture.
+- **Normalized font rasterization** (Story 1.8) — chromium launch args
+  `--font-render-hinting=none --disable-lcd-text` (playwright.config.ts): the
+  same Inter woff2 otherwise rasters differently under macOS CoreText vs Linux
+  FreeType hinting/subpixel AA — measured 2–3% pixel diff on text-heavy
+  stories, tripping the 1.5% threshold on CI. With hinting off and LCD text
+  disabled, the committed baselines compare identically on both platforms;
+  the threshold itself is unchanged.
 - **Canvas-element capture** — each story is loaded as the preview canvas
   itself (`iframe.html?id=<id>&viewMode=story`, the manager chrome never
   enters the shot); dark adds `&globals=theme:dark`, the exact URL-persisted

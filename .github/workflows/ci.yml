@@ -1,0 +1,130 @@
+# CI — the full quality-gate chain (Story 1.8).
+#
+# Mirrors the local verification chain 1:1 (the local chain is the source of
+# truth — nothing here weakens or widens it):
+#   pnpm lint → pnpm typecheck → pnpm build → pnpm test → pnpm test:visual
+#   → impeccable detector over changed UI files (FR-9 / AD-1 intent gate)
+#
+# `pnpm test` includes the gen-drift, tokens-drift, consumed-tokens,
+# zero-hardcoded, import-boundary, docs-preview and contrast suites;
+# `pnpm build` runs the docs predev/prebuild tokens chain via `pnpm -r build`.
+#
+# Visual suite runs in COMPARE mode: baselines are committed under
+# tests/visual/visual.spec.ts-snapshots/ with platform-neutral names (no
+# {platform} suffix in snapshotPathTemplate), so ubuntu compares against the
+# same files captured on macOS — the pinned capture environment (fixed
+# viewport + DSF, forced reduced motion, locally-served Inter) is what makes
+# the pixels comparable cross-platform.
+#
+# On failure, test-results/ + playwright-report/ are uploaded as artifacts
+# (the 1.6 "provisional capture archived" defer, closed mechanically).
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# A superseded push/PR cancels its in-flight run.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout (full history — the detector diffs against the base sha)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: pnpm 12.5.1 (from packageManager field)
+        uses: pnpm/action-setup@v4
+
+      - name: Node 20 + pnpm store cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint (typescript-eslint + AD-4 import boundaries)
+        run: pnpm lint
+
+      - name: Typecheck (TS 7 native over root surfaces)
+        run: pnpm typecheck
+
+      - name: Build (workspace build incl. docs prebuild tokens chain)
+        run: pnpm build
+
+      - name: Test (unit + gen/tokens drift + zero-hardcoded + boundaries + preview + contrast)
+        run: pnpm test
+
+      - name: Install pinned chromium for the visual suite
+        run: pnpm exec playwright install chromium --with-deps
+
+      - name: Visual + axe suite (compare mode against committed baselines)
+        run: pnpm test:visual
+
+      # FR-9 CI intent gate: the impeccable design detector, non-interactive.
+      # Headless entry point: the same engine the local PostToolUse/Stop hooks
+      # run (`.claude/settings.json`), invoked via its documented `detect`
+      # verb. Exit contract: 0 clean, 1 target unscannable, 2 findings — any
+      # non-zero fails this step and the findings are named in the log.
+      # Reads the committed `.impeccable/config.json` (project ignores + the
+      # sanctioned bounce-easing exception recorded with its evidence).
+      # NOTE: the engine binary is committed for darwin-arm64 only; on linux
+      # the launcher downloads the version-pinned binary (VERSION file) from
+      # the public impeccable release channel and verifies it against the
+      # release sha256 sidecar before exec.
+      - name: Impeccable design detector (changed UI files, zero blockers)
+        run: |
+          set -eu
+          # Base for "changed": PR → event base sha; push → previous branch sha.
+          BASE_SHA=""
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          else
+            BASE_SHA="${{ github.event.before }}"
+          fi
+          # All-zero sha (brand-new branch / rewritten history) or a missing
+          # object → no usable diff base: scan the full UI source set instead
+          # (strictly stronger than the diff, never weaker).
+          UI_ROOTS="packages/tokens/src packages/components/src packages/react/src packages/docs/src packages/docs/.storybook"
+          if [ -n "$BASE_SHA" ] \
+              && [ "$BASE_SHA" != "0000000000000000000000000000000000000000" ] \
+              && git cat-file -e "$BASE_SHA^{commit}" 2>/dev/null; then
+            FILES=$(git diff --name-only --diff-filter=ACMRT "$BASE_SHA" HEAD -- packages/ \
+              | grep -E '\.(ts|tsx|js|jsx|mjs|cjs|css|scss|sass|less|html|vue|svelte|astro)$' || true)
+          else
+            echo "impeccable: no usable diff base — scanning full UI source set"
+            FILES=$UI_ROOTS
+          fi
+          if [ -z "$FILES" ]; then
+            echo "impeccable: no UI files changed — nothing to scan"
+            exit 0
+          fi
+          echo "impeccable: scanning:"
+          while IFS= read -r file; do echo "  $file"; done <<< "$FILES"
+          # Paths in this repo contain no spaces; unquoted expansion keeps the
+          # detector's exact exit code (0 clean / 1 unscannable / 2 findings).
+          # shellcheck disable=SC2086
+          .claude/skills/impeccable/scripts/impeccable detect $FILES
+
+      - name: Upload visual-run artifacts on failure (diffs + reports)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-run-artifacts
+          path: |
+            test-results/
+            playwright-report/
+          if-no-files-found: ignore
+          retention-days: 14

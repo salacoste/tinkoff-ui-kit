@@ -1,5 +1,13 @@
 # tinkoff-ui-kit
 
+[![CI](https://github.com/salacoste/tinkoff-ui-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/salacoste/tinkoff-ui-kit/actions/workflows/ci.yml)
+
+CI gates every push/PR with the full chain: `lint` → `typecheck` → `build` →
+`test` (unit + gen/tokens drift + zero-hardcoded + import boundaries + preview +
+contrast) → `test:visual` (compare mode vs committed cross-platform baselines,
+axe in both themes) → impeccable design detector over changed UI files;
+visual diffs are uploaded as artifacts on failure.
+
 UI kit based on the Tinkoff (T-Bank) design language — recreated, systematized and improved.
 
 An internal study project: we take the existing site as the design reference, extract its
