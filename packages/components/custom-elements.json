@@ -25,6 +25,14 @@
         },
         {
           "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/select/index.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "mountOverlay",
           "declaration": {
             "name": "mountOverlay",
@@ -888,6 +896,802 @@
           "declaration": {
             "name": "TkInput",
             "module": "src/input/input.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/select/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/select/select.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/select/select.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "selectStyles",
+          "default": "css` :host { display: block; } /* Disabled (EXPERIENCE State Patterns): 40% opacity, no pointer events at the host boundary; the trigger keeps aria-disabled (focusable pattern). */ :host([disabled]) { opacity: 0.4; pointer-events: none; } .label { display: block; margin: 0 0 var(--tk-space-8); font-family: var(--tk-font-body); font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-bold-weight); line-height: var(--tk-text-body-m-leading); color: var(--tk-color-text-primary); cursor: pointer; } .label__star { margin-inline-start: var(--tk-space-4); } /* --- Trigger box: Input's field language verbatim (fill/radius/hairline on the wrapper so the unified ring wraps the whole field). --- */ .field { box-sizing: border-box; display: flex; align-items: center; gap: var(--tk-space-8); width: 100%; height: 52px; border: 1px solid var(--tk-color-border-default); border-radius: var(--tk-select-radius, var(--tk-radius-md)); background: var(--tk-select-fill, var(--tk-color-surface-field)); } .field:focus-within { outline: 2px solid var(--tk-color-focus-ring); outline-offset: 2px; } .field__trigger { /* The full 52px box is the interactive target (≥44px floor) — a real button so keyboard/touch get native semantics under the combobox role. */ flex: 1; min-width: 0; box-sizing: border-box; height: 100%; display: inline-flex; align-items: center; margin: 0; border: none; padding: 0; padding-inline-start: var(--tk-space-16); background: transparent; font-family: var(--tk-font-body); font-size: var(--tk-text-body-l-size); line-height: var(--tk-text-body-l-leading); color: var(--tk-select-text, var(--tk-color-text-primary)); text-align: start; cursor: pointer; -webkit-appearance: none; appearance: none; } /* Dedup only — the :focus-within ring above is showing at this exact moment (state changes are instant; the ring is never removed). */ .field__trigger:focus-visible { outline: none; } /* Placeholder: the DESIGN token is gray-500, but on the surface-field fill it measures 3.46:1 (#79818C on #ECF1F7) — under AA for 17px text. tk-input escapes measurement only because a native input's placeholder paints through the ::placeholder pseudo (axe never sees it); this component's placeholder is a real span, so the kit's AA-override axis applies (the link-on-tint precedent): one step darker, text-secondary (4.95:1 on the light fill; the dark layer's #FFFFFFB3 passes on the translucent dark field). Deviation documented in verify/select/NOTES.md. */ .field__value--placeholder { color: var(--tk-select-placeholder, var(--tk-color-text-secondary)); } /* Long selected labels truncate visually (ellipsis) — the accessible name keeps the full string. */ .field__value { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } /* --- Chevron: decorative inline SVG (aria-hidden in the template), color via the text-secondary token (reference reads ~#4A4A52 — nearest token step, flagged in the module header). Rotates 180° on open on the motion tokens; the token layer collapses durations to 0ms under prefers-reduced-motion, so no separate media query is needed. --- */ .field__chevron { flex: none; display: inline-flex; margin-inline-end: var(--tk-space-16); color: var(--tk-color-text-secondary); transition: transform var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-standard); } :host([open]) .field__chevron { transform: rotate(180deg); } .error { display: flex; align-items: flex-start; gap: var(--tk-space-4); margin: var(--tk-space-8) 0 0; font-family: var(--tk-font-body); font-size: var(--tk-text-body-s-size); line-height: var(--tk-text-body-s-leading); color: var(--tk-color-error-on-field); } .error__icon { flex: none; width: 16px; height: 16px; margin-block-start: 0.5px; } `",
+          "description": "tk-select styles — TWO sheets, because the menu panel carries its OWN\nshadow root while living as a generated child of tk-select's shadow tree\n(spec 2.3 Design Notes, amended — see select.ts's class doc: single-tree\naria id refs; the controller's popover path promotes in place, the\nfallback path moves the panel across the tree boundary and back):\n\n- `selectStyles` — adopted into the tk-select host's shadow root: the field\n  (label, trigger box, chevron, error) in Input's exact visual language.\n- `selectMenuStyles` — adopted into the PANEL's own shadow root, so its\n  styles never leak document-level (CONVENTIONS §6) AND travel with the\n  panel when the controller's fallback path reparents it. `:host` rules\n  are author-origin and therefore also reset the popover API's UA sheet\n  (`[popover]` sets border/padding/background/margin/inset) on the popover\n  mounting path; option rows are the panel's light children, styled via\n  ::slotted.\n\nTokens only (FR-1), zero theme branches (AD-3). Visual spec: DESIGN.md\ncomponents.select + the 2.0 capture notes § Select (trigger = field\nlanguage 52px radius ~12 flat fill; menu #FFFFFF radius ~12 soft dropdown\nshadow; rows ~48px, 16px inner padding, ~15px #333 text).\n\nPer-component custom properties (`--tk-select-*`, CONVENTIONS §6 — the\nsame-slot-same-role rule vs `--tk-input-*`), each consumed WITH its token\ndefault:\n- `--tk-select-fill`        trigger fill      (default surface-field)\n- `--tk-select-radius`      trigger radius    (default radius-md)\n- `--tk-select-text`        value text color  (default text-primary)\n- `--tk-select-placeholder` placeholder color (default text-secondary — the AA override, see the rule below)\n- `--tk-select-menu-radius` menu panel radius (default radius-md — the menu sheet below)\n\nKnown structural (non-token) values, flagged per the flag-don't-invent rule:\n- field height 52px and the 1px hairline (the Input literals);\n- the chevron's 24px box / 1.5px stroke (icon metrics, no token);\n- option min-height 48px and the menu 4px inner inset (capture-measured);\n- the 4px field→menu gap (MENU_OFFSET_PX in select.ts — the open capture's\n  flush-to-4px placement, unreadable exactly at DPR 1);\n- the menu max-height `calc(var(--tk-space-48) * 7 + var(--tk-space-12))`\n  — spacing-DERIVED per the spec's long-list row (7 × 48px rows + the\n  panel's own vertical padding + one headroom step, overflow-y auto)."
+        },
+        {
+          "kind": "variable",
+          "name": "selectMenuStyles",
+          "default": "css` :host { box-sizing: border-box; display: block; margin: 0; inset: auto; border: none; padding: var(--tk-space-4); background: var(--tk-color-surface-base); color: var(--tk-color-text-primary); font-family: var(--tk-font-body); border-radius: var(--tk-select-menu-radius, var(--tk-radius-md)); box-shadow: var(--tk-shadow-dropdown); overflow-y: auto; overscroll-behavior: contain; /* Long-list row: spacing-derived max (token-less by the spec's own instruction) — 7 × 48px rows + the panel's own 2 × 4px vertical padding + a 4px headroom step: at exactly content height an overflowing-by-a-fraction list sprouts a one-notch scrollbar gutter (a light strip in the dark theme — caught in the 2.3 vision pass). */ max-height: calc(var(--tk-space-48) * 7 + var(--tk-space-12)); } /* Option rows are the panel's LIGHT children (generated by select.ts into the panel element itself); one slot projects them. radius-sm per the capture notes; the 48px row + 12px inline padding give the ~16px text inset measured on the reference (4px panel inset + 12px). */ ::slotted([role='option']) { display: flex; align-items: center; gap: var(--tk-space-8); box-sizing: border-box; min-height: 48px; padding: var(--tk-space-4) var(--tk-space-12); border-radius: var(--tk-radius-sm); font-size: var(--tk-text-body-m-size); line-height: var(--tk-text-body-m-leading); color: var(--tk-color-text-primary); cursor: pointer; user-select: none; } /* Visual focus (the active option) and hover: the reference's flat-fill language — no borders, no yellow (the capture shows none). The ACTIVE step is surface-field (the field fill family — more perceptible than gray-100, which measured invisible against surface-base in the 2.3 vision pass); hover stays a whisper lighter. Real focus (the ring) stays on the trigger the whole time the menu is open. */ ::slotted([role='option']:hover) { background: var(--tk-color-gray-100); } ::slotted([role='option'].tk-active) { background: var(--tk-color-surface-field); } /* Selected: ink check glyph (right-aligned) — the capture's own marking is a checkbox affordance on a multiselect; this kit's single-select marks with ink, never yellow (noted per the spec's \"follow the capture\" rule). */ ::slotted([role='option'][aria-selected='true']) { font-weight: var(--tk-text-body-m-bold-weight); } ::slotted([role='option'][aria-disabled='true']) { color: var(--tk-color-text-muted); cursor: default; } ::slotted([role='option'][aria-disabled='true']:hover) { background: transparent; } /* NOTE: the selected-option check glyph is NOT styled here — it is a descendant of the slotted option, and ::slotted reaches only the slotted element itself. select.ts builds it with size attributes and an inline margin-inline-start:auto (generated-element inline styles, the same class the overlay controller applies); its color is currentColor inherited from the row. */ `",
+          "description": "The PANEL sheet — adopted into the menu panel's own shadow root (see the\nfile header for why the panel is not a shadow child of tk-select). `:host`\nresets the popover UA sheet on the popover mounting path: UA `[popover]`\nsets `border: solid; padding: 0.25em; background-color: Canvas;\ncolor: CanvasText; inset: 0; margin: auto; overflow: auto` — author-origin\nrules win over UA regardless of specificity, and the controller's inline\ntop/left/position always win over both.\n\nThe panel is hidden when closed via the `hidden` attribute (set by\nselect.ts) — never via shadow styles, so the attribute survives the\ncontroller's reparenting."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "selectStyles",
+          "declaration": {
+            "name": "selectStyles",
+            "module": "src/select/select.css.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "selectMenuStyles",
+          "declaration": {
+            "name": "selectMenuStyles",
+            "module": "src/select/select.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/select/select.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "TK_SELECT_TYPEAHEAD_RESET_MS",
+          "type": {
+            "text": "number"
+          },
+          "default": "500",
+          "description": "Typeahead buffer reset window — a JS timing constant (the token layer\ncannot feed JS timers); 500ms matches the `--tk-motion-duration-slow` step\nthe scale already carries. Noted per the spec's «note the timing constant»."
+        },
+        {
+          "kind": "class",
+          "description": "tk-select — native-equivalent keyboard dropdown (Story 2.3), the overlay\ncontroller's (2.2) first real consumer.\n\nSTATEFUL API — the §4 contract frozen at 2.1 (Input PR), inherited\nverbatim: `value` strict-controlled (renders exactly `value`, selection\nonly emits `value-change`), `defaultValue` seeds uncontrolled (later\nchanges ignored), releasing `value` goes uncontrolled seeded from the last\ncontrolled value. `open` is the §9 frozen overlay-surface state: the\n`open` attribute/property plus `open-change` (`detail: { value: boolean }`).\n\nMENU MOUNTING (spec 2.3 Design Notes, AMENDED — see NOTES.md/select): the\npanel is a GENERATED child of this element's SHADOW ROOT, carrying its own\nshadow root (`<style>` + `<slot>`) so its styles never leak document-level\n(§6) and its `:host` rules reset the popover UA sheet. Option rows are the\npanel's light children INSIDE tk-select's shadow tree: the trigger's\n`aria-activedescendant` / `aria-controls` id refs stay WITHIN ONE TREE.\nThe Design Notes' light-DOM variant (panel as a host light child plus a\nmounting <slot>) crosses a shadow boundary on every idref and FAILED the\naxe gate (aria-valid-attr-value cannot resolve shadow→light refs;\nstrictly-scoped screen readers follow the same rule) — amended here\nbecause the decided pattern could not pass the spec's own acceptance\ncriteria. Mounting stays EXCLUSIVELY `mountOverlay(panel, 'dropdown')` +\n`positionFloating(panel, { anchor: field, matchAnchorWidth: 'min' })`: the\npopover path promotes the element IN PLACE (the controller's documented\nshadow-safe mechanism); the fallback path legally moves the panel out of\nthe shadow root into the overlay container (DOM moves cross tree\nboundaries fine — the panel's own shadow root travels with it) and back on\nrelease, a fallback-only window where idrefs cross trees, in engines\nwithout popover support (no axe/AT gate runs there; happy-dom unit tests\nassert structure only). Zero bespoke positioning/z code here; dropdowns do\nNOT scroll-lock.\n\nKEYBOARD (EXPERIENCE Select row — native parity): Enter/Space/arrows/\nHome/End/typeahead open when closed; arrows navigate with VISUAL focus via\naria-activedescendant (wrapping — noted pick); Enter selects; Escape closes\nwithout selecting; Home/End jump first/last ENABLED option; typeahead\ncomposes a multi-char buffer (TK_SELECT_TYPEAHEAD_RESET_MS reset), matching\nlabel prefixes case-insensitively; DISABLED options are skipped by\nnavigation/typeahead and never select (the «skips» pick — noted per the\nspec); Tab is never intercepted — focus loss closes the menu (focus\nfollows natural tab order), and an outside click closes it and returns\nfocus to the trigger.\n\nDECISIONS flagged per the spec's Implementation Notes:\n- No INTERNAL required validation (unlike Input): a select has no typing,\n  so blur-timing is ambiguous — `required` is semantics-only (asterisk +\n  aria-required); the consumer drives `error`.\n- Selected-row marking = ink check glyph + medium weight (the capture shows\n  no yellow anywhere; its own selected affordance is a checkbox on a\n  multiselect — out of scope for v1's single select).\n- The open-state story renders `<tk-select open>` — the frozen §9\n  declarative form IS the «menu open through element API» technique.",
+          "name": "TkSelect",
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Visible label above the field (empty/absent = the placeholder names the field).",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "In-field hint while nothing is selected; never replaces the label.",
+              "attribute": "placeholder"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Controlled value channel — STRICT semantics (frozen at 2.1, CONVENTIONS\n§4): the element renders exactly this (the matching option's label);\nselection emits `value-change` and applies nothing locally. Property-only\n(`attribute: false`); non-strings set via JS clamp to their string form;\nnull/undefined after control RELEASES to uncontrolled seeded from the\nlast controlled value."
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Initial value for the UNCONTROLLED mode; ignored after the first update.",
+              "attribute": "default-value"
+            },
+            {
+              "kind": "field",
+              "name": "options",
+              "type": {
+                "text": "TkSelectOption[]"
+              },
+              "default": "[]",
+              "description": "The v1 data shape — array of { value, label, disabled? }; property-only (object data never reflects)."
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Required: label asterisk + aria-required (semantics only — see the class doc).",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Consumer-driven error message: renders the error state immediately; empty string = no error.",
+              "attribute": "error"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disabled: 40% opacity, no pointer events, aria-disabled; wins over everything.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Menu open state — the frozen §9 overlay-surface property (reflects; `open-change` fires on every flip).",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "#uncontrolledValue",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Live uncontrolled state (the truth whenever `value` is not provided)."
+            },
+            {
+              "kind": "field",
+              "name": "#lastControlledValue",
+              "privacy": "private",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Last string ever provided through the controlled channel — the seed on release."
+            },
+            {
+              "kind": "field",
+              "name": "#isControlled",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the controlled channel has ever supplied a value."
+            },
+            {
+              "kind": "field",
+              "name": "#activeIndex",
+              "privacy": "private",
+              "type": {
+                "text": "number | null"
+              },
+              "default": "null",
+              "description": "Index of the option with VISUAL focus while the menu is open (null = none)."
+            },
+            {
+              "kind": "field",
+              "name": "#typeaheadBuffer",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Multi-char typeahead buffer + its reset timer (fake-timer tested)."
+            },
+            {
+              "kind": "field",
+              "name": "#typeaheadTimer",
+              "privacy": "private",
+              "type": {
+                "text": "number | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#panel",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLDivElement | null"
+              },
+              "default": "null",
+              "description": "The generated menu panel — a child of the shadow renderRoot (see the class doc), hidden when closed."
+            },
+            {
+              "kind": "field",
+              "name": "#overlayHandle",
+              "privacy": "private",
+              "type": {
+                "text": "TkOverlayHandle | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#positionHandle",
+              "privacy": "private",
+              "type": {
+                "text": "TkPositioningHandle | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#onDocumentPointerDown",
+              "privacy": "private",
+              "description": "Document-level outside-press listener (bound once, added/removed with the menu)."
+            },
+            {
+              "kind": "field",
+              "name": "#uniqueId",
+              "privacy": "private",
+              "type": {
+                "text": "string | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#nextId",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "static": true,
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#id",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveOptions",
+              "privacy": "private",
+              "type": {
+                "text": "TkSelectOption[]"
+              },
+              "description": "Options with null/undefined clamped to the empty list (null-tolerant props).",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveValue",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "description": "The value in force: exactly `value` when controlled, the internal state otherwise.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#selectedOption",
+              "privacy": "private",
+              "type": {
+                "text": "TkSelectOption | null"
+              },
+              "description": "The option matching the value in force (null when unmatched/empty).",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#message",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "description": "The message in force: the consumer `error` prop (null-tolerant — React conditionals pass null).",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#getPanel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLDivElement"
+                }
+              },
+              "description": "The generated panel: role=listbox, own shadow root (styles + slot), hidden until open."
+            },
+            {
+              "kind": "method",
+              "name": "#panelName",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "description": "The panel's accessible name (axe `aria-input-field-name`: role=listbox\nmust be named): the field label, else the placeholder — the same\nname-fallback chain the trigger's aria-label uses."
+            },
+            {
+              "kind": "method",
+              "name": "#syncPanelName",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "panel",
+                  "type": {
+                    "text": "HTMLDivElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#renderMenu",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Renders the option rows into the panel's light children — same shadow tree as the trigger (see the class doc)."
+            },
+            {
+              "kind": "method",
+              "name": "#trigger",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLButtonElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#anchorField",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "description": "The POSITIONING anchor: the field BOX, not the trigger button inside it —\nthe button excludes the chevron strip and the menu would hang ~50px short\nof the field's right edge (invisible on light surfaces, obvious on dark;\ncaught in the 2.3 vision pass)."
+            },
+            {
+              "kind": "method",
+              "name": "#mountMenu",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#unmountMenu",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#initialActiveIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "edge",
+                  "type": {
+                    "text": "'first' | 'last'"
+                  }
+                }
+              ],
+              "description": "Where visual focus starts on open: the selected option when it is\nselectable, else an edge (interaction-driven opens pick the edge by the\nopening key; every other open — including the declarative `open`\nattribute — starts at the first enabled row, never nowhere)."
+            },
+            {
+              "kind": "method",
+              "name": "#openAt",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "edge",
+                  "type": {
+                    "text": "'first' | 'last'"
+                  }
+                }
+              ],
+              "description": "Opens (or keeps open) with visual focus on the selected option, else an edge."
+            },
+            {
+              "kind": "method",
+              "name": "#firstEnabled",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#lastEnabled",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#stepEnabled",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "from",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "direction",
+                  "type": {
+                    "text": "1 | -1"
+                  }
+                }
+              ],
+              "description": "Next/previous ENABLED option from `from`, WRAPPING (the noted pick — native parity)."
+            },
+            {
+              "kind": "method",
+              "name": "#setActive",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#scrollActiveIntoView",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncActiveOnDataChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Active index follows the data: keep in range, drop onto the selected option, never onto a disabled row."
+            },
+            {
+              "kind": "method",
+              "name": "#setOpen",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "next",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "{ focus?: boolean }"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#close",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "{ returnFocus: boolean }"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#selectIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Selects option `index`: disabled rows never select; controlled applies nothing locally."
+            },
+            {
+              "kind": "method",
+              "name": "#emitValueChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#clearTypeahead",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#runTypeahead",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Composes the buffer and jumps to the first ENABLED label-prefix match (no match → stays)."
+            },
+            {
+              "kind": "method",
+              "name": "#handleTriggerKeydown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#handleTriggerClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#handleFocusout",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "FocusEvent"
+                  }
+                }
+              ],
+              "description": "Focus loss (EXPERIENCE: the menu closes on outside click AND on focus\nloss): any focusout whose relatedTarget is outside the whole component\ncloses the menu — focus then follows the NATURAL tab order (no forced\nreturn; that behavior belongs to the outside-click row only)."
+            }
+          ],
+          "events": [
+            {
+              "name": "open-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "`{ value: boolean }` — the frozen §9 overlay-surface state event; composed, bubbles."
+            },
+            {
+              "name": "value-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "`{ value }` with the unwrapped selected option value; composed, bubbles."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Visible label above the field (empty/absent = the placeholder names the field).",
+              "name": "label",
+              "fieldName": "label"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "In-field hint while nothing is selected; never replaces the label.",
+              "name": "placeholder",
+              "fieldName": "placeholder"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Initial value for the UNCONTROLLED mode; ignored after the first update.",
+              "name": "default-value",
+              "fieldName": "defaultValue"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Required: label asterisk + aria-required (semantics only — see the class doc).",
+              "name": "required",
+              "default": "false",
+              "fieldName": "required"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Consumer-driven error message: renders the error state immediately; empty string = no error.",
+              "name": "error",
+              "fieldName": "error"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disabled: 40% opacity, no pointer events, aria-disabled; wins over everything.",
+              "name": "disabled",
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Menu open state — the frozen §9 overlay-surface property (reflects; `open-change` fires on every flip).",
+              "name": "open",
+              "default": "false",
+              "fieldName": "open"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-select",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TK_SELECT_TYPEAHEAD_RESET_MS",
+          "declaration": {
+            "name": "TK_SELECT_TYPEAHEAD_RESET_MS",
+            "module": "src/select/select.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkSelect",
+          "declaration": {
+            "name": "TkSelect",
+            "module": "src/select/select.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-select",
+          "declaration": {
+            "name": "TkSelect",
+            "module": "src/select/select.ts"
           }
         }
       ]

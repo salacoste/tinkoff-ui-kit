@@ -547,6 +547,92 @@ describe('positionFloating (DOM wiring)', () => {
     expect(surface.style.top).toBe(''); // released: reposition is inert
   });
 
+  // --- matchAnchorWidth (Story 2.3 addition) -------------------------------
+
+  it("matchAnchorWidth: true pins width BEFORE the floating rect is read (the clamp result proves the order), re-matches the live anchor, and restores on release", () => {
+    setViewport(500, 800);
+    const anchor = document.createElement('div');
+    const surface = document.createElement('div');
+    document.body.append(anchor, surface);
+    surface.style.width = '777px'; // prior inline width — must survive release
+    // The surface rect DERIVES from the element's current inline width —
+    // whatever the implementation has applied by measurement time is what
+    // the geometry sees (natural width 100 before any match is applied).
+    vi.spyOn(surface, 'getBoundingClientRect').mockImplementation(() =>
+      rect(0, 0, Number.parseFloat(surface.style.width) || 100, 100),
+    );
+
+    // Anchor hangs past the right edge so the horizontal clamp BITES: with
+    // the width applied first, floating measures 200 wide and left clamps
+    // 300 → 292 (500 − 200 − 8); measuring before applying (the reorder this
+    // test pins out) reads the natural 100 and leaves left at 300.
+    stubRect(anchor, rect(400, 300, 200, 40)); // top 400, left 300 → right edge 500 = viewport edge
+    const handle = positionFloating(surface, { anchor, placement: 'bottom', matchAnchorWidth: true });
+    cleanup.push(() => handle.release());
+    expect(surface.style.width, 'width pinned to the anchor').toBe('200px');
+    expect(surface.style.left, 'clamp computed against the MATCHED width — order pinned').toBe('292px');
+    expect(surface.style.top).toBe('440px');
+
+    // Anchor widened (a relayout between events): the next reposition — here
+    // scroll-triggered — re-matches from the LIVE rect and re-clamps.
+    stubRect(anchor, rect(400, 60, 260, 40));
+    window.dispatchEvent(new Event('scroll'));
+    expect(surface.style.width).toBe('260px');
+    expect(surface.style.left, '500 − 260 − 8 = 232 stays inside; 60 needs no clamp').toBe('60px');
+
+    handle.release();
+    expect(surface.style.width, 'prior inline width restored').toBe('777px');
+    // And no post-release re-application on further events.
+    window.dispatchEvent(new Event('resize'));
+    expect(surface.style.width).toBe('777px');
+  });
+
+  it("matchAnchorWidth: 'min' pins only min-width — the surface may grow past the anchor", () => {
+    setViewport(1000, 800);
+    const anchor = document.createElement('div');
+    const surface = document.createElement('div');
+    document.body.append(anchor, surface);
+    stubRect(surface, rect(0, 0, 200, 100));
+
+    stubRect(anchor, rect(300, 400, 120, 40));
+    const handle = positionFloating(surface, { anchor, placement: 'bottom', matchAnchorWidth: 'min' });
+    cleanup.push(() => handle.release());
+    expect(surface.style.minWidth).toBe('120px');
+    expect(surface.style.width, 'width untouched under min — growth stays consumer-CSS').toBe('');
+
+    handle.release();
+    expect(surface.style.minWidth).toBe('');
+  });
+
+  it('without matchAnchorWidth neither width nor min-width is ever touched', () => {
+    setViewport(1000, 800);
+    const anchor = document.createElement('div');
+    const surface = document.createElement('div');
+    document.body.append(anchor, surface);
+    stubRect(surface, rect(0, 0, 200, 100));
+    stubRect(anchor, rect(300, 400, 120, 40));
+    const handle = positionFloating(surface, { anchor, placement: 'bottom' });
+    cleanup.push(() => handle.release());
+    expect(surface.style.width).toBe('');
+    expect(surface.style.minWidth).toBe('');
+  });
+
+  it('matchAnchorWidth garbage throws loudly on first application (module style)', () => {
+    setViewport(1000, 800);
+    const anchor = document.createElement('div');
+    const surface = document.createElement('div');
+    document.body.append(anchor, surface);
+    stubRect(surface, rect(0, 0, 200, 100));
+    stubRect(anchor, rect(300, 400, 120, 40));
+    expect(() =>
+      positionFloating(surface, {
+        anchor,
+        // @ts-expect-error — runtime garbage, exactly what the guard is for
+        matchAnchorWidth: 'max',
+      }),
+    ).toThrow(/matchAnchorWidth/);
+  });
+
   it('auto-releases when the anchor leaves the DOM (a detached anchor would clamp to the corner)', () => {
     setViewport(1000, 800);
     const anchor = document.createElement('div');

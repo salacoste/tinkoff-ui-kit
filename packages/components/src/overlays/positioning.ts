@@ -23,6 +23,19 @@
  * in); prior inline `position`/`top`/`left` are snapshotted and restored on
  * release. Surfaces should be margin-free or carry their margins themselves —
  * margins shift the box off the computed coordinates.
+ *
+ * Story 2.3 addition (the sanctioned public-API extension, spec 2.3 Never
+ * clause: "a new option, not a contract change"): `matchAnchorWidth` —
+ * `true` pins the surface's `width` to the anchor's current width, `'min'`
+ * pins only `minWidth` (the surface may grow: Select uses `'min'` so long
+ * option labels can exceed the trigger). Applied BEFORE the floating rect is
+ * read on every reposition (the constraint shapes the measurement), from the
+ * LIVE anchor rect — an anchor that resizes between scroll/resize events is
+ * re-matched then. Prior inline `width`/`min-width` are snapshotted and
+ * restored on release like the coordinate styles. Garbage values (anything
+ * but `true`/`'min'`/`undefined`) throw loudly on the first application —
+ * module style; geometry itself (computeFloatingPosition) is untouched: width
+ * matching is a DOM-style concern, not geometry.
  */
 
 /** The four anchored sides. */
@@ -148,6 +161,13 @@ export function computeFloatingPosition(
 export interface TkPositionFloatingOptions extends TkComputeOptions {
   /** The element the floating surface anchors to (trigger, input, button…). */
   anchor: HTMLElement;
+  /**
+   * Match the surface's box to the anchor's width: `true` pins `width`,
+   * `'min'` pins only `min-width` (the surface may grow past the anchor).
+   * Applied from the live anchor rect on every reposition; snapshot-restored
+   * on release. (Story 2.3 addition — Select's menu uses `'min'`.)
+   */
+  matchAnchorWidth?: boolean | 'min';
 }
 
 /** Positioning handle — `placement` reflects the last applied flip decision. */
@@ -193,6 +213,8 @@ export function positionFloating(
     position: floating.style.position,
     top: floating.style.top,
     left: floating.style.left,
+    width: floating.style.width,
+    minWidth: floating.style.minWidth,
   };
   let current = requested;
   let released = false;
@@ -201,6 +223,21 @@ export function positionFloating(
   // requestAnimationFrame would run the callback before the id assignment
   // lands — the id alone cannot gate re-scheduling.
   let framePending = false;
+
+  /** Anchor-width matching (Story 2.3): constraint first, measurement second. */
+  const applyAnchorWidth = (anchorWidth: number): void => {
+    if (options.matchAnchorWidth === true) {
+      floating.style.width = `${anchorWidth}px`;
+    } else if (options.matchAnchorWidth === 'min') {
+      floating.style.minWidth = `${anchorWidth}px`;
+    } else if (options.matchAnchorWidth !== undefined) {
+      throw new Error(
+        `positionFloating: matchAnchorWidth must be true | 'min' | undefined — got '${String(
+          options.matchAnchorWidth,
+        )}'`,
+      );
+    }
+  };
 
   const releaseHandle = (): void => {
     if (released) return;
@@ -216,6 +253,8 @@ export function positionFloating(
     floating.style.position = priorStyles.position;
     floating.style.top = priorStyles.top;
     floating.style.left = priorStyles.left;
+    floating.style.width = priorStyles.width;
+    floating.style.minWidth = priorStyles.minWidth;
   };
 
   const reposition = (): void => {
@@ -227,6 +266,10 @@ export function positionFloating(
       return;
     }
     const anchorRect = options.anchor.getBoundingClientRect();
+    // Width constraint BEFORE the floating rect read — the applied match must
+    // shape the measured box (a surface measured pre-constraint would compute
+    // its flip/clamp geometry against the wrong width).
+    if (options.matchAnchorWidth !== undefined) applyAnchorWidth(anchorRect.width);
     const floatingRect = floating.getBoundingClientRect();
     const position = computeFloatingPosition(
       {

@@ -175,13 +175,17 @@ describe('consumed --tk-* tokens exist in the token sheet (spec 1.7 review)', ()
     // Real component hook → passes.
     expect(fallbackViolation('--tk-input-fill')).toBeNull();
     expect(fallbackViolation('--tk-input-placeholder')).toBeNull();
+    // A REAL component since Story 2.3 (src/select/ exists) — the exemption
+    // covers it now; the pre-2.3 assertion flipped with the story, as its
+    // message anticipated.
+    expect(fallbackViolation('--tk-select-fill')).toBeNull();
     // Undeclared CORE token in fallback position → flagged (the original bug
     // class — mutation-proven in review to escape under the blanket rule).
     expect(fallbackViolation('--tk-z-modaal')).not.toBeNull();
     expect(fallbackViolation('--tk-space-8px')).not.toBeNull();
-    // Unknown component prefix → flagged.
+    // Unknown component prefix → flagged (modal is not a component dir yet).
     expect(fallbackViolation('--tk-inputtypo-x')).not.toBeNull();
-    expect(fallbackViolation('--tk-select-fill'), 'not a real component YET (story 2.3)').not.toBeNull();
+    expect(fallbackViolation('--tk-modal-fill'), 'not a real component YET (Epic 4)').not.toBeNull();
   });
 
   it('detector passes declared tokens, whitespace-tolerant forms, and comment mentions (negative self-check)', () => {

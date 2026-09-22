@@ -5,7 +5,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import * as litReact from '@lit/react';
 import { afterAll, describe, expect, it, vi } from 'vitest';
 
-import { Button, EVENT_MAP, Input } from './index.js';
+import { Button, EVENT_MAP, Input, Select } from './index.js';
 
 /**
  * pillkit-react generated surface. The wrapper imports `pillkit-components`
@@ -178,6 +178,121 @@ describe('pillkit-react', () => {
     expect(el?.value).toBeUndefined();
     // Seeded from the last controlled value.
     expect((el as Element).shadowRoot?.querySelector('input')?.value).toBe('ab');
+  });
+
+  // --- Story 2.3: tk-select wrapper (mirrors the Input smoke) ----------------
+
+  it("carries the story 2.3 registry entry: tk-select's value-change/open-change", () => {
+    expect(EVENT_MAP['tk-select']).toEqual({
+      onValueChange: 'value-change',
+      onOpenChange: 'open-change',
+    });
+  });
+
+  it('renders <Select> as tk-select with element properties set through the wrapper', async () => {
+    const container = await renderToContainer(
+      React.createElement(Select, {
+        label: 'Кэшбэк',
+        placeholder: 'Выберите категорию',
+        options: [
+          { value: 'all', label: '1% Все покупки' },
+          { value: 'taxi', label: '5% Такси' },
+        ],
+      }),
+    );
+    const el = container.querySelector('tk-select');
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    expect((el as unknown as { label?: string }).label).toBe('Кэшбэк');
+    expect((el as unknown as { options?: unknown[] }).options).toHaveLength(2);
+    expect(el?.shadowRoot?.querySelector('button')).not.toBeNull();
+  });
+
+  it('Select handlers receive unwrapped payloads (string value, boolean open)', async () => {
+    const onValueChange = vi.fn();
+    const onOpenChange = vi.fn();
+    const container = await renderToContainer(
+      React.createElement(Select, { onValueChange, onOpenChange }),
+    );
+    const el = container.querySelector('tk-select');
+    el?.dispatchEvent(
+      new CustomEvent('value-change', { detail: { value: 'taxi' }, composed: true, bubbles: true }),
+    );
+    el?.dispatchEvent(
+      new CustomEvent('open-change', { detail: { value: true }, composed: true, bubbles: true }),
+    );
+    expect(onValueChange).toHaveBeenCalledTimes(1);
+    expect(onValueChange.mock.calls[0]?.[0]).toBe('taxi');
+    expect(onOpenChange).toHaveBeenCalledTimes(1);
+    expect(onOpenChange.mock.calls[0]?.[0]).toBe(true);
+  });
+
+  it('Select controlled mode: standard value mapping, wrapper adds no clamping (mirrors Input)', async () => {
+    const OPTIONS = [
+      { value: 'all', label: '1% Все покупки' },
+      { value: 'taxi', label: '5% Такси' },
+    ];
+    let state = 'all';
+    const container = await renderToContainer(
+      React.createElement(Select, {
+        options: OPTIONS,
+        value: state,
+        onValueChange: (value: unknown) => {
+          expect(typeof value).toBe('string');
+          state = value as string;
+        },
+      }),
+    );
+    const root = roots[roots.length - 1];
+    const el = container.querySelector('tk-select') as (Element & {
+      value?: string;
+      open?: boolean;
+      updateComplete?: Promise<unknown>;
+    }) | null;
+    expect(el?.value).toBe('all');
+
+    // Open + select the second option through the element's own pipeline.
+    await act(() => {
+      (el as unknown as { open: boolean }).open = true;
+    });
+    await (el as unknown as { updateComplete: Promise<unknown> }).updateComplete;
+    const panelId = (el as Element).shadowRoot
+      ?.querySelector('button')
+      ?.getAttribute('aria-controls');
+    const row = panelId
+      ? (document.getElementById(panelId)?.querySelectorAll('[role="option"]')[1] as HTMLElement)
+      : null;
+    expect(row, 'the open menu renders its option rows').not.toBeNull();
+    await act(() => {
+      row?.click();
+    });
+
+    // Strict: the event fired, the element's channel keeps the consumer value.
+    expect(state).toBe('taxi');
+    expect(el?.value).toBe('all');
+
+    // The consumer's render answers: value flows back.
+    await act(() => {
+      root.render(
+        React.createElement(Select, {
+          options: OPTIONS,
+          value: state,
+          onValueChange: (value: unknown) => {
+            state = value as string;
+          },
+        }),
+      );
+    });
+    expect(el?.value).toBe('taxi');
+
+    // Removing the value prop releases the element (frozen §4 semantics).
+    await act(() => {
+      root.render(React.createElement(Select, { options: OPTIONS, label: 'Кэшбэк' }));
+    });
+    expect(el?.value).toBeUndefined();
+    // Seeded from the last controlled value — display still shows «Такси».
+    expect(
+      (el as Element).shadowRoot?.querySelector('.field__value')?.textContent,
+    ).toContain('Такси');
   });
 
   it('forwards refs through the HOC to the underlying elements (every wrapper is a forwardRef HOC)', async () => {
