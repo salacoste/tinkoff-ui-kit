@@ -5,9 +5,9 @@ created: '2026-09-22'
 status: 'done'
 route: 'full'
 route_source: 'auto'
-review: ''
-review_source: ''
-lenses_ran: []
+review: 'thorough'
+review_source: 'auto'
+lenses_ran: [blind-hunter, edge-case-hunter, verification-gap, intent-alignment]
 review_loop_iteration: 0
 baseline_commit: 'dcfc52ee48d18487c55c68da5de67f9e5f7f932a'
 context:
@@ -119,3 +119,16 @@ Lit standard decorators (no experimental), `useDefineForClassFields: false` alre
 - `pnpm gen && git diff --exit-code` -- expected: exit 0
 - `pnpm test:visual` (twice) -- expected: all-pass stable, demo baselines gone, button present both themes
 - impeccable hooks -- expected: zero blocker findings on UI file writes
+\n
+### Spec Change Log (review passes)
+
+- Decorator mode: vite 8 / vitest 5 (rolldown-oxc) silently DROP TC39 standard decorators — legacy `experimentalDecorators: true` is the only working path on the pinned stack (verified in dist; recorded 2026-09-22).
+- 4 demo baselines existed on disk, not 6 (spec miscount; all 4 removed).
+- Flagged structural non-token values (flag-don't-invent rule): spinner 2px stroke, secondary 1px hairline (a11y-for-dark addition beyond the reference), compact 6px pill inset.
+- Long-label stance decided: single-line, never wraps, visual-only ellipsis under consumer-constrained width, accessible name keeps full text (Long label story).
+- @lit/react node builds drop element properties (SSR props bag only) — react tests resolve the browser build.
+- Post-review: compact restructured — the native button IS the 44px box, pill painted on ::before inset 6px (live hit-test proven at +3/+22/+41px).
+
+### Review Triage Log
+
+Pass 1 (4 lenses): high — nonexistent token consumed (--tk-text-body-m-bold-leading → line-height normal; fixed to base leading + tests/consumed-tokens guard), host-dispatched clicks bypassed loading/disabled interception (host-bound listener), check:gen + React wrapper unverified (tests/gen-drift + react-dom render smoke). Medium — compact never rendered 32px (restructured, then floor violation fixed again: full 44px clickable), invalid enums unstyled (willUpdate clamp, recorded in CONVENTIONS §2), loading kept hover/cursor affordances, aria always-false noise, stories lost typecheck (root tsconfig glob), width-freeze vacuous (real Playwright measurement in button.spec), secondary/inverse reference crops missing (added + vision-verified; dark inverse hover observed ≈#6B6B6B = ink-200 step). Low — EVENT_MAP toEqual({}) time bomb (membership + freeze), generator locale-sort + duplicate-tag throw, trivia cleanups. False — transitions-dev already vendored at 1.1. Pass 2 (orchestrator follow-up): compact padding band not clickable → floor violated → restructured to clickable-box (proven). Noted: impeccable edit-time hooks auto-suppressed after 6 edits/file, no blockers fired; full audit lands with 1.8 CI detector step — flagged to maintainer.
