@@ -10,6 +10,7 @@ the baseline workflow (AD-8).
 | File | Role |
 |------|------|
 | `visual.spec.ts` | The suite — one visual test + one axe test per story × theme, generated from `index.json` |
+| `button.spec.ts` | Component LAYOUT assertions only Playwright can make (loading width-freeze with real layout; compact 44px element box vs 32px pill) — same webServer, same built bundle |
 | `stories.ts` / `stories.test.ts` | Story discovery + theme-URL builder, and its vitest unit tests (`*.test.ts` belongs to vitest; Playwright runs `*.spec.ts` only) |
 | `inter.css` / `inject.ts` | Font determinism — both `--tk-font-*` slots overridden to locally-served Inter |
 | `serve.mjs` | Zero-dep static server mounting `packages/docs/dist` at `/` and `@fontsource/inter` at `/inter` (started by `playwright.config.ts` `webServer`) |

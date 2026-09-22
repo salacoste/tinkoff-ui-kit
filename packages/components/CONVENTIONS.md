@@ -14,6 +14,7 @@ Every rule cites its source. The items the sources left undecided for the pilot 
 
 - Properties are camelCase Lit reactive properties: `variant`, `size`, `loading`, `value`. *(AD-5)*
 - Variants and sizes are string-literal unions, never booleans that fork rendering (`variant: 'primary' | 'secondary' | 'inverse'`, not `primary?: boolean; secondary?: boolean`). Confirmed with per-family defaults at the pilot — Button ships `variant: 'primary' | 'secondary' | 'inverse'` (default `primary`) and `size: 'hero' | 'card' | 'compact'` (default `card`); later families declare their own unions and defaults the same way. *(resolved at 1.7 pilot)*
+- Enum error strategy: an invalid runtime value CLAMPS to the union default (in `willUpdate`, correcting the reflected attribute too) — never throws. Bad input degrades to the default variant, not a crash, and the value in force is always visible in the DOM. *(resolved at the 1.7 pilot review)*
 - Attribute reflection: ALL public boolean and enum props reflect to attributes (`@property({ reflect: true })` — booleans as bare presence/absence, enums as their string value); value props (string/number/object data like `value`) NEVER reflect. The reflected attributes are styling/state hooks (the Button sheet keys on `variant`/`size`/`loading`/`disabled` host attributes). *(resolved at 1.7 pilot)*
 - Every prop appears in the component's CEM manifest (jsdoc annotations feed the React wrapper generation). *(AD-1)*
 

@@ -1,5 +1,6 @@
-import { LitElement, html } from 'lit';
+import { LitElement, html, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
+import type { PropertyValues } from 'lit';
 
 import { buttonStyles } from './button.css.js';
 
@@ -54,19 +55,77 @@ export class TkButton extends LitElement {
   static override readonly styles = [buttonStyles];
 
   /**
-   * Click interception. `disabled` already kills pointer events at the host
-   * (CSS), but a focused button still fires synthetic clicks from Enter/Space
-   * — and a `loading` button must not activate at all (I/O matrix). Preventing
-   * default and stopping propagation before the event escapes the shadow root
-   * keeps both states inert for mouse AND keyboard, while the button stays
-   * focusable (aria-disabled pattern; native `disabled` would drop it from
-   * the tab order and hide it from some screen readers).
+   * Click interception, bound at the HOST (constructor listener — always the
+   * first listener on the element). `disabled` already kills pointer events
+   * at the host (CSS), but a focused button still fires synthetic clicks from
+   * Enter/Space — and a `loading` button must not activate at all (I/O
+   * matrix). Binding here covers BOTH dispatch paths: native clicks bubbling
+   * out of the shadow `<button>` (composed) AND clicks dispatched on
+   * `<tk-button>` itself (`el.click()`, delegated listeners on ancestors).
+   * preventDefault + stopImmediatePropagation keeps both inert while the
+   * button stays focusable (aria-disabled pattern; native `disabled` would
+   * drop it from the tab order and hide it from some screen readers).
    */
-  private handleClick(event: Event): void {
+  private readonly handleClick = (event: Event): void => {
     if (this.disabled || this.loading) {
       event.preventDefault();
       event.stopImmediatePropagation();
     }
+  };
+
+  constructor() {
+    super();
+    this.addEventListener('click', this.handleClick);
+  }
+
+  /**
+   * Enum clamp — the CONVENTIONS §2 error strategy: an invalid `variant`/
+   * `size` value falls back to the union default instead of rendering an
+   * unstyled interactive control (never throws — bad input degrades, it does
+   * not crash). The reflected attribute is corrected too, so the DOM shows
+   * the value actually in force.
+   */
+  protected override willUpdate(changed: PropertyValues<this>): void {
+    if (changed.has('variant') && !(TkButton.variants as readonly string[]).includes(this.variant)) {
+      this.variant = 'primary';
+    }
+    if (changed.has('size') && !(TkButton.sizes as readonly string[]).includes(this.size)) {
+      this.size = 'card';
+    }
+  }
+
+  /**
+   * Accessible-name guard: a button with no default-slot content has no
+   * accessible name. Warns ONCE per element (flag), checked at first render
+   * and on slotchange — slotted content can arrive after connect. Fires in
+   * every environment with a clear prefix: `import.meta.env.DEV` is a Vite
+   * build-time injection that does not exist for non-Vite consumers of the
+   * lib build, so gating on it would silence the warning exactly where a
+   * consumer first integrates the kit.
+   */
+  #nameWarned = false;
+
+  #warnIfUnnamed(): void {
+    if (this.#nameWarned) return;
+    const defaultSlot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot:not([name])');
+    const hasContent = (defaultSlot?.assignedNodes({ flatten: true }) ?? []).some(
+      (node: Node) =>
+        node.nodeType === Node.ELEMENT_NODE || (node.textContent ?? '').trim().length > 0,
+    );
+    if (!hasContent) {
+      this.#nameWarned = true;
+      console.warn(
+        'tk-button: no content in the default slot — the button has no accessible name. Give it a slotted label.',
+      );
+    }
+  }
+
+  override firstUpdated(): void {
+    this.#warnIfUnnamed();
+  }
+
+  private handleSlotChange(): void {
+    this.#warnIfUnnamed();
   }
 
   override render() {
@@ -74,14 +133,13 @@ export class TkButton extends LitElement {
       <button
         class="button"
         type="button"
-        aria-disabled=${this.disabled ? 'true' : 'false'}
-        aria-busy=${this.loading ? 'true' : 'false'}
-        @click=${this.handleClick}
+        aria-disabled=${this.disabled ? 'true' : nothing}
+        aria-busy=${this.loading ? 'true' : nothing}
       >
         <span class="button__spinner" aria-hidden="true"></span>
         <span class="button__label">
           <slot name="icon"></slot>
-          <slot></slot>
+          <slot @slotchange=${this.handleSlotChange}></slot>
         </span>
       </button>
     `;

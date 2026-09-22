@@ -12,10 +12,11 @@
     "vitest.config.ts",
     "playwright.config.ts",
     "eslint.config.js",
-    "packages/*/vite.config.ts"
+    "packages/*/vite.config.ts",
+    "packages/*/vitest.config.ts",
+    "packages/*/src/**/*.stories.ts"
   ],
   "exclude": [
-    "packages/*/src",
     "packages/*/dist"
   ]
 }

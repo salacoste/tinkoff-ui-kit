@@ -9,8 +9,8 @@ import { buildStoryUrl, readStoryIds } from './stories';
  * Unit tests for the visual-harness discovery helpers (spec 1.6, Code Map:
  * happy-dom-free pure logic — the theme-URL builder and the loud-failure
  * reader). The happy-path reader runs against the real built index under the
- * same build-before-test assumption as tests/import-boundaries.test.ts and
- * tests/docs-preview.test.ts (pnpm build precedes pnpm test).
+ * same build-before-test assumption as tests/import-boundaries.test.ts
+ * (pnpm build precedes pnpm test).
  */
 
 /** Scratch index for the error-path cases — mkdtemp dirs live in the OS tmp tree. */

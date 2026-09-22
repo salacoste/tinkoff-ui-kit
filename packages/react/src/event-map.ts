@@ -23,7 +23,9 @@ export interface TkKitElementEventMap {
   readonly [reactPropName: string]: string;
 }
 
-export const EVENT_MAP: Readonly<Record<string, Readonly<TkKitElementEventMap>>> = {
+export const EVENT_MAP: Readonly<Record<string, Readonly<TkKitElementEventMap>>> = Object.freeze({
   // 'tk-button': {} — none at v1 (native click only); entries land with the
   // first component that emits kit custom events (e.g. Input's value-change).
-};
+  // Frozen at runtime: new entries are FILE edits, never mutation — `pnpm
+  // gen` regenerates the wrappers after any edit.
+});

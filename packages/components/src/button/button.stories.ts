@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 
 import './button.js';
-import './index.js';
 
 /**
  * tk-button stories (spec 1.7): default playground, every variant × size,
@@ -70,6 +69,10 @@ const canvasStyles = html`
       flex-wrap: wrap;
       align-items: center;
       gap: var(--tk-space-16);
+    }
+    .tkbtn-canvas .tkbtn-row--column {
+      flex-direction: column;
+      align-items: flex-start;
     }
     .tkbtn-canvas figure {
       margin: 0;
@@ -236,6 +239,34 @@ export const Interaction: Story = {
         ${button('Press me', { variant: 'primary', size: 'hero' })}
         ${button('Tab to me', { variant: 'secondary', size: 'hero' })}
         ${button('Me too', { variant: 'inverse', size: 'hero' })}
+      </div>
+    </main>
+  `,
+};
+
+export const LongLabel: Story = {
+  name: 'Long label',
+  render: () => html`
+    ${canvasStyles}
+    <main class="tkbtn-canvas">
+      <h1>Long label</h1>
+      <p class="tkbtn-note">
+        Reference buttons are single-line: the label never wraps. Unconstrained, the
+        button grows with its text. Under a consumer-constrained width the label
+        truncates with an ellipsis VISUALLY only — the slotted light-DOM text stays
+        complete, so the accessible name keeps the full string (inspect the
+        accessibility tree below the canvas). Constrain the button, not the label,
+        when you need this behavior.
+      </p>
+      <div class="tkbtn-row tkbtn-row--column">
+        <tk-button variant="primary" size="hero">
+          Открыть вклад «СмартВклад» с ежемесячной капитализацией процентов
+        </tk-button>
+        <div style="width: 320px">
+          <tk-button variant="primary" size="card" style="width: 100%">
+            Открыть вклад «СмартВклад» с ежемесячной капитализацией процентов
+          </tk-button>
+        </div>
       </div>
     </main>
   `,

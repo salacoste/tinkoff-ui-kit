@@ -31,5 +31,8 @@
   "dependencies": {
     "lit": "3.3.3"
   },
-  "customElements": "custom-elements.json"
+  "customElements": "custom-elements.json",
+  "devDependencies": {
+    "@storybook/web-components-vite": "10.6.0"
+  }
 }

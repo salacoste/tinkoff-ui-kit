@@ -37,6 +37,7 @@ const fileStem = (tag) => tag.replace(/^tk-/, '');
 /** Collect { tag, className } pairs from every custom-element-definition export. */
 function readElements(manifest) {
   const elements = [];
+  const seen = new Map();
   for (const module of manifest.modules ?? []) {
     for (const exportEntry of module.exports ?? []) {
       if (exportEntry.kind !== 'custom-element-definition') continue;
@@ -46,6 +47,13 @@ function readElements(manifest) {
           `generate-wrappers: custom-element-definition without a resolvable class name in ${module.path} — re-run pnpm --filter @tk-kit/components gen:manifest`,
         );
       }
+      const firstSeen = seen.get(exportEntry.name);
+      if (firstSeen !== undefined) {
+        throw new Error(
+          `generate-wrappers: duplicate tag '${exportEntry.name}' in the manifest (defined in both ${firstSeen} and ${module.path}) — one element, one definition; fix the manifest source`,
+        );
+      }
+      seen.set(exportEntry.name, module.path);
       elements.push({ tag: exportEntry.name, className });
     }
   }
@@ -54,7 +62,9 @@ function readElements(manifest) {
       `generate-wrappers: no custom-element definitions found in ${MANIFEST_PATH} — the manifest must list at least one element (run pnpm --filter @tk-kit/components gen:manifest)`,
     );
   }
-  return elements.sort((a, b) => a.tag.localeCompare(b.tag));
+  // Locale-independent sort: plain code-unit comparison, so generated output
+  // is byte-identical on every machine regardless of ICU/locale collation.
+  return elements.sort((a, b) => (a.tag < b.tag ? -1 : a.tag > b.tag ? 1 : 0));
 }
 
 let manifest;
