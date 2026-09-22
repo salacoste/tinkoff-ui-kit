@@ -1,0 +1,50 @@
+/*
+ * Deterministic test font for the visual harness (spec 1.6) — injected by
+ * tests/visual/inject.ts AFTER page load, so it lands last in the cascade.
+ *
+ * The kit's font slots default to a system stack (the reference brand font is
+ * proprietary and intentionally not bundled — a consumer points the slots at
+ * their own font, Inter recommended). System stacks raster differently across
+ * machines, so the harness pins BOTH slots to Inter, served LOCALLY by
+ * tests/visual/serve.mjs from node_modules/@fontsource/inter — no network
+ * fetch, same bytes on every run.
+ *
+ * Weights: 400/500 (body + bold variants) and 500/700 (headings) cover every
+ * --tk-text-* weight in the token sheet. Latin subset only — the docs surface
+ * is English.
+ */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('/inter/files/inter-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: block;
+  src: url('/inter/files/inter-latin-500-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+  src: url('/inter/files/inter-latin-700-normal.woff2') format('woff2');
+}
+
+/*
+ * Slot override. The token sheet declares the slots on `:root` (and its dark
+ * layer on `:root[data-theme=dark]` — fonts are not themed, but match both
+ * selector shapes so the override can never lose the cascade in either theme).
+ * Injected stylesheets land after the app's, so equal specificity wins.
+ */
+:root,
+:root[data-theme='dark'] {
+  --tk-font-heading: 'Inter', sans-serif;
+  --tk-font-body: 'Inter', sans-serif;
+}

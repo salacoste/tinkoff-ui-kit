@@ -35,6 +35,9 @@ build/
 coverage/
 .playwright/
 
+# Playwright visual-harness run artifacts (baselines under tests/visual/ stay tracked)
+test-results/
+
 # playwright-cli runtime output (keep PRD evidence captures explicitly)
 .playwright-cli/*
 !.playwright-cli/tbank-home-full.png

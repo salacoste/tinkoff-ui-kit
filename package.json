@@ -10,6 +10,8 @@
     "test": "pnpm -r test && vitest run",
     "lint": "eslint .",
     "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test:visual": "pnpm --filter @tk-kit/docs build && if ls tests/visual/*.spec.ts-snapshots/*.png >/dev/null 2>&1; then playwright test; else echo 'visual harness: no baselines yet — first run writes them (see tests/visual/README.md)'; playwright test --update-snapshots; fi",
+    "test:visual:update": "pnpm --filter @tk-kit/docs build && playwright test --update-snapshots",
     "gen:tokens": "pnpm --filter @tk-kit/tokens gen:tokens",
     "check:tokens-drift": "pnpm gen:tokens && git diff --exit-code -- packages/tokens && test -z \"$(git status --porcelain -- packages/tokens/src packages/tokens/scripts)\""
   },
@@ -17,12 +19,15 @@
     "node": ">=20"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
     "@custom-elements-manifest/analyzer": "0.11.0",
+    "@fontsource/inter": "5.3.0",
     "@types/node": "26.6.2",
     "@typescript/native": "npm:typescript@7.0.2",
     "eslint": "10.11.0",
     "happy-dom": "^20.14.5",
     "lit": "3.3.3",
+    "playwright": "1.63.0",
     "typescript": "npm:@typescript/typescript6@6.0.2",
     "typescript-eslint": "8.70.1",
     "vite": "8.3.0",
