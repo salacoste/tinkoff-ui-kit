@@ -2,12 +2,12 @@
 title: 'Story 1.6 — Visual regression harness with pinned capture environment'
 type: 'feature'
 created: '2026-09-22'
-status: 'in-progress'
+status: 'done'
 route: 'full'
 route_source: 'auto'
-review: ''
-review_source: ''
-lenses_ran: []
+review: 'thorough'
+review_source: 'auto'
+lenses_ran: [blind-hunter, edge-case-hunter, verification-gap, intent-alignment]
 review_loop_iteration: 0
 baseline_commit: 'b8f0505b649b443889e33852680b47a728916df0'
 context:
@@ -96,3 +96,20 @@ Story discovery from index.json (not story globbing source files) keeps the harn
 - `pnpm test:visual` (twice) -- expected: first run writes baselines exit 0; second run all-pass exit 0 (stability)
 - `pnpm build && pnpm test && pnpm lint && pnpm typecheck` -- expected: all exit 0 (harness doesn't break existing gates)
 - probe: temporary visual change → suite fails with diff → revert → green
+
+### (Review Triage Log content appended programmatically)
+
+- medium — error-display renders accepted as green baselines (a broken 1.7 story would be baselined as Storybook's error page, then "protected" forever) → patch: error-state gate + allowlist (tokens--groups only), fails in compare AND update modes.
+- medium — dark-theme application never asserted at capture (update mode could rewrite dark baselines as light renders) → patch: html[data-theme=dark] assertion in the dark branch.
+- medium — `ls`-glob mode heuristic non-portable (Windows always flips to update mode = silent baseline overwrite) → patch: node preflight run.mjs (.png-specific, exit-code-preserving).
+- low — serve.mjs crash modes (malformed percent-encoding, stream errors, port conflicts, NaN port) → patch: all four handled with clear messages.
+- low — fonts.load resolves empty on 404 (silent system-font baselines) → patch: document.fonts.check per weight, loud throw.
+- low — screenshot options duplicated config+inline (inline wins silently) → patch: single-sourced in config; workers pinned (CI 1 / local 2).
+- low — index v-field dead (format change misreported as "no stories") + invalid-JSON branch untested → patch: v===5 loud guard + 2 unit tests.
+- low — playwright-report/ unignored; networkidle+img-decode settle for 1.7 images; README operator gaps (baseline-removal rule, -g targeting, stale-dist warning, element-scoped axe exclusion note) → patch: all applied.
+- defer — CI wiring of compare-mode test:visual (verification-gap #3) — owner 1.8 by spec Never-list.
+- defer — cross-platform baselines / snapshotPathTemplate decision (platform-suffixed -chromium-darwin baselines fail on Linux) — owner 1.8 (README documents).
+- defer — provisional-capture archiving mechanism ("the capture is archived" is prose-only; test-results/ gitignored) — owner 1.8 CI artifacts.
+- note — intent-audit D6: every baseline includes the disclaimer-banner chrome (docs-composition renders, the only surface pre-1.7) — accepted; banner edits legitimately trip all baselines.
+- note — axe exclusion is element-scoped though spec wording said color-contrast-only — mirrors the storybook config; documented in README; demo removed at 1.7.
+- false — "fresh checkout writes baselines then exits 0" (edge claim): with committed baselines a fresh checkout runs compare mode; the write-mode branch covers the genuine no-baseline state only — README now documents the real behavior.

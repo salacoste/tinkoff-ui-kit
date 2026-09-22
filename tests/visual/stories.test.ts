@@ -57,6 +57,18 @@ describe('visual harness story discovery (spec 1.6)', () => {
     expect(() => readStoryIds(join(missing, '..'))).toThrow(/build it first/);
   });
 
+  it('unparseable index fails loudly', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'tk-visual-'));
+    indexIn(dir, 'not json at all{');
+    expect(() => readStoryIds(dir)).toThrow(/not valid JSON/);
+  });
+
+  it('unexpected index format version fails with adapt-the-reader guidance', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'tk-visual-'));
+    indexIn(dir, '{"v":6,"entries":{"a--b":{"type":"story","id":"a--b"}}}');
+    expect(() => readStoryIds(dir)).toThrow(/v=6.*adapt the reader/us);
+  });
+
   it('story-less index fails loudly (never a silent zero-test pass)', () => {
     const dir = mkdtempSync(join(tmpdir(), 'tk-visual-'));
     indexIn(dir, '{"v":5,"entries":{}}');

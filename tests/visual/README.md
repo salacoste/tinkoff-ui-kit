@@ -13,6 +13,7 @@ the baseline workflow (AD-8).
 | `stories.ts` / `stories.test.ts` | Story discovery + theme-URL builder, and its vitest unit tests (`*.test.ts` belongs to vitest; Playwright runs `*.spec.ts` only) |
 | `inter.css` / `inject.ts` | Font determinism — both `--tk-font-*` slots overridden to locally-served Inter |
 | `serve.mjs` | Zero-dep static server mounting `packages/docs/dist` at `/` and `@fontsource/inter` at `/inter` (started by `playwright.config.ts` `webServer`) |
+| `run.mjs` | `test:visual` runner — portable baseline preflight: any baseline PNG present → compare mode; none → `--update-snapshots` |
 | `visual.spec.ts-snapshots/` | **Committed baselines** — the initial truth, never regenerated silently |
 
 ## Running
@@ -23,10 +24,20 @@ pnpm test:visual                        # builds docs → serves dist → runs t
 pnpm test:visual:update                 # same, but (re)writes baselines — see workflow below
 ```
 
-`pnpm test:visual` detects baseline-creation mode itself: with no baselines on
-disk (fresh checkout) it runs once with `--update-snapshots` (writes them, exits
-0); with baselines present it runs in compare mode, where any missing or drifted
-baseline **fails**.
+`pnpm test:visual` detects baseline-creation mode itself (via `run.mjs`): with
+no baselines on disk (fresh checkout) it runs once with `--update-snapshots`
+(writes them, exits 0); with baselines present it runs in compare mode, where
+any missing or drifted baseline **fails**.
+
+**Stale-dist warning:** invoking `playwright test` directly serves whatever
+currently sits in `packages/docs/dist` — after editing story sources that is a
+STALE bundle, and you would baseline yesterday's pixels. Prefer
+`pnpm test:visual` / `pnpm test:visual:update`, which build docs first; if you
+must call Playwright directly (e.g. to target a single story), build first:
+
+```sh
+pnpm --filter @tk-kit/docs build && pnpm exec playwright test -g "tokens--swatches"
+```
 
 `test:visual` is **deliberately NOT wired into `pnpm test`** — CI wiring is
 Story 1.8. It also runs only the chromium project (v1 scope). Note for 1.8:
@@ -68,12 +79,14 @@ threshold meaningful (FR-10, AD-8):
 ### Story discovery
 
 The suite reads `packages/docs/dist/index.json` — the Storybook 10 static story
-index. Emitted shape: `{ "v": 5, "entries": Record<id, { type, subtype, id,
-name, title, importPath, tags, exportName }> }`; entries with `type: "story"`
-become tests (sorted for stable order). Whatever Storybook builds is what gets
-tested — new stories appear with **zero harness edits**. A missing, unparseable
-or story-less index fails loudly with "build docs first" guidance (also covered
-by `stories.test.ts`).
+index. Emitted shape (format-pinned: the reader rejects any `v` other than 5
+with an adapt-the-reader message, so a future Storybook format change surfaces
+as itself, not as "no stories"): `{ "v": 5, "entries": Record<id, { type,
+subtype, id, name, title, importPath, tags, exportName }> }`; entries with
+`type: "story"` become tests (sorted for stable order). Whatever Storybook
+builds is what gets tested — new stories appear with **zero harness edits**. A
+missing, unparseable or story-less index fails loudly with "build docs first"
+guidance (also covered by `stories.test.ts`).
 
 ### Known quirk: `tokens--groups`
 
@@ -83,6 +96,12 @@ missing" error display. The harness tests it anyway — its baseline locks that
 error page (stable: verified byte-identical across a docs rebuild) and its
 removal lands with the rest of the tokens demo at Story 1.7. The spec freezes
 docs changes out of this story, so the wart is documented rather than fixed.
+
+Error-display renders are otherwise REFUSED: a story showing the error display
+that is not in `ERROR_STATE_ALLOWLIST` (`visual.spec.ts`, currently exactly
+`tokens--groups`) fails the suite in compare AND update modes — a broken story
+must never quietly become a green error-page baseline. When the demo is removed
+at 1.7, its baselines AND its allowlist entry go in the same change.
 
 ## Baseline workflow (AD-8)
 
@@ -95,15 +114,23 @@ a human side-by-side against the site capture, attached to the baseline PR.
 
 1. **Creating / adding baselines** (new story, or first run):
    `pnpm test:visual:update`, review the written PNGs, commit them in the same
-   change as the story. A story id in `index.json` with no baseline fails the
-   suite naming the story — absence is loud, never silent.
-2. **Provisional rule (autonomous runs):** baselines generated while no
+   change as the story. To re-approve a single story instead of the whole
+   suite, target it by title with `-g`:
+   `pnpm --filter @tk-kit/docs build && pnpm exec playwright test --update-snapshots -g "tokens--swatches"`.
+   A story id in `index.json` with no baseline fails the suite naming the
+   story — absence is loud, never silent.
+2. **Removing a story = removing its baselines:** delete the story's baseline
+   PNGs (and its error-state allowlist entry, if any) in the SAME change that
+   removes the story — orphaned baselines are review blockers. Story 1.7's
+   removal of the tokens demo (`tokens--groups`, `tokens--swatches`) is the
+   first case, including `tokens--groups`' allowlist entry.
+3. **Provisional rule (autonomous runs):** baselines generated while no
    maintainer is present are PROVISIONAL — the capture is archived, the
    automated drift check runs on every later change, and the maintainer
    confirms on return (formalized in Story 5.5).
-3. **Human side-by-side gate at creation:** a baseline enters `main` only with
+4. **Human side-by-side gate at creation:** a baseline enters `main` only with
    a maintainer looking at the rendered story next to the baseline image.
-4. **Intentional change = baseline re-approval in the same PR:** when a change
+5. **Intentional change = baseline re-approval in the same PR:** when a change
    deliberately alters pixels, run `pnpm test:visual:update`, commit the new
    baseline WITH the change, and call it out in the PR description. A baseline
    update traveling alone — without the code that changed the pixels — is a
@@ -115,6 +142,10 @@ a human side-by-side against the site capture, attached to the baseline PR.
 Every story runs `@axe-core/playwright` in both themes with the WCAG tag filter
 (`wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`); zero violations passes, failures
 report rule ids + node selectors. The single documented exclusion mirrors the
-story's own Storybook a11y config: `tokens--swatches` excludes `.tksw-chip`
-(color-only swatches, no text — every text-bearing element stays in scope).
-No other story may carry an exclusion.
+story's own Storybook a11y config verbatim: `tokens--swatches` excludes
+`.tksw-chip`. Scope note: the exclusion is ELEMENT-scoped — the chips are
+excluded from ALL rules, not just color-contrast (the motivating rule; the
+chips are color-only, carry no text, so no other rule plausibly applies) —
+because that is exactly what the storybook `parameters.a11y.context.exclude`
+does. It dies with the demo at Story 1.7. No other story may carry an
+exclusion.

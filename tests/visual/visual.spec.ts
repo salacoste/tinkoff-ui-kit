@@ -32,6 +32,16 @@ const A11Y_CONTEXT_EXCLUDE: Readonly<Record<string, readonly string[]>> = {
 };
 
 /**
+ * Stories that intentionally render Storybook's error display and are still
+ * baselined (documented in README's tokens--groups quirk). Anything NOT here
+ * that shows the error display fails the suite in BOTH compare and update
+ * modes — a broken story must never quietly become a green error-page baseline
+ * that the harness then "protects". Entry dies with its story (README:
+ * baseline-removal rule).
+ */
+const ERROR_STATE_ALLOWLIST: readonly string[] = ['tokens--groups'];
+
+/**
  * Settle wait: the story mount has children (normal render) OR Storybook
  * surfaced its error display via body.sb-show-errordisplay (a misrendered
  * story — itself a stable, lockable render state the baseline then records;
@@ -66,6 +76,38 @@ async function storyCanvas(page: Page) {
   return isErrorState ? page.locator('.sb-errordisplay') : page.locator('body');
 }
 
+/**
+ * Baseline gate: an error-display render is only acceptable for explicitly
+ * allowlisted story ids. Thrown in the test body, it fails in compare AND
+ * --update-snapshots modes alike (update mode only auto-accepts screenshot
+ * mismatches, not errors).
+ */
+async function assertNoUnexpectedErrorState(page: Page, id: string): Promise<void> {
+  const isErrorState = await page.evaluate(() =>
+    document.body.classList.contains('sb-show-errordisplay'),
+  );
+  if (isErrorState && !ERROR_STATE_ALLOWLIST.includes(id)) {
+    throw new Error(
+      `Story ${id} renders Storybook's error display — refusing to baseline a broken story. Fix the story; ERROR_STATE_ALLOWLIST in visual.spec.ts is for documented legacy cases only (see tests/visual/README.md).`,
+    );
+  }
+}
+
+/**
+ * Image settle for stories with <img> content (first real cases land at 1.7):
+ * network quiet, then every image decoded. decode() rejects on broken sources —
+ * swallowed, because a deterministically broken image is itself the state the
+ * baseline should record.
+ */
+async function waitForDecodedCanvas(page: Page): Promise<void> {
+  await page.waitForLoadState('networkidle');
+  await page.evaluate(async () => {
+    await Promise.all(
+      Array.from(document.images).map((image) => image.decode().catch(() => undefined)),
+    );
+  });
+}
+
 /** Discovery — a missing/empty index is a loud failure with build guidance. */
 let storyIds: string[];
 try {
@@ -82,15 +124,18 @@ for (const id of storyIds) {
     test(`visual: ${id} [${theme}]`, async ({ page }) => {
       await page.goto(buildStoryUrl(id, theme));
       await waitForStorySettled(page);
+      await assertNoUnexpectedErrorState(page, id);
+      // Capture-side theme assertion: the dark URL param must actually have
+      // flipped the preview root, or update mode would rewrite dark baselines
+      // as light renders (the theme decorator is what sets the attribute).
+      if (theme === 'dark') {
+        await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+      }
+      await waitForDecodedCanvas(page);
       await pinDeterministicFonts(page);
-      // Threshold 0.015 (OQ-6): forgiving of sub-pixel antialias noise, tight
-      // enough that any real component change trips it. animations/caret are
-      // also pinned in playwright.config.ts expect defaults.
-      await expect(await storyCanvas(page)).toHaveScreenshot({
-        maxDiffPixelRatio: 0.015,
-        animations: 'disabled',
-        caret: 'hide',
-      });
+      // Screenshot options (threshold 0.015 / animations / caret) live ONLY in
+      // playwright.config.ts expect defaults — one source of truth.
+      await expect(await storyCanvas(page)).toHaveScreenshot();
     });
 
     test(`axe: ${id} [${theme}]`, async ({ page }) => {

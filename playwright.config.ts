@@ -23,6 +23,9 @@ const PORT = 6007;
 
 export default defineConfig({
   testDir: 'tests/visual',
+  // Pinned worker counts: 1 in CI (no raster contention on shared runners),
+  // 2 locally — deliberate, reproducible parallelism for stitched captures.
+  workers: process.env.CI ? 1 : 2,
   // tests/visual/ is shared by two runners: vitest owns *.test.ts (unit tests
   // for the harness helpers, root vitest.config.ts glob) and Playwright owns
   // *.spec.ts (this suite). Restrict testMatch so each file runs exactly once.
@@ -38,6 +41,10 @@ export default defineConfig({
     // Screenshot comparisons can retry and stitch tall story canvases — give
     // them more headroom than the 5s assertion default.
     timeout: 15_000,
+    // SINGLE source of truth for screenshot options — the spec calls
+    // toHaveScreenshot() bare; inline call-site options would silently win on
+    // drift. Threshold 0.015 (OQ-6): forgiving of sub-pixel antialias noise,
+    // tight enough that any real component change trips it.
     toHaveScreenshot: {
       maxDiffPixelRatio: 0.015,
       animations: 'disabled',

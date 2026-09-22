@@ -56,6 +56,13 @@ export function readStoryIds(distDir: string = DOCS_DIST_DIR): string[] {
       `Visual harness: story index at ${indexPath} is not valid JSON: ${(error as Error).message}`,
     );
   }
+  // Format pin: without this, a future Storybook format change surfaces as the
+  // misleading "contains no stories" (entries parsed under the wrong shape).
+  if (index.v !== 5) {
+    throw new Error(
+      `Visual harness: story index at ${indexPath} has format v=${String(index.v)}, expected v=5 — adapt the reader (tests/visual/stories.ts) to the emitted shape and update the shape note in tests/visual/README.md.`,
+    );
+  }
   const ids = Object.values(index.entries ?? {})
     .filter((entry) => entry.type === 'story' && typeof entry.id === 'string')
     .map((entry) => entry.id as string)

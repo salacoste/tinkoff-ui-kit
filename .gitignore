@@ -37,6 +37,7 @@ coverage/
 
 # Playwright visual-harness run artifacts (baselines under tests/visual/ stay tracked)
 test-results/
+playwright-report/
 
 # playwright-cli runtime output (keep PRD evidence captures explicitly)
 .playwright-cli/*
