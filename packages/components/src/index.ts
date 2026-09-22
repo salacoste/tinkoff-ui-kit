@@ -10,6 +10,7 @@
 export * from './button/index.js';
 export * from './checkbox/index.js';
 export * from './input/index.js';
+export * from './progress-bar/index.js';
 export * from './segmented-radio/index.js';
 export * from './select/index.js';
 export * from './thumbnail-picker/index.js';

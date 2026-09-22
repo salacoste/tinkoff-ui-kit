@@ -5,7 +5,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import * as litReact from '@lit/react';
 import { afterAll, describe, expect, it, vi } from 'vitest';
 
-import { Button, Checkbox, EVENT_MAP, Input, SegmentedRadio, Select, ThumbnailPicker } from './index.js';
+import { Button, Checkbox, EVENT_MAP, Input, ProgressBar, SegmentedRadio, Select, ThumbnailPicker } from './index.js';
 
 /**
  * pillkit-react generated surface. The wrapper imports `pillkit-components`
@@ -651,4 +651,47 @@ describe('pillkit-react', () => {
       (input) => input.checked,
     );
     expect(seeded?.value).toBe('blue');
+  });
+  // --- Story 2.7: tk-progress-bar wrapper (stateless display — no events) --
+
+  it('ships NO registry entry for tk-progress-bar (stateless display, nothing dispatches)', () => {
+    // Spec 2.7: value is an input, not a channel — the element dispatches
+    // nothing, so the completeness guard demands NO event-map entry (the
+    // tk-button no-entry precedent).
+    expect(EVENT_MAP['tk-progress-bar']).toBeUndefined();
+  });
+
+  it('renders <ProgressBar> as tk-progress-bar with element properties set through the wrapper', async () => {
+    const container = await renderToContainer(
+      React.createElement(ProgressBar, { label: 'Уже заполнено', value: 30, min: 0, max: 100 }),
+    );
+    const el = container.querySelector('tk-progress-bar') as (Element & {
+      label?: string;
+      value?: number;
+      min?: number;
+      max?: number;
+      updateComplete?: Promise<unknown>;
+    }) | null;
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    expect(el?.label).toBe('Уже заполнено');
+    expect(el?.value).toBe(30);
+    expect(el?.min).toBe(0);
+    expect(el?.max).toBe(100);
+    await (el as { updateComplete: Promise<unknown> }).updateComplete;
+    // Prop reflection into the shadow surface: the track carries the aria
+    // wiring of the rendered value.
+    const track = (el as Element).shadowRoot?.querySelector('.track');
+    expect(track?.getAttribute('role')).toBe('progressbar');
+    expect(track?.getAttribute('aria-valuenow')).toBe('30');
+    expect(track?.getAttribute('aria-valuemax')).toBe('100');
+  });
+
+  it('ProgressBar booleans reach the element as reflected attributes (indeterminate/announce)', async () => {
+    const container = await renderToContainer(
+      React.createElement(ProgressBar, { indeterminate: true, label: 'Загрузка' }),
+    );
+    const el = container.querySelector('tk-progress-bar');
+    expect(el?.hasAttribute('indeterminate')).toBe(true);
+    // announce stays off unless asked — narration is opt-in.
+    expect(el?.hasAttribute('announce')).toBe(false);
   });
