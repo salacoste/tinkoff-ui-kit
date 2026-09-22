@@ -1,29 +1,21 @@
 // @vitest-environment happy-dom
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { html, render } from 'lit';
 
 import previewExport, { withDisclaimer, withTheme } from '../packages/docs/.storybook/preview';
-import { GROUPS } from '../packages/docs/src/tokens-demo.stories';
 
 /**
  * Running verification of the docs preview runtime (spec 1.5 review): the
  * decorators previously had no execution check — deleting withTheme or
  * withDisclaimer kept every gate green. Here they are invoked directly against
- * a stub story in happy-dom. The GROUPS assertion keeps the demo's token list
- * honest: every swatch name must exist as a declaration in the built tokens
- * sheet (build-before-test assumption documented in import-boundaries.test.ts).
+ * a stub story in happy-dom. (The 1.5 tokens-demo GROUPS sheet check was
+ * removed with the demo at Story 1.7.)
  */
-
-// happy-dom rewrites import.meta.url to an http URL — process.cwd() is the
-// vitest project root (repo root) and stays a real filesystem path.
-const REPO_ROOT = process.cwd();
 
 type StoryContextArg = Parameters<typeof withTheme>[1];
 
 /** Minimal StoryContext stub — only what the decorators actually read. */
-const ctx = (globals: Record<string, unknown>, id = 'tokens--swatches'): StoryContextArg =>
+const ctx = (globals: Record<string, unknown>, id = 'components-button--playground'): StoryContextArg =>
   ({ globals, id }) as unknown as StoryContextArg;
 
 const stubStory = () => html`<p>stub</p>`;
@@ -69,14 +61,5 @@ describe('docs preview runtime (spec 1.5 review)', () => {
     );
     expect(container.querySelector('.tk-docs-disclaimer')).toBeNull();
     expect(container.textContent).toContain('stub');
-  });
-
-  it('every tokens-demo GROUPS name is declared in the built tokens sheet', () => {
-    const css = readFileSync(join(REPO_ROOT, 'packages/tokens/dist/index.css'), 'utf8');
-    for (const group of GROUPS) {
-      for (const token of group.tokens) {
-        expect(css, `${token} (${group.heading}) is not declared — stale demo entry`).toContain(`${token}:`);
-      }
-    }
   });
 });

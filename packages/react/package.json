@@ -2,7 +2,7 @@
   "name": "@tk-kit/react",
   "version": "0.0.0",
   "private": true,
-  "description": "React adapters for tinkoff-ui-kit — wrappers generated from the Custom Elements Manifest of @tk-kit/components via @lit/react. Placeholder scaffold; wrappers land from Story 1.7.",
+  "description": "React adapters for tinkoff-ui-kit — wrappers generated from the Custom Elements Manifest of @tk-kit/components via @lit/react (regenerate: pnpm gen).",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -18,7 +18,8 @@
   ],
   "scripts": {
     "build": "vite build && tsc -p tsconfig.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "gen:wrappers": "node scripts/generate-wrappers.mjs"
   },
   "engines": {
     "node": ">=20"
@@ -29,5 +30,8 @@
   },
   "peerDependencies": {
     "react": "19.3.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0"
   }
 }

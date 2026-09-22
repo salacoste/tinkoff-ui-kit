@@ -1,8 +1,8 @@
 # @tk-kit/docs
 
 Storybook 10 docs surface for tinkoff-ui-kit — theme-toggle skeleton with the
-unofficial-study disclaimer (Story 1.5). Web-components renderer only; component
-stories land from Story 1.7.
+unofficial-study disclaimer (Story 1.5). Web-components renderer only; the
+component stories composed here ship with the components package (Story 1.7).
 
 ## Scripts
 
@@ -16,12 +16,17 @@ clone until that build runs.
 
 ## Layout
 
-- `.storybook/main.ts` — framework, addons, stories glob
+- `.storybook/main.ts` — framework, addons, stories globs (docs `src/` +
+  `../../components/src/` — component stories travel with their code; the
+  Button pilot landed in Story 1.7)
 - `.storybook/preview.ts` — theme toolbar globalType (flips `data-theme` on the
   preview `<html>`), document-level tokens.css import, disclaimer banner
   decorator (suppressed on the getting-started story, which has its own inline
   box)
 - `src/getting-started.stories.ts` — docs index: install, theming recipe,
   CONVENTIONS.md pointer, disclaimer
-- `src/tokens-demo.stories.ts` — `@internal` token-swatch demo proving the
-  theming pipeline; removed at Story 1.7
+
+The `@internal` token-swatch demo (spec 1.5) was removed at Story 1.7 per its
+contract — real component stories carry the theming demos now (its baselines
+and harness allowlist entries went in the same change, per the baseline
+removal rule).

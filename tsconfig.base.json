@@ -13,6 +13,13 @@
     "esModuleInterop": true,
     "useDefineForClassFields": false, // Lit 3 reactive props are accessor-based; define semantics would overwrite them
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    // Lit + this toolchain: vite 8 / vitest 5 (rolldown-oxc) silently DROP
+    // TC39 standard decorators (compiled as plain class fields — Lit's
+    // reactive accessors never install). Legacy decorator mode is the only
+    // decorator path esbuild/oxc compile correctly, and Lit 3 decorators are
+    // dual-mode; paired with useDefineForClassFields: false above.
+    // Deviation from spec-1-7 Design Notes recorded there.
+    "experimentalDecorators": true
   }
 }

@@ -1,14 +1,17 @@
-import { LitElement } from 'lit';
+// @vitest-environment happy-dom
 import { describe, expect, it } from 'vitest';
 
-import { componentsPackagePlaceholder } from './index.js';
+import { TkButton } from './index.js';
 
-describe('@tk-kit/components scaffold', () => {
-  it('exposes the scaffold placeholder module', () => {
-    expect(componentsPackagePlaceholder).toBe(true);
-  });
-
-  it('resolves the pinned lit dependency for the 1.7 component work', () => {
-    expect(LitElement).toBeDefined();
+/**
+ * Package entry: every component's public surface is reachable from
+ * `@tk-kit/components` (the React wrapper generator imports elements from
+ * the package root, so a component missing here breaks `pnpm gen`).
+ */
+describe('@tk-kit/components entry', () => {
+  it('re-exports the button element and registers tk-button', async () => {
+    expect(TkButton).toBeDefined();
+    await customElements.whenDefined('tk-button');
+    expect(customElements.get('tk-button')).toBe(TkButton);
   });
 });

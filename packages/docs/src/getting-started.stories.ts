@@ -137,7 +137,7 @@ pnpm add @tk-kit/components @tk-kit/react @tk-kit/tokens --workspace</code></pre
         The link pins <code>workspace:*</code>, so the kit builds and updates
         alongside your app. Components are Lit custom elements
         (<code>tk-*</code>); the React wrappers are generated from the component
-        manifest and land with the first component (Story 1.7).
+        manifest (see <code>Button</code> from <code>@tk-kit/react</code>).
       </p>
 
       <h2>Theming</h2>
@@ -177,9 +177,11 @@ pnpm add @tk-kit/components @tk-kit/react @tk-kit/tokens --workspace</code></pre
       </p>
 
       <p class="tkgs-status">
-        Skeleton status (Story 1.5): this page plus a temporary token-swatch
-        demo prove the theming pipeline. The first component — Button — lands in
-        Story 1.7 with full stories, axe checks, and a visual baseline.
+        Pipeline status (Story 1.7): the first component — Button — is live
+        under Components, shipped through the full pipeline: Lit core, CEM
+        manifest, generated React wrapper, stories with axe checks in both
+        themes, and a (provisional) visual baseline. The temporary token-swatch
+        demo from the skeleton phase is gone.
       </p>
     </main>
   `,

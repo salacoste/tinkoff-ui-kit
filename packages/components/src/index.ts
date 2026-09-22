@@ -1,8 +1,10 @@
 /**
  * @tk-kit/components — Lit custom elements core package for tinkoff-ui-kit.
  *
- * Placeholder module. Components are authored here as Lit custom elements
- * (one directory per component under `src/<name>/`), starting with the Button
- * pilot in Story 1.7.
+ * One directory per component under `src/<name>/`; this entry re-exports the
+ * public surface of every component. The Custom Elements Manifest
+ * (`custom-elements.json`, generated via `pnpm gen:manifest`) and the React
+ * wrappers it feeds (packages/react, `pnpm gen`) stay in sync with these
+ * exports.
  */
-export const componentsPackagePlaceholder = true;
+export * from './button/index.js';

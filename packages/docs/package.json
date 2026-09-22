@@ -9,7 +9,7 @@
     "dev": "storybook dev -p 6006",
     "prebuild": "pnpm --filter @tk-kit/tokens build",
     "build": "storybook build --output-dir dist && tsc -p tsconfig.json --noEmit",
-    "test": "node -e \"console.log('@tk-kit/docs: Storybook skeleton green placeholder — component stories land from Story 1.7')\""
+    "test": "node -e \"console.log('@tk-kit/docs: docs surface verified via build + the visual/axe harness (pnpm test:visual); component stories live in packages/components/src')\""
   },
   "engines": {
     "node": ">=20"

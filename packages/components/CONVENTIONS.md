@@ -2,7 +2,7 @@
 
 **Status:** active (Story 1.4) · **Normative for:** every component PR · **Sources:** ARCHITECTURE-SPINE (AD-1…AD-12), EXPERIENCE.md, PRD FR-3. Where this file and code disagree, the code is wrong until either changes by PR.
 
-Every rule cites its source. Items the sources leave undecided are marked `[OPEN — decided at 1.7 pilot]` and resolved once, in the Button pilot PR, then frozen like everything else.
+Every rule cites its source. The items the sources left undecided for the pilot are ALL resolved (Button pilot PR — see the "resolved at 1.7 pilot" notes in §2, §3, §5, §7) and frozen like every other rule. The 2.1 items in §4 remain open by design.
 
 ## 1. Element & file naming
 
@@ -13,15 +13,15 @@ Every rule cites its source. Items the sources leave undecided are marked `[OPEN
 ## 2. Props
 
 - Properties are camelCase Lit reactive properties: `variant`, `size`, `loading`, `value`. *(AD-5)*
-- Variants and sizes are string-literal unions, never booleans that fork rendering (`variant: 'primary' | 'secondary' | 'inverse'`, not `primary?: boolean; secondary?: boolean`). `[OPEN — union-vs-boolean rule and per-family defaults are confirmed at the 1.7 pilot]`
-- Attribute reflection: `[OPEN — decided at 1.7 pilot]` (which props reflect as attributes; boolean reflection shape). No reflection rule is normative until then.
+- Variants and sizes are string-literal unions, never booleans that fork rendering (`variant: 'primary' | 'secondary' | 'inverse'`, not `primary?: boolean; secondary?: boolean`). Confirmed with per-family defaults at the pilot — Button ships `variant: 'primary' | 'secondary' | 'inverse'` (default `primary`) and `size: 'hero' | 'card' | 'compact'` (default `card`); later families declare their own unions and defaults the same way. *(resolved at 1.7 pilot)*
+- Attribute reflection: ALL public boolean and enum props reflect to attributes (`@property({ reflect: true })` — booleans as bare presence/absence, enums as their string value); value props (string/number/object data like `value`) NEVER reflect. The reflected attributes are styling/state hooks (the Button sheet keys on `variant`/`size`/`loading`/`disabled` host attributes). *(resolved at 1.7 pilot)*
 - Every prop appears in the component's CEM manifest (jsdoc annotations feed the React wrapper generation). *(AD-1)*
 
 ## 3. Events
 
 - Value updates: `<prop>-change` — `value-change`, `checked-change`. Payload is always `detail: { value }` where `value` is the unwrapped new value (string, boolean, object — never the raw `CustomEvent`). *(AD-5, Conventions table)*
-- Occurrences: bare `<verb>` — `open`, `close`, `dismiss`, `select` (when not a value change). Same `detail: { value }` shape where a payload exists.
-- Event crossing of the shadow boundary (composed/bubbling) is `[OPEN — decided at 1.7 pilot]` — no rule is normative until then.
+- Occurrences: bare `<verb>` — `open`, `close`, `dismiss`, `select` (when not a value change). Same `detail: { value }` shape where a payload exists. Occurrence events arrive with the first component that needs one — tk-button ships none at v1 (native `click` serves activation). *(resolved at 1.7 pilot)*
+- Kit custom events ALWAYS cross the shadow boundary: `composed: true, bubbles: true` — consumers listen on the element (or any ancestor) without shadow-piercing. The native events kit elements re-emit or forward keep their own native composition. *(resolved at 1.7 pilot)*
 - Events are listed in the React event-map registry (`packages/react`) so wrappers expose `onValueChange` / `onClose`. CI's `pnpm gen && git diff --exit-code` fails on **unregenerated** wrapper output; registry completeness itself is enforced by PR checklist item 3, not by the gen check. *(AD-1)*
 - React handlers receive the unwrapped `value`, never the `CustomEvent`. *(AD-1)*
 
@@ -34,7 +34,7 @@ Every rule cites its source. Items the sources leave undecided are marked `[OPEN
 
 ## 5. Slots
 
-- Default-slot vs named-slot choice heuristics are `[OPEN — decided at 1.7 pilot]`; EXPERIENCE.md names the concrete per-component slots (Button icon, Input badge).
+- The DEFAULT slot carries the component's primary content (Button's label; later: Input's badge row additions stay named). Anatomy beyond the primary content gets NAMED slots (Button `icon` — left of the label). A component with a single meaningful projection uses the default slot alone; named slots are added per component as EXPERIENCE.md names them. *(resolved at 1.7 pilot)*
 - Slot names are lowercase kebab and identical across components for the same role (`badge` in Input = `badge` in any future field) — the same-slot-same-role rule, applied to content slots by analogy with the custom-property grammar. *(Conventions table; analogy noted)*
 - Content projection never assumes light-DOM structure inside the shadow root beyond documented slots.
 
@@ -48,7 +48,7 @@ Every rule cites its source. Items the sources leave undecided are marked `[OPEN
 ## 7. TypeScript
 
 - Strict mode; public props/events typed with exported literal unions; no `any` in public surface. *(AD-6)*
-- Event payload type export naming (`TkInputChangeEvent`-style) is `[OPEN — confirmed at the 1.7 pilot]`.
+- Event payload types export as `Tk<PascalName>...Event`: `TkInputChangeEvent`, `TkSelectOpenEvent` — `Tk` + the PascalCase component name + the event stem. Named at the pilot; first concrete export lands with Input (2.1). *(resolved at 1.7 pilot)*
 
 ## 8. Accessibility & keyboard
 

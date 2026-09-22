@@ -21,31 +21,10 @@ import { buildStoryUrl, readStoryIds, THEMES } from './stories';
 const AXE_WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] as const;
 
 /**
- * The ONE documented axe exclusion (spec 1.6): mirrors the storybook a11y
- * config in packages/docs/src/tokens-demo.stories.ts (parameters.a11y.context.
- * exclude) — the color-only .tksw-chip swatches carry no text; excluding them
- * keeps every text-bearing element in scope in both themes. No other story may
- * carry an exclusion.
- */
-const A11Y_CONTEXT_EXCLUDE: Readonly<Record<string, readonly string[]>> = {
-  'tokens--swatches': ['.tksw-chip'],
-};
-
-/**
- * Stories that intentionally render Storybook's error display and are still
- * baselined (documented in README's tokens--groups quirk). Anything NOT here
- * that shows the error display fails the suite in BOTH compare and update
- * modes — a broken story must never quietly become a green error-page baseline
- * that the harness then "protects". Entry dies with its story (README:
- * baseline-removal rule).
- */
-const ERROR_STATE_ALLOWLIST: readonly string[] = ['tokens--groups'];
-
-/**
  * Settle wait: the story mount has children (normal render) OR Storybook
- * surfaced its error display via body.sb-show-errordisplay (a misrendered
- * story — itself a stable, lockable render state the baseline then records;
- * see README on tokens--groups). A CSS `:nth` wait cannot express this: the
+ * surfaced its error display via body.sb-show-errordisplay. The error branch
+ * exists so a misrendered story settles FAST into the assertNoErrorState gate
+ * below instead of timing out — a CSS `:nth` wait cannot express this: the
  * hidden errordisplay div precedes #storybook-root in the DOM, so a comma
  * selector with .first() would pin the wrong element.
  */
@@ -63,32 +42,29 @@ async function waitForStorySettled(page: Page): Promise<void> {
 }
 
 /**
- * The story canvas for screenshot capture. Normally the iframe `<body>` (the
- * preview document IS the canvas — never the manager). For a story that
- * misrenders, Storybook shows its error display instead: every block in it is
- * position:fixed, so <body> collapses to zero height and is not screenshotable
- * — the error display (full-viewport, fixed) is that state's canvas.
+ * The story canvas for screenshot capture: the iframe `<body>` (the preview
+ * document IS the canvas — never the manager), full story height (taller-than
+ * -viewport canvases are stitched).
  */
 async function storyCanvas(page: Page) {
-  const isErrorState = await page.evaluate(() =>
-    document.body.classList.contains('sb-show-errordisplay'),
-  );
-  return isErrorState ? page.locator('.sb-errordisplay') : page.locator('body');
+  return page.locator('body');
 }
 
 /**
- * Baseline gate: an error-display render is only acceptable for explicitly
- * allowlisted story ids. Thrown in the test body, it fails in compare AND
- * --update-snapshots modes alike (update mode only auto-accepts screenshot
- * mismatches, not errors).
+ * Baseline gate: NO story may render Storybook's error display. Thrown in the
+ * test body, it fails in compare AND --update-snapshots modes alike (update
+ * mode only auto-accepts screenshot mismatches, not errors) — a broken story
+ * must never quietly become a green error-page baseline the harness then
+ * "protects". (The 1.6 tokens-demo allowlist exception was removed with the
+ * demo at Story 1.7; there is no allowlist to re-enter.)
  */
-async function assertNoUnexpectedErrorState(page: Page, id: string): Promise<void> {
+async function assertNoErrorState(page: Page, id: string): Promise<void> {
   const isErrorState = await page.evaluate(() =>
     document.body.classList.contains('sb-show-errordisplay'),
   );
-  if (isErrorState && !ERROR_STATE_ALLOWLIST.includes(id)) {
+  if (isErrorState) {
     throw new Error(
-      `Story ${id} renders Storybook's error display — refusing to baseline a broken story. Fix the story; ERROR_STATE_ALLOWLIST in visual.spec.ts is for documented legacy cases only (see tests/visual/README.md).`,
+      `Story ${id} renders Storybook's error display — refusing to baseline a broken story. Fix the story (see tests/visual/README.md).`,
     );
   }
 }
@@ -124,7 +100,7 @@ for (const id of storyIds) {
     test(`visual: ${id} [${theme}]`, async ({ page }) => {
       await page.goto(buildStoryUrl(id, theme));
       await waitForStorySettled(page);
-      await assertNoUnexpectedErrorState(page, id);
+      await assertNoErrorState(page, id);
       // Capture-side theme assertion: the dark URL param must actually have
       // flipped the preview root, or update mode would rewrite dark baselines
       // as light renders (the theme decorator is what sets the attribute).
@@ -141,11 +117,12 @@ for (const id of storyIds) {
     test(`axe: ${id} [${theme}]`, async ({ page }) => {
       await page.goto(buildStoryUrl(id, theme));
       await waitForStorySettled(page);
-      let builder = new AxeBuilder({ page }).withTags([...AXE_WCAG_TAGS]);
-      for (const selector of A11Y_CONTEXT_EXCLUDE[id] ?? []) {
-        builder = builder.exclude(selector);
-      }
-      const results = await builder.analyze();
+      // No story carries an axe exclusion (the 1.6 tokens-demo chip exclusion
+      // died with the demo at Story 1.7) — every element of every story is
+      // audited in both themes.
+      const results = await new AxeBuilder({ page })
+        .withTags([...AXE_WCAG_TAGS])
+        .analyze();
       const violations = results.violations.map(
         (violation) =>
           `${violation.id}: ${violation.nodes.map((node) => node.target.join(' ')).join(', ')}`,

@@ -2,7 +2,7 @@
   "name": "@tk-kit/components",
   "version": "0.0.0",
   "private": true,
-  "description": "Lit custom elements core package for tinkoff-ui-kit — the single source of component behavior, rendered via Shadow DOM and themed with --tk-* custom properties. Placeholder scaffold; components land from Story 1.7.",
+  "description": "Lit custom elements core package for tinkoff-ui-kit — the single source of component behavior, rendered via Shadow DOM and themed with --tk-* custom properties.",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -12,20 +12,24 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./CONVENTIONS.md": "./CONVENTIONS.md"
+    "./CONVENTIONS.md": "./CONVENTIONS.md",
+    "./custom-elements.json": "./custom-elements.json"
   },
   "files": [
     "dist",
-    "CONVENTIONS.md"
+    "CONVENTIONS.md",
+    "custom-elements.json"
   ],
   "scripts": {
     "build": "vite build && tsc -p tsconfig.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "gen:manifest": "cem analyze --config cem.config.mjs"
   },
   "engines": {
     "node": ">=20"
   },
   "dependencies": {
     "lit": "3.3.3"
-  }
+  },
+  "customElements": "custom-elements.json"
 }

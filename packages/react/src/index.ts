@@ -1,10 +1,13 @@
 /**
  * @tk-kit/react — React adapters for tinkoff-ui-kit.
  *
- * Placeholder module. Wrappers are generated from the Custom Elements Manifest
- * of `@tk-kit/components` via `@lit/react`'s `createComponent` (with the owned
- * event-map registry) starting in Story 1.7. Until then the package re-exports
- * the core package entry, proving the `react → components` dependency edge
- * stays external in the built artifact.
+ * Wrappers are GENERATED from the Custom Elements Manifest of
+ * `@tk-kit/components` via `@lit/react`'s createComponent, driven by the
+ * owned event registry (`./event-map.js`). Regenerate with `pnpm gen`
+ * (root); `pnpm check:gen` fails on unregenerated output. No behavior,
+ * styling, or a11y logic lives in this package (AD-1) — the Lit core owns
+ * all three.
  */
-export * from '@tk-kit/components';
+export * from './generated/index.js';
+export { EVENT_MAP } from './event-map.js';
+export type { TkKitElementEventMap } from './event-map.js';

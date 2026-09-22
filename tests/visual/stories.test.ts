@@ -22,8 +22,8 @@ const indexIn = (dir: string, json: string): string => {
 
 describe('visual harness story discovery (spec 1.6)', () => {
   it('light URL is the bare story URL — no globals param', () => {
-    expect(buildStoryUrl('tokens--swatches', 'light')).toBe(
-      '/iframe.html?id=tokens--swatches&viewMode=story',
+    expect(buildStoryUrl('components-button--playground', 'light')).toBe(
+      '/iframe.html?id=components-button--playground&viewMode=story',
     );
   });
 
@@ -46,10 +46,12 @@ describe('visual harness story discovery (spec 1.6)', () => {
     expect(ids.length).toBeGreaterThan(0);
     expect(ids).toEqual([...ids].sort());
     for (const id of ids) expect(id).toMatch(/^[a-z0-9-]+--[a-z0-9-]+$/);
-    // The stories that exist as of spec 1.6 — 1.7 adds Button and removes the
-    // tokens demo, so this asserts membership, not the exact set.
+    // Post-1.7 reality: Button stories are composed in (from components/src),
+    // and the tokens demo is gone — story AND baseline removal traveled
+    // together (baseline-removal rule).
     expect(ids).toContain('getting-started--page');
-    expect(ids).toContain('tokens--swatches');
+    expect(ids).toContain('components-button--playground');
+    expect(ids.filter((id) => id.startsWith('tokens--'))).toEqual([]);
   });
 
   it('missing index fails loudly with build guidance', () => {

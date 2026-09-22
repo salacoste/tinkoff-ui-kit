@@ -88,20 +88,14 @@ builds is what gets tested — new stories appear with **zero harness edits**. A
 missing, unparseable or story-less index fails loudly with "build docs first"
 guidance (also covered by `stories.test.ts`).
 
-### Known quirk: `tokens--groups`
+### Error-display refusal
 
-The `GROUPS` data export in `packages/docs/src/tokens-demo.stories.ts` is
-misindexed by Storybook as a story and renders its "component annotation is
-missing" error display. The harness tests it anyway — its baseline locks that
-error page (stable: verified byte-identical across a docs rebuild) and its
-removal lands with the rest of the tokens demo at Story 1.7. The spec freezes
-docs changes out of this story, so the wart is documented rather than fixed.
-
-Error-display renders are otherwise REFUSED: a story showing the error display
-that is not in `ERROR_STATE_ALLOWLIST` (`visual.spec.ts`, currently exactly
-`tokens--groups`) fails the suite in compare AND update modes — a broken story
-must never quietly become a green error-page baseline. When the demo is removed
-at 1.7, its baselines AND its allowlist entry go in the same change.
+A story that renders Storybook's error display (`body.sb-show-errordisplay`)
+fails the suite in compare AND update modes — a broken story must never quietly
+become a green error-page baseline the harness then "protects". There is NO
+allowlist: the single historical exception (`tokens--groups`, the 1.6 tokens
+demo's misindexed data export) was removed WITH the demo at Story 1.7, and
+nothing has replaced it.
 
 ## Baseline workflow (AD-8)
 
@@ -120,10 +114,12 @@ a human side-by-side against the site capture, attached to the baseline PR.
    A story id in `index.json` with no baseline fails the suite naming the
    story — absence is loud, never silent.
 2. **Removing a story = removing its baselines:** delete the story's baseline
-   PNGs (and its error-state allowlist entry, if any) in the SAME change that
-   removes the story — orphaned baselines are review blockers. Story 1.7's
-   removal of the tokens demo (`tokens--groups`, `tokens--swatches`) is the
-   first case, including `tokens--groups`' allowlist entry.
+   PNGs (and any harness references — allowlist/exclusion entries, membership
+   test assertions) in the SAME change that removes the story — orphaned
+   baselines are review blockers. DONE at Story 1.7: the tokens demo's stories
+   (`tokens--groups`, `tokens--swatches`) went with their 4 baseline PNGs, the
+   error-state allowlist, and the `.tksw-chip` axe exclusion (removal rule
+   exercised end-to-end).
 3. **Provisional rule (autonomous runs):** baselines generated while no
    maintainer is present are PROVISIONAL — the capture is archived, the
    automated drift check runs on every later change, and the maintainer
@@ -141,11 +137,7 @@ a human side-by-side against the site capture, attached to the baseline PR.
 
 Every story runs `@axe-core/playwright` in both themes with the WCAG tag filter
 (`wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`); zero violations passes, failures
-report rule ids + node selectors. The single documented exclusion mirrors the
-story's own Storybook a11y config verbatim: `tokens--swatches` excludes
-`.tksw-chip`. Scope note: the exclusion is ELEMENT-scoped — the chips are
-excluded from ALL rules, not just color-contrast (the motivating rule; the
-chips are color-only, carry no text, so no other rule plausibly applies) —
-because that is exactly what the storybook `parameters.a11y.context.exclude`
-does. It dies with the demo at Story 1.7. No other story may carry an
-exclusion.
+report rule ids + node selectors. No story carries an exclusion — the single
+historical one (the 1.6 demo's `.tksw-chip` color-only swatches) was removed
+with the demo at Story 1.7, so every element of every story is audited in both
+themes.
