@@ -4,6 +4,205 @@
   "modules": [
     {
       "kind": "javascript-module",
+      "path": "src/badge/badge.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "badgeStyles",
+          "default": "css` :host { display: inline-flex; } .badge { box-sizing: border-box; display: inline-flex; align-items: center; min-height: 22px; padding-inline: var(--tk-space-8); border-radius: var(--tk-radius-full); font-family: var(--tk-font-body); font-size: var(--tk-text-body-xs-size); font-weight: var(--tk-text-body-s-bold-weight); line-height: var(--tk-text-body-xs-leading); letter-spacing: var(--tk-text-body-xs-tracking); white-space: nowrap; } /* display:flex on the cells outranks the UA's [hidden] — restate it. The label cell (with its slot) stays in the DOM, hidden never absent, so slotchange fires in every state; hidden subtrees are unrendered and out of the accessibility tree — a count badge announces ONLY the count. */ .badge__count[hidden], .badge__label[hidden] { display: none; } /* --- Variants: flat saturated fills, text pairs per the header notes. -- */ :host([variant='incentive']) .badge { background: var(--tk-color-green-100); /* INK-on-saturated-brand-fill (the 2.1 AA pairing) — see the header. */ color: var(--tk-color-text-on-primary); } :host([variant='stat']) .badge { background: var(--tk-color-ink-300); color: var(--tk-color-white); } `",
+          "description": "tk-badge styles — tokens only (FR-1), zero theme branches (AD-3).\n\nVisual spec: DESIGN.md `components.badge-chip` (pill `{rounded.full}`,\n`{typography.body-xs}`) + the 2.0 capture notes § Badge/Chip\n(badge-chip-incentive.png, 46×45 with the badge ~44×22 inside: stadium\npill, ~8–9px horizontal text padding) + EXPERIENCE.md Badge/Chip row\n(static or dynamic count; count > 99 renders «99+»; never interactive\nalone — NO cursor/hover affordance exists in this sheet by design).\n\nVARIANTS (theme-invariant pairs — the raw scale tokens carry no dark\nremaps, so the badge paints identically on a dark canvas, the same\nruling as the progress-bar bar):\n- incentive: green-100 fill + INK text — the AA pairing frozen at Story\n  2.1 (tk-input's slotted chip): white on green-100 is 2.66:1 (fails AA\n  at 12px), ink #333 is 4.74:1 (passes). The token consumed is\n  text-on-primary — the yellow-keeps-ink invariant, reused for the same\n  class of saturated brand fill; do not copy onto other fills blindly.\n- stat: ink-300 fill + white text — 12.635:1, the button-inverse pair.\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule — the token sheet carries no counterpart:\n- the 22px min-height (the capture's probed badge height; body-xs at\n  leading 1.45 is a ~17.4px line box, so the min-height carries the pill\n  to the reference's 22px — content taller than that still grows);\n- the 1px hairline is absent by design (the reference chip is a flat\n  saturated fill).\nBold weight consumes the body-s bold step: body-xs carries no bold token\nof its own (the tk-input slotted-chip precedent, sized to the same\nreference chip)."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "badgeStyles",
+          "declaration": {
+            "name": "badgeStyles",
+            "module": "src/badge/badge.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/badge/badge.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-badge — the kit's Badge/Chip (Story 3.2).\n\nPill chip in the Tinkoff (T-Bank) register: the reference's «+20%»\nincentive badge (capture badge-chip-incentive.png, ~44×22) and the stat\nchip. NEVER interactive alone — a plain `<span>`, no tabindex, no role, no\nfocus stop; the action belongs to the surrounding surface (EXPERIENCE.md\nBadge/Chip row: «never interactive alone»).\n\nCONTENT MODES (the spec's precedence):\n- `count` present (a finite number) → the count renders, capped: values\n  above 99 render «99+» (dynamic counters); 0 renders «0» — a visible\n  zero is information. The count WINS over slot/label while set.\n- otherwise the DEFAULT slot carries the label; real slotted content\n  beats the `label` prop (the checkbox/progress-bar slot-presence rule).\n\nVARIANTS: `incentive` (green-100 fill + ink text — the AA pairing frozen\nat 2.1: white on green-100 is 2.66:1 and fails, ink is 4.74:1) and `stat`\n(ink-300 fill + white text, 12.6:1). Both pairs are THEME-INVARIANT —\nthe raw scale tokens carry no dark remaps, mirroring the yellow-keeps-ink\nrule (see badge.css.ts).\n\nSTATELESS (the simple-component mold): nothing dispatches — the event-map\nno-entry case (tk-button precedent). SSR-compat (AD-10): rendered via\nLit templates only.",
+          "name": "TkBadge",
+          "slots": [
+            {
+              "description": "Label (primary content); wins over the `label` prop, loses to `count`.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "variants",
+              "static": true,
+              "readonly": true,
+              "default": "['incentive', 'stat']",
+              "type": {
+                "text": "['incentive', 'stat']"
+              },
+              "description": "Variant union (CONVENTIONS §2: literal unions, never forking booleans)."
+            },
+            {
+              "kind": "field",
+              "name": "COUNT_CAP",
+              "type": {
+                "text": "number"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "99",
+              "description": "Count cap — everything above renders «99+» (the reference's dynamic counters)."
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'incentive' | 'stat'"
+              },
+              "default": "'incentive'",
+              "description": "Fill/text pairing.",
+              "attribute": "variant",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "count",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Dynamic count (number DATA — never reflects, CONVENTIONS §2). While a\nfinite number is set, the badge renders the capped count and the\nslot/label cells hide. A non-finite value (attribute `count=\"abc\"` →\nNaN) reads as absent — the label path takes over.",
+              "attribute": "count"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Label text — the default slot's fallback (slot content wins).",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "#labelSlotted",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the default slot carries REAL content (element or non-empty text)."
+            },
+            {
+              "kind": "field",
+              "name": "#countText",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "description": "The count text in force: the capped string when `count` is a finite\nnumber, null otherwise (absent/NaN → the label path). Non-integer\nvalues render as-is — the cap is the only transformation the spec names.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#syncSlotPresence",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Slot presence (the badge-slot rule, checkbox's label mirror): REAL\ncontent (an element or non-empty text) counts; empty text nodes — the\n`${cond ? html`…` : ''}` template shape — do NOT. Checked at\nfirstUpdated and on every slotchange. The label cell (with its slot)\nstays in the DOM — hidden, never absent — precisely so slotchange fires\nin every state (the progress-bar header lesson)."
+            },
+            {
+              "kind": "method",
+              "name": "#handleSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "'incentive' | 'stat'"
+              },
+              "description": "Fill/text pairing.",
+              "name": "variant",
+              "default": "'incentive'",
+              "fieldName": "variant"
+            },
+            {
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Dynamic count (number DATA — never reflects, CONVENTIONS §2). While a\nfinite number is set, the badge renders the capped count and the\nslot/label cells hide. A non-finite value (attribute `count=\"abc\"` →\nNaN) reads as absent — the label path takes over.",
+              "name": "count",
+              "fieldName": "count"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Label text — the default slot's fallback (slot content wins).",
+              "name": "label",
+              "fieldName": "label"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-badge",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkBadge",
+          "declaration": {
+            "name": "TkBadge",
+            "module": "src/badge/badge.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-badge",
+          "declaration": {
+            "name": "TkBadge",
+            "module": "src/badge/badge.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/badge/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/badge/badge.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/button/button.css.ts",
       "declarations": [
         {
@@ -632,6 +831,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/badge/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/button/index.js"
           }
         },
@@ -649,6 +856,14 @@
           "declaration": {
             "name": "*",
             "module": "src/input/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/link/index.js"
           }
         },
         {
@@ -1323,6 +1538,197 @@
           "declaration": {
             "name": "TkInput",
             "module": "src/input/input.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/link/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/link/link.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/link/link.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "linkStyles",
+          "default": "css` /* Inline by default so the element flows inside sentences; the variant rules below reshape the anchor for the standalone box. */ :host { display: inline; } /* Interactive-target floor while disabled: clicks die at the element boundary (the aria-disabled pattern keeps the link focusable). */ :host([disabled]) { pointer-events: none; } .link { font-family: var(--tk-font-body); color: var(--tk-color-link); /* Rest = NO visible underline (the capture's plain word): the line is painted with a TRANSPARENT decoration color rather than omitted, so its hover/focus appearance FADES on the motion token (EXPERIENCE State Patterns' 150ms letter — the token layer collapses it to 0ms under prefers-reduced-motion) instead of popping in. focus-visible means the underline is ALWAYS the keyboard's focus indicator — pointer clicks never flash it. */ text-decoration: underline; text-decoration-color: transparent; transition: text-decoration-color var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-standard); cursor: pointer; -webkit-tap-highlight-color: transparent; } .link:hover, .link:focus-visible { text-decoration-color: currentColor; } /* --- Variants. -- */ /* Standalone: body-m on its own line — the card «Читать далее» register. The interactive target is padded to the 44×44 floor without painting anything: min-height carries the block axis and the inline padding (space-12 each side) carries short labels («Далее») under 44px wide — the button-compact pairing precedent. align-items centers the text in the taller box, the underline stays at the text. */ :host([variant='standalone']) .link { display: inline-flex; align-items: center; min-height: 44px; padding-inline: var(--tk-space-12); font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-weight); line-height: var(--tk-text-body-m-leading); } /* Legal: body-xs gray fine print (footer legal copy) — the ONLY variant that changes color; no underline at rest, same hover/focus affordance. */ :host([variant='legal']) .link { font-size: var(--tk-text-body-xs-size); font-weight: var(--tk-text-body-xs-weight); line-height: var(--tk-text-body-xs-leading); letter-spacing: var(--tk-text-body-xs-tracking); color: var(--tk-color-text-secondary); } /* --- Disabled: 40% opacity, no pointer events (host-level above); the anchor carries aria-disabled (template). The element stays focusable — the underline may still show on keyboard focus, mirroring how the button's ring behaves while disabled. --- */ :host([disabled]) .link { opacity: 0.4; cursor: default; } `",
+          "description": "tk-link styles — tokens only (FR-1), zero theme branches (AD-3).\n\nVisual spec: DESIGN.md `components.text-link` (blue, underline on hover)\n+ EXPERIENCE.md Component Patterns (TextLink row: inline or standalone —\nstandalone gets body-m; keyboard focus shows a visible underline) + the\n2.0 capture notes § TextLink (text-link-read-more.png, 48×25: plain word\nat rest, NO underline, no arrow — the rest-underline probe recorded in\n.playwright-cli/verify/link/NOTES.md).\n\nCOLOR RULING (the spec's probe NOTES record, supersedes DESIGN.md's\n`hover-color: blue-200`): the link consumes `--tk-color-link` ALWAYS —\nblue-100 light / #66A3FF dark, the AA pair the token layer carries.\nA hover color step has no dark counterpart (blue-200 carries no dark\nremap; NO new tokens this story), so the AFFORDANCE is the underline in\nboth themes: it appears on hover (pointer) and on :focus-visible\n(keyboard — always visible while focused, the reference behavior). The\nlegal variant is text-secondary gray in both themes.\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule — the token sheet carries no counterpart:\n- the standalone 44px min-height (the interactive-target floor padded\n  exactly like button compact: a transparent box — only the hit target\n  grows, nothing paints; the reference's standalone links are plain text\n  lines and inline links inside sentences keep their line-box targets)."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "linkStyles",
+          "declaration": {
+            "name": "linkStyles",
+            "module": "src/link/link.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/link/link.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-link — the kit's TextLink (Story 3.1).\n\nInline text link in the Tinkoff (T-Bank) register: blue at rest via the\nSEMANTIC link token (never a scale step), underline only on hover and\nkeyboard focus — the reference's «Читать» is a plain word at rest (capture\ntext-link-read-more.png; the probe in .playwright-cli/verify/link/NOTES.md).\nVariants: `inline` (inherits surrounding typography — links live inside\nsentences), `standalone` (body-m, own line — card «Читать далее» CTAs) and\n`legal` (body-xs gray fine print — footer legal copy).\n\nAnchors: renders a native `<a>` in its shadow root with the default slot as\nthe label (native semantics — role, name and Enter activation by\nconstruction); `href`/`target`/`rel` pass through. `disabled` follows the\nButton mold: aria-disabled + inert click interception at the host, the\nelement stays focusable.\n\nColor ruling (the spec's probe NOTES record): the link ALWAYS consumes\n`--tk-color-link` — consumers never pick a link-on-tint step manually; the\nsemantic token themes itself (blue-100 light / #66A3FF dark, the AA pair\nthe token layer already carries). The legal variant is text-secondary gray.\n\nSTATELESS (the simple-component mold): no channel, no controlled pair,\nnothing dispatches — the event-map no-entry case (tk-button precedent).\nSSR-compat (AD-10): rendered via Lit templates only.",
+          "name": "TkLink",
+          "slots": [
+            {
+              "description": "Label (primary content).",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "variants",
+              "static": true,
+              "readonly": true,
+              "default": "['inline', 'standalone', 'legal']",
+              "type": {
+                "text": "['inline', 'standalone', 'legal']"
+              },
+              "description": "Usage variant union (CONVENTIONS §2: literal unions, never forking booleans)."
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'inline' | 'standalone' | 'legal'"
+              },
+              "default": "'inline'",
+              "description": "Usage variant: inline (inherit), standalone (body-m), legal (body-xs gray).",
+              "attribute": "variant",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disabled: no navigation, announced as disabled; stays focusable (aria-disabled pattern).",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Pass-through URL for the inner anchor.",
+              "attribute": "href"
+            },
+            {
+              "kind": "field",
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "description": "Pass-through browsing context for the inner anchor.",
+              "attribute": "target"
+            },
+            {
+              "kind": "field",
+              "name": "rel",
+              "type": {
+                "text": "string"
+              },
+              "description": "Pass-through relationship for the inner anchor.",
+              "attribute": "rel"
+            },
+            {
+              "kind": "field",
+              "name": "handleClick",
+              "privacy": "private",
+              "readonly": true,
+              "description": "Click interception, bound at the HOST — the Button mold verbatim: a\ndisabled link never navigates, from EITHER dispatch path (native clicks\nbubbling out of the shadow `<a>` AND clicks dispatched on `<tk-link>`\nitself — `el.click()`, delegation). preventDefault kills the navigation;\nstopImmediatePropagation keeps consumer listeners inert. The element\nstays focusable (aria-disabled pattern — native removal from the tab\norder hides it from some screen readers)."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "'inline' | 'standalone' | 'legal'"
+              },
+              "description": "Usage variant: inline (inherit), standalone (body-m), legal (body-xs gray).",
+              "name": "variant",
+              "default": "'inline'",
+              "fieldName": "variant"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disabled: no navigation, announced as disabled; stays focusable (aria-disabled pattern).",
+              "name": "disabled",
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Pass-through URL for the inner anchor.",
+              "fieldName": "href"
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "description": "Pass-through browsing context for the inner anchor.",
+              "fieldName": "target"
+            },
+            {
+              "name": "rel",
+              "type": {
+                "text": "string"
+              },
+              "description": "Pass-through relationship for the inner anchor.",
+              "fieldName": "rel"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-link",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkLink",
+          "declaration": {
+            "name": "TkLink",
+            "module": "src/link/link.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-link",
+          "declaration": {
+            "name": "TkLink",
+            "module": "src/link/link.ts"
           }
         }
       ]

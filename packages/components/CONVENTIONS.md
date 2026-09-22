@@ -7,7 +7,7 @@ Every rule cites its source. The items the sources left undecided for the pilot 
 ## 1. Element & file naming
 
 - Custom element names: `tk-` prefix, kebab-case, one word per concept — `tk-button`, `tk-segmented-radio`, `tk-thumbnail-picker`. Prefix decision closed at OQ-3 — `tk-`/`--tk-*` stay permanently (generic abbreviation, zero trademark collision). *(AD-4/Conventions)*
-- One component per directory: `packages/components/src/<name>/` containing `index.ts` (element + re-exports), `<name>.css.ts` or styles module, `<name>.test.ts`, `<name>.story.ts`. *(AD-4 Conventions)*
+- One component per directory: `packages/components/src/<name>/` containing `index.ts` (element + re-exports), `<name>.css.ts` or styles module, `<name>.test.ts`, `<name>.stories.ts`. *(AD-4 Conventions; the file stem is `stories.ts` — the Storybook convention every suite has shipped since 1.7, text corrected at 3.1/3.2 review)*
 - Class names: `TkButton`, `TkSegmentedRadio` — PascalCase with the prefix.
 
 ## 2. Props
@@ -81,7 +81,8 @@ Every rule cites its source. The items the sources left undecided for the pilot 
 
 | Date | Component | Deviation | Rationale |
 |---|---|---|---|
-| — | — | — | — |
+| 2026-09-23 | tk-link (Story 3.1) | Hover affordance is the underline only — no color step; EXPERIENCE State Patterns' hover token step (blue-200) is not consumed. The underline fades in on the 150ms motion token, so the motion letter holds. | The cross-theme-correct step token does not exist: blue-200 carries NO dark remap (a raw step would be invisible/wrong in dark) and no-new-tokens forbids inventing a link-hover semantic this story. The underline carries the affordance in BOTH themes. Revisit if the token layer ever gains a link-hover semantic. |
+| 2026-09-23 | tk-link (Story 3.1) | Focus indicator is the underline, not the unified 2px ring (§8). | EXPERIENCE.md's TextLink row names «keyboard focus visible underline» — the component row outranks the generic ring rule for inline text; the ring governs boxed controls (buttons, fields) where the reference shows a box. The underline is always visible while keyboard-focused (`:focus-visible`), never removed. |
 
 ## 10. Construction rules
 

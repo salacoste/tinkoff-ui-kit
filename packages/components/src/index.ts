@@ -7,9 +7,11 @@
  * wrappers it feeds (packages/react, `pnpm gen`) stay in sync with these
  * exports.
  */
+export * from './badge/index.js';
 export * from './button/index.js';
 export * from './checkbox/index.js';
 export * from './input/index.js';
+export * from './link/index.js';
 export * from './progress-bar/index.js';
 export * from './segmented-radio/index.js';
 export * from './select/index.js';

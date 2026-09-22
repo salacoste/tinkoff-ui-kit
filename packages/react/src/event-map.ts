@@ -57,6 +57,12 @@ export const EVENT_MAP: Readonly<Record<string, Readonly<TkKitElementEventMap>>>
     onValueChange: 'value-change',
   },
   // 'tk-button': none at v1 (native click serves activation).
+  // 'tk-link': none at v3.1 — STATELESS (spec 3.1): navigation is the native
+  // anchor's own behavior; the element dispatches nothing (the completeness
+  // guard's no-entry case, mirrored from tk-button).
+  // 'tk-badge': none at v3.2 — STATELESS DISPLAY (spec 3.2): never
+  // interactive alone; the element dispatches nothing (the completeness
+  // guard's no-entry case, mirrored from tk-button).
   // 'tk-progress-bar': none at v2.7 — STATELESS DISPLAY (spec 2.7): value is
   // an input, not a channel; the element dispatches nothing (the completeness
   // guard's no-entry case, mirrored from tk-button).

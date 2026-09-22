@@ -5,7 +5,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import * as litReact from '@lit/react';
 import { afterAll, describe, expect, it, vi } from 'vitest';
 
-import { Button, Checkbox, EVENT_MAP, Input, ProgressBar, SegmentedRadio, Select, ThumbnailPicker } from './index.js';
+import { Badge, Button, Checkbox, EVENT_MAP, Input, Link, ProgressBar, SegmentedRadio, Select, ThumbnailPicker } from './index.js';
 
 /**
  * pillkit-react generated surface. The wrapper imports `pillkit-components`
@@ -694,4 +694,52 @@ describe('pillkit-react', () => {
     expect(el?.hasAttribute('indeterminate')).toBe(true);
     // announce stays off unless asked — narration is opt-in.
     expect(el?.hasAttribute('announce')).toBe(false);
+  });
+
+  // --- Story 3.1/3.2: tk-link / tk-badge wrappers (stateless — no events) --
+
+  it('ships NO registry entries for tk-link/tk-badge (stateless, nothing dispatches)', () => {
+    // Specs 3.1/3.2: navigation is the native anchor's own behavior and the
+    // badge is never interactive alone — neither dispatches, so the
+    // completeness guard demands NO event-map entry (the tk-button
+    // no-entry precedent).
+    expect(EVENT_MAP['tk-link']).toBeUndefined();
+    expect(EVENT_MAP['tk-badge']).toBeUndefined();
+  });
+
+  it('renders <Link> as tk-link with element properties and pass-through attrs (smoke)', async () => {
+    const container = await renderToContainer(
+      React.createElement(Link, { variant: 'legal', href: '/legal', target: '_blank' }, 'Политика'),
+    );
+    const el = container.querySelector('tk-link');
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    expect((el as unknown as { variant?: string }).variant).toBe('legal');
+    expect((el as unknown as { href?: string }).href).toBe('/legal');
+    expect((el as unknown as { target?: string }).target).toBe('_blank');
+    // Children project into the default slot; the shadow anchor carries the
+    // pass-through surface.
+    expect(el?.textContent).toBe('Политика');
+    const anchor = el?.shadowRoot?.querySelector('a.link');
+    expect(anchor?.getAttribute('href')).toBe('/legal');
+    expect(anchor?.getAttribute('target')).toBe('_blank');
+  });
+
+  it('renders <Badge> as tk-badge with count/variant through the wrapper (smoke)', async () => {
+    const container = await renderToContainer(
+      React.createElement(Badge, { variant: 'stat', count: 250 }),
+    );
+    const el = container.querySelector('tk-badge') as (Element & {
+      variant?: string;
+      count?: number;
+      updateComplete?: Promise<unknown>;
+    }) | null;
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    expect(el?.variant).toBe('stat');
+    expect(el?.count).toBe(250);
+    await (el as { updateComplete: Promise<unknown> }).updateComplete;
+    // Count mode: the cap renders, the number data never reflects.
+    expect(el?.shadowRoot?.querySelector('.badge__count')?.textContent).toBe('99+');
+    expect(el?.hasAttribute('count')).toBe(false);
+    // Never interactive: no tabindex/role anywhere in the shadow surface.
+    expect(el?.shadowRoot?.querySelector('[tabindex], [role]')).toBeNull();
   });
