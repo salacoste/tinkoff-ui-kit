@@ -5,7 +5,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import * as litReact from '@lit/react';
 import { afterAll, describe, expect, it, vi } from 'vitest';
 
-import { Button, Checkbox, EVENT_MAP, Input, SegmentedRadio, Select } from './index.js';
+import { Button, Checkbox, EVENT_MAP, Input, SegmentedRadio, Select, ThumbnailPicker } from './index.js';
 
 /**
  * pillkit-react generated surface. The wrapper imports `pillkit-components`
@@ -526,3 +526,129 @@ describe('pillkit-react', () => {
     expect(buttonRef.current?.tagName).toBe('TK-BUTTON');
   });
 });
+  // --- Story 2.6: tk-thumbnail-picker wrapper (mirrors the Input/Select smoke) --
+
+  it("carries the story 2.6 registry entry: tk-thumbnail-picker's value-change", () => {
+    expect(EVENT_MAP['tk-thumbnail-picker']).toEqual({ onValueChange: 'value-change' });
+  });
+
+  it('renders <ThumbnailPicker> as tk-thumbnail-picker with element properties set through the wrapper', async () => {
+    const container = await renderToContainer(
+      React.createElement(ThumbnailPicker, {
+        label: 'Выберите дизайн карты',
+        defaultValue: 'black',
+        options: [
+          { value: 'black', label: 'Чёрная' },
+          { value: 'blue', label: 'Синяя' },
+        ],
+      }),
+    );
+    const el = container.querySelector('tk-thumbnail-picker');
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    expect((el as unknown as { label?: string }).label).toBe('Выберите дизайн карты');
+    expect((el as unknown as { options?: unknown[] }).options).toHaveLength(2);
+    const radios = (el as Element).shadowRoot?.querySelectorAll('input[type="radio"]');
+    expect(radios, 'the native radio group renders').toHaveLength(2);
+    expect((el as Element).shadowRoot?.querySelector('[role="radiogroup"]')).not.toBeNull();
+  });
+
+  it('ThumbnailPicker handlers receive the UNWRAPPED string — never the CustomEvent (AD-1)', async () => {
+    const handler = vi.fn();
+    const container = await renderToContainer(
+      React.createElement(ThumbnailPicker, {
+        onValueChange: handler,
+        options: [
+          { value: 'black', label: 'Чёрная' },
+          { value: 'blue', label: 'Синяя' },
+        ],
+      }),
+    );
+    const el = container.querySelector('tk-thumbnail-picker');
+    expect(el).not.toBeNull();
+
+    // Direct dispatch: detail { value } in, bare string out.
+    el?.dispatchEvent(
+      new CustomEvent('value-change', { detail: { value: 'blue' }, composed: true, bubbles: true }),
+    );
+    expect(handler).toHaveBeenCalledTimes(1);
+    const payload = handler.mock.calls[0]?.[0];
+    expect(payload).toBe('blue');
+    expect(typeof payload).toBe('string');
+
+    // Real selection path: same unwrap through the element's own pipeline
+    // (the change event the UA fires after a tile-click/Space selection).
+    handler.mockClear();
+    const radios = (el as Element).shadowRoot?.querySelectorAll('input');
+    const second = radios?.[1] as HTMLInputElement | undefined;
+    second!.checked = true;
+    second!.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler.mock.calls[0]?.[0]).toBe('blue');
+  });
+
+  it('ThumbnailPicker controlled mode: standard value mapping, wrapper adds no clamping (string channel)', async () => {
+    const OPTIONS = [
+      { value: 'black', label: 'Чёрная' },
+      { value: 'blue', label: 'Синяя' },
+    ];
+    let state = 'black';
+    const container = await renderToContainer(
+      React.createElement(ThumbnailPicker, {
+        options: OPTIONS,
+        value: state,
+        onValueChange: (value: unknown) => {
+          expect(typeof value).toBe('string');
+          state = value as string;
+        },
+      }),
+    );
+    const root = roots[roots.length - 1];
+    const el = container.querySelector('tk-thumbnail-picker') as (Element & {
+      value?: string;
+      updateComplete?: Promise<unknown>;
+    }) | null;
+    expect(el?.value).toBe('black');
+
+    // Select the second tile through the element's own pipeline.
+    const radios = (el as Element).shadowRoot?.querySelectorAll('input');
+    const second = radios?.[1] as HTMLInputElement | undefined;
+    await act(() => {
+      second!.checked = true;
+      second!.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
+    });
+
+    // Strict: the event fired, the element's channel keeps the consumer value.
+    expect(state).toBe('blue');
+    expect(el?.value).toBe('black');
+
+    // The consumer's render answers: value flows back.
+    await act(() => {
+      root.render(
+        React.createElement(ThumbnailPicker, {
+          options: OPTIONS,
+          value: state,
+          onValueChange: (value: unknown) => {
+            state = value as string;
+          },
+        }),
+      );
+    });
+    expect(el?.value).toBe('blue');
+    const checked = [...((el as Element).shadowRoot?.querySelectorAll('input') ?? [])].find(
+      (input) => input.checked,
+    );
+    expect(checked?.value).toBe('blue');
+
+    // Removing the value prop releases the element (frozen §4 semantics)
+    // — seeded from the last controlled value.
+    await act(() => {
+      root.render(
+        React.createElement(ThumbnailPicker, { options: OPTIONS, label: 'Выберите дизайн карты' }),
+      );
+    });
+    expect(el?.value).toBeUndefined();
+    const seeded = [...((el as Element).shadowRoot?.querySelectorAll('input') ?? [])].find(
+      (input) => input.checked,
+    );
+    expect(seeded?.value).toBe('blue');
+  });

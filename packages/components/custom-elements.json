@@ -669,6 +669,14 @@
         },
         {
           "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/thumbnail-picker/index.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "mountOverlay",
           "declaration": {
             "name": "mountOverlay",
@@ -2566,6 +2574,567 @@
           "declaration": {
             "name": "TkSelect",
             "module": "src/select/select.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/thumbnail-picker/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/thumbnail-picker/thumbnail-picker.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/thumbnail-picker/thumbnail-picker.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "thumbnailPickerStyles",
+          "default": "css` :host { display: block; max-width: 100%; } /* Disabled group (EXPERIENCE State Patterns): 40% opacity, no pointer events at the host boundary. The inner inputs keep aria-disabled (focusable — the button-pilot pattern); the change guard reverts any keyboard flip, so nothing ever emits or commits while disabled. */ :host([disabled]) { opacity: 0.4; pointer-events: none; } /* Group label — the segmented-radio field pattern verbatim. A SPAN, not a clickable <label for>: the association would concatenate the group text onto the tab-stop tile's accessible name (the 2.5 ratified lesson) — so no pointer affordance either. */ .label { display: block; margin: 0 0 var(--tk-space-8); font-family: var(--tk-font-body); font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-bold-weight); line-height: var(--tk-text-body-m-leading); color: var(--tk-color-text-primary); } /* --- The tile grid: auto-filled 72px tracks wrapping by container width (DESIGN «wrap to grid»), 12px gaps on both axes (probe-exact). --- */ .grid { display: grid; grid-template-columns: repeat(auto-fill, var(--tk-thumbnail-picker-tile, 72px)); gap: var(--tk-space-12); } /* The native label IS the tile's hit frame: input + face inside one label gives click-to-select and the accessible name for free (the 2.4/2.5 pattern). 72×72 ≥ the 44×44 target floor. */ .tile { position: relative; display: block; width: var(--tk-thumbnail-picker-tile, 72px); height: var(--tk-thumbnail-picker-tile, 72px); cursor: pointer; } /* The invisible native radio covers the whole tile — the visual face is its sibling. */ .tile__input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; padding: 0; opacity: 0; cursor: pointer; -webkit-appearance: none; appearance: none; } /* Tile face — radius-md square (DESIGN), field fill under the initials, overflow-hidden so the artwork clips to the rounded outline. The selected ring is an OUTER box-shadow annulus (probe geometry: hugs the rounded outline from outside, no offset) — painted on the face, outside the overflow clip, no layout shift. */ .tile__face { box-sizing: border-box; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; overflow: hidden; border-radius: var(--tk-thumbnail-picker-radius, var(--tk-radius-md)); background: var(--tk-thumbnail-picker-face-fill, var(--tk-color-surface-field)); transition: box-shadow var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-standard); } /* Thumbnail artwork fills the face (cover), clipped by the radius. alt=\"\" + aria-hidden keep it decorative — the label text names the radio. */ .tile__image { display: block; width: 100%; height: 100%; object-fit: cover; } /* Initials fallback face (no/failed thumbnail): the label's first graphemes on the field fill — text-primary holds AA on surface-field in both themes (light ≈9.9:1; dark ≈10:1 effective). Decorative (aria-hidden); the full label rides the sr-only text. */ .tile__initials { font-family: var(--tk-font-body); font-size: var(--tk-text-body-l-bold-size); font-weight: var(--tk-text-body-l-bold-weight); line-height: 1; color: var(--tk-thumbnail-picker-initials, var(--tk-color-text-primary)); } /* Per-tile label text: VISUALLY HIDDEN (probe — the reference tiles carry artwork only); the accessible name still comes from this text inside the wrapping label. The standard sr-only clip. */ .tile__text { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; } /* Hover (unselected only): ONE token step — the border-default → border-strong hairline class (the checkbox/input hover move), inset so it never shifts layout; it reads over artwork AND initials faces. The token layer collapses the duration to 0ms under prefers-reduced-motion. */ .tile__input:not(:checked):hover + .tile__face { box-shadow: inset 0 0 0 1px var(--tk-color-border-strong); } /* Selected: the 2px ink ring — OUTER, hugging the rounded outline, no offset (probe geometry; ink per DESIGN). */ .tile__input:checked + .tile__face { box-shadow: 0 0 0 2px var(--tk-thumbnail-picker-ring, var(--tk-color-ink-300)); } /* Unified focus ring — 2px token ring, offset 2px, never removed: drawn on the VISIBLE face (the invisible input owns :focus-visible; the sibling selector bridges). Coexists with the selection ring. */ .tile__input:focus-visible + .tile__face { outline: 2px solid var(--tk-color-focus-ring); outline-offset: 2px; } /* Disabled option (aria-disabled keeps it focusable — the pilot pattern): artwork dims to the State-Patterns 40%, initials take text-muted (the token's sanctioned disabled-text role), no hover whisper, default cursor. Selectability is guarded in thumbnail-picker.ts, never by pointer tricks alone. */ .tile__input[aria-disabled='true'] + .tile__face { cursor: default; } .tile__input[aria-disabled='true'] + .tile__face .tile__initials { color: var(--tk-color-text-muted); } .tile__input[aria-disabled='true'] + .tile__face .tile__image { opacity: 0.4; } .tile__input[aria-disabled='true']:hover + .tile__face { box-shadow: none; } /* Zero-state copy slot (EXPERIENCE State Patterns: «never blank») — the documented default copy inside the empty slot, de-emphasized body-s secondary text on the surface. */ .empty { font-family: var(--tk-font-body); font-size: var(--tk-text-body-s-size); font-weight: var(--tk-text-body-s-weight); line-height: var(--tk-text-body-s-leading); color: var(--tk-color-text-secondary); } `",
+          "description": "tk-thumbnail-picker styles — tokens only (FR-1), zero theme branches (AD-3).\n\nVisual spec: DESIGN.md `components.thumbnailPicker` («Square tiles\n{rounded.md}, selected gets 2px ink border ring») + the 2.6 PIXEL PROBE of\n`.playwright-cli/captures/thumbnail-picker-card-design.png` (536×170,\nrecorded in .playwright-cli/verify/thumbnail-picker/NOTES.md), which\nresolved the spec's flagged ring ambiguity:\n\n- RING TREATMENT (the probe reading, recorded per the acceptance\n  criterion): the reference's selection marker is a solid #FFDD2D annulus\n  ~3px (clean bottom rows) hugging the tile's ROUNDED OUTLINE from the\n  OUTSIDE — artwork edge, then ring, then page — with NO gap/offset and no\n  shadow; unselected tiles are flat artwork with no border. Mapping into\n  the frozen architecture: DESIGN mandates the 2px INK ring and DESIGN\n  wins over captures (the segmented-radio deviation-1 precedent), so the\n  kit renders `box-shadow: 0 0 0 2px ink-300` — an OUTER ring hugging the\n  radius-md outline (the probe's geometry, ink per DESIGN), no layout\n  shift, zero offset. The reference's yellow exists only as the ring.\n- TILE SIZE: 72px squares per DESIGN/EXPERIENCE («tiles 72px, wrap to\n  grid») — the reference's own tiles are ~125×79 card artwork; the DESIGN\n  square wins (documented deviation, side-by-side shows it).\n- GRID: `repeat(auto-fill, 72px)` with a 12px gap — the probe measured\n  12px gaps on BOTH axes in the reference (the one pixel-exact metric the\n  kit inherits directly; --tk-space-12).\n- FACES: `thumbnail` renders an <img> (cover); the initials fallback is\n  the kit's own story surface on the field fill (the spec's noted\n  initials decision). Per-tile label text is VISUALLY HIDDEN (the\n  reference tiles carry artwork only — no captions; the accessible name\n  still comes from the wrapping label).\n- LABEL PLACEMENT: no visible per-tile labels (probe: the capture's 4+2\n  grid shows artwork only); the group label above mirrors the\n  segmented-radio field pattern.\n\nPer-component custom properties (`--tk-<component>-<slot>`, CONVENTIONS §6;\nsame-slot-same-role vs `--tk-input-*`/`--tk-select-*` — the field-surface\nrole is `fill`, mirroring `--tk-input-fill`), each consumed WITH its token\ndefault:\n- `--tk-thumbnail-picker-face-fill`  initials-face fill (default surface-field)\n- `--tk-thumbnail-picker-initials`   initials text     (default text-primary)\n- `--tk-thumbnail-picker-ring`       selected ring     (default ink-300)\n- `--tk-thumbnail-picker-radius`     tile radius       (default radius-md)\n- `--tk-thumbnail-picker-tile`       tile track size   (default the 72px literal)\n\nKnown structural (non-token) values, flagged per the flag-don't-invent rule:\n- the 72px square tile (DESIGN.md `components.thumbnailPicker` literal);\n- the 2px ring width (DESIGN literal; probe-measured 3px — DESIGN wins);\n- the 1px hover hairline (the checkbox/input hairline class);\n- the sr-only text clip metrics (the standard a11y pattern, not design)."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "thumbnailPickerStyles",
+          "declaration": {
+            "name": "thumbnailPickerStyles",
+            "module": "src/thumbnail-picker/thumbnail-picker.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/thumbnail-picker/thumbnail-picker.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-thumbnail-picker — selectable tiles with ring (Story 2.6), the form's\nvisual-choice control («Выберите дизайн карты»).\n\nSTATEFUL API — the §4 contract frozen at 2.1 (Input PR), inherited verbatim\nwith a string channel (tk-segmented-radio's exact mirror): `value`\nstrict-controlled (renders exactly `value`; selecting emits `value-change`\nand applies nothing locally — the native radios keep their live flip until\nthe element's next update), `defaultValue` seeds uncontrolled (later\nchanges ignored), releasing `value` goes uncontrolled seeded from the last\ncontrolled value. «Exactly one selected ever» holds by construction: the\nnative radio group is exclusive, `updated()` re-syncs every input to the\nsingle value in force, and zero selected is the valid pre-selection state.\n\nARIA TECHNIQUE (the 2.4/2.5 pattern, per the spec's Design Notes): the\nnative shadow `<input type=\"radio\">` group stays THE interaction and\nannouncement surface — Space, label-click, form association and\nchecked/unchecked announcements all come native; the grid carries\n`role=\"radiogroup\"` named by the visible `label` via aria-labelledby. The\nlabel element is a SPAN, not a clickable `<label for>` (the 2.5 ratified\nlesson): pointing `for` at the tab-stop radio makes Chromium CONCATENATE\nthe group text onto that one option's accessible name — an asymmetric\nrename that follows the roving tab stop. Each tile is named by its own\nwrapping label (the option label text, visually hidden inside the face:\nthe reference tiles carry artwork only — no visible captions).\n\nROW-MAJOR GRID NAVIGATION (the one behavior that differs from 2.5): the\ntiles flow in a `repeat(auto-fill, <tile>)` CSS grid, so the arrows follow\nGRID semantics — Right/Left step ±1 in DOM order (row-major: Right at a\nrow's end lands on the next row's first tile, WRAPPING through the grid),\nDown/Up move to the SAME COLUMN in the next/previous row, WRAPPING through\nthe grid bottom/top and CLAMPING to the target row's last tile when the\nrow is too short (an uneven last row — the reference's 4+2; the WAI grid\nnearest-cell convention). The grid SHAPE is derived from the RENDERED DOM\nat keydown time: consecutive `.tile` elements are clustered into rows by\n`offsetTop` (tiles in one grid row share their top offset) — no `columns`\nprop, no assumption about the container width (the spec's noted judgment\ncall: explicit-free), and position-based moves (not ±columns index\narithmetic, which wraps onto the wrong column on uneven rows — found live\nby the 2.6 visual spec). A degenerate single row makes Down/Up no-ops and\nleaves the linear Left/Right pair — the matrix's «single row/column\ndegenerates to linear» row. Disabled tiles are skipped by continuing in\nthe SAME direction (column alignment is preserved); when no enabled tile\nexists in that direction's cycle, the arrow is inert. Selection follows\nfocus (radio semantics). Home/End are deliberately absent (EXPERIENCE's\nletter: arrows only — the same noted pick as 2.5). Space is never\nintercepted (native: selects, no-op when already selected); Enter selects\nexplicitly (the spec's test-letter «Space/Enter select») with form-submit\nsuppressed. Tab is never intercepted — the roving tabindex (selected tile\n0, others −1; first enabled when nothing selected) makes Tab enter the\ngrid at the selected tile and leave naturally. Every HANDLED key\n(arrows, Enter) is preventDefaulted BEFORE any disabled exit, so the UA's\nown radio-arrow roving never runs in any state (the 2.5 review fix).\n\nEMPTY STATE (EXPERIENCE State Patterns row): zero options (including\n`options=null`) renders the zero-state COPY SLOT instead of the grid — a\ndocumented default copy in a named `empty` slot, projectable by consumers;\ninert (no radios, no tab stops, no radiogroup role — an empty radiogroup\nwould fail axe's aria-required-children).\n\nTILE FACES: `thumbnail` renders an `<img>` (object-fit cover, alt=\"\"\ndecorative); a LOAD FAILURE (onerror — e.g. a 404) swaps that tile to the\ninitials face permanently (tracked per value+URL; a changed URL retries).\nNo `thumbnail` renders the INITIALS face — the first grapheme of each of\nthe label's first two words, uppercased («Чёрная» → «Ч», «Все покупки» →\n«ВП») on the field fill (the spec's noted initials-fallback decision).\n\nFORM PARTICIPATION (2.4's ratified amendment): the host declares\n`formAssociated` and mirrors the entry through ElementInternals\n(`setFormValue`) — the selected option's value under the host's reflected\n`name`, nothing when unselected. The shadow radios never submit.\n\nSSR-compat (AD-10): rendered via Lit templates only; the imperative\nnative re-sync lives in `updated()`, never at construction.",
+          "name": "TkThumbnailPicker",
+          "members": [
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "true",
+              "description": "FORM ASSOCIATION (2.4's ratified amendment): the host mirrors the\nsubmission entry through ElementInternals — the selected option's value\nunder the host's reflected `name`, no entry when unselected. Feature-\nguarded: environments without ElementInternals (happy-dom) skip the\nmirror — wiring is unit-pinned, the live FormData row is proven in\ntests/visual/thumbnail-picker.spec.ts (chromium)."
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Visible group label above the grid — the group's accessible name.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Controlled value channel — STRICT semantics (frozen at 2.1, string\nmirror of tk-segmented-radio): the element renders exactly this (the\nmatching option is the selected tile); selecting emits `value-change`\nand applies nothing locally. Property-only (`attribute: false`);\nnon-strings set via JS clamp to their string form; null/undefined after\ncontrol RELEASES to uncontrolled seeded from the last controlled value."
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Initial value for the UNCONTROLLED mode; ignored after the first update.",
+              "attribute": "default-value"
+            },
+            {
+              "kind": "field",
+              "name": "options",
+              "type": {
+                "text": "TkThumbnailPickerOption[]"
+              },
+              "default": "[]",
+              "description": "The v1 data shape — array of { value, label, disabled?, thumbnail? }; property-only (object data never reflects)."
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disabled group: 40% opacity, no pointer events, aria-disabled (kept focusable).",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Pass-through: the control's form name. REFLECTS — the ElementInternals\nform mirror reads the HOST's name content attribute for the entry's name\n(and the shadow radios carry the same value for direct-DOM consumers).",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "#uncontrolledValue",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Live uncontrolled state (the truth whenever `value` is not provided)."
+            },
+            {
+              "kind": "field",
+              "name": "#lastControlledValue",
+              "privacy": "private",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Last string ever provided through the controlled channel — the seed on release."
+            },
+            {
+              "kind": "field",
+              "name": "#isControlled",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the controlled channel has ever supplied a value."
+            },
+            {
+              "kind": "field",
+              "name": "#thumbnailFailures",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, string>()",
+              "description": "Failed thumbnail loads — option value → the URL that failed. A retry\nwith a different URL clears itself naturally (the map only matches on\nthe exact pair); the failure stickiness prevents a permanently\nre-attempting broken image (no broken-image glyph ever shows)."
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private",
+              "type": {
+                "text": "ElementInternals | null"
+              },
+              "readonly": true,
+              "default": "null",
+              "description": "ElementInternals form mirror — null where unsupported (happy-dom)."
+            },
+            {
+              "kind": "field",
+              "name": "#uniqueId",
+              "privacy": "private",
+              "type": {
+                "text": "string | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#nextId",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "static": true,
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#id",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveOptions",
+              "privacy": "private",
+              "type": {
+                "text": "TkThumbnailPickerOption[]"
+              },
+              "description": "Options with null/undefined clamped to the empty list (null-tolerant props).",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveValue",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "description": "The value in force: exactly `value` when controlled, the internal state otherwise.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#groupName",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "description": "The radio group name the shadow inputs share: the host `name` when the\nconsumer set one (direct-DOM parity), else a per-instance unique id.\nRadio grouping is computed per tree — each instance's shadow root is its\nown tree — so instances never cross-group.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#tabStopIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "description": "Where Tab enters the grid (roving tabindex): the option matching the\nvalue in force; when nothing is selected, the FIRST non-disabled option;\nnull for an empty (or all-disabled) grid — the empty state renders no\nradios at all."
+            },
+            {
+              "kind": "method",
+              "name": "#syncNativeChecked",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "target",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Sets every shadow radio's checkedness to `checked = (value === target)` — idempotent, fires nothing."
+            },
+            {
+              "kind": "method",
+              "name": "#radioInputs",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLInputElement[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#tileElements",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncFormValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Mirrors the submission entry through ElementInternals — the selected value, no entry when unselected."
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Native reset parity: form.reset() restores the default selection\n(defaultValue semantics — the initial-value contract, again). The\ncontrolled channel is consumer-owned and untouched."
+            },
+            {
+              "kind": "method",
+              "name": "#emitValueChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "`detail: { value }` with the unwrapped string; composed + bubbles (CONVENTIONS §3)."
+            },
+            {
+              "kind": "method",
+              "name": "#commit",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The selection pipeline (arrows, Enter, Space and label-click all arrive\nhere): uncontrolled commits the internal state; both modes emit.\nControlled applies nothing locally — the native group keeps its live\nflip until the element's next update reverts it to exactly `value` (the\nfrozen strict contract). `#syncNativeChecked` keeps the moved option's\nNATIVE checkedness live in every mode."
+            },
+            {
+              "kind": "method",
+              "name": "#selectIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Selects option `index`: disabled tiles never select (guarded by every path that lands here too)."
+            },
+            {
+              "kind": "method",
+              "name": "#renderedRows",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number[][]"
+                }
+              },
+              "description": "The RENDERED grid's rows, derived at keydown time (the Design Notes\ntechnique — documented): consecutive `.tile` elements are clustered into\nrows by `offsetTop` (grid row-major flow puts one row's tiles at a\nshared top offset; a new row starts wherever the offset changes). Each\nrow is the list of OPTION indices it holds — tile order IS option order.\nReal engines get exact geometry; zero-layout environments (happy-dom,\ndisplay:none) collapse every tile onto offsetTop 0 → one row → the\nsingle-row degeneration (Down/Up no-ops), which is also the honest\nreading of an unlayouted grid. Row/col POSITIONS (not ±columns index\narithmetic) drive the vertical moves: on an UNEVEN last row (the\nreference's 4+2), index arithmetic would wrap Down from the bottom row\nonto the wrong column — found live by the 2.6 visual spec."
+            },
+            {
+              "kind": "method",
+              "name": "#stepEnabledLinear",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "from",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "direction",
+                  "type": {
+                    "text": "1 | -1"
+                  }
+                }
+              ],
+              "description": "Next ENABLED option from `from` stepping ±1 (horizontal), WRAPPING\nlinearly over the options — grid-correct by DOM order, because the next\ntile in row-major flow IS the next grid cell (Right at a row's end lands\non the next row's first tile). Null when no enabled option other than\n`from` exists in the direction's cycle."
+            },
+            {
+              "kind": "method",
+              "name": "#verticalTarget",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "from",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "direction",
+                  "type": {
+                    "text": "1 | -1"
+                  }
+                }
+              ],
+              "description": "Vertical move target: the SAME COLUMN in the next/previous row, WRAPPING\nthrough the grid's rows; when the target row is TOO SHORT for the\ncolumn (an uneven last row — the reference's 4+2), the target clamps to\nthat row's LAST tile (the WAI grid nearest-cell convention). A disabled\ntarget continues to the next row in the same direction, same column.\nNull for a single-row grid (the degeneration: vertical is inert) or when\nno enabled target exists before the walk returns to `from`."
+            },
+            {
+              "kind": "method",
+              "name": "#handleKeydown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "Arrow navigation (EXPERIENCE ThumbnailPicker row): grid semantics over\nthe tile grid — Left/Up = previous, Right/Down = next, ROW-MAJOR\n(Right at a row's end wraps onto the next row's first tile; Down keeps\nthe column), WRAPPING through the grid edges, disabled tiles SKIPPED\n(stepping in the same direction), selection FOLLOWS focus. Every\nHANDLED key (arrows, Enter) is preventDefaulted BEFORE any disabled\nexit — the UA's own radio-arrow move must never run; the element owns\nthese keys in every state and every engine. Enter selects the focused\ntile (suppressing form submit from disabled groups too); Space is left\nnative (selects, no-op when already selected); Tab/Home/End pass\nthrough untouched."
+            },
+            {
+              "kind": "method",
+              "name": "#handleChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "The change pipeline (native label-click and Space both arrive here — no\ncustom key handling exists for either, the platform owns them): disabled\ngroup or disabled option reverts the native flip and emits nothing;\notherwise the full #commit pipeline runs. An already-selected radio\nfires no native change at all — the no-op comes native."
+            },
+            {
+              "kind": "method",
+              "name": "#handleThumbnailError",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "url",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Thumbnail load failure (the matrix's Image-fail row): the tile swaps to\nthe initials face — no broken-image glyph. Tracked per value+URL so a\nfixed URL (options updated with a new `thumbnail`) retries naturally."
+            },
+            {
+              "kind": "method",
+              "name": "#initialsOf",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "label",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Initials for the fallback face: the first grapheme of each of the\nlabel's first two words, uppercased («Чёрная» → «Ч», «Все покупки» →\n«ВП»); Array.from keeps surrogate pairs (and Cyrillic) intact. An empty\nlabel renders an empty face — the shape requires a label, so this is a\nnull-guard, not a designed state."
+            }
+          ],
+          "events": [
+            {
+              "name": "value-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "`{ value: string }` with the unwrapped newly selected option value; composed, bubbles."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Visible group label above the grid — the group's accessible name.",
+              "name": "label",
+              "fieldName": "label"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Initial value for the UNCONTROLLED mode; ignored after the first update.",
+              "name": "default-value",
+              "fieldName": "defaultValue"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disabled group: 40% opacity, no pointer events, aria-disabled (kept focusable).",
+              "name": "disabled",
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Pass-through: the control's form name. REFLECTS — the ElementInternals\nform mirror reads the HOST's name content attribute for the entry's name\n(and the shadow radios carry the same value for direct-DOM consumers).",
+              "name": "name",
+              "fieldName": "name"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-thumbnail-picker",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkThumbnailPicker",
+          "declaration": {
+            "name": "TkThumbnailPicker",
+            "module": "src/thumbnail-picker/thumbnail-picker.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-thumbnail-picker",
+          "declaration": {
+            "name": "TkThumbnailPicker",
+            "module": "src/thumbnail-picker/thumbnail-picker.ts"
           }
         }
       ]

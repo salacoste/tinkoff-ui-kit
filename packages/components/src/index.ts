@@ -12,6 +12,7 @@ export * from './checkbox/index.js';
 export * from './input/index.js';
 export * from './segmented-radio/index.js';
 export * from './select/index.js';
+export * from './thumbnail-picker/index.js';
 // Overlays — the shared controller module (Story 2.2), NOT an element: no
 // wrapper is generated for it (CONVENTIONS §9 binds floating components to
 // consume these capabilities; AD-12). Selective exports by design: only the

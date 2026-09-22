@@ -50,5 +50,11 @@ export const EVENT_MAP: Readonly<Record<string, Readonly<TkKitElementEventMap>>>
   'tk-segmented-radio': {
     onValueChange: 'value-change',
   },
+  // Story 2.6 — the string state channel (§4 contract on `value`, the same
+  // mapping as tk-input/tk-select/tk-segmented-radio; demanded mechanically
+  // by tests/event-map-completeness.test.ts).
+  'tk-thumbnail-picker': {
+    onValueChange: 'value-change',
+  },
   // 'tk-button': none at v1 (native click serves activation).
 });
