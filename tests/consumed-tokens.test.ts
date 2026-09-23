@@ -183,9 +183,12 @@ describe('consumed --tk-* tokens exist in the token sheet (spec 1.7 review)', ()
     // class — mutation-proven in review to escape under the blanket rule).
     expect(fallbackViolation('--tk-z-modaal')).not.toBeNull();
     expect(fallbackViolation('--tk-space-8px')).not.toBeNull();
-    // Unknown component prefix → flagged (modal is not a component dir yet).
+    // Unknown component prefix → flagged.
     expect(fallbackViolation('--tk-inputtypo-x')).not.toBeNull();
-    expect(fallbackViolation('--tk-modal-fill'), 'not a real component YET (Epic 4)').not.toBeNull();
+    // A REAL component since Story 4.1 (src/modal/ exists) — the exemption
+    // covers it now; the pre-4.1 assertion flipped with the story, exactly
+    // as its own message anticipated.
+    expect(fallbackViolation('--tk-modal-fill')).toBeNull();
   });
 
   it('detector passes declared tokens, whitespace-tolerant forms, and comment mentions (negative self-check)', () => {

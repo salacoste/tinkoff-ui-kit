@@ -21,3 +21,6 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-1-5-storybook-skeleton.md`
   summary: Add a monospace font slot (--tk-font-mono) to the token system when the first code-rendering surface needs it
   evidence: docs code samples currently render in --tk-font-body because no mono slot exists (1.5 review); token addition is a DESIGN.md governance change — fold into a later story that owns a code surface (docs completion 5.5 or a code component)
+- source_spec: `_bmad-output/implementation-artifacts/spec-4-1-4-3-overlays.md`
+  summary: Verify the iOS momentum-scroll behavior of the modal scroll-lock on a REAL device
+  evidence: Story 4.1 shipped the mitigation the 2.2 module named — `overscroll-behavior: contain` on the modal panel's scrollable region (modal.css.ts), on top of the controller's refcounted `overflow: hidden` lock (the documented 2.2 accepted limitation: desktop engines and non-momentum touch are covered; iOS Safari momentum scrolling is not stopped by `overflow: hidden`). The real-device check (iPhone Safari: body scroll frozen behind the dialog, panel scrolls internally, no rubber-band bleed-through to the page) stays maintainer-side — no iOS device is reachable from the autonomous run; desktop-Chromium verification of the lock itself is unit- and spec-pinned (modal.test.ts).

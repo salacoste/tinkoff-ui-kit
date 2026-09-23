@@ -12,9 +12,10 @@ fidelity deltas are already recorded in each component's own verify NOTES
 **SR method note:** observations below come from a LIVE keyboard walk of the
 built story with axe-tree dumps (role/name/state via Playwright ariaSnapshot)
 at each step. Full VO/NVDA narration is a 5.x human task — this record is the
-tree-level evidence for it. The Toast leg of UJ-3 is EXPLICITLY DEFERRED to
-Story 4.3 (re-walked with the Toast story there); the composed story contains
-no Toast and the valid-submit step asserts none appears.
+tree-level evidence for it. The Toast leg of UJ-3 was deferred to Story 4.3
+and CLOSED THERE (2026-09-23): the composed form now raises the submit-success
+Toast after the valid submit, and the walkthrough driver carries the Toast leg
+(see the Flow-6 addendum below).
 
 ## Files
 
@@ -135,13 +136,11 @@ Empty ФИО + Enter on «Продолжить»:
 
 Fill ФИО → 67, телефон → 83, consent (click) → 100; the ProgressBar's polite
 region narrates settled values («Заполнено 33%» observed at entry,
-«Заполнено 100%» at the end — announce is ON in this composition, the one
-sanctioned aria-live user). Valid submit: `aria-busy=true` + spinner with the
-button WIDTH FROZEN (169.7px → 169.7px measured), resets after 1200ms,
-ProgressBar stays 100% (the formula — all six fields complete — not a submit
-side effect). NO Toast/status surface appears (light-DOM census 0; the only
-aria-live region on the page is the ProgressBar's own — the 4.3 deferral
-holds).
+«Заполнено 100%» at the end — announce is ON in this composition). Valid
+submit: `aria-busy=true` + spinner with the button WIDTH FROZEN (169.7px →
+169.7px measured), resets after 1200ms, ProgressBar stays 100% (the formula —
+all six fields complete — not a submit side effect), THEN the submit-success
+Toast appears (the 4.3 leg — see the Flow-6 addendum).
 
 ### Initial axe tree (step 0 dump, light theme)
 
@@ -252,3 +251,29 @@ semantics rather than gaps: the error-layering interplay in Flow-3 step 3
 narration depending on the opt-in `announce` prop (off by default — the
 composition opts in; consumers who forget it get silent progress, per the
 frozen optional-live rule).
+
+
+## Flow-6 addendum — the Toast leg, CLOSED at Story 4.3 (2026-09-23)
+
+The composed form now raises the confirmation toast on the VALID submit path
+(after the 1200ms loading reset), via the imperative `showToast` helper —
+the §9-sanctioned form, built on the same `tk-toast` element as the
+declarative one. The committed driver's Step 6 grew the leg; re-walked live
+(**31/31 checks pass**, up from 23):
+
+- Appears in the shared stack (`#tk-toast-stack`, z via `var(--tk-z-toast)`)
+  with `aria-live="polite"` and the message «Заявка отправлена. Менеджер
+  свяжется с вами» — UJ-3's «announced politely».
+- Focus NOT stolen: the deep focus chain stays on the submit `tk-button`
+  through appearance AND collapse; no tabindex anywhere on the toast.
+- 5s default, PAUSABLE on hover: hovered ~1.5s in, held ~7s total (past the
+  nominal window) — still visible; after the pointer leaves, the ~3.5s
+  remainder + exit collapses it, and the stacking host tears down with the
+  last toast (the queue's MutationObserver lifecycle, observed live).
+- Esc on the empty-ФИО submit path: no toast exists to dismiss (the toast
+  only rides the valid path) — the failure/recovery leg from UJ-3 is the
+  error message + this confirmation, both without focus theft.
+
+Story-copy note: the form story's note/checklist rows were updated in the
+same pass (they described the 4.3 deferral); the application-form visual
+baselines were re-taken for the new copy.

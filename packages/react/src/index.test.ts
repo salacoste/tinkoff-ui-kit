@@ -5,7 +5,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import * as litReact from '@lit/react';
 import { afterAll, describe, expect, it, vi } from 'vitest';
 
-import { ArticleCard, Badge, Button, Checkbox, EVENT_MAP, FeatureCard, Footer, Input, Link, Navbar, ProgressBar, PromoCard, SegmentedRadio, Select, ServiceCard, Tabs, ThumbnailPicker } from './index.js';
+import { ArticleCard, Badge, Button, Checkbox, EVENT_MAP, FeatureCard, Footer, Input, Link, Modal, Navbar, ProgressBar, PromoCard, SegmentedRadio, Select, ServiceCard, Tabs, ThumbnailPicker, Toast, Tooltip } from './index.js';
 
 /**
  * pillkit-react generated surface. The wrapper imports `pillkit-components`
@@ -1065,5 +1065,102 @@ describe('pillkit-react', () => {
       React.createElement(ArticleCard, { skeleton: true }),
     );
     expect(container2.querySelector('tk-article-card')?.hasAttribute('skeleton')).toBe(true);
+  });
+
+  // --- Stories 4.1–4.3: the overlay trio (modal/tooltip open-change; toast none) --
+
+  it("carries the 4.1/4.2 registry entries: tk-modal/tk-tooltip open-change", () => {
+    expect(EVENT_MAP['tk-modal']).toEqual({ onOpenChange: 'open-change' });
+    expect(EVENT_MAP['tk-tooltip']).toEqual({ onOpenChange: 'open-change' });
+  });
+
+  it('ships NO registry entry for tk-toast (fire-and-forget, nothing dispatches)', () => {
+    // Spec 4.3 ruling: no open channel, no kit events — the slotted action
+    // serves its own native click (the tk-button no-entry precedent);
+    // showToast is built on the SAME element, never a parallel event surface.
+    expect(EVENT_MAP['tk-toast']).toBeUndefined();
+  });
+
+  it('renders <Modal> as tk-modal with heading through the wrapper (smoke)', async () => {
+    const onOpenChange = vi.fn();
+    const container = await renderToContainer(
+      React.createElement(
+        Modal,
+        { heading: 'Подтверждение', onOpenChange },
+        React.createElement('p', null, 'Тело'),
+        React.createElement('button', { slot: 'actions' }, 'ОК'),
+      ),
+    );
+    const el = container.querySelector('tk-modal') as (Element & {
+      heading?: string;
+      updateComplete?: Promise<unknown>;
+    }) | null;
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    expect(el?.heading).toBe('Подтверждение');
+    await (el as { updateComplete: Promise<unknown> }).updateComplete;
+    // open-change unwraps to the bare boolean (AD-1).
+    el?.dispatchEvent(
+      new CustomEvent('open-change', { detail: { value: true }, composed: true, bubbles: true }),
+    );
+    expect(onOpenChange).toHaveBeenCalledTimes(1);
+    expect(onOpenChange.mock.calls[0]?.[0]).toBe(true);
+  });
+
+  it('renders <Tooltip> as tk-tooltip with props and an unwrapped onOpenChange (smoke)', async () => {
+    const onOpenChange = vi.fn();
+    const container = await renderToContainer(
+      React.createElement(
+        Tooltip,
+        { content: 'Подсказка', placement: 'bottom', onOpenChange },
+        React.createElement('button', null, 'Триггер'),
+      ),
+    );
+    const el = container.querySelector('tk-tooltip') as (Element & {
+      content?: string;
+      placement?: string;
+    }) | null;
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    expect(el?.content).toBe('Подсказка');
+    expect(el?.getAttribute('placement')).toBe('bottom'); // enum reflects
+    // The trigger wires aria-describedby to the eager surface.
+    const describedBy = el?.querySelector('button')?.getAttribute('aria-describedby');
+    expect(describedBy).toBeTruthy();
+    expect(el?.shadowRoot?.getElementById(describedBy ?? '')?.getAttribute('role')).toBe('tooltip');
+    el?.dispatchEvent(
+      new CustomEvent('open-change', { detail: { value: false }, composed: true, bubbles: true }),
+    );
+    expect(onOpenChange).toHaveBeenCalledTimes(1);
+    expect(onOpenChange.mock.calls[0]?.[0]).toBe(false);
+  });
+
+  it('renders <Toast> as tk-toast; the element self-enqueues from the wrapper too (smoke)', async () => {
+    const container = await renderToContainer(
+      React.createElement(
+        Toast,
+        { variant: 'destructive', duration: 0 },
+        'Платёж не прошёл',
+      ),
+    );
+    // The toast SELF-ENQUEUES on connect: it is no longer inside the React
+    // container — it relocated into the shared bottom-right stack (query the
+    // document, not the container). React consumers wanting fire-and-forget
+    // notifications should prefer the imperative showToast helper (the §9
+    // ruling) precisely because JSX-owned toasts relocate out of the tree —
+    // noted in verify/toast/NOTES.md.
+    const el = document.querySelector('#tk-toast-stack tk-toast') as (Element & {
+      variant?: string;
+      updateComplete?: Promise<unknown>;
+      dismiss?: () => void;
+    }) | null;
+    expect(el, 'the wrapper renders the custom element (relocated to the stack)').not.toBeNull();
+    expect(el?.variant).toBe('destructive');
+    await (el as { updateComplete: Promise<unknown> }).updateComplete;
+    expect(el?.getAttribute('role')).toBe('alert'); // destructive register
+    expect(el?.shadowRoot?.querySelector('[tabindex]'), 'never focusable').toBeNull();
+    // Re-home into the container before teardown: React's unmount removes
+    // the nodes it TRACKS as container children — a relocated node would
+    // throw removeChild during the suite's root.unmount() cleanup.
+    if (el) container.appendChild(el);
+    (el as { dismiss: () => void }).dismiss?.();
   });
 });

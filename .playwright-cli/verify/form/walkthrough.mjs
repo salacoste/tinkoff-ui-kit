@@ -356,9 +356,13 @@ await page.waitForTimeout(50);
 check('progress 83→100 after согласие', (await progressBarValue(page)) === 100);
 check('final narration «Заполнено 100%»', (await announcement(page)) === 'Заполнено 100%');
 
-// --- Step 6 — valid submit: loading, width frozen, reset; NO Toast -------------
-console.log('\n=== STEP 6 — valid submit ===');
+// --- Step 6 — valid submit + THE TOAST LEG (story 4.3 closed UJ-3) --------------
+// Submit → loading (width frozen) → reset → the submit-success Toast appears
+// politely (aria-live), focus NOT stolen, lives the 5s default, PAUSABLE on
+// hover (held past the window while hovered, collapses after resume).
+console.log('\n=== STEP 6 — valid submit + Toast ===');
 await submitButton.focus();
+const focusBeforeToast = await activeStop(page);
 const buttonBox = await submitButton.boundingBox();
 await page.keyboard.press('Enter');
 await page.waitForTimeout(80);
@@ -378,27 +382,49 @@ check(
   Math.abs((loadingState.box?.width ?? 0) - (buttonBox?.width ?? 0)) < 0.5,
   `${buttonBox?.width} → ${loadingState.box?.width}`,
 );
-await page.waitForTimeout(1400);
-const resetState = await page.evaluate(() => {
-  const host = document.querySelector('.tkf-panel tk-button');
-  const progress = document.querySelector('.tkf-panel tk-progress-bar');
+await page.waitForTimeout(1450); // SUBMIT_RESET_MS (1200) + settle
+const toastState = await page.evaluate(() => {
+  const el = document.querySelector('#tk-toast-stack tk-toast');
   return {
-    busy: host?.shadowRoot?.querySelector('button')?.getAttribute('aria-busy'),
-    lightToasts: document.querySelectorAll('tk-toast, [role="status"]').length,
-    lightLive: document.querySelectorAll('[aria-live]').length,
-    progressLive: progress?.shadowRoot?.querySelectorAll('[aria-live]').length ?? 0,
+    inStack: el !== null,
+    live: el?.getAttribute('aria-live') ?? null,
+    role: el?.getAttribute('role'),
+    text: el?.textContent ?? '',
+    tabindex: el?.hasAttribute('tabindex') ?? false,
+    hostZ: document.getElementById('tk-toast-stack')?.style?.zIndex ?? null,
   };
 });
-check('button resets (aria-busy gone)', resetState.busy !== 'true');
 check(
-  'NO Toast / status surface appears (deferred to 4.3)',
-  resetState.lightToasts === 0 && resetState.lightLive === 0,
-  JSON.stringify(resetState),
+  'submit toast appeared in the shared stack (aria-live polite, z via --tk-z-toast)',
+  toastState.inStack && toastState.live === 'polite' && toastState.hostZ === 'var(--tk-z-toast)',
+  JSON.stringify(toastState),
 );
+check('toast message announced («Заявка отправлена»)', toastState.text.includes('Заявка отправлена'), toastState.text.trim());
+check(
+  'focus NOT stolen by the toast (still on the submit button)',
+  (await activeStop(page)) === focusBeforeToast && focusBeforeToast.startsWith('tk-button'),
+  `${focusBeforeToast} → ${await activeStop(page)}`,
+);
+check('toast never takes focus (no tabindex anywhere)', toastState.tabindex === false);
 check('ProgressBar stays 100% after the demo reset', (await progressBarValue(page)) === 100);
-console.log(
-  `aria-live census: light DOM=${resetState.lightLive}, inside ProgressBar (announce)=${resetState.progressLive}`,
-);
+
+// Pausable on hover: hover ~1.5s in, hold PAST the 5s window (paused), leave,
+// then the ~3.5s remainder + exit collapses it.
+const toastLocator = page.locator('#tk-toast-stack tk-toast').first();
+await page.waitForTimeout(1500); // ~1.5s of the window elapsed
+await toastLocator.hover();
+await page.waitForTimeout(5500); // held ~7s total — past the nominal 5s
+const afterHold = await page.evaluate(() => {
+  const el = document.querySelector('#tk-toast-stack tk-toast');
+  return { connected: el?.isConnected ?? false, exiting: el?.hasAttribute('data-exiting') ?? false };
+});
+check('hover PAUSED the 5s timer (toast survives past its window)', afterHold.connected && !afterHold.exiting, JSON.stringify(afterHold));
+await page.mouse.move(4, 4); // pointer leaves the toast
+await page.waitForTimeout(4300); // ~3.5s remainder + exit slack
+const afterResume = await page.evaluate(() => document.querySelector('#tk-toast-stack tk-toast')?.isConnected ?? false);
+check('toast collapsed after the resumed remainder', !afterResume);
+const stackGone = await page.evaluate(() => document.getElementById('tk-toast-stack') === null);
+check('the stacking host tears down with the last toast (queue lifecycle)', stackGone);
 
 // --- Step 7 — final tree --------------------------------------------------------
 console.log('\n=== STEP 7 — final tree (filled form) ===');

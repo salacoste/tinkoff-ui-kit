@@ -11,6 +11,8 @@ import type { TkSegmentedRadioOption } from '../segmented-radio/segmented-radio.
 import '../thumbnail-picker/thumbnail-picker.js';
 import type { TkThumbnailPickerOption } from '../thumbnail-picker/thumbnail-picker.js';
 import '../progress-bar/progress-bar.js';
+import '../toast/toast.js';
+import { showToast } from '../toast/show.js';
 
 /**
  * The composed application form (spec 2.8) — Epic 2's stated deliverable:
@@ -106,6 +108,13 @@ const FIO_REQUIRED_MESSAGE = 'Укажите фамилию, имя и отче�
  */
 const SUBMIT_RESET_MS = 1200;
 
+/**
+ * The submit-success toast window — 5s, the component default (UJ-3: «remains
+ * 5s, pausable»), spelled out as a constant so the walkthrough driver can
+ * mirror the exact timing.
+ */
+const TK_FORM_TOAST_DURATION_MS = 5000;
+
 /** The demo's whole state (the spec: a tiny state object; no framework). */
 interface FormState {
   fio: string;
@@ -191,12 +200,15 @@ export const ApplicationForm: Story = {
     };
 
     /**
-     * Submit (the spec's I/O matrix): empty required ФИО → the story sets the
-     * Input `error` prop (aria-describedby, focus NOT stolen, ProgressBar
-     * untouched); valid ФИО → the button goes loading briefly (spinner, width
-     * frozen), then resets. ProgressBar reads 100% whenever all six fields
-     * are complete — the formula, not a submit side effect. NO Toast: the
-     * confirmation toast is deferred to story 4.3 (see the note copy below).
+     * Submit (the spec's I/O matrix; the 4.3 Toast leg landed): empty
+     * required ФИО → the story sets the Input `error` prop (aria-describedby,
+     * focus NOT stolen, ProgressBar untouched); valid ФИО → the button goes
+     * loading briefly (spinner, width frozen), then resets AND raises the
+     * submit-success Toast (aria-live polite, never steals focus, default
+     * 5s pausable on hover — UJ-3's failure/recovery leg closed). ProgressBar
+     * reads 100% whenever all six fields are complete — the formula, not a
+     * submit side effect. The toast uses the imperative showToast helper —
+     * built on the same tk-toast element (the §9 ruling).
      */
     const handleSubmit = (): void => {
       if (state.submitting) return;
@@ -205,7 +217,13 @@ export const ApplicationForm: Story = {
         return;
       }
       update({ submitting: true });
-      window.setTimeout(() => update({ submitting: false }), SUBMIT_RESET_MS);
+      window.setTimeout(() => {
+        update({ submitting: false });
+        showToast({
+          message: 'Заявка отправлена. Менеджер свяжется с вами',
+          duration: TK_FORM_TOAST_DURATION_MS,
+        });
+      }, SUBMIT_RESET_MS);
     };
 
     const view = () => html`
@@ -224,9 +242,9 @@ export const ApplicationForm: Story = {
           «заполненных полей / всего» (всего 6; «Да» и «Чёрная» предвыбраны
           как в эталоне — старт 33%). Отправка с пустым ФИО поднимает ошибку
           через <code>error</code>-проп — aria-describedby, фокус не крадётся;
-          валидная отправка крутит спиннер с замороженной шириной и
-          сбрасывается. Тост подтверждения отложен до 4.3 — после успешной
-          отправки форма молча готова к следующему шагу.
+          валидная отправка крутит спиннер с замороженной шириной,
+          сбрасывается и поднимает тост подтверждения (aria-live polite,
+          фокус не крадётся, 5с с паузой при наведении — ветка UJ-3 из 4.3).
         </p>
         <div class="tkf-panel">
           <tk-progress-bar
@@ -311,8 +329,9 @@ export const ApplicationForm: Story = {
             экземпляры элементов и фокус переживают каждый обновляющий
             ререндер; двигаются только производные привязки (value
             ProgressBar, error у ФИО, loading кнопки). Подтверждающий тост
-            (история 4.3) сюда сознательно не включён — ветка UJ-3 с тостом
-            будет пройдена заново вместе с его стори в эпике 4.
+            (история 4.3, ветка UJ-3) поднимается императивным
+            <code>showToast</code> — тем же элементом tk-toast, что и
+            декларативная форма; фокус остаётся на кнопке отправки.
           </p>
           <h2>Чек-лист UJ-3: только с клавиатуры</h2>
           <table>
@@ -359,7 +378,9 @@ export const ApplicationForm: Story = {
                 <td>Валидная отправка</td>
                 <td>
                   Кнопка крутит спиннер (ширина заморожена) и сбрасывается;
-                  ProgressBar на 100% — все шесть полей заполнены.
+                  ProgressBar на 100% — все шесть полей заполнены; тост
+                  подтверждения объявляется вежливо (aria-live polite), фокус
+                  НЕ крадётся, живёт 5с, пауза при наведении.
                 </td>
               </tr>
             </tbody>

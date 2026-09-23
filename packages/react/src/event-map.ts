@@ -62,6 +62,21 @@ export const EVENT_MAP: Readonly<Record<string, Readonly<TkKitElementEventMap>>>
   'tk-tabs': {
     onValueChange: 'value-change',
   },
+  // Stories 4.1/4.2 — the frozen §9 overlay-surface state event both modal
+  // and tooltip carry (the tk-select mapping; demanded mechanically by
+  // tests/event-map-completeness.test.ts).
+  'tk-modal': {
+    onOpenChange: 'open-change',
+  },
+  'tk-tooltip': {
+    onOpenChange: 'open-change',
+  },
+  // 'tk-toast': none at v4.3 — FIRE-AND-FORGET (spec 4.3 ruling): no `open`
+  // channel and no kit events at all; a toast appears already visible,
+  // never takes focus, and the slotted action serves its own native click
+  // (the tk-button/cards no-entry precedent). The imperative showToast is
+  // built on the SAME element, never a parallel event surface — the
+  // completeness guard's no-entry case.
   // 'tk-button': none at v1 (native click serves activation).
   // 'tk-navbar': none at v3.4 — NAVIGATION, NOT A FORM CONTROL (spec 3.4
   // ruling): `activeValue` is a prop-only input with NO change-event

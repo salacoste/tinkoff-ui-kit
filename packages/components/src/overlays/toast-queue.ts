@@ -137,6 +137,14 @@ function ensureHost(): HTMLDivElement {
   host.style.gap = 'var(--tk-space-8)';
   host.style.padding = 'var(--tk-space-16)';
   host.style.pointerEvents = 'none';
+  // POPOVER UA RESET (found live at 4.3's visual pass): UA [popover] centers
+  // the box (inset: 0 + margin: auto + fit-content size), which fights the
+  // bottom/right corner hug — pin the leading edges open and zero the auto
+  // margins (the select panel / navbar drawer :host-reset precedent, inline
+  // form because this host has no shadow root of its own).
+  host.style.top = 'auto';
+  host.style.left = 'auto';
+  host.style.margin = '0';
   document.body.appendChild(host);
   hostMount = mountOverlay(host, 'toast');
   // mountOverlay opts mounted elements into interactivity; the stacking host

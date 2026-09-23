@@ -1604,6 +1604,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/modal/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/navbar/index.js"
           }
         },
@@ -1661,6 +1669,22 @@
           "declaration": {
             "name": "*",
             "module": "src/thumbnail-picker/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/toast/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/tooltip/index.js"
           }
         },
         {
@@ -2494,6 +2518,389 @@
           "declaration": {
             "name": "TkLink",
             "module": "src/link/link.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/modal/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/modal/modal.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/modal/modal.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "modalStyles",
+          "default": "css` :host { display: contents; } `",
+          "description": "The host sheet — the host renders nothing of its own."
+        },
+        {
+          "kind": "variable",
+          "name": "modalSurfaceStyles",
+          "default": "css` :host { box-sizing: border-box; /* Viewport-filling centring frame. The controller owns stacking (z via its layer token); position fixed keeps the frame viewport-anchored on the popover path, and is also what the fallback container expects. width/height auto are part of the POPOVER UA RESET (found live at the 4.3 visual pass): UA [popover] sizes the box fit-content + auto margins, which would shrink the scrim to the panel — author rules win regardless of specificity. */ position: fixed; inset: 0; width: auto; height: auto; display: flex; align-items: center; justify-content: center; margin: 0; border: none; padding: 0; background: transparent; font-family: var(--tk-font-body); } /* :host display:flex beats the UA [hidden] rule — enforce closedness. */ :host([hidden]) { display: none; } /* The scrim: ink alpha (see the file header). A press on the SCRIM itself dismisses (select.ts wires the handler); the panel sits above it. */ .scrim { position: absolute; inset: 0; background: var(--tk-modal-scrim, color-mix(in srgb, var(--tk-color-ink-400) 52%, transparent)); animation: tk-modal-scrim-in var(--tk-motion-duration-moderate) var(--tk-motion-curve-productive-entrance); } /* The panel (role=dialog lives here). max-width 480 = 10 × the 48 spacing step; width clamps to the viewport minus a 16px step each side; the height cap + overflow make long bodies scroll INSIDE the panel, and overscroll-behavior contain is the shipped iOS momentum-scroll mitigation (the deferred-work entry names the real-device check). */ .panel { position: relative; box-sizing: border-box; display: flex; flex-direction: column; gap: var(--tk-space-16); width: calc(100% - var(--tk-space-32)); max-width: var(--tk-modal-width, calc(var(--tk-space-48) * 10)); max-height: calc(100dvh - var(--tk-space-32)); margin: 0; /* border-default hairline: theme-correct separation in BOTH themes — light gets a whisper-thin edge on white, dark gets the layer's own #FFFFFF24 edge, where the reserved tonal-step-3 semantic does not exist and the scrim alone cannot separate #1A1A1A from #1A1A1A (found live at the 4.3 vision pass). */ border: 1px solid var(--tk-color-border-default); padding: var(--tk-space-32); overflow-y: auto; overscroll-behavior: contain; background: var(--tk-modal-fill, var(--tk-color-surface-base)); color: var(--tk-color-text-primary); border-radius: var(--tk-modal-radius, var(--tk-radius-lg)); box-shadow: var(--tk-shadow-modal); animation: tk-modal-panel-in var(--tk-motion-duration-moderate) var(--tk-motion-curve-productive-entrance); } /* The panel is a programmatic-focus CONTAINER (tabindex=-1, the zero-focusables fallback): the unified ring belongs to the child controls — script focus on the container paints no ring of its own (native dialog behavior; the select trigger's dedup precedent, recorded in NOTES.md/modal). */ .panel:focus-visible { outline: none; } .panel__heading { margin: 0; font-family: var(--tk-font-heading); font-size: var(--tk-text-heading-6-size); font-weight: var(--tk-text-heading-6-weight); line-height: var(--tk-text-heading-6-leading); color: var(--tk-color-text-primary); } .panel__body { min-width: 0; } .panel__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--tk-space-12); margin-inline-start: auto; } /* Exit (data-closing is set by modal.ts before the awaited teardown): scrim fades out, panel fades + rises — 150ms productive-exit, then the mount releases. */ :host([data-closing]) .scrim { animation: tk-modal-scrim-out var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-exit); } :host([data-closing]) .panel { animation: tk-modal-panel-out var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-exit); } @keyframes tk-modal-scrim-in { from { opacity: 0; } } @keyframes tk-modal-panel-in { from { opacity: 0; transform: translateY(var(--tk-space-16)); } } @keyframes tk-modal-scrim-out { to { opacity: 0; } } @keyframes tk-modal-panel-out { to { opacity: 0; transform: translateY(calc(-1 * var(--tk-space-8))); } } /* Reduced motion: the token layer already collapsed the durations; the belt (navbar drawer precedent) kills any final-keyframe flash. The component's JS close path skips the animation wait under the same media query, so no dead timeout is ever awaited. */ @media (prefers-reduced-motion: reduce) { .scrim, .panel { animation: none; } } `",
+          "description": "The SURFACE sheet (scrim + panel), adopted into the surface's shadow root."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "modalStyles",
+          "declaration": {
+            "name": "modalStyles",
+            "module": "src/modal/modal.css.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "modalSurfaceStyles",
+          "declaration": {
+            "name": "modalSurfaceStyles",
+            "module": "src/modal/modal.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/modal/modal.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "TK_MODAL_EXIT_MAX_MS",
+          "type": {
+            "text": "number"
+          },
+          "default": "350",
+          "description": "Upper bound on the awaited exit animation before the mount releases — a JS\ntiming constant (the token layer cannot feed JS waits; the select\ntypeahead's TK_SELECT_TYPEAHEAD_RESET_MS precedent): 150ms exit + frame\nslack. Animation end OR this bound, whichever first; skipped entirely under\nprefers-reduced-motion (where the sheet's animations are already none)."
+        },
+        {
+          "kind": "class",
+          "description": "tk-modal — the derived overlay dialog (Story 4.1), every mechanic consumed\nfrom the 2.2 controller (zero bespoke mount/lock/trap code here — pinned\nstructurally by the unit suite).\n\nOPEN CHANNEL — the tk-select mold verbatim (the frozen §9 overlay-surface\nstate): `open` attribute/property (reflects), `open-change`\n`detail: { value: boolean }` composed/bubbles, POST-mount on open and\nPOST-release on close, flip-only (Lit's first-update change-map never\nproduces a spurious open-change — the 2.3 guard). No default-open pair:\nthe mold's open channel has none, and a declarative `<tk-modal open>` IS\nthe initial-open form (the select ruling).\n\nSURFACE (the 2.3 ratified panel-in-shadow pattern): the scrim + panel are\nONE generated element (`div.modal`) in tk-modal's shadow tree carrying its\nOWN shadow root — mounted by `mountOverlay(surface, 'modal')` (popover path\npromotes in place; the fallback container reparents it across the tree\nboundary, a no-axe-gate window per the select ruling). The surface's light\nchildren are two FORWARDING slots (default + actions) projecting tk-modal's\nlight DOM through the surface's own slots: on the popover path the chain\nstays in one document; the fallback path moves surface + forwarding slots\ntogether, which detaches them from tk-modal's shadow tree — slotted\nconsumer content stops projecting on that legacy path (documented\nlimitation, engines without the popover API; happy-dom unit tests assert\nstructure only, the molds' rule).\n\nMECHANICS (all controller): scroll-lock refcounted (`lockBodyScroll()`),\nfocus `trapFocus(host)` — the HOST is the trap container so SLOTTED\nconsumer focusables (actions buttons) join the cycle, which the trap's\nselector-level collection could never see from inside the surface's tree;\nLIFO nesting gives the one supported level (inner modal traps within its\nown panel; inner close restores INTO the outer). Initial focus = first\nfocusable (light DOM order = body before actions), else the panel itself\n(tabindex=-1). No inert-style background treatment at v1 (the trap module\nleaves that to the consumer; the trap + scrim + scroll-lock carry the\ndialog) — recorded in NOTES.md/modal.\n\nDISMISS: Esc (document-capture keydown answered ONLY by the newest open\nmodal — and skipped entirely while any LIVE tk-toast is connected: toasts\npaint above modals and eat the Esc first, the z-scale's own ordering\nlogic; a toast mid-exit no longer counts, or the press would die with it)\nand a\nclick/press on the SCRIM itself (panel clicks never match). A dismiss never\nfires consumer actions — destructive confirm is a STORY pattern (explicit\nbutton in the actions slot; no `destructive` prop).\n\nMOTION: entrance scrim fade + panel opacity/translateY on the 300ms\nmoderate productive-entrance token; exit 150ms fast productive-exit, then\nthe mount releases — the close path awaits animation end with the\nTK_MODAL_EXIT_MAX_MS bound and RE-VALIDATES its generation + connectivity\nafter the await (the 3.4 navbar lesson: rapid double-toggle and\ndisconnect-during-open must leak no mount/lock). Reduced motion: the token\nlayer collapses durations and the sheet's belt kills the keyframes; the JS\nwait is skipped under the same media query.\n\niOS momentum scroll: the panel's `overscroll-behavior: contain` is the\nshipped mitigation; the real-device check is maintainer-side (the\ndeferred-work.md entry this story lands).\n\nSSR-compat (AD-10): no imperative DOM at construction; the surface is\ngenerated on first open/heading write, client-side.",
+          "name": "TkModal",
+          "slots": [
+            {
+              "description": "Body content of the dialog.",
+              "name": ""
+            },
+            {
+              "description": "Buttons row (right-aligned); destructive confirm is an explicit button here — a dismiss never fires it.",
+              "name": "actions"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Heading text — renders the panel's heading element and names the dialog.",
+              "attribute": "heading"
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Open state — the frozen §9 overlay-surface property (reflects; `open-change` fires on every flip).",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "#surface",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLDivElement | null"
+              },
+              "default": "null",
+              "description": "The generated surface (scrim + panel), hidden while closed."
+            },
+            {
+              "kind": "field",
+              "name": "#overlayHandle",
+              "privacy": "private",
+              "type": {
+                "text": "TkOverlayHandle | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#lockHandle",
+              "privacy": "private",
+              "type": {
+                "text": "TkScrollLockHandle | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#trapHandle",
+              "privacy": "private",
+              "type": {
+                "text": "TkFocusTrapHandle | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#transition",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Transition generation — bumped on every real flip; stale coroutines abort on it."
+            },
+            {
+              "kind": "field",
+              "name": "#uniqueId",
+              "privacy": "private",
+              "type": {
+                "text": "string | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#nextId",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "static": true,
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#id",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#onDocumentKeydown",
+              "privacy": "private",
+              "readonly": true,
+              "description": "Document-capture Esc — the modal's dismiss listener while open. Only the\nNEWEST open modal answers (openModals is LIFO by open order); while any\nLIVE tk-toast is connected the toast eats the Esc (toast layer 600 >\nmodal 500; the toast's own document listener dismisses it). A toast\nmid-exit (data-exiting) is already leaving and its handler ignores it —\ndeferring to it would make this press dead (the fix-round dead-press\nfinding, mirrored from the toast handler's own filter)."
+            },
+            {
+              "kind": "field",
+              "name": "#handleScrimClick",
+              "privacy": "private",
+              "readonly": true,
+              "description": "A press on the scrim itself dismisses; panel clicks never match (retargeted)."
+            },
+            {
+              "kind": "method",
+              "name": "#getSurface",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLDivElement"
+                }
+              },
+              "description": "The generated surface: scrim + panel in its own shadow root; forwarding slots as its light children."
+            },
+            {
+              "kind": "method",
+              "name": "#renderSurface",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "(Re)renders the surface's shadow content — the heading prop is live while open."
+            },
+            {
+              "kind": "method",
+              "name": "#panel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#openSurface",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "flipped",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "OPEN (synchronous — the surface is generated, so no render await is\nneeded and no race window exists; the 3.4 lesson's await-guard applies\nto the close path, which does await)."
+            },
+            {
+              "kind": "method",
+              "name": "#closeSurface",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "gen",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "flipped",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "CLOSE: play the exit, await its end (bounded), re-validate, release.\nA re-open mid-exit bumps the generation — this coroutine aborts without\nreleasing (the mount stayed live and #openSurface cleared the closing\nlook). A disconnect mid-exit also aborts — disconnectedCallback released\nsynchronously already."
+            },
+            {
+              "kind": "method",
+              "name": "#awaitExitAnimation",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "surface",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "animationend on the panel's exit keyframes, raced with the bound."
+            },
+            {
+              "kind": "method",
+              "name": "#releaseSurface",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "gen",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Releases everything the open path acquired (idempotent; the caller owns\nthe generation check — a stale close coroutine must not tear down a\nre-opened mount). The trap releases FIRST (it restores the pre-trap\nfocus — the consumer's opener), then lock, then the controller mount;\nthe surface re-homes into the shadow tree (the container fallback\ndetaches it) so the next open stays valid."
+            },
+            {
+              "kind": "method",
+              "name": "#emitOpenChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "open-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "`{ value: boolean }` — the frozen §9 overlay-surface state event; composed, bubbles; post-mount on open, post-release on close."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Heading text — renders the panel's heading element and names the dialog.",
+              "name": "heading",
+              "fieldName": "heading"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Open state — the frozen §9 overlay-surface property (reflects; `open-change` fires on every flip).",
+              "name": "open",
+              "default": "false",
+              "fieldName": "open"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-modal",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TK_MODAL_EXIT_MAX_MS",
+          "declaration": {
+            "name": "TK_MODAL_EXIT_MAX_MS",
+            "module": "src/modal/modal.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkModal",
+          "declaration": {
+            "name": "TkModal",
+            "module": "src/modal/modal.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-modal",
+          "declaration": {
+            "name": "TkModal",
+            "module": "src/modal/modal.ts"
           }
         }
       ]
@@ -6019,6 +6426,784 @@
           "declaration": {
             "name": "TkThumbnailPicker",
             "module": "src/thumbnail-picker/thumbnail-picker.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/toast/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/toast/toast.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/toast/show.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/toast/show.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "showToast",
+          "return": {
+            "type": {
+              "text": "TkShowToastHandle"
+            }
+          },
+          "parameters": [
+            {
+              "name": "options",
+              "type": {
+                "text": "TkShowToastOptions"
+              }
+            }
+          ],
+          "description": "Shows a toast: builds a `tk-toast` element and lets its connectedCallback\nenqueue it into the shared stack. SSR-safe degenerate handle without a\ndocument/body — MIRRORING enqueueToast's own no-body guard (a bodyless\npre-hydration document would append to nothing and the toast would never\nreach the stack)."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "showToast",
+          "declaration": {
+            "name": "showToast",
+            "module": "src/toast/show.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/toast/toast.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "toastStyles",
+          "default": "css` :host { box-sizing: border-box; display: flex; align-items: flex-start; gap: var(--tk-space-12); max-width: calc(var(--tk-space-48) * 10); margin: 0; padding: var(--tk-space-16) var(--tk-space-20); background: var(--tk-toast-fill, var(--tk-color-surface-base)); color: var(--tk-color-text-primary); font-family: var(--tk-font-body); font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-weight); line-height: var(--tk-text-body-m-leading); border-radius: var(--tk-toast-radius, var(--tk-radius-lg)); box-shadow: var(--tk-shadow-default); /* The stacking host is pass-through (toast-queue.ts); a toast opts back into interaction for itself — hover-pause and the action button. */ pointer-events: auto; animation: tk-toast-in var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-entrance); } :host([data-exiting]) { animation: tk-toast-out var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-exit); } /* The internal per-variant glyph: aria-hidden in the template; color via the per-variant token class (currentColor stroke). The 0.5px block offset is OPTICAL ALIGNMENT — the 20px circle glyph rides a hair high against the 15px/1.5 text line beside it; half a pixel centers the stroke-weight difference with no measurable layout shift. */ .toast__icon { flex: none; display: inline-flex; margin-block-start: 0.5px; } .toast__icon--default { color: var(--tk-toast-icon, var(--tk-color-green-200)); } .toast__icon--destructive { color: var(--tk-toast-icon, var(--tk-color-error)); } .toast__message { flex: 1; min-width: 0; } .toast__action { flex: none; display: inline-flex; align-items: center; } /* The action slot's interactive element: a bare light-DOM button gets the link-register affordance; kit buttons (tk-button) bring their own. The ≥44px interactive-target floor (EXPERIENCE A11y Floor) applies to the EFFECTIVE box — min-height plus inline padding make the whole row-high box clickable, the navbar drawer-link pattern — never just the glyphs. */ ::slotted(button) { display: inline-flex; align-items: center; box-sizing: border-box; min-height: 44px; margin: 0; border: none; padding: 0; padding-inline: var(--tk-space-8); background: none; font-family: var(--tk-font-body); font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-bold-weight); line-height: var(--tk-text-body-m-leading); color: var(--tk-color-link); cursor: pointer; } ::slotted(button):focus-visible { outline: 2px solid var(--tk-color-focus-ring); outline-offset: 2px; } @keyframes tk-toast-in { from { opacity: 0; transform: translateY(var(--tk-space-16)); } } @keyframes tk-toast-out { to { opacity: 0; transform: translateY(var(--tk-space-16)); } } /* Reduced motion: the token layer already collapsed the durations; the belt kills any final-keyframe flash (the navbar drawer precedent — the JS exit path skips the animation wait under the same media query). */ @media (prefers-reduced-motion: reduce) { :host, :host([data-exiting]) { animation: none; } } `",
+          "description": "tk-toast styles — ONE sheet: the toast HOST is the visual card (it renders\nits own icon + message slot + action slot in its shadow root), and the\nqueue relocates the whole host into the shared stacking host\n(#tk-toast-stack) — styles travel with the element by construction, no\nsecond sheet needed (unlike modal/tooltip whose surfaces are generated).\n\nTokens only (FR-1), zero theme branches (AD-3). Visual spec: DESIGN.md\ncomponents.toast — «White card rounded.lg, default shadow, icon + message\n+ optional action» + the Epic-4 spec rows (padding 16/20, entrance\nslide-up+fade 150ms fast productive-entrance, exit 150ms).\n\nPOINTER EVENTS: the stacking host is deliberately click-through and\nchildren would inherit `none` (toast-queue.ts) — the toast re-enables\ninteraction on itself (hover-pause and the action button depend on it).\n\nPer-component custom properties (`--tk-toast-*`, CONVENTIONS §6), each\nconsumed WITH its token default:\n- `--tk-toast-fill`    card fill     (default surface-base)\n- `--tk-toast-radius`  card radius   (default radius-lg)\n- `--tk-toast-icon`    icon color    (default: per-variant — green-200 for\n  the default check, the error semantic for destructive; see the class\n  doc for the AA non-text ruling)\n\nMotion: entrance translateY(16px→0) + fade on the 150ms fast\nproductive-entrance token; exit the reverse on productive-exit (the\nJS side awaits animationend with a bound). The reduced-motion belt kills\nboth keyframes after the token layer already collapsed the durations."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "toastStyles",
+          "declaration": {
+            "name": "toastStyles",
+            "module": "src/toast/toast.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/toast/toast.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "TK_TOAST_EXIT_MAX_MS",
+          "type": {
+            "text": "number"
+          },
+          "default": "350",
+          "description": "Upper bound on the awaited exit animation before the element removes\nitself — a JS timing constant (the select typeahead's precedent: the token\nlayer cannot feed JS waits): 150ms exit + frame slack. Animation end OR\nthis bound, whichever first; skipped entirely under\nprefers-reduced-motion (where the sheet's animation is already none)."
+        },
+        {
+          "kind": "variable",
+          "name": "TK_TOAST_DEFAULT_DURATION_MS",
+          "type": {
+            "text": "number"
+          },
+          "default": "5000",
+          "description": "The default auto-dismiss window — EXPERIENCE.md: «Auto-dismiss 5s default»."
+        },
+        {
+          "kind": "class",
+          "description": "tk-toast — the derived notification card (Story 4.3). NO kit events, no\n`open` channel: a toast is fire-and-forget — it appears already visible,\nnever takes focus (no tabindex, no focus() — structural pins), and removes\nitself when done. That is the documented §9/event-map ruling (native click\non the slotted action serves the action — the button/cards precedent).\n\nSELF-ENQUEUE (the §9 «built on the SAME elements» rule made literal): the\nelement enqueues ITSELF on connectedCallback —\n`enqueueToast({ element: this, onCollapse: exit-then-remove })` — so BOTH\nusage patterns are the same element: declarative (create/append a tk-toast\nanywhere; it relocates into the shared bottom-right host) and imperative\n(`showToast(options)` sugar in ./show.ts that builds THIS element, sets\nprops, slots the optional action, returns a dismiss handle). Stacking\n(bottom-right, max 3 visible, oldest collapses) is the queue's; the\nauto-dismiss TIMER is the element's own (the queue never starts or stops\ntimers).\n\nREMOVAL IS SELF-REMOVAL (the queue's advertised pattern): dismiss() plays\nthe exit animation and removes the element; the stacking host's\nMutationObserver prunes the queue entry and tears the host down when the\nlast toast leaves (2.2 contract) — the queue's handle.dismiss is never\nused from here, precisely so the exit animation paints before the element\nleaves the host.\n\nANNOUNCEMENTS: default → aria-live=\"polite\" on the host; destructive →\nrole=\"alert\" (implies assertive) — never both. The message is the default\nslot; the action is the named `action` slot (ONE interactive element; its\nnative click is the consumer's — the toast STAYS until duration/dismiss,\nthe recorded pick). The per-variant icon is an internal token-drawn SVG,\naria-hidden.\n\nTIMING: `duration` ms (default 5000; 0 = sticky until Esc/dismiss;\nnegative clamps to 0, non-finite degrades to the default). Auto-dismiss\nPAUSES on pointerenter/focusin and RESUMES on pointerleave/focusout.\n\nSSR-compat (AD-10): no imperative DOM at construction; the queue's\nenqueueToast itself no-ops without a document.\n\nREACT CAVEAT (wrapper consumers): the self-enqueue RELOCATES the element\nout of whatever container it was mounted in (into the shared bottom-right\nhost). Unmounting a relocated toast through a container-owning renderer\n(React's root.unmount) throws removeChild on a node it no longer parents —\nre-home it first or, better, use the imperative showToast helper for\nfire-and-forget notifications (the §9 pattern). The generated wrapper\nworks while mounted; this is the documented cost of the shared stack.",
+          "name": "TkToast",
+          "slots": [
+            {
+              "description": "The message.",
+              "name": ""
+            },
+            {
+              "description": "ONE interactive element; its native click is the consumer's (the toast stays until duration/dismiss).",
+              "name": "action"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "TkToastVariant"
+              },
+              "default": "'default'",
+              "description": "Icon + announcement register — invalid values clamp to 'default' (CONVENTIONS §2).",
+              "attribute": "variant",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "duration",
+              "default": "5000",
+              "description": "Auto-dismiss window in ms — 0 = sticky; negative clamps to 0. Number\ndata, never reflected (CONVENTIONS §2).",
+              "attribute": "duration",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveDuration",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "description": "The effective auto-dismiss window after clamps.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#timer",
+              "privacy": "private",
+              "type": {
+                "text": "number | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#deadline",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#remaining",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#exiting",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "#startTimer",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#arm",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#clearTimer",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#handlePointerEnter",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#handlePointerLeave",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#handleFocusIn",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#handleFocusOut",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#resume",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "dismiss",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Dismisses the toast: the exit animation, then SELF-REMOVAL (the queue's\nMutationObserver prunes the stack entry — see the class doc). Idempotent;\nnever moves focus."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "TkToastVariant"
+              },
+              "description": "Icon + announcement register — invalid values clamp to 'default' (CONVENTIONS §2).",
+              "name": "variant",
+              "default": "'default'",
+              "fieldName": "variant"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "Auto-dismiss window in ms — 0 = sticky; negative clamps to 0. Number\ndata, never reflected (CONVENTIONS §2).",
+              "name": "duration",
+              "default": "TK_TOAST_DEFAULT_DURATION_MS",
+              "fieldName": "duration"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-toast",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TK_TOAST_EXIT_MAX_MS",
+          "declaration": {
+            "name": "TK_TOAST_EXIT_MAX_MS",
+            "module": "src/toast/toast.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TK_TOAST_DEFAULT_DURATION_MS",
+          "declaration": {
+            "name": "TK_TOAST_DEFAULT_DURATION_MS",
+            "module": "src/toast/toast.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkToast",
+          "declaration": {
+            "name": "TkToast",
+            "module": "src/toast/toast.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-toast",
+          "declaration": {
+            "name": "TkToast",
+            "module": "src/toast/toast.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tooltip/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/tooltip/tooltip.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tooltip/tooltip.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "tooltipStyles",
+          "default": "css` :host { display: contents; } `",
+          "description": "The host sheet — the host renders nothing of its own (the trigger is slotted)."
+        },
+        {
+          "kind": "variable",
+          "name": "tooltipSurfaceStyles",
+          "default": "css` :host { box-sizing: border-box; display: block; max-width: calc(var(--tk-space-48) * 6); margin: 0; inset: auto; border: none; padding: var(--tk-space-8) var(--tk-space-12); background: var(--tk-tooltip-fill, var(--tk-color-ink-300)); color: var(--tk-tooltip-text, var(--tk-color-white)); font-family: var(--tk-font-body); font-size: var(--tk-text-body-xs-size); font-weight: var(--tk-text-body-xs-weight); line-height: var(--tk-text-body-xs-leading); border-radius: var(--tk-tooltip-radius, var(--tk-radius-sm)); box-shadow: var(--tk-shadow-tooltip); /* The controller's positionFloating owns inline position/top/left; the fade rides on top without fighting it. */ animation: tk-tooltip-in var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-standard); } /* :host display:block beats the UA [hidden] rule — enforce closedness. */ :host([hidden]) { display: none; } @keyframes tk-tooltip-in { from { opacity: 0; } } `",
+          "description": "The SURFACE sheet (the ink pill), adopted into the surface's shadow root."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "tooltipStyles",
+          "declaration": {
+            "name": "tooltipStyles",
+            "module": "src/tooltip/tooltip.css.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "tooltipSurfaceStyles",
+          "declaration": {
+            "name": "tooltipSurfaceStyles",
+            "module": "src/tooltip/tooltip.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tooltip/tooltip.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "TK_TOOLTIP_DELAY_MS",
+          "type": {
+            "text": "number"
+          },
+          "default": "300",
+          "description": "Show delay after pointerenter/focusin — a JS timing constant documented\nfrom EXPERIENCE.md («Hover + focus show (delay 300ms)»): a DELAY, not a\nmotion value — the token layer cannot feed JS timers (the select\ntypeahead's TK_SELECT_TYPEAHEAD_RESET_MS precedent)."
+        },
+        {
+          "kind": "class",
+          "description": "tk-tooltip — the derived info pill (Story 4.2), positioned by the 2.2\ncontroller (mountOverlay 'tooltip' layer + positionFloating with the\ncontroller's all-four-edge flip; zero bespoke positioning/z code — pinned\nstructurally by the unit suite).\n\nOPEN CHANNEL — the tk-select mold verbatim (the frozen §9 overlay-surface\nstate): `open` attribute/property (reflects) + `open-change`\n`detail: { value: boolean }` composed/bubbles, flip-only post-mount (the\n2.3 first-update guard — no mount-time open-change(false)).\n\nCONTENT IS PROP-ONLY BY DESIGN: the pill text is the `content` prop — the\nsurface is non-focusable BY CONSTRUCTION (nothing slot-projects into it,\nso no consumer can ever put a control there), and the surface itself is\nrole=\"tooltip\" with no tabindex, never in the tab order.\n\nTRIGGER: the default slot (a single element — more than one dev-warns).\nThe component wires aria-describedby from the slotted trigger to the\nsurface's id (the APG pattern: the description is announced on focus,\npolite by nature) — set while the trigger is assigned, restored to the\ntrigger's prior value on unwire/disconnect. The surface is created EAGERLY\n(firstUpdated) so the idref resolves from the first paint — the select\naria-controls precedent (axe validates idrefs even while the target is\nhidden).\n\nBEHAVIOR (EXPERIENCE row): open on pointerenter AND focusin after\nTK_TOOLTIP_DELAY_MS; close on pointerleave / focusout / Esc — immediate,\ncancelling any pending timer; click/tap TOGGLES (touch parity — hover is\nnever the only path).\n\nICON-ONLY TRIGGER GUARD (warn, never block): opening for a trigger with\nno accessible-name heuristic (no text, no aria-label/labelledby/title)\ndev-warns once — the story demonstrates the correct recipe.\n\nSSR-compat (AD-10): no imperative DOM at construction; the surface is\ngenerated on first update, client-side.",
+          "name": "TkTooltip",
+          "slots": [
+            {
+              "description": "The TRIGGER (a single element); aria-describedby is wired from it to the pill.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "placement",
+              "type": {
+                "text": "TkTooltipPlacement"
+              },
+              "default": "'top'",
+              "description": "Requested side — invalid values clamp to 'top' (CONVENTIONS §2).",
+              "attribute": "placement",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "content",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Tooltip text — prop-only by design (see the class doc).",
+              "attribute": "content"
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Open state — the frozen §9 overlay-surface property (reflects; `open-change` fires on every flip).",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "#surface",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLDivElement | null"
+              },
+              "default": "null",
+              "description": "The generated pill surface, hidden while closed."
+            },
+            {
+              "kind": "field",
+              "name": "#overlayHandle",
+              "privacy": "private",
+              "type": {
+                "text": "TkOverlayHandle | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#positionHandle",
+              "privacy": "private",
+              "type": {
+                "text": "TkPositioningHandle | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#showTimer",
+              "privacy": "private",
+              "type": {
+                "text": "number | null"
+              },
+              "default": "null",
+              "description": "The pending 300ms show timer (cancelled by every close signal)."
+            },
+            {
+              "kind": "field",
+              "name": "#trigger",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null",
+              "description": "The currently-wired trigger and its prior aria-describedby value."
+            },
+            {
+              "kind": "field",
+              "name": "#priorDescribedBy",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#uniqueId",
+              "privacy": "private",
+              "type": {
+                "text": "string | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#nextId",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "static": true,
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#id",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#handleSlotChange",
+              "privacy": "private",
+              "readonly": true,
+              "description": "The default slot IS the trigger. Slots see only the host's light DOM —\nthese listeners live on the HOST, where events from the slotted trigger\n(light DOM) and from the surface's tree both arrive (composed)."
+            },
+            {
+              "kind": "method",
+              "name": "#unwireTrigger",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#resolveTrigger",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "description": "The wired trigger — or the live slot's first assigned element when\nslotchange has not fired yet (a declarative `open` at first paint races\nthe slotchange microtask; the mount must not be refused for it)."
+            },
+            {
+              "kind": "method",
+              "name": "#warnIfMultiple",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "assigned",
+                  "type": {
+                    "text": "Element[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#clearShowTimer",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#scheduleOpen",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#warnIfUnnamedTrigger",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "trigger",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                }
+              ],
+              "description": "Warn-once heuristic for icon-only triggers with no accessible name (never blocks)."
+            },
+            {
+              "kind": "method",
+              "name": "#setOpen",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "next",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#handlePointerOver",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#handlePointerOut",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#handleFocusIn",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#handleFocusOut",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#handleClick",
+              "privacy": "private",
+              "readonly": true,
+              "description": "Touch parity: click/tap toggles (hover is never the only path)."
+            },
+            {
+              "kind": "field",
+              "name": "#handleKeydown",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#getSurface",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLDivElement"
+                }
+              },
+              "description": "The generated pill surface: role=tooltip, own shadow root (styles + text), hidden until open."
+            },
+            {
+              "kind": "method",
+              "name": "#renderSurface",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "(Re)renders the surface's shadow content — the content prop is live while open."
+            },
+            {
+              "kind": "method",
+              "name": "#mountSurface",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#position",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#unmountSurface",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "open-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "`{ value: boolean }` — the frozen §9 overlay-surface state event; composed, bubbles."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Open state — the frozen §9 overlay-surface property (reflects; `open-change` fires on every flip).",
+              "name": "open",
+              "default": "false",
+              "fieldName": "open"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Tooltip text — prop-only by design (see the class doc).",
+              "name": "content",
+              "default": "''",
+              "fieldName": "content"
+            },
+            {
+              "type": {
+                "text": "TkTooltipPlacement"
+              },
+              "description": "Requested side — invalid values clamp to 'top' (CONVENTIONS §2).",
+              "name": "placement",
+              "default": "'top'",
+              "fieldName": "placement"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-tooltip",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TK_TOOLTIP_DELAY_MS",
+          "declaration": {
+            "name": "TK_TOOLTIP_DELAY_MS",
+            "module": "src/tooltip/tooltip.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkTooltip",
+          "declaration": {
+            "name": "TkTooltip",
+            "module": "src/tooltip/tooltip.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-tooltip",
+          "declaration": {
+            "name": "TkTooltip",
+            "module": "src/tooltip/tooltip.ts"
           }
         }
       ]
