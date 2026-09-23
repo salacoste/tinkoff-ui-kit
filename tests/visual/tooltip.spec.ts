@@ -50,7 +50,9 @@ for (const theme of THEMES) {
       const surface =
         tooltip.shadowRoot?.querySelector('[role="tooltip"]') ??
         document.querySelector('#tk-overlay-root > [role="tooltip"]');
-      const trigger = tooltip.querySelector('button');
+      // The story trigger is a composed tk-button (the 5.1 sweep fix — the
+      // canonical kit trigger, whose unified ring the a11y sweep pins).
+      const trigger = tooltip.querySelector('tk-button, button');
       if (!surface || !trigger) return null;
       const surfaceRect = surface.getBoundingClientRect();
       const triggerRect = trigger.getBoundingClientRect();

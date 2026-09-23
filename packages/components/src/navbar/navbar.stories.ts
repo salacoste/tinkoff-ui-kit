@@ -158,14 +158,19 @@ const canvasStyles = html`
       font-weight: var(--tk-text-heading-1-weight);
       line-height: 1;
     }
-    /* The story-composed utility cluster (utilities slot content): ≥44px
-       targets with the unified focus ring; on mobile the reference chips
-       them (round search, login pill) — the story's own media query. */
+    /* The story-composed utility cluster (utilities slot content): ≥44×44
+       targets with the unified focus ring (the 5.1 sweep fix: the icon-only
+       search anchor measured 20×44 — min-width + centering close the floor
+       gap exactly like the mobile chips already did); on mobile the
+       reference chips them (round search, login pill) — the story's own
+       media query. */
     .tkn-utility {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: var(--tk-space-8);
       min-height: 44px;
+      min-width: 44px;
       font-size: var(--tk-text-body-m-size);
       line-height: var(--tk-text-body-m-leading);
       color: var(--tk-color-text-primary);
@@ -525,7 +530,38 @@ export const Accessibility: Story = {
             </tbody>
           </table>
         </div>
-      </main>
+      
+      <h2>Протокол скринридер-проверки (VoiceOver / NVDA)</h2>
+      <p class="tkn-note">
+        Протокол исполняется вручную на стороне мейнтейнера: автоматический
+        прогон не управляет скринридером (запись в deferred-work.md). Каждое
+        расхождение с ожидаемым объявлением — дефект, а не особенность.
+      </p>
+
+      <table>
+        <thead>
+          <tr><th>Шаг</th><th>Ожидаемые объявления</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Чтение сверху</td>
+            <td>«баннер» (role=banner), затем «навигация, 4 элементов»</td>
+          </tr>
+          <tr>
+            <td>Активная ссылка</td>
+            <td>«Частным лицам, ссылка, текущая страница» (aria-current)</td>
+          </tr>
+          <tr>
+            <td>Burger (&lt;768px): открытие</td>
+            <td>«диалог» — фокус на первой ссылке меню; фон не читается</td>
+          </tr>
+          <tr>
+            <td>Esc в drawer</td>
+            <td>меню закрывается, фокус возвращается на burger: «Меню, кнопка»</td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
     </div>
   `,
 };

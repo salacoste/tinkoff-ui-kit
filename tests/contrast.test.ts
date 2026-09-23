@@ -121,6 +121,61 @@ const AA_PAIRS: readonly AaPair[] = [
   { theme: 'dark', name: 'focus-ring vs dark surface-muted', fg: dark('--tk-color-focus-ring'), bg: dark('--tk-color-surface-muted'), min: AA_NON_TEXT, recorded: 6.249 },
   // Dark — the yellow invariant: primary CTA keeps ink text, identical ratio by construction.
   { theme: 'dark', name: 'invariant text-on-primary on unchanged yellow-100', fg: colorTokens['--tk-color-text-on-primary'], bg: colorTokens['--tk-color-yellow-100'], min: AA_TEXT, recorded: 9.405 },
+  // --- 5.1–5.3 sweep extension: every RENDERED pair the kit-wide walk found
+  // outside the table above (overlays, badge fills, the card tint pairings).
+  // Light values from the generated colorTokens map; dark legs use ONLY the
+  // generated darkColorTokens overrides — never re-typed here.
+  // Light — overlay surfaces: toast/modal panel text, the tooltip pill, the badge stat fill.
+  { theme: 'light', name: 'text-primary on surface-base (toast body / modal panel text)', fg: colorTokens['--tk-color-text-primary'], bg: colorTokens['--tk-color-surface-base'], min: AA_TEXT, recorded: 12.635 },
+  // Light — field fills: input text / select value / unselected segment label.
+  { theme: 'light', name: 'text-primary on surface-field (input text / select value / segment label)', fg: colorTokens['--tk-color-text-primary'], bg: colorTokens['--tk-color-surface-field'], min: AA_TEXT, recorded: 11.126 },
+  // Light — the select placeholder span (a REAL element axe measures — the
+  // AA-override step; see select.css.ts and verify/select/NOTES.md).
+  { theme: 'light', name: 'text-secondary (select placeholder) on surface-field', fg: colorTokens['--tk-color-text-secondary'], bg: colorTokens['--tk-color-surface-field'], min: AA_TEXT, recorded: 4.962 },
+  // Dark — the translucent field (#FFFFFF1A) composited onto dark surface-base
+  // first (the test rejects alpha backgrounds; compositing stays generated-
+  // sourced — both inputs come from the dark map).
+  { theme: 'dark', name: 'text-primary on dark surface-field (composited on dark surface-base)', fg: dark('--tk-color-text-primary'), bg: composite(dark('--tk-color-surface-field'), dark('--tk-color-surface-base')), min: AA_TEXT, recorded: 13.009 },
+  { theme: 'dark', name: 'text-secondary (select placeholder) on dark surface-field (composited)', fg: dark('--tk-color-text-secondary'), bg: composite(dark('--tk-color-surface-field'), dark('--tk-color-surface-base')), min: AA_TEXT, recorded: 7.303 },
+  { theme: 'light', name: 'tooltip pill text (white) on ink-300 fill', fg: colorTokens['--tk-color-white'], bg: colorTokens['--tk-color-ink-300'], min: AA_TEXT, recorded: 12.635 },
+  { theme: 'light', name: 'badge stat text (white) on ink-300 fill', fg: colorTokens['--tk-color-white'], bg: colorTokens['--tk-color-ink-300'], min: AA_TEXT, recorded: 12.635 },
+  // Light — badge incentive: the 2.1 ink-on-green pair.
+  { theme: 'light', name: 'badge incentive text-on-primary on green-100', fg: colorTokens['--tk-color-text-on-primary'], bg: colorTokens['--tk-color-green-100'], min: AA_TEXT, recorded: 4.742 },
+  // Light — card tint pairings (promo/feature headings; descriptions are the secondary legs).
+  { theme: 'light', name: 'text-primary on tint-gray (card default)', fg: colorTokens['--tk-color-text-primary'], bg: colorTokens['--tk-color-tint-gray'], min: AA_TEXT, recorded: 11.596 },
+  { theme: 'light', name: 'text-primary on tint-bluegray', fg: colorTokens['--tk-color-text-primary'], bg: colorTokens['--tk-color-tint-bluegray'], min: AA_TEXT, recorded: 11.126 },
+  { theme: 'light', name: 'text-primary on tint-mint', fg: colorTokens['--tk-color-text-primary'], bg: colorTokens['--tk-color-tint-mint'], min: AA_TEXT, recorded: 10.772 },
+  { theme: 'light', name: 'text-primary on tint-beige', fg: colorTokens['--tk-color-text-primary'], bg: colorTokens['--tk-color-tint-beige'], min: AA_TEXT, recorded: 10.586 },
+  { theme: 'light', name: 'text-secondary (card description) on tint-gray', fg: colorTokens['--tk-color-text-secondary'], bg: colorTokens['--tk-color-tint-gray'], min: AA_TEXT, recorded: 5.172 },
+  { theme: 'light', name: 'text-secondary (card description) on tint-bluegray', fg: colorTokens['--tk-color-text-secondary'], bg: colorTokens['--tk-color-tint-bluegray'], min: AA_TEXT, recorded: 4.962 },
+  { theme: 'light', name: 'text-secondary (card description) on tint-mint', fg: colorTokens['--tk-color-text-secondary'], bg: colorTokens['--tk-color-tint-mint'], min: AA_TEXT, recorded: 4.804 },
+  { theme: 'light', name: 'text-secondary (card description) on tint-beige', fg: colorTokens['--tk-color-text-secondary'], bg: colorTokens['--tk-color-tint-beige'], min: AA_TEXT, recorded: 4.721 },
+  // Light — card action links on tints (article/service cards; the on-tint step).
+  { theme: 'light', name: 'link-on-tint (card action) on tint-gray', fg: colorTokens['--tk-color-link-on-tint'], bg: colorTokens['--tk-color-tint-gray'], min: AA_TEXT, recorded: 5.175 },
+  { theme: 'light', name: 'link-on-tint (card action) on tint-bluegray', fg: colorTokens['--tk-color-link-on-tint'], bg: colorTokens['--tk-color-tint-bluegray'], min: AA_TEXT, recorded: 4.965 },
+  { theme: 'light', name: 'link-on-tint (card action) on tint-mint', fg: colorTokens['--tk-color-link-on-tint'], bg: colorTokens['--tk-color-tint-mint'], min: AA_TEXT, recorded: 4.807 },
+  { theme: 'light', name: 'link-on-tint (card action) on tint-beige', fg: colorTokens['--tk-color-link-on-tint'], bg: colorTokens['--tk-color-tint-beige'], min: AA_TEXT, recorded: 4.724 },
+  // Light — the charcoal pair (theme-invariant tint): white text on charcoal cards.
+  { theme: 'light', name: 'white on tint-charcoal (charcoal cards)', fg: colorTokens['--tk-color-white'], bg: colorTokens['--tk-color-tint-charcoal'], min: AA_TEXT, recorded: 12.635 },
+  // Dark — card tint pairings on the first-pass dark tints (5.4 owns refinement; the pairs hold).
+  { theme: 'dark', name: 'text-primary on dark tint-gray', fg: dark('--tk-color-text-primary'), bg: dark('--tk-color-tint-gray'), min: AA_TEXT, recorded: 15.523 },
+  { theme: 'dark', name: 'text-primary on dark tint-bluegray', fg: dark('--tk-color-text-primary'), bg: dark('--tk-color-tint-bluegray'), min: AA_TEXT, recorded: 15.626 },
+  { theme: 'dark', name: 'text-primary on dark tint-mint', fg: dark('--tk-color-text-primary'), bg: dark('--tk-color-tint-mint'), min: AA_TEXT, recorded: 14.909 },
+  { theme: 'dark', name: 'text-primary on dark tint-beige', fg: dark('--tk-color-text-primary'), bg: dark('--tk-color-tint-beige'), min: AA_TEXT, recorded: 15.037 },
+  { theme: 'dark', name: 'text-secondary (card description) on dark tint-gray', fg: dark('--tk-color-text-secondary'), bg: dark('--tk-color-tint-gray'), min: AA_TEXT, recorded: 8.352 },
+  { theme: 'dark', name: 'text-secondary (card description) on dark tint-bluegray', fg: dark('--tk-color-text-secondary'), bg: dark('--tk-color-tint-bluegray'), min: AA_TEXT, recorded: 8.382 },
+  { theme: 'dark', name: 'text-secondary (card description) on dark tint-mint', fg: dark('--tk-color-text-secondary'), bg: dark('--tk-color-tint-mint'), min: AA_TEXT, recorded: 8.091 },
+  { theme: 'dark', name: 'text-secondary (card description) on dark tint-beige', fg: dark('--tk-color-text-secondary'), bg: dark('--tk-color-tint-beige'), min: AA_TEXT, recorded: 8.121 },
+  // Dark — card action links on the dark tints (link-on-tint remaps to dark-link).
+  { theme: 'dark', name: 'link-on-tint (card action) on dark tint-gray', fg: dark('--tk-color-link-on-tint'), bg: dark('--tk-color-tint-gray'), min: AA_TEXT, recorded: 6.097 },
+  { theme: 'dark', name: 'link-on-tint (card action) on dark tint-bluegray', fg: dark('--tk-color-link-on-tint'), bg: dark('--tk-color-tint-bluegray'), min: AA_TEXT, recorded: 6.137 },
+  { theme: 'dark', name: 'link-on-tint (card action) on dark tint-mint', fg: dark('--tk-color-link-on-tint'), bg: dark('--tk-color-tint-mint'), min: AA_TEXT, recorded: 5.856 },
+  { theme: 'dark', name: 'link-on-tint (card action) on dark tint-beige', fg: dark('--tk-color-link-on-tint'), bg: dark('--tk-color-tint-beige'), min: AA_TEXT, recorded: 5.906 },
+  // Theme-invariant (like the yellow pair above): the charcoal card's re-scoped
+  // secondary CTA — the actions zone re-declares surface-base/text-primary to
+  // white/ink-300 in BOTH themes (the 3.7 review-fix pair), so light-map
+  // values are the truth in dark too.
+  { theme: 'dark', name: 'invariant charcoal-card CTA pair (ink-300 label on white pill)', fg: colorTokens['--tk-color-ink-300'], bg: colorTokens['--tk-color-white'], min: AA_TEXT, recorded: 12.635 },
 ];
 
 describe('WCAG AA contrast — mechanized DESIGN.md table (spec 1.3)', () => {

@@ -478,6 +478,33 @@ export const Accessibility: Story = {
       <div class="tkc-row">
         ${checkbox({ indeterminate: true })}
       </div>
+    
+      <h2>Протокол скринридер-проверки (VoiceOver / NVDA)</h2>
+      <p class="tkc-note">
+        Протокол исполняется вручную на стороне мейнтейнера: автоматический
+        прогон не управляет скринридером (запись в deferred-work.md). Каждое
+        расхождение с ожидаемым объявлением — дефект, а не особенность.
+      </p>
+
+      <table>
+        <thead>
+          <tr><th>Шаг</th><th>Ожидаемые объявления</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Tab на чекбокс</td>
+            <td>«Согласие, пункт выбора, не отмечен»</td>
+          </tr>
+          <tr>
+            <td>Space</td>
+            <td>«отмечен» — состояние объявляется сразу</td>
+          </tr>
+          <tr>
+            <td>Indeterminate</td>
+            <td>«частично отмечен» (aria-checked=mixed)</td>
+          </tr>
+        </tbody>
+      </table>
     </main>
   `,
 };

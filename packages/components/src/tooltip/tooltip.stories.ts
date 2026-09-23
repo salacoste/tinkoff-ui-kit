@@ -194,7 +194,7 @@ export const Open: Story = {
       <div class="tku-row" style="margin-top: var(--tk-space-24)">
         <figure>
           <tk-tooltip open content="Ставка действует первые 4 месяца" placement="top">
-            <button type="button">Ставка по вкладу</button>
+            <tk-button variant="secondary" size="compact">Ставка по вкладу</tk-button>
           </tk-tooltip>
           <figcaption>role=tooltip над триггером; нефокусируема</figcaption>
         </figure>
@@ -367,6 +367,33 @@ export const Accessibility: Story = {
           <button type="button">Триггер с подсказкой</button>
         </tk-tooltip>
       </div>
+    
+      <h2>Протокол скринридер-проверки (VoiceOver / NVDA)</h2>
+      <p class="tku-note">
+        Протокол исполняется вручную на стороне мейнтейнера: автоматический
+        прогон не управляет скринридером (запись в deferred-work.md). Каждое
+        расхождение с ожидаемым объявлением — дефект, а не особенность.
+      </p>
+
+      <table>
+        <thead>
+          <tr><th>Шаг</th><th>Ожидаемые объявления</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Фокус на триггере (Tab)</td>
+            <td>после имени кнопки зачитывается текст подсказки (aria-describedby): «…Ставка действует первые 4 месяца»</td>
+          </tr>
+          <tr>
+            <td>Esc</td>
+            <td>подсказка скрывается; повторное объявление прекращается</td>
+          </tr>
+          <tr>
+            <td>Tab дальше</td>
+            <td>сама пилюля НЕ является остановкой — фокус проходит мимо (role=tooltip, нет tabindex)</td>
+          </tr>
+        </tbody>
+      </table>
     </main>
   `,
 };

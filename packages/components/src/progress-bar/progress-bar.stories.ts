@@ -433,6 +433,37 @@ export const Accessibility: Story = {
           <figcaption>детерминированный: valuenow/min/max + labelledby</figcaption>
         </figure>
       </section>
+    
+      <h2>Протокол скринридер-проверки (VoiceOver / NVDA)</h2>
+      <p class="tkpb-note">
+        Протокол исполняется вручную на стороне мейнтейнера: автоматический
+        прогон не управляет скринридером (запись в deferred-work.md). Каждое
+        расхождение с ожидаемым объявлением — дефект, а не особенность.
+      </p>
+
+      <table>
+        <thead>
+          <tr><th>Шаг</th><th>Ожидаемые объявления</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Tab-обход</td>
+            <td>фокус проходит мимо — шкала не остановка (нет tabindex); состояние доходит только через атрибуты</td>
+          </tr>
+          <tr>
+            <td>Чтение бара (VO: Ctrl+Opt+Cmd+J к следующему)</td>
+            <td>«Индикатор выполнения, 50 процентов» — aria-valuenow/min/max</td>
+          </tr>
+          <tr>
+            <td>announce-режим</td>
+            <td>смена значения зачитывается ОДИН раз после успокоения: «Заполнено 50%» (aria-live polite)</td>
+          </tr>
+          <tr>
+            <td>indeterminate</td>
+            <td>«занятая» (aria-busy), значение не объявляется</td>
+          </tr>
+        </tbody>
+      </table>
     </main>
   `,
 };

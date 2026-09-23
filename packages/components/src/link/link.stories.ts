@@ -357,6 +357,33 @@ export const Accessibility: Story = {
         ${link('Цель для клавиатуры', { variant: 'standalone' })}
         ${link('Недоступна с клавиатуры', { variant: 'standalone', disabled: true })}
       </section>
+    
+      <h2>Протокол скринридер-проверки (VoiceOver / NVDA)</h2>
+      <p class="tklink-note">
+        Протокол исполняется вручную на стороне мейнтейнера: автоматический
+        прогон не управляет скринридером (запись в deferred-work.md). Каждое
+        расхождение с ожидаемым объявлением — дефект, а не особенность.
+      </p>
+
+      <table>
+        <thead>
+          <tr><th>Шаг</th><th>Ожидаемые объявления</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Tab на ссылку</td>
+            <td>«Текст ссылки, ссылка» — роль ссылки у всех вариантов (inline / standalone / legal)</td>
+          </tr>
+          <tr>
+            <td>Disabled-ссылка</td>
+            <td>«Текст ссылки, ссылка, недоступна» (aria-disabled) — навигация по Enter блокируется</td>
+          </tr>
+          <tr>
+            <td>Enter</td>
+            <td>переход по href; standalone-цель 44px не меняет объявлений</td>
+          </tr>
+        </tbody>
+      </table>
     </main>
   `,
 };

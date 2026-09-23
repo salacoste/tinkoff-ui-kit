@@ -434,6 +434,37 @@ export const Accessibility: Story = {
         ${button('Цель для клавиатуры', { variant: 'primary', size: 'hero' })}
         ${button('Compact: порог 44px', { variant: 'secondary', size: 'compact' })}
       </div>
+    
+      <h2>Протокол скринридер-проверки (VoiceOver / NVDA)</h2>
+      <p class="tkbtn-note">
+        Протокол исполняется вручную на стороне мейнтейнера: автоматический
+        прогон не управляет скринридером (запись в deferred-work.md). Каждое
+        расхождение с ожидаемым объявлением — дефект, а не особенность.
+      </p>
+
+      <table>
+        <thead>
+          <tr><th>Шаг</th><th>Ожидаемые объявления</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Tab на кнопку</td>
+            <td>«Подпись, кнопка» — имя и роль; размер/вариант НЕ объявляются</td>
+          </tr>
+          <tr>
+            <td>Кнопка в состоянии loading</td>
+            <td>имя сохраняется: «Подпись, кнопка, занятая» (aria-busy) — подпись не исчезает за спиннером</td>
+          </tr>
+          <tr>
+            <td>Disabled-кнопка</td>
+            <td>«Подпись, кнопка, недоступна» (aria-disabled) — остановка остаётся в порядке Tab</td>
+          </tr>
+          <tr>
+            <td>Enter / Space</td>
+            <td>активация: срабатывает действие; в loading/disabled — тишина</td>
+          </tr>
+        </tbody>
+      </table>
     </main>
   `,
 };

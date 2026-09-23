@@ -112,7 +112,11 @@ export const toastStyles = css`
     cursor: pointer;
   }
 
-  ::slotted(button):focus-visible {
+  /* The pseudo-class must live INSIDE ::slotted() — the form with it
+     appended AFTER the closing paren is silently DROPPED at parse (CSS
+     Scoping: nothing may compound after ::slotted(); probed via CSSOM) —
+     the 5.1 sweep finding: the action button fell back to the UA ring. */
+  ::slotted(button:focus-visible) {
     outline: 2px solid var(--tk-color-focus-ring);
     outline-offset: 2px;
   }
