@@ -56,6 +56,12 @@ export const EVENT_MAP: Readonly<Record<string, Readonly<TkKitElementEventMap>>>
   'tk-thumbnail-picker': {
     onValueChange: 'value-change',
   },
+  // Story 3.3 — the string state channel (§4 contract on `value`, the same
+  // mapping as tk-input/tk-select/tk-segmented-radio/tk-thumbnail-picker;
+  // demanded mechanically by tests/event-map-completeness.test.ts).
+  'tk-tabs': {
+    onValueChange: 'value-change',
+  },
   // 'tk-button': none at v1 (native click serves activation).
   // 'tk-link': none at v3.1 — STATELESS (spec 3.1): navigation is the native
   // anchor's own behavior; the element dispatches nothing (the completeness

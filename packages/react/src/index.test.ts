@@ -5,7 +5,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import * as litReact from '@lit/react';
 import { afterAll, describe, expect, it, vi } from 'vitest';
 
-import { Badge, Button, Checkbox, EVENT_MAP, Input, Link, ProgressBar, SegmentedRadio, Select, ThumbnailPicker } from './index.js';
+import { Badge, Button, Checkbox, EVENT_MAP, Input, Link, ProgressBar, SegmentedRadio, Select, Tabs, ThumbnailPicker } from './index.js';
 
 /**
  * pillkit-react generated surface. The wrapper imports `pillkit-components`
@@ -742,4 +742,139 @@ describe('pillkit-react', () => {
     expect(el?.hasAttribute('count')).toBe(false);
     // Never interactive: no tabindex/role anywhere in the shadow surface.
     expect(el?.shadowRoot?.querySelector('[tabindex], [role]')).toBeNull();
+  });
+
+  // --- Story 3.3: tk-tabs wrapper (mirrors the SegmentedRadio smoke) --------
+
+  it("carries the story 3.3 registry entry: tk-tabs's value-change", () => {
+    expect(EVENT_MAP['tk-tabs']).toEqual({ onValueChange: 'value-change' });
+  });
+
+  it('renders <Tabs> as tk-tabs with element properties set through the wrapper', async () => {
+    const container = await renderToContainer(
+      React.createElement(
+        Tabs,
+        {
+          defaultValue: 'debit',
+          tabs: [
+            { value: 'debit', label: 'Дебетовая карта' },
+            { value: 'credit', label: 'Кредитная карта', badge: 5 },
+            { value: 'deposit', label: 'Вклад' },
+          ],
+        },
+        React.createElement('div', { slot: 'tab-0' }, 'Дебетовая'),
+        React.createElement('div', { slot: 'tab-1' }, 'Кредитная'),
+        React.createElement('div', { slot: 'tab-2' }, 'Вклад'),
+      ),
+    );
+    const el = container.querySelector('tk-tabs');
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    expect((el as unknown as { defaultValue?: string }).defaultValue).toBe('debit');
+    expect((el as unknown as { tabs?: unknown[] }).tabs).toHaveLength(3);
+    const tabButtons = (el as Element).shadowRoot?.querySelectorAll('[role="tab"]');
+    expect(tabButtons, 'the tab bar renders').toHaveLength(3);
+    expect((el as Element).shadowRoot?.querySelector('[role="tablist"]')).not.toBeNull();
+    // The badge composition rides along (nested tk-badge inside tab 2).
+    expect((el as Element).shadowRoot?.querySelector('[role="tab"] tk-badge')).not.toBeNull();
+    // Panel projection: the per-index named slots carry the children.
+    const panel0 = (el as Element).shadowRoot?.querySelector('[role="tabpanel"]');
+    expect(panel0?.querySelector('slot')?.getAttribute('name')).toBe('tab-0');
+    expect(el?.querySelector('[slot="tab-0"]')?.textContent).toBe('Дебетовая');
+  });
+
+  it('Tabs handlers receive the UNWRAPPED string — never the CustomEvent (AD-1)', async () => {
+    const handler = vi.fn();
+    const container = await renderToContainer(
+      React.createElement(Tabs, {
+        onValueChange: handler,
+        tabs: [
+          { value: 'debit', label: 'Дебетовая карта' },
+          { value: 'credit', label: 'Кредитная карта' },
+        ],
+      }),
+    );
+    const el = container.querySelector('tk-tabs');
+    expect(el).not.toBeNull();
+
+    // Direct dispatch: detail { value } in, bare string out.
+    el?.dispatchEvent(
+      new CustomEvent('value-change', { detail: { value: 'credit' }, composed: true, bubbles: true }),
+    );
+    expect(handler).toHaveBeenCalledTimes(1);
+    const payload = handler.mock.calls[0]?.[0];
+    expect(payload).toBe('credit');
+    expect(typeof payload).toBe('string');
+
+    // Real selection path: same unwrap through the element's own pipeline
+    // (the click the UA fires on the shadow tab button).
+    handler.mockClear();
+    const buttons = (el as Element).shadowRoot?.querySelectorAll('[role="tab"]');
+    await act(() => {
+      (buttons?.[1] as HTMLButtonElement | undefined)?.click();
+    });
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler.mock.calls[0]?.[0]).toBe('credit');
+  });
+
+  it('Tabs controlled mode: standard value mapping, wrapper adds no clamping (string channel)', async () => {
+    const TABS = [
+      { value: 'debit', label: 'Дебетовая карта' },
+      { value: 'credit', label: 'Кредитная карта' },
+    ];
+    let state = 'debit';
+    const container = await renderToContainer(
+      React.createElement(Tabs, {
+        tabs: TABS,
+        value: state,
+        onValueChange: (value: unknown) => {
+          expect(typeof value).toBe('string');
+          state = value as string;
+        },
+      }),
+    );
+    const root = roots[roots.length - 1];
+    const el = container.querySelector('tk-tabs') as (Element & {
+      value?: string;
+      updateComplete?: Promise<unknown>;
+    }) | null;
+    expect(el?.value).toBe('debit');
+
+    // Select the second tab through the element's own pipeline.
+    const buttons = (el as Element).shadowRoot?.querySelectorAll('[role="tab"]');
+    await act(() => {
+      (buttons?.[1] as HTMLButtonElement | undefined)?.click();
+    });
+
+    // Strict: the event fired, the element's channel keeps the consumer value.
+    expect(state).toBe('credit');
+    expect(el?.value).toBe('debit');
+
+    // The consumer's render answers: value flows back.
+    await act(() => {
+      root.render(
+        React.createElement(Tabs, {
+          tabs: TABS,
+          value: state,
+          onValueChange: (value: unknown) => {
+            state = value as string;
+          },
+        }),
+      );
+    });
+    expect(el?.value).toBe('credit');
+    const selected = [...((el as Element).shadowRoot?.querySelectorAll('[role="tab"]') ?? [])].find(
+      (tab) => tab.getAttribute('aria-selected') === 'true',
+    );
+    expect(selected?.textContent).toContain('Кредитная карта');
+
+    // Removing the value prop releases the element (frozen §4 semantics)
+    // — seeded from the last controlled value.
+    await act(() => {
+      root.render(React.createElement(Tabs, { tabs: TABS }));
+    });
+    expect(el?.value).toBeUndefined();
+    const seeded = [...((el as Element).shadowRoot?.querySelectorAll('[role="tab"]') ?? [])].find(
+      (tab) => tab.getAttribute('aria-selected') === 'true',
+    );
+    expect(seeded?.textContent).toContain('Кредитная карта');
   });

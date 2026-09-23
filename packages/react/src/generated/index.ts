@@ -7,4 +7,5 @@ export * from './link.js';
 export * from './progress-bar.js';
 export * from './segmented-radio.js';
 export * from './select.js';
+export * from './tabs.js';
 export * from './thumbnail-picker.js';
