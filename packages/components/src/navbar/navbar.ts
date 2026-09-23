@@ -265,6 +265,12 @@ export class TkNavbar extends LitElement {
       anchor: bar,
       placement: 'bottom',
       matchAnchorWidth: true,
+      // The sheet is FULL-BLEED by design (width == the bar == the viewport):
+      // the positioner's default 8px viewport padding would clamp the
+      // degenerate equal-width case 8px in from the left and 8px PAST the
+      // right edge (probed at 360px live) — zero padding keeps the flush
+      // edge-to-edge sheet the reference draws.
+      viewportPadding: 0,
     });
     this.#lockHandle = lockBodyScroll();
     this.#trapHandle = trapFocus(panel);

@@ -212,6 +212,17 @@ export const navbarStyles = css`
     overflow-y: auto;
     padding: var(--tk-space-8) var(--tk-space-16) var(--tk-space-24);
     background: var(--tk-navbar-drawer-fill, var(--tk-color-surface-base));
+    /* POPOVER UA RESET (found at the 3.10 composition; the tk-select panel
+       precedent in select.css.ts): the controller mounts this sheet via the
+       popover path, and UA [popover] styles it "inset: 0; margin: auto;
+       border: solid" — without an author-origin reset the margin:auto
+       re-centers the box between the positioner's inline top and the UA
+       bottom:0 (a drawer floating ~260px below the bar at 360×800, measured
+       live), and the UA border paints a stray dark outline. Author rules win
+       over UA regardless of specificity. */
+    border: none;
+    margin: 0;
+    inset: auto;
     border-radius: var(--tk-radius-lg) var(--tk-radius-lg) 0 0;
     box-shadow: var(--tk-shadow-popover);
   }

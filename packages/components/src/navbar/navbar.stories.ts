@@ -284,24 +284,38 @@ const revealOnReady = (event: Event): void => {
   }
 };
 
-/** Opens the drawer inside an embedded preview after it settles (frame 2 of the mobile demo). */
+/**
+ * Opens the drawer inside an embedded preview after it settles (frame 2 of
+ * the mobile demo). BOUNDED RETRY POLL, not a fonts.ready+setTimeout(0)
+ * one-shot: the nested Storybook preview mounts ASYNCHRONOUSLY after the
+ * iframe's load event, so the one-shot click queried before tk-navbar
+ * existed and silently no-oped (observed in the built bundle —
+ * aria-expanded stayed false and the «открытый drawer» frame shipped a
+ * closed bar; found at the 3.10 composition review). The poll lands the
+ * click the moment the burger renders — ~5s ceiling, then it degrades to
+ * the closed state.
+ */
 const openDrawerInside = (event: Event): void => {
   const frame = event.target as HTMLIFrameElement;
-  const open = (): void => {
+  const OPEN_ATTEMPTS = 50;
+  const OPEN_RETRY_MS = 100;
+  const tryOpen = (attemptsLeft: number): void => {
+    let burger: HTMLButtonElement | null | undefined;
     try {
-      const navbar = frame.contentDocument?.querySelector('tk-navbar');
-      navbar?.shadowRoot?.querySelector<HTMLButtonElement>('.burger')?.click();
+      burger = frame.contentDocument
+        ?.querySelector('tk-navbar')
+        ?.shadowRoot?.querySelector<HTMLButtonElement>('.burger');
     } catch {
-      /* the frame is same-origin; a miss just leaves the drawer closed */
+      /* the frame is same-origin; a cross-origin surprise stops the poll */
+      return;
     }
+    if (burger) {
+      burger.click();
+      return;
+    }
+    if (attemptsLeft > 0) window.setTimeout(() => tryOpen(attemptsLeft - 1), OPEN_RETRY_MS);
   };
-  try {
-    const doc = frame.contentDocument;
-    if (!doc) return;
-    void doc.fonts.ready.then(() => window.setTimeout(open, 0));
-  } catch {
-    /* ignore */
-  }
+  tryOpen(OPEN_ATTEMPTS);
 };
 
 export const Playground: Story = {
