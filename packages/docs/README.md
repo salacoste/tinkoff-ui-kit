@@ -1,8 +1,11 @@
 # pillkit-docs
 
-Storybook 10 docs surface for tinkoff-ui-kit — theme-toggle skeleton with the
-unofficial-study disclaimer (Story 1.5). Web-components renderer only; the
-component stories composed here ship with the components package (Story 1.7).
+Storybook 10 docs surface for [pillkit](https://github.com/salacoste/tinkoff-ui-kit)
+(RU, OQ-4) — theme toolbar, token reference, theming guide, getting-started with
+the component search, and per-component API tables generated from the CEM.
+Private package: documentation only, never published to npm. The unofficial-study
+disclaimer renders on every story (preview.ts banner + the inline box on the
+getting-started page); component stories ship with the components package.
 
 ## Scripts
 

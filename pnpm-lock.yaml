@@ -253,7 +253,7 @@ importers:
         specifier: workspace:*
         version: link:../components
       react:
-        specifier: 19.3.0
+        specifier: ^19.0.0
         version: 19.3.0
     devDependencies:
       '@types/react':

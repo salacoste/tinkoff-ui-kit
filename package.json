@@ -2,7 +2,8 @@
   "name": "tinkoff-ui-kit",
   "version": "0.1.0",
   "private": true,
-  "description": "UI kit based on the Tinkoff (T-Bank) design language — recreated, systematized and improved",
+  "description": "pillkit — UI kit recreating a banking-grade design language (unofficial study project; see README)",
+  "license": "SEE LICENSE IN LICENSE",
   "packageManager": "pnpm@12.5.1",
   "type": "module",
   "scripts": {

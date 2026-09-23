@@ -2,7 +2,24 @@
   "name": "pillkit-components",
   "version": "0.0.0",
   "private": true,
-  "description": "Lit custom elements core package for tinkoff-ui-kit — the single source of component behavior, rendered via Shadow DOM and themed with --tk-* custom properties.",
+  "description": "Lit custom elements core for pillkit — 19 tk-* components (forms, navigation, cards, overlays) rendered via Shadow DOM and themed with --tk-* custom properties; includes the shared overlay controller.",
+  "keywords": [
+    "pillkit",
+    "web-components",
+    "custom-elements",
+    "lit",
+    "ui-components",
+    "ui-kit",
+    "design-system",
+    "forms",
+    "overlays"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/salacoste/tinkoff-ui-kit.git",
+    "directory": "packages/components"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -17,6 +34,7 @@
   },
   "files": [
     "dist",
+    "!dist/api-reference*",
     "CONVENTIONS.md",
     "custom-elements.json"
   ],

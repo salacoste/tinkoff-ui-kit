@@ -201,7 +201,8 @@ cd my-app && pnpm init
 #     - ../tinkoff-ui-kit/packages/*
 # соберите пакеты кита — exports указывают на ./dist:
 cd ../tinkoff-ui-kit && pnpm install && pnpm build && cd ../my-app
-pnpm add pillkit-components pillkit-react pillkit-tokens --workspace</code></pre>
+# my-app — корень воркспейса, поэтому каждый add требует -w:
+pnpm add -w pillkit-components pillkit-react pillkit-tokens --workspace</code></pre>
       <p>
         Компоненты — Lit custom elements (<code>tk-*</code>); для React
         используйте сгенерированные обёртки из <code>pillkit-react</code>.
@@ -243,13 +244,17 @@ pnpm add pillkit-components pillkit-react pillkit-tokens --workspace</code></pre
         <strong>отдельно-лицензированные активы</strong>:
         <strong>DaytonaSans</strong> — переименованная Neue Haas Unica W1G
         (© Monotype Imaging Inc.), <strong>DaytonaPragma</strong> —
-        переименованная Pragmatica (© ParaType, веса 400/500/700). Оба
-        используются и распространяются по лицензиям на использование и
-        переименование, принадлежащим мейнтейнеру, и
-        <strong>не покрываются MIT-лицензией пакета</strong> — условия в
+        переименованная Pragmatica (© ParaType, веса 400/500/700). Шрифты
+        распространяются в пакете по договорам на использование и
+        переименование, заключённым мейнтейнером с Monotype и ParaType:
+        эти договоры лицензируют МЕЙНТЕЙНЕРА и НЕ передаются вместе с
+        пакетом — права потребителя на файлы шрифтов определяет только
         <a href="${FONTS_LICENSE_URL}" target="_blank" rel="noreferrer noopener"
           >LICENSE-FONTS.md</a
-        >. Подключаются одной строкой рядом с токенами:
+        >. Шрифты <strong>не покрываются MIT-лицензией пакета</strong>; если
+        требуемое использование в LICENSE-FONTS.md не описано — не
+        распространяйте файлы дальше и свяжитесь с мейнтейнером.
+        Подключаются одной строкой рядом с токенами:
       </p>
       <pre><code>import 'pillkit-tokens/tokens.css';
 import 'pillkit-tokens/daytona.css';</code></pre>

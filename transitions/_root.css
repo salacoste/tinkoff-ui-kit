@@ -1,3 +1,8 @@
+/* Vendored, unmodified from the transitions.dev free recipes pack (https://transitions.dev).
+ * Upstream terms (https://transitions.dev/terms.html): use in unlimited personal/commercial
+ * projects, modify and ship freely; do NOT redistribute the collection (or a substantial
+ * part of it) as a library/pack. NOT covered by this repo's MIT license (root LICENSE).
+ * Repository-local source material — never shipped in npm packages. */
 /* Vendored from transitions.dev free recipes (npx transitions-dev add --free).
  * Per-transition tunable defaults. Import once globally; every t-*.css snippet
  * reads from these semantic names. Motion values fold into --tk-* tokens in Story 1.2.

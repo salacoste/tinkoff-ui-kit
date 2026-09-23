@@ -1,3 +1,8 @@
+/* Vendored, unmodified from the transitions.dev free recipes pack (https://transitions.dev).
+ * Upstream terms (https://transitions.dev/terms.html): use in unlimited personal/commercial
+ * projects, modify and ship freely; do NOT redistribute the collection (or a substantial
+ * part of it) as a library/pack. NOT covered by this repo's MIT license (root LICENSE).
+ * Repository-local source material — never shipped in npm packages. */
 /* The wrap stacks two layers on the same coordinates. The
    skeleton owns the cold pulse + the fade-out side of the
    reveal; the content owns the fade-in side. They share the

@@ -1,3 +1,8 @@
+/* Vendored, unmodified from the transitions.dev free recipes pack (https://transitions.dev).
+ * Upstream terms (https://transitions.dev/terms.html): use in unlimited personal/commercial
+ * projects, modify and ship freely; do NOT redistribute the collection (or a substantial
+ * part of it) as a library/pack. NOT covered by this repo's MIT license (root LICENSE).
+ * Repository-local source material — never shipped in npm packages. */
 /* The bar is just a flex container with padding for the pill
    to sit inside. Tabs sit on z-index: 1, the pill on z-index: 0,
    so labels read above the pill background. */

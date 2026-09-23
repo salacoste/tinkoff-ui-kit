@@ -2,7 +2,23 @@
   "name": "pillkit-react",
   "version": "0.0.0",
   "private": true,
-  "description": "React adapters for tinkoff-ui-kit — wrappers generated from the Custom Elements Manifest of pillkit-components via @lit/react (regenerate: pnpm gen).",
+  "description": "React 19 adapters for pillkit — wrappers generated from the Custom Elements Manifest of pillkit-components via @lit/react; event handlers receive unwrapped detail payloads.",
+  "keywords": [
+    "pillkit",
+    "react",
+    "react-components",
+    "web-components",
+    "custom-elements",
+    "lit",
+    "wrappers",
+    "ui-kit"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/salacoste/tinkoff-ui-kit.git",
+    "directory": "packages/react"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -29,7 +45,7 @@
     "pillkit-components": "workspace:*"
   },
   "peerDependencies": {
-    "react": "19.3.0"
+    "react": "^19.0.0"
   },
   "devDependencies": {
     "@types/react": "19.3.0",
