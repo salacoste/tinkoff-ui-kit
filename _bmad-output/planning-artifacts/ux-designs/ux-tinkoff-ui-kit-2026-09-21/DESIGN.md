@@ -3,7 +3,7 @@ name: tinkoff-ui-kit
 description: Open-source recreation of the T-Bank (ex-Tinkoff) consumer web design language — yellow-black, pill-shaped, pastel-carded — as a token-first component kit with an authored dark theme.
 status: final
 created: 2026-09-21
-updated: 2026-09-22
+updated: 2026-09-23
 sources:
   - ../../prds/prd-tinkoff-ui-kit-2026-09-21/prd.md
   - ../../briefs/brief-tinkoff-ui-kit-2026-09-21/brief.md
@@ -54,8 +54,8 @@ colors:
   # Card tints (from marketing inventory)
   tint-gray: '#F5F5F6'
   tint-bluegray: '#ECF1F7'
-  tint-mint: '#E2F1EC'
-  tint-beige: '#F5EFE6'
+  tint-mint: '#D0F4F2'
+  tint-beige: '#F1EBD6'
   tint-charcoal: '#333333'
   # Semantic — dark theme (authored from brand-truth evidence; see Colors body)
   dark-base: '#1A1A1A'
@@ -231,8 +231,10 @@ links, icons at rest, or decoration.
 (blue = links/focus, green = success, red = error) each ship 3 steps for hover/active depth.
 
 **Card tints** (gray, bluegray, mint, beige, charcoal) are the marketing language's signature
-pastel surfaces; each pairs automatic dark-text, charcoal pairs white text. `[ASSUMPTION]` mint
-and beige hex values are vision-inventory estimates pending build-time capture verification.
+pastel surfaces; each pairs automatic dark-text, charcoal pairs white text. Mint and beige are
+verified values (Story 3.6 closure): measured by computed styles + native-zoom crops in the
+Story 2.0 capture pack — mint `#D0F4F2` (ОСАГО card, flat single-hex surface), beige
+`#F1EBD6` (Т-Образование card) — replacing the earlier vision-inventory estimates.
 
 **Dark theme (authored).** Evidence: the site's own `on-dark` white-alpha layer (text at
 100%/72%/50%, field at 10% white), the T-Bank app dark mode (near-black base, tonally elevated

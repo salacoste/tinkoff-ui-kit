@@ -1,0 +1,7 @@
+[
+  {
+    "story": "components-servicecard--playground",
+    "selector": "main .tksc-grid",
+    "file": "kit-service-card"
+  }
+]

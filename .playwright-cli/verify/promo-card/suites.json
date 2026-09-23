@@ -1,0 +1,9 @@
+[
+  {
+    "story": "components-promocard--playground",
+    "selector": "main .tkpc-grid",
+    "file": "kit-promo-card",
+    "ctaCard": "main tk-promo-card[variant=\"charcoal\"]",
+    "ctaStory": "components-promocard--variants"
+  }
+]

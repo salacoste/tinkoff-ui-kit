@@ -55,8 +55,8 @@ Light entries from the `colors` block: brand/ink/gray/lightblue/functional scale
 | `--tk-color-link-on-tint` | `#1464CC` | AA addition — `blue-200` for links on tinted/field surfaces (blue-100 = 4.07:1 on field, fails). DESIGN.md Colors. |
 | `--tk-color-tint-gray` | `#F5F5F6` |  |
 | `--tk-color-tint-bluegray` | `#ECF1F7` |  |
-| `--tk-color-tint-mint` | `#E2F1EC` | [ASSUMPTION] vision-inventory estimate pending build-time capture verification — resolved by Stories 3.6/5.6. DESIGN.md Colors. |
-| `--tk-color-tint-beige` | `#F5EFE6` | [ASSUMPTION] vision-inventory estimate pending build-time capture verification — resolved by Stories 3.6/5.6. DESIGN.md Colors. |
+| `--tk-color-tint-mint` | `#D0F4F2` | Verified — Story 3.6 closure: measured `#D0F4F2` on the reference ОСАГО card (computed style + native-zoom crop, Story 2.0 capture pack), replacing the vision-inventory estimate. DESIGN.md Colors. |
+| `--tk-color-tint-beige` | `#F1EBD6` | Verified — Story 3.6 closure: measured `#F1EBD6` on the reference Т-Образование card (computed style + native-zoom crop, Story 2.0 capture pack), replacing the vision-inventory estimate. DESIGN.md Colors. |
 | `--tk-color-tint-charcoal` | `#333333` |  |
 | `--tk-color-link` | `#1771E6` | Semantic alias — `blue-100`, added in Story 1.3: components consume semantics, not scales (AD-2/AD-3), and the dark layer needs a semantic name to override (`dark-link`). DESIGN.md Colors (TextLink). |
 | `--tk-color-error` | `#E01F19` | Semantic alias — `red-100`, added in Story 1.3 alongside `link` so both themes expose error semantics (the dark layer overrides it with `dark-error`). DESIGN.md Colors. |
@@ -241,8 +241,8 @@ Setting `data-theme="dark"` on `<html>` re-resolves every SEMANTIC color token �
 | `--tk-color-error-on-field` | `#D3120E` | `#FF7B74` | `colors.dark-error` | Alias — dark reuses `dark-error` (the light-only on-field step exists because red-100 fails on light field/muted surfaces). |
 | `--tk-color-tint-gray` | `#F5F5F6` | `#242424` | `colors.dark-tint-gray` | [ASSUMPTION] first-pass dark tint — darken toward L≈16–20% keeping hue; refinement owned by Story 5.4. DESIGN.md Colors. |
 | `--tk-color-tint-bluegray` | `#ECF1F7` | `#1E242C` | `colors.dark-tint-bluegray` | [ASSUMPTION] first-pass dark tint — darken toward L≈16–20% keeping hue; refinement owned by Story 5.4. DESIGN.md Colors. |
-| `--tk-color-tint-mint` | `#E2F1EC` | `#1C2A26` | `colors.dark-tint-mint` | [ASSUMPTION] first-pass dark tint — darken toward L≈16–20% keeping hue; refinement owned by Story 5.4. DESIGN.md Colors. |
-| `--tk-color-tint-beige` | `#F5EFE6` | `#2A2620` | `colors.dark-tint-beige` | [ASSUMPTION] first-pass dark tint — darken toward L≈16–20% keeping hue; refinement owned by Story 5.4. DESIGN.md Colors. |
+| `--tk-color-tint-mint` | `#D0F4F2` | `#1C2A26` | `colors.dark-tint-mint` | [ASSUMPTION] first-pass dark tint — darken toward L≈16–20% keeping hue; refinement owned by Story 5.4. DESIGN.md Colors. |
+| `--tk-color-tint-beige` | `#F1EBD6` | `#2A2620` | `colors.dark-tint-beige` | [ASSUMPTION] first-pass dark tint — darken toward L≈16–20% keeping hue; refinement owned by Story 5.4. DESIGN.md Colors. |
 
 ### Theme invariants
 

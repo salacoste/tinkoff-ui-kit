@@ -537,11 +537,11 @@ const TOKEN_NOTES = new Map([
   ],
   [
     '--tk-color-tint-mint',
-    '[ASSUMPTION] vision-inventory estimate pending build-time capture verification — resolved by Stories 3.6/5.6. DESIGN.md Colors.',
+    'Verified — Story 3.6 closure: measured `#D0F4F2` on the reference ОСАГО card (computed style + native-zoom crop, Story 2.0 capture pack), replacing the vision-inventory estimate. DESIGN.md Colors.',
   ],
   [
     '--tk-color-tint-beige',
-    '[ASSUMPTION] vision-inventory estimate pending build-time capture verification — resolved by Stories 3.6/5.6. DESIGN.md Colors.',
+    'Verified — Story 3.6 closure: measured `#F1EBD6` on the reference Т-Образование card (computed style + native-zoom crop, Story 2.0 capture pack), replacing the vision-inventory estimate. DESIGN.md Colors.',
   ],
   [
     '--tk-radius-xl',

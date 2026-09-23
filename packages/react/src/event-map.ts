@@ -78,6 +78,11 @@ export const EVENT_MAP: Readonly<Record<string, Readonly<TkKitElementEventMap>>>
   // 'tk-badge': none at v3.2 — STATELESS DISPLAY (spec 3.2): never
   // interactive alone; the element dispatches nothing (the completeness
   // guard's no-entry case, mirrored from tk-button).
+  // 'tk-promo-card'/'tk-feature-card'/'tk-service-card'/'tk-article-card':
+  // none at v3.6–3.9 — DISPLAY COMPONENTS (specs 3.6–3.9): passive surfaces;
+  // the CTA/link carries the action as a native anchor/button inside slots
+  // (nothing dispatches — the completeness guard's no-entry case, mirrored
+  // from tk-button/tk-footer).
   // 'tk-progress-bar': none at v2.7 — STATELESS DISPLAY (spec 2.7): value is
   // an input, not a channel; the element dispatches nothing (the completeness
   // guard's no-entry case, mirrored from tk-button).

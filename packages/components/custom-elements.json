@@ -4,6 +4,287 @@
   "modules": [
     {
       "kind": "javascript-module",
+      "path": "src/article-card/article-card.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "articleCardStyles",
+          "default": "css` :host { display: block; } /* position:relative — the stitching context the link's ::after resolves against. */ .card { position: relative; display: flex; flex-direction: column; box-sizing: border-box; height: 100%; min-width: 0; padding: var(--tk-article-card-padding, var(--tk-space-32)); border-radius: var(--tk-article-card-radius, var(--tk-radius-lg)); background: var(--tk-article-card-fill, var(--tk-color-tint-gray)); color: var(--tk-article-card-text, var(--tk-color-text-primary)); font-family: var(--tk-font-body); } /* --- Tint auto-pairing: per-tint token consumption (no theme branches) --- */ :host([variant='bluegray']) .card { background: var(--tk-article-card-fill, var(--tk-color-tint-bluegray)); } :host([variant='mint']) .card { background: var(--tk-article-card-fill, var(--tk-color-tint-mint)); } :host([variant='beige']) .card { background: var(--tk-article-card-fill, var(--tk-color-tint-beige)); } /* Charcoal pairs WHITE text (DESIGN Colors; the tint is theme-invariant); the whole-card link follows the pairing — white beats the on-tint blue. */ :host([variant='charcoal']) .card { background: var(--tk-article-card-fill, var(--tk-color-tint-charcoal)); color: var(--tk-article-card-text, var(--tk-color-white)); } :host([variant='charcoal']) .card__link { color: var(--tk-article-card-link, var(--tk-color-white)); } :host([variant='charcoal']) .card__description { color: var(--tk-article-card-text-muted, var(--tk-color-white)); } /* --- Anatomy --------------------------------------------------------------- */ /* 2-line clamp (the spec's webkit-prefix + standard pair): the title box is a -webkit-box; overflow hidden crops past the second line. */ .card__heading { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; margin: 0 0 var(--tk-space-8); font-family: var(--tk-font-heading); font-size: var(--tk-text-heading-6-size); font-weight: var(--tk-text-heading-6-weight); line-height: var(--tk-text-heading-6-leading); } .card__description { margin: 0; font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-weight); line-height: var(--tk-text-body-m-leading); color: var(--tk-article-card-text-muted, var(--tk-color-text-secondary)); } /* The «Читать» link: pinned bottom (margin-top:auto), the semantic link token, and the UNDERLINE affordance (transparent decoration painted in on hover/:focus-visible over the motion token — the tk-link language; the underline is the keyboard focus indicator, never removed). */ .card__link { margin-top: auto; padding-top: var(--tk-space-16); align-self: flex-start; font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-weight); line-height: var(--tk-text-body-m-leading); /* AA on tints (DESIGN text-link 'on-tint-color'): blue-100 = ~4.1-4.4:1 on the tint surfaces (fails 4.5:1) — the on-tint step carries the card register; the dark layer remaps it to dark-link. */ color: var(--tk-article-card-link, var(--tk-color-link-on-tint)); text-decoration: underline; text-decoration-color: transparent; transition: text-decoration-color var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-standard); } .card__link:hover, .card__link:focus-visible { text-decoration-color: currentColor; } /* THE STITCH: the pseudo covers the whole card — clicks anywhere land on the ANCHOR (the pseudo's origin) and navigate natively; the card is one click target and one tab stop. */ .card__link::after { content: ''; position: absolute; inset: 0; } /* --- Skeleton (the shared card pattern): gray-200 blocks matching the final layout; STATIC by design (no shimmer — reduced-motion-safe). --- */ .sk { background: var(--tk-color-gray-200); } .sk--title { width: 90%; height: var(--tk-text-heading-6-size); margin-bottom: var(--tk-space-8); border-radius: var(--tk-radius-full); } .sk--line { width: 90%; height: var(--tk-text-body-m-size); margin-bottom: var(--tk-space-8); border-radius: var(--tk-radius-full); } .sk--link { width: 25%; height: var(--tk-text-body-m-size); margin-top: auto; border-radius: var(--tk-radius-full); } /* --- The EXPERIENCE responsive matrix: <768px card padding drops one spacing step (32 → 24) — the navbar's breakpoint value. --- */ @media (max-width: 767px) { .card { padding: var(--tk-article-card-padding-mobile, var(--tk-space-24)); } } `",
+          "description": "tk-article-card styles — tokens only (FR-1), zero theme branches (AD-3).\n\nVisual spec: EXPERIENCE.md Component Patterns (ArticleCard row: «Читать»\nlink covers whole card via ::after stitch — single tab stop) + DESIGN.md\nComponents table (Text-only: 2-line title, desc, \"Читать\" link) + the\n2.0 capture notes § ArticleCard (article-card-grid.png, 1280×285):\n\n- FILL/RADIUS (probe): ~#F5F5F7 neutral gray at ~16–20px radius →\n  tint-gray at radius-lg (16px — the exact token inside the probed\n  range; the family's smaller text-card register), flat, no shadow.\n- TITLE (probe): ~#1C1C1E ~20px 600–700 lh 28px → heading-6 (20px/500\n  lh 1.35 — kit weight discipline caps card headings at 500),\n  LINE-CLAMPED to 2 lines (webkit prefix + standard, the spec's noted\n  pair).\n- DESCRIPTION (probe): ~#8E8E93 ~15px/21px 2–3 lines → body-m at\n  text-secondary.\n- LINK (probe): blue ~14–15px, no underline, no arrow → body-m at the\n  semantic link token; the underline fades in on hover/:focus-visible\n  (the tk-link affordance language — the underline IS the keyboard\n  focus indicator for card links, the tk-link §9 exception precedent).\n- STITCH (the spec's Design Notes pick): `.card__link::after {\n  position: absolute; inset: 0 }` over the position:relative card —\n  the pseudo belongs to the ANCHOR, so the whole card is one native\n  click target and ONE tab stop.\n\nPer-component custom properties (`--tk-article-card-*`, CONVENTIONS §6),\neach consumed WITH its token default:\n- `--tk-article-card-fill`     card fill          (default: per-variant tint)\n- `--tk-article-card-text`     title color        (default text-primary; white on charcoal)\n- `--tk-article-card-text-muted` description color (default text-secondary; white on charcoal)\n- `--tk-article-card-link`     link color         (default the on-tint AA step link-on-tint; white on charcoal)\n- `--tk-article-card-radius`   card radius        (default radius-lg)\n- `--tk-article-card-padding`  card padding       (default space-32)\n- `--tk-article-card-padding-mobile` <768px padding (default space-24 — the responsive matrix's one-step drop)\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule: the 2-line clamp count (the spec's literal), the 767px breakpoint\n(the navbar's mobile flip), and the skeleton block widths (90% title and\ndescription lines, 25% link — placeholder proportions)."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "articleCardStyles",
+          "declaration": {
+            "name": "articleCardStyles",
+            "module": "src/article-card/article-card.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/article-card/article-card.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-article-card — the text-only media card (Story 3.9): 2-line clamped\ntitle, description, and the «Читать» link covering the WHOLE CARD via a\n::after stitch — ONE tab stop, ONE click target, the card never carries\nthe action itself (composition discipline's other face: here the link\nlegitimately owns the entire surface).\n\nTHE STITCH (the spec's Design Notes pick): `.card__link::after {\nposition: absolute; inset: 0 }` over the position:relative card. The\npseudo-element belongs to the ANCHOR, so clicks anywhere on the card hit\nthe anchor and navigate natively — the reason the link is a NATIVE\n`<a>` in this element's shadow root (the tk-footer anchor precedent),\nnot a nested tk-link: a custom element's pseudo would land clicks on\nthe HOST, and the host is not the navigating anchor. The link carries\nthe kit's link affordance (semantic token, underline on hover and\nkeyboard focus — the tk-link language).\n\nTint auto-pairing and the flat tinted surface follow the tk-promo-card\nmachinery (per-tint token consumption, charcoal → white, no shadows).\nSKELETON state: EXPERIENCE names ArticleCard skeletons — the shared\ngray-200 block pattern, static under reduced motion (no animation\nexists; noted).\n\nSTATELESS (the display-component mold): no channel, no controlled pair,\nnothing dispatches — the event-map no-entry case. SSR-compat (AD-10):\nrendered via Lit templates only.",
+          "name": "TkArticleCard",
+          "slots": [
+            {
+              "description": "Overrides the `heading` prop.",
+              "name": "heading"
+            },
+            {
+              "description": "Overrides the `description` prop.",
+              "name": "description"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "variants",
+              "static": true,
+              "readonly": true,
+              "default": "['gray', 'bluegray', 'mint', 'beige', 'charcoal']",
+              "type": {
+                "text": "['gray', 'bluegray', 'mint', 'beige', 'charcoal']"
+              },
+              "description": "Tint variant union (CONVENTIONS §2: literal unions, never forking booleans)."
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "TkArticleCardVariant"
+              },
+              "default": "'gray'",
+              "description": "Tint variant — also decides the text pairing (dark text on pastels, white on charcoal).",
+              "attribute": "variant",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "description": "Card title (heading-6, line-clamp 2); the `heading` slot overrides.",
+              "attribute": "heading"
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "description": "Card description (body-m); the `description` slot overrides.",
+              "attribute": "description"
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Navigation target for the whole-card «Читать» link.",
+              "attribute": "href"
+            },
+            {
+              "kind": "field",
+              "name": "linkLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Читать'",
+              "description": "Link label (default «Читать»).",
+              "attribute": "link-label"
+            },
+            {
+              "kind": "field",
+              "name": "skeleton",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Skeleton state: gray-200 placeholder blocks matching the final layout.",
+              "attribute": "skeleton",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "#headingSlotted",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Slot-assignment tracking: a named slot's content overrides its prop (tk-promo-card pattern)."
+            },
+            {
+              "kind": "field",
+              "name": "#descriptionSlotted",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "#slotHasContent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLSlotElement"
+                  }
+                }
+              ],
+              "description": "A slot carries projectable content when an element or non-empty text is assigned."
+            },
+            {
+              "kind": "method",
+              "name": "#handleHeadingSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#handleDescriptionSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "TkArticleCardVariant"
+              },
+              "description": "Tint variant — also decides the text pairing (dark text on pastels, white on charcoal).",
+              "name": "variant",
+              "default": "'gray'",
+              "fieldName": "variant"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Skeleton state: gray-200 placeholder blocks matching the final layout.",
+              "name": "skeleton",
+              "default": "false",
+              "fieldName": "skeleton"
+            },
+            {
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "description": "Card title (heading-6, line-clamp 2); the `heading` slot overrides.",
+              "fieldName": "heading"
+            },
+            {
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "description": "Card description (body-m); the `description` slot overrides.",
+              "fieldName": "description"
+            },
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Navigation target for the whole-card «Читать» link.",
+              "fieldName": "href"
+            },
+            {
+              "name": "link-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Читать'",
+              "description": "Link label (default «Читать»).",
+              "fieldName": "linkLabel"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-article-card",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkArticleCard",
+          "declaration": {
+            "name": "TkArticleCard",
+            "module": "src/article-card/article-card.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-article-card",
+          "declaration": {
+            "name": "TkArticleCard",
+            "module": "src/article-card/article-card.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/article-card/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/article-card/article-card.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/badge/badge.css.ts",
       "declarations": [
         {
@@ -823,6 +1104,297 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/feature-card/feature-card.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "featureCardStyles",
+          "default": "css` :host { display: block; } .card { display: flex; flex-direction: column; box-sizing: border-box; height: 100%; min-width: 0; min-height: var(--tk-feature-card-min-height, 320px); padding: var(--tk-feature-card-padding, var(--tk-space-32)); border-radius: var(--tk-feature-card-radius, var(--tk-radius-xxl)); background: var(--tk-feature-card-fill, var(--tk-color-tint-gray)); color: var(--tk-feature-card-text, var(--tk-color-text-primary)); font-family: var(--tk-font-body); } /* --- Tint auto-pairing: per-tint token consumption (no theme branches) --- */ :host([variant='bluegray']) .card { background: var(--tk-feature-card-fill, var(--tk-color-tint-bluegray)); } :host([variant='mint']) .card { background: var(--tk-feature-card-fill, var(--tk-color-tint-mint)); } :host([variant='beige']) .card { background: var(--tk-feature-card-fill, var(--tk-color-tint-beige)); } /* EDITORIAL = the charcoal register: white heading, white pairing, and the two-column grid with the art bleeding right — but the SECOND column only exists when art is slotted (data-has-art; no art → single column, review finding 2). Padding collapses onto the body column; the card's radius + overflow clip crop the bleed. */ :host([variant='editorial']) .card { display: grid; grid-template-columns: minmax(0, 1fr); padding: 0; overflow: hidden; background: var(--tk-feature-card-fill, var(--tk-color-tint-charcoal)); color: var(--tk-feature-card-text, var(--tk-color-white)); } :host([variant='editorial'][data-has-art]) .card { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); } :host([variant='editorial']) .card__description { color: var(--tk-feature-card-text-muted, var(--tk-color-white)); } /* Editorial CTA pair (review finding 1): the slotted tk-button secondary's pill is --tk-color-surface-base (dark: #1A1A1A — invisible on the theme-invariant charcoal) and its label is --tk-color-text-primary (dark: white). Re-scoped to the hook PAIR inside the actions zone — flat-tree inheritance carries them into the slotted button. */ :host([variant='editorial']) .card__actions { --tk-color-surface-base: var(--tk-feature-card-cta-fill, var(--tk-color-white)); --tk-color-text-primary: var(--tk-feature-card-cta-text, var(--tk-color-ink-300)); } /* Stretch fills the column's full height; the zone's flex justify/align flex-end anchors the ART low-right against the bleed edge. The second rule re-zeroes the anatomy margin at higher specificity — the bleed stays flush to the card's bottom-right edge. */ :host([variant='editorial']) .card__art { grid-column: 2; grid-row: 1; align-self: stretch; justify-content: flex-end; align-items: flex-end; margin-bottom: 0; overflow: hidden; } :host([variant='editorial'][data-has-art]) .card__art { margin-bottom: 0; } :host([variant='editorial']) .card__art ::slotted(img) { width: 100%; height: 100%; object-fit: cover; } :host([variant='editorial']) .card__body { grid-column: 1; grid-row: 1; padding: var(--tk-feature-card-padding, var(--tk-space-32)); } /* --- Anatomy --------------------------------------------------------------- */ /* Art zone: COLLAPSED without slotted art (the data-has-art attribute the element toggles on slotchange — no stray 24px margin when empty). */ .card__art { display: none; } :host([data-has-art]) .card__art { display: flex; margin-bottom: var(--tk-space-24); } .card__art ::slotted(img) { display: block; max-width: 100%; height: auto; } .card__body { display: flex; flex-direction: column; flex: 1; min-width: 0; } .card__heading { margin: 0 0 var(--tk-space-8); font-family: var(--tk-font-heading); font-size: var(--tk-text-heading-4-size); font-weight: var(--tk-text-heading-4-weight); line-height: var(--tk-text-heading-4-leading); } .card__description { margin: 0; font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-weight); line-height: var(--tk-text-body-m-leading); color: var(--tk-feature-card-text-muted, var(--tk-color-text-secondary)); } /* The CTA zone: START-aligned (the banner register) and pinned bottom via margin-top:auto — the consumer's slotted tk-button secondary carries it. */ .card__actions { display: flex; justify-content: flex-start; margin-top: auto; padding-top: var(--tk-space-24); } /* --- Skeleton (the shared card pattern): gray-200 blocks matching the final layout; STATIC by design (no shimmer — reduced-motion-safe). --- */ .sk { background: var(--tk-color-gray-200); } .sk--heading { width: 60%; height: var(--tk-text-heading-4-size); margin-bottom: var(--tk-space-12); border-radius: var(--tk-radius-full); } .sk--line { width: 90%; height: var(--tk-text-body-m-size); margin-bottom: var(--tk-space-8); border-radius: var(--tk-radius-full); } .sk--cta { width: 40%; height: var(--tk-space-48); margin-top: auto; border-radius: var(--tk-radius-full); } /* --- The EXPERIENCE responsive matrix: <768px card padding drops one spacing step (32 → 24) — the navbar's breakpoint value. --- */ @media (max-width: 767px) { .card { padding: var(--tk-feature-card-padding-mobile, var(--tk-space-24)); } :host([variant='editorial']) .card__body { padding: var(--tk-feature-card-padding-mobile, var(--tk-space-24)); } } `",
+          "description": "tk-feature-card styles — tokens only (FR-1), zero theme branches (AD-3).\n\nVisual spec: DESIGN.md `components.card-feature` (radius xxl, min-height\n320) + EXPERIENCE.md Component Patterns (FeatureCard row: as PromoCard,\n2-up scale; editorial variant supports background art bleed right) + the\n2.0 capture notes § FeatureCard (feature-card-platinum.png 552×432,\nfeature-card-tj-banner.png 432×401):\n\n- SCALE (DESIGN frozen): min-height 320px, radius-xxl — the 2-up banner\n register (the capture's per-card radius readings ranged 16–28, flagged;\n the DESIGN xxl ruling covers the family).\n- HEADING (probe): ~28–30px 700 → heading-4 (28px; kit weight discipline\n  caps card headings at 500 per DESIGN Typography).\n- BODY (probe): #FFFFFF ~16px on the slate banners → body-m, white on\n editorial (charcoal pairing), text-secondary on pastels.\n- CTA (probe): white pill, dark text — the consumer's slotted tk-button\n  secondary; START-aligned (the editorial banner register — promo-card\n  owns the centered CTA) and pinned bottom via margin-top:auto.\n- EDITORIAL BLEED (the spec's grid pick, noted over absolute): the\n variant flips the card to a two-column grid — body padded in column 1,\n art in column 2 STRETCHED to the right edge (card padding collapses;\n align-self:stretch fills the column's full height and the zone's flex\n justify/align flex-end anchors the ART low-right; border-radius +\n overflow clip crop the bleed past the content zone). Without slotted\n art the grid stays SINGLE-COLUMN (the data-has-art pick, below).\n- FLAT (DESIGN Elevation): tinted surfaces carry NO shadow.\n\nPer-component custom properties (`--tk-feature-card-*`, CONVENTIONS §6),\neach consumed WITH its token default:\n- `--tk-feature-card-fill`     card fill          (default: per-variant tint; charcoal on editorial)\n- `--tk-feature-card-text`     heading color      (default text-primary; white on editorial)\n- `--tk-feature-card-text-muted` description color (default text-secondary; white on editorial)\n- `--tk-feature-card-radius`   card radius        (default radius-xxl)\n- `--tk-feature-card-padding`  body padding       (default space-32)\n- `--tk-feature-card-padding-mobile` <768px padding (default space-24 — the responsive matrix's one-step drop)\n- `--tk-feature-card-min-height` card min-height  (default 320px)\n- `--tk-feature-card-cta-fill` editorial CTA pill fill (default white)\n  and `--tk-feature-card-cta-text` its label (default ink-300) — a PAIR,\n  the footer-pill precedent. EDITORIAL CTA DELIVERY (review finding 1):\n  the composed tk-button secondary paints its pill from\n  --tk-color-surface-base (button.css.ts) — the token the dark layer\n  remaps to #1A1A1A, near-invisible on the THEME-INVARIANT charcoal. The\n  editorial rule re-scopes surface-base/text-primary to the hook pair\n  INSIDE the actions zone only: slotted content inherits custom\n  properties through the FLAT TREE (slot → .card__actions → .card →\n  host), so the pill stays white with ink text in BOTH themes and stays\n  themable through the hooks.\n\nART ZONE (review finding 2): the zone is COLLAPSED (display:none, no\nmargin) unless the host carries `data-has-art` — the element toggles\nthat attribute from the art slot's slotchange (the attribute pick over\n:has(); :empty cannot work — the slot element is always a child). On the\neditorial variant the grid also waits for it: no slotted art → the\nbanner stays a SINGLE column (no empty 0.95fr track).\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule: the 320px min-height (DESIGN.md `card-feature` literal — carried\nby the `--tk-feature-card-min-height` hook), the 767px breakpoint (the\nnavbar's mobile flip), the editorial grid ratio (1.05fr/0.95fr — a\nlayout proportion, not a scale value), and the skeleton block\nwidths/heights (60% heading, 90% lines, space-48 CTA — placeholder\nproportions)."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "featureCardStyles",
+          "declaration": {
+            "name": "featureCardStyles",
+            "module": "src/feature-card/feature-card.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/feature-card/feature-card.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-feature-card — the 2-up large marketing card (Story 3.7): radius-xxl,\nmin-height 320, heading-4 scale, and the CHARCOAL EDITORIAL variant\n(white heading, white pill CTA, art BLEEDING RIGHT) — the reference's\n«Платинум»/«Т-Ж» banner register. Inherits tk-promo-card's patterns\n(epic dependency order): tint auto-pairing via per-tint token\nconsumption, passive card + consumer-slotted CTA, the shared skeleton\npattern, and the slotchange lazy-enforcement technique on the art slot.\n\nEDITORIAL BLEED (the spec's grid pick, noted over absolute positioning):\nthe editorial variant swaps the flex column for a two-column GRID — the\nbody (padded) in column 1, the art in column 2 stretching to the card's\nRIGHT EDGE (card padding collapses to 0 on that variant, the art zone\nself-aligns end and the card's border-radius + overflow clip crop the\nbleed). `editorial` consumes `--tk-color-tint-charcoal` and paints the\nWHITE pairing — the same pairing machinery as promo-card's charcoal.\n\nSTATELESS (the display-component mold): no channel, no controlled pair,\nnothing dispatches — the event-map no-entry case (tk-promo-card\nprecedent). SSR-compat (AD-10): rendered via Lit templates only.",
+          "name": "TkFeatureCard",
+          "slots": [
+            {
+              "description": "Card art; TOP on tint variants, RIGHT-BLEED column on editorial (imgs lazy-enforced).",
+              "name": "art"
+            },
+            {
+              "description": "Overrides the `heading` prop.",
+              "name": "heading"
+            },
+            {
+              "description": "Overrides the `description` prop.",
+              "name": "description"
+            },
+            {
+              "description": "The CTA (compose a tk-button secondary — white pill); pinned bottom-start, start-aligned on editorial.",
+              "name": "actions"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "variants",
+              "static": true,
+              "readonly": true,
+              "default": "['gray', 'bluegray', 'mint', 'beige', 'editorial']",
+              "type": {
+                "text": "['gray', 'bluegray', 'mint', 'beige', 'editorial']"
+              },
+              "description": "Tint variant union (CONVENTIONS §2: literal unions, never forking booleans)."
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "TkFeatureCardVariant"
+              },
+              "default": "'gray'",
+              "description": "Tint variant — `editorial` is the charcoal register with right-bleed art.",
+              "attribute": "variant",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "description": "Card heading (heading-4); the `heading` slot overrides.",
+              "attribute": "heading"
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "description": "Card description (body-m); the `description` slot overrides.",
+              "attribute": "description"
+            },
+            {
+              "kind": "field",
+              "name": "skeleton",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Skeleton state: gray-200 placeholder blocks matching the final layout.",
+              "attribute": "skeleton",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "#headingSlotted",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Slot-assignment tracking: a named slot's content overrides its prop (tk-promo-card pattern)."
+            },
+            {
+              "kind": "field",
+              "name": "#descriptionSlotted",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "#slotHasContent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLSlotElement"
+                  }
+                }
+              ],
+              "description": "A slot carries projectable content when an element or non-empty text is assigned."
+            },
+            {
+              "kind": "method",
+              "name": "#handleHeadingSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#handleDescriptionSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#enforceLazyArt",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLSlotElement"
+                  }
+                }
+              ],
+              "description": "Lazy enforcement on the art slot (the spec's noted slotchange technique\n— see tk-promo-card): every img projected into the slot — directly\nslotted or at ANY nesting depth inside a wrapper (querySelectorAll\nwalks the whole assigned subtree) — gets `loading=\"lazy\"\ndecoding=\"async\"` SET."
+            },
+            {
+              "kind": "method",
+              "name": "#handleArtSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "Art slotchange does double duty: lazy-enforces slotted imgs AND toggles\nthe `data-has-art` host attribute — the styling hook that expands the\nart zone and opens the editorial bleed column (no slotted art → zone\nstays display:none, editorial stays single-column; the attribute pick\nover :has() is recorded in the css header)."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "TkFeatureCardVariant"
+              },
+              "description": "Tint variant — `editorial` is the charcoal register with right-bleed art.",
+              "name": "variant",
+              "default": "'gray'",
+              "fieldName": "variant"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Skeleton state: gray-200 placeholder blocks matching the final layout.",
+              "name": "skeleton",
+              "default": "false",
+              "fieldName": "skeleton"
+            },
+            {
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "description": "Card heading (heading-4); the `heading` slot overrides.",
+              "fieldName": "heading"
+            },
+            {
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "description": "Card description (body-m); the `description` slot overrides.",
+              "fieldName": "description"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-feature-card",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkFeatureCard",
+          "declaration": {
+            "name": "TkFeatureCard",
+            "module": "src/feature-card/feature-card.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-feature-card",
+          "declaration": {
+            "name": "TkFeatureCard",
+            "module": "src/feature-card/feature-card.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/feature-card/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/feature-card/feature-card.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/footer/footer.css.ts",
       "declarations": [
         {
@@ -968,6 +1540,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/article-card/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/badge/index.js"
           }
         },
@@ -985,6 +1565,14 @@
           "declaration": {
             "name": "*",
             "module": "src/checkbox/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/feature-card/index.js"
           }
         },
         {
@@ -1032,6 +1620,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/promo-card/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/segmented-radio/index.js"
           }
         },
@@ -1041,6 +1637,14 @@
           "declaration": {
             "name": "*",
             "module": "src/select/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/service-card/index.js"
           }
         },
         {
@@ -2693,6 +3297,297 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/promo-card/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/promo-card/promo-card.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/promo-card/promo-card.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "promoCardStyles",
+          "default": "css` :host { display: block; } .card { display: flex; flex-direction: column; box-sizing: border-box; height: 100%; min-width: 0; padding: var(--tk-promo-card-padding, var(--tk-space-32)); border-radius: var(--tk-promo-card-radius, var(--tk-radius-xxl)); background: var(--tk-promo-card-fill, var(--tk-color-tint-gray)); color: var(--tk-promo-card-text, var(--tk-color-text-primary)); font-family: var(--tk-font-body); } /* --- Tint auto-pairing: per-tint token consumption (no theme branches) --- */ :host([variant='bluegray']) .card { background: var(--tk-promo-card-fill, var(--tk-color-tint-bluegray)); } :host([variant='mint']) .card { background: var(--tk-promo-card-fill, var(--tk-color-tint-mint)); } :host([variant='beige']) .card { background: var(--tk-promo-card-fill, var(--tk-color-tint-beige)); } /* Charcoal pairs WHITE text (DESIGN Colors: charcoal pairs white text; the tint itself is theme-invariant). */ :host([variant='charcoal']) .card { background: var(--tk-promo-card-fill, var(--tk-color-tint-charcoal)); color: var(--tk-promo-card-text, var(--tk-color-white)); } :host([variant='charcoal']) .card__description { color: var(--tk-promo-card-text-muted, var(--tk-color-white)); } /* Charcoal CTA pair (review finding 1): the slotted tk-button secondary's pill is --tk-color-surface-base (dark: #1A1A1A — invisible on the theme-invariant charcoal) and its label is --tk-color-text-primary (dark: white). Re-scoped to the hook PAIR inside the actions zone — flat-tree inheritance carries them into the slotted button. */ :host([variant='charcoal']) .card__actions { --tk-color-surface-base: var(--tk-promo-card-cta-fill, var(--tk-color-white)); --tk-color-text-primary: var(--tk-promo-card-cta-text, var(--tk-color-ink-300)); } /* --- Anatomy --------------------------------------------------------------- */ /* Art zone: COLLAPSED without slotted art (the data-has-art attribute the element toggles on slotchange — no stray 24px margin when empty). */ .card__art { display: none; } :host([data-has-art]) .card__art { display: flex; margin-bottom: var(--tk-space-24); } .card__art ::slotted(img) { display: block; max-width: 100%; height: auto; } .card__body { display: flex; flex-direction: column; flex: 1; min-width: 0; } .card__heading { margin: 0 0 var(--tk-space-8); font-family: var(--tk-font-heading); font-size: var(--tk-text-heading-5-size); font-weight: var(--tk-text-heading-5-weight); line-height: var(--tk-text-heading-5-leading); text-align: center; } .card__description { margin: 0; font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-weight); line-height: var(--tk-text-body-m-leading); color: var(--tk-promo-card-text-muted, var(--tk-color-text-secondary)); text-align: center; } /* The CTA zone: the consumer's slotted tk-button secondary (white pill); margin-top:auto pins it BOTTOM-CENTER across varying description lengths. */ .card__actions { display: flex; justify-content: center; margin-top: auto; padding-top: var(--tk-space-24); } /* --- Skeleton (the shared card pattern): gray-200 blocks matching the final layout; STATIC by design — no shimmer exists, so the reduced-motion path is the same render (noted in promo-card.ts). --- */ .sk { background: var(--tk-color-gray-200); } .sk--art { aspect-ratio: 4 / 3; margin-bottom: var(--tk-space-24); border-radius: var(--tk-radius-lg); } .sk--heading { width: 60%; height: var(--tk-text-heading-5-size); margin-bottom: var(--tk-space-12); border-radius: var(--tk-radius-full); } .sk--line { width: 90%; height: var(--tk-text-body-m-size); margin-bottom: var(--tk-space-8); border-radius: var(--tk-radius-full); } .sk--cta { width: 40%; height: var(--tk-space-48); margin-top: auto; border-radius: var(--tk-radius-full); } /* --- The EXPERIENCE responsive matrix: <768px card padding drops one spacing step (32 → 24) — the navbar's breakpoint value. --- */ @media (max-width: 767px) { .card { padding: var(--tk-promo-card-padding-mobile, var(--tk-space-24)); } } `",
+          "description": "tk-promo-card styles — tokens only (FR-1), zero theme branches (AD-3).\n\nVisual spec: DESIGN.md `components.card-promo` (radius xxl, tint bg,\npadding space-32) + EXPERIENCE.md Component Patterns (PromoCard row:\ntint variant sets pairing; CTA carries the action) + the 2.0 capture\nnotes § PromoCard (promo-card-grid.png, 1280×961):\n\n- RADIUS/PADDING (DESIGN frozen): radius-xxl 32, padding space-32 — the\n  capture's per-card radius readings ranged 16–28 (flagged); the DESIGN\n  xxl register is the systematized ruling for the card family.\n- TINTS (probe, computed): pastel surfaces incl. the Story 3.6-closed\n  mint #D0F4F2 / beige #F1EBD6 — consumed via the tint tokens, never\n  literals.\n- PAIRING: dark heading/body on pastels (capture ~#191C23/#3E434E →\n  text-primary/text-secondary), WHITE on charcoal — implemented as\n  per-tint TOKEN CONSUMPTION (the same rules restyle under the dark\n  layer's tint overrides; no component theme branches).\n- HEADING (probe): ~24px 600–700 → heading-5 (24px; kit weight discipline\n  caps card headings at 500 per DESIGN Typography).\n- BODY (probe): ~16px → body-m (15px — the kit's card-description slot,\n  the article-card capture reads 15px exactly).\n- CTA (probe): white pill bottom-CENTER — the consumer's slotted tk-button\n  secondary (composed, not reimplemented); the actions zone pins it via\n  margin-top:auto. The heading/description CENTER to match (the reference's\n  promo register centers card text — recorded from the side-by-side vision\n  pass, .playwright-cli/verify/promo-card/NOTES.md deviation 1).\n- FLAT (DESIGN Elevation): tinted surfaces carry NO shadow — this sheet\n  declares none.\n\nPer-component custom properties (`--tk-promo-card-*`, CONVENTIONS §6),\neach consumed WITH its token default:\n- `--tk-promo-card-fill`     card fill          (default: per-variant tint)\n- `--tk-promo-card-text`     heading color      (default text-primary; white on charcoal)\n- `--tk-promo-card-text-muted` description color (default text-secondary; white on charcoal)\n- `--tk-promo-card-radius`   card radius        (default radius-xxl)\n- `--tk-promo-card-padding`  card padding       (default space-32)\n- `--tk-promo-card-padding-mobile` <768px padding (default space-24 — the\n  EXPERIENCE responsive matrix's «card paddings drop one spacing step»;\n  separate hook so a desktop override survives the breakpoint, the\n  tk-navbar height-mobile precedent)\n- `--tk-promo-card-cta-fill` charcoal CTA pill fill (default white) and\n  `--tk-promo-card-cta-text` its label (default ink-300) — a PAIR, the\n  footer-pill precedent. CHARCOAL CTA DELIVERY (review finding 1): the\n  composed tk-button secondary paints its pill from `--tk-color-surface-base`\n  (button.css.ts) — the token the DARK layer remaps to #1A1A1A, which is\n  near-invisible on the THEME-INVARIANT charcoal. The charcoal rule\n  re-scopes surface-base/text-primary to the hook pair INSIDE the actions\n  zone only: slotted content inherits custom properties through the FLAT\n  TREE (slot → .card__actions → .card → host), so the pill stays white\n  with ink text in BOTH themes and stays themable through the hooks.\n\nART ZONE (review finding 2): the zone is COLLAPSED (display:none, no\nmargin) unless the host carries `data-has-art` — the element toggles that\nattribute from the art slot's slotchange (the reviewer's attribute pick\nover :has(); :empty cannot work — the slot element is always a child).\nNo slotted art → the heading sits at the padding register directly.\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule: the 767px breakpoint (the navbar's mobile flip), the skeleton\nblock widths/aspect (60% heading, 90% lines, 4/3 art, 40% CTA — layout\nproportions of the placeholder, not scale values) and the CTA block's\nspace-48 height (the tk-button `card` size the skeleton mirrors)."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "promoCardStyles",
+          "declaration": {
+            "name": "promoCardStyles",
+            "module": "src/promo-card/promo-card.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/promo-card/promo-card.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-promo-card — the tinted marketing card (Story 3.6): pastel surface,\nradius-xxl, art slot TOP, heading/description (props or same-named slots),\nand a WHITE PILL CTA bottom-center — the CTA is the CONSUMER's slotted\ntk-button secondary; the CARD itself is PASSIVE (composition discipline:\ncards are not clickable — the CTA carries the action).\n\nTINT AUTO-PAIRING (the spec's core mechanism): the `variant` decides the\npairing through PER-TINT TOKEN CONSUMPTION — pastels (gray/bluegray/mint/\nbeige) paint text-primary/text-secondary, charcoal paints white — zero\ntheme branches beyond the token layer (AD-3): the same rules restyle when\nthe dark layer overrides the tint tokens.\n\nART SLOT LAZY ENFORCEMENT (EXPERIENCE: «art slot lazy-loads» — the noted\nslotchange technique): slotted content belongs to the consumer, so the\ncard cannot put attributes on it from a template. On every `slotchange`\nof the art slot the element walks the assigned elements and SETS\n`loading=\"lazy\" decoding=\"async\"` on every projected `<img>` (directly\nslotted or at any nesting depth) — enforcement, not a default: the\nreference's below-fold promo art never blocks the first paint. The same\nhandler toggles the `data-has-art` host attribute so the art zone\ncollapses when nothing is slotted (see the css header).\n\nSKELETON (the shared card pattern, EXPERIENCE State Patterns): the\n`skeleton` boolean replaces the content with gray-200 placeholder blocks\nmatching the final layout (art block, heading line, description lines,\nCTA pill). The blocks are STATIC — no shimmer animation exists, so the\nreduced-motion path is trivially the same render (noted; motion tokens\nstay unconsumed).\n\nSTATELESS (the display-component mold): no channel, no controlled pair,\nnothing dispatches — the event-map no-entry case (tk-footer precedent).\nSSR-compat (AD-10): rendered via Lit templates only; the slotchange\nlistener is event-driven post-mount access, never construction-time.",
+          "name": "TkPromoCard",
+          "slots": [
+            {
+              "description": "Card art, TOP (projected imgs get loading=lazy decoding=async enforced).",
+              "name": "art"
+            },
+            {
+              "description": "Overrides the `heading` prop.",
+              "name": "heading"
+            },
+            {
+              "description": "Overrides the `description` prop.",
+              "name": "description"
+            },
+            {
+              "description": "The CTA (compose a tk-button secondary — white pill); pinned bottom-center.",
+              "name": "actions"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "variants",
+              "static": true,
+              "readonly": true,
+              "default": "['gray', 'bluegray', 'mint', 'beige', 'charcoal']",
+              "type": {
+                "text": "['gray', 'bluegray', 'mint', 'beige', 'charcoal']"
+              },
+              "description": "Tint variant union (CONVENTIONS §2: literal unions, never forking booleans)."
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "TkPromoCardVariant"
+              },
+              "default": "'gray'",
+              "description": "Tint variant — also decides the text pairing (dark text on pastels, white on charcoal).",
+              "attribute": "variant",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "description": "Card heading (heading-5); the `heading` slot overrides.",
+              "attribute": "heading"
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "description": "Card description (body-m); the `description` slot overrides.",
+              "attribute": "description"
+            },
+            {
+              "kind": "field",
+              "name": "skeleton",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Skeleton state: gray-200 placeholder blocks matching the final layout.",
+              "attribute": "skeleton",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "#headingSlotted",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Slot-assignment tracking: a named slot's content overrides its prop (Lit fallback cannot see it)."
+            },
+            {
+              "kind": "field",
+              "name": "#descriptionSlotted",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "#slotHasContent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLSlotElement"
+                  }
+                }
+              ],
+              "description": "A slot carries projectable content when an element or non-empty text is assigned (tk-button name-guard check)."
+            },
+            {
+              "kind": "method",
+              "name": "#handleHeadingSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#handleDescriptionSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#enforceLazyArt",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLSlotElement"
+                  }
+                }
+              ],
+              "description": "Lazy enforcement on the art slot (the spec's noted technique): every img\nprojected into the slot — directly slotted or at ANY nesting depth inside\na wrapper (querySelectorAll walks the whole assigned subtree) — gets\n`loading=\"lazy\" decoding=\"async\"` SET. Slot content is the consumer's;\nslotchange is the only hook that sees it."
+            },
+            {
+              "kind": "method",
+              "name": "#handleArtSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "Art slotchange does double duty: lazy-enforces slotted imgs AND toggles\nthe `data-has-art` host attribute — the styling hook that expands the\nart zone (no slotted art → the zone stays display:none with no stray\nmargin; the attribute pick over :has() is recorded in the css header)."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "TkPromoCardVariant"
+              },
+              "description": "Tint variant — also decides the text pairing (dark text on pastels, white on charcoal).",
+              "name": "variant",
+              "default": "'gray'",
+              "fieldName": "variant"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Skeleton state: gray-200 placeholder blocks matching the final layout.",
+              "name": "skeleton",
+              "default": "false",
+              "fieldName": "skeleton"
+            },
+            {
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "description": "Card heading (heading-5); the `heading` slot overrides.",
+              "fieldName": "heading"
+            },
+            {
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "description": "Card description (body-m); the `description` slot overrides.",
+              "fieldName": "description"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-promo-card",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkPromoCard",
+          "declaration": {
+            "name": "TkPromoCard",
+            "module": "src/promo-card/promo-card.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-promo-card",
+          "declaration": {
+            "name": "TkPromoCard",
+            "module": "src/promo-card/promo-card.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/segmented-radio/index.ts",
       "declarations": [],
       "exports": [
@@ -3946,6 +4841,239 @@
           "declaration": {
             "name": "TkSelect",
             "module": "src/select/select.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/service-card/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/service-card/service-card.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/service-card/service-card.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "serviceCardStyles",
+          "default": "css` :host { display: block; } .card { display: flex; flex-direction: column; box-sizing: border-box; height: 100%; min-width: 0; padding: var(--tk-service-card-padding, var(--tk-space-24)); border-radius: var(--tk-service-card-radius, var(--tk-radius-xl)); background: var(--tk-service-card-fill, var(--tk-color-tint-gray)); color: var(--tk-service-card-text, var(--tk-color-text-primary)); font-family: var(--tk-font-body); } /* --- Tint auto-pairing: per-tint token consumption (no theme branches) --- */ :host([variant='bluegray']) .card { background: var(--tk-service-card-fill, var(--tk-color-tint-bluegray)); } :host([variant='mint']) .card { background: var(--tk-service-card-fill, var(--tk-color-tint-mint)); } :host([variant='beige']) .card { background: var(--tk-service-card-fill, var(--tk-color-tint-beige)); } /* Charcoal pairs WHITE text (DESIGN Colors; the tint is theme-invariant); the action link follows through its hook — white beats the on-tint blue on the dark fill. */ :host([variant='charcoal']) .card { background: var(--tk-service-card-fill, var(--tk-color-tint-charcoal)); color: var(--tk-service-card-text, var(--tk-color-white)); } :host([variant='charcoal']) .card__description { color: var(--tk-service-card-text-muted, var(--tk-color-white)); } :host([variant='charcoal']) .card__actions { --tk-color-link: var(--tk-service-card-link, var(--tk-color-white)); } /* --- Anatomy --------------------------------------------------------------- */ /* Decorative icon tile: the CONTAINER is aria-hidden (set in the template) — the projected art announces nothing. */ .card__icon { display: flex; width: var(--tk-space-48); height: var(--tk-space-48); margin-bottom: var(--tk-space-16); border-radius: var(--tk-service-card-icon-radius, var(--tk-radius-md)); overflow: hidden; } .card__icon ::slotted(*) { width: 100%; height: 100%; object-fit: cover; } .card__heading { margin: 0 0 var(--tk-space-8); font-family: var(--tk-font-heading); font-size: var(--tk-text-heading-5-size); font-weight: var(--tk-text-heading-5-weight); line-height: var(--tk-text-heading-5-leading); } .card__description { margin: 0; font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-weight); line-height: var(--tk-text-body-m-leading); color: var(--tk-service-card-text-muted, var(--tk-color-text-secondary)); } /* The action zone: the consumer's slotted tk-link standalone; pinned BOTTOM across description lengths (flex column + margin-top:auto). The link re-scope (see the header's LINK DELIVERY note) sources from the own-grammar hook — blue-100 fails 4.5:1 on the tint surfaces, so the AA on-tint step is the default; charcoal overrides it to white. */ .card__actions { display: flex; margin-top: auto; padding-top: var(--tk-space-16); --tk-color-link: var(--tk-service-card-link, var(--tk-color-link-on-tint)); } /* --- The EXPERIENCE responsive matrix: <768px card padding drops one spacing step (24 → 20) — the navbar's breakpoint value. --- */ @media (max-width: 767px) { .card { padding: var(--tk-service-card-padding-mobile, var(--tk-space-20)); } } `",
+          "description": "tk-service-card styles — tokens only (FR-1), zero theme branches (AD-3).\n\nVisual spec: DESIGN.md `components.card-service` (radius xl, padding\nspace-24) + EXPERIENCE.md Component Patterns (ServiceCard row: text link\nis the action; icon decorative aria-hidden) + the 2.0 capture notes §\nServiceCard (service-card-grid.png, 1280×361):\n\n- RADIUS/PADDING (DESIGN frozen): radius-xl 24, padding space-24 — the\n  capture reads ~24px radius / ~28–40px asymmetric padding; the DESIGN\n  symmetric systematization wins (xxl belongs to the big promo/feature\n  register — the two card registers never mix).\n- FILL (probe): ~#F5F6F8 → tint-gray (the family default), flat — no\n  shadow on tinted surfaces.\n- ICON (probe): 44×44 rounded-square ~12px radius → the slot wraps a\n  fixed track consuming radius-md (12px) at the ≥44px square; the\n  projected art is the consumer's (kit ships no icon set).\n- HEADING (probe): near-black ~24px 600–700 → heading-5 (24px; kit\n  weight discipline caps card headings at 500).\n- BODY (probe): ~#33383D 16px/24px 3 lines → body-m at text-secondary.\n- LINK (probe): brand blue 16px, no underline — the consumer's slotted\n  tk-link standalone; pinned BOTTOM across description lengths via\n  margin-top:auto.\n\nPer-component custom properties (`--tk-service-card-*`, CONVENTIONS §6),\neach consumed WITH its token default:\n- `--tk-service-card-fill`     card fill          (default: per-variant tint)\n- `--tk-service-card-text`     heading color      (default text-primary; white on charcoal)\n- `--tk-service-card-text-muted` description color (default text-secondary; white on charcoal)\n- `--tk-service-card-radius`   card radius        (default radius-xl)\n- `--tk-service-card-padding`  card padding       (default space-24)\n- `--tk-service-card-padding-mobile` <768px padding (default space-20 — the responsive matrix's one-step drop)\n- `--tk-service-card-icon-radius` icon tile radius (default radius-md)\n- `--tk-service-card-link`      action link color (default the on-tint AA\n  step link-on-tint; white on charcoal)\n\nLINK DELIVERY (review finding 5 — why a re-scope remains): the action is\na SLOTTED tk-link, and tk-link resolves --tk-color-link inside ITS OWN\nshadow root — the only cross-boundary channel that reaches it is a\ncustom-property re-scope (slotted content inherits through the FLAT\nTREE: slot → .card__actions → .card → host, AD-2's sanctioned\nmechanism). The re-scope lives on the ACTIONS ZONE only (not the whole\ncard — consumer link overrides elsewhere in the card are untouched) and\nis SOURCED from the own-grammar hook above, so consumers theme this\ncard's action link through `--tk-service-card-link` like every other\nslot.\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule: the 767px breakpoint (the navbar's mobile flip) and the icon\ntile's space-48 square (the ≥44px decorative floor, the capture's 44px\ntrack grown to the family's 48px rhythm)."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "serviceCardStyles",
+          "declaration": {
+            "name": "serviceCardStyles",
+            "module": "src/service-card/service-card.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/service-card/service-card.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-service-card — the compact directory card (Story 3.8): radius-xl,\npadding space-24, a small DECORATIVE icon slot (the component sets\naria-hidden on the icon CONTAINER — the projected 3D tile is decoration,\nthe text carries the meaning), heading/description, and the TEXT LINK\npinned to the card bottom across description lengths (flex column +\nmargin-top:auto on the actions zone — the consumer's slotted tk-link is\nthe ACTION; the card itself is passive, the composition discipline every\ncard shares).\n\nTint auto-pairing and the flat tinted surface follow the tk-promo-card\nmachinery (per-tint token consumption, charcoal → white, no shadows).\nNO skeleton state: EXPERIENCE names skeletons for ArticleCard and\nPromoCard content only — the service card is a static directory entry.\n\nSTATELESS (the display-component mold): no channel, no controlled pair,\nnothing dispatches — the event-map no-entry case (tk-promo-card\nprecedent). SSR-compat (AD-10): rendered via Lit templates only.",
+          "name": "TkServiceCard",
+          "slots": [
+            {
+              "description": "Decorative icon tile (the container is aria-hidden — nothing announced).",
+              "name": "icon"
+            },
+            {
+              "description": "Overrides the `heading` prop.",
+              "name": "heading"
+            },
+            {
+              "description": "Overrides the `description` prop.",
+              "name": "description"
+            },
+            {
+              "description": "The text link (compose a tk-link standalone); pinned bottom across description lengths.",
+              "name": "actions"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "variants",
+              "static": true,
+              "readonly": true,
+              "default": "['gray', 'bluegray', 'mint', 'beige', 'charcoal']",
+              "type": {
+                "text": "['gray', 'bluegray', 'mint', 'beige', 'charcoal']"
+              },
+              "description": "Tint variant union (CONVENTIONS §2: literal unions, never forking booleans)."
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "TkServiceCardVariant"
+              },
+              "default": "'gray'",
+              "description": "Tint variant — also decides the text pairing (dark text on pastels, white on charcoal).",
+              "attribute": "variant",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "description": "Card heading (heading-5); the `heading` slot overrides.",
+              "attribute": "heading"
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "description": "Card description (body-m); the `description` slot overrides.",
+              "attribute": "description"
+            },
+            {
+              "kind": "field",
+              "name": "#headingSlotted",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Slot-assignment tracking: a named slot's content overrides its prop (tk-promo-card pattern)."
+            },
+            {
+              "kind": "field",
+              "name": "#descriptionSlotted",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "#slotHasContent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLSlotElement"
+                  }
+                }
+              ],
+              "description": "A slot carries projectable content when an element or non-empty text is assigned."
+            },
+            {
+              "kind": "method",
+              "name": "#handleHeadingSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#handleDescriptionSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "TkServiceCardVariant"
+              },
+              "description": "Tint variant — also decides the text pairing (dark text on pastels, white on charcoal).",
+              "name": "variant",
+              "default": "'gray'",
+              "fieldName": "variant"
+            },
+            {
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "description": "Card heading (heading-5); the `heading` slot overrides.",
+              "fieldName": "heading"
+            },
+            {
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "description": "Card description (body-m); the `description` slot overrides.",
+              "fieldName": "description"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-service-card",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkServiceCard",
+          "declaration": {
+            "name": "TkServiceCard",
+            "module": "src/service-card/service-card.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-service-card",
+          "declaration": {
+            "name": "TkServiceCard",
+            "module": "src/service-card/service-card.ts"
           }
         }
       ]

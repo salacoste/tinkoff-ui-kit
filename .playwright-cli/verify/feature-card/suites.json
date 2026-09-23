@@ -1,0 +1,8 @@
+[
+  {
+    "story": "components-featurecard--playground",
+    "selector": "main .tkfc-grid",
+    "file": "kit-feature-card",
+    "ctaCard": "main tk-feature-card[variant=\"editorial\"]"
+  }
+]

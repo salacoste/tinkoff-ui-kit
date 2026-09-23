@@ -5,7 +5,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import * as litReact from '@lit/react';
 import { afterAll, describe, expect, it, vi } from 'vitest';
 
-import { Badge, Button, Checkbox, EVENT_MAP, Footer, Input, Link, Navbar, ProgressBar, SegmentedRadio, Select, Tabs, ThumbnailPicker } from './index.js';
+import { ArticleCard, Badge, Button, Checkbox, EVENT_MAP, FeatureCard, Footer, Input, Link, Navbar, ProgressBar, PromoCard, SegmentedRadio, Select, ServiceCard, Tabs, ThumbnailPicker } from './index.js';
 
 /**
  * pillkit-react generated surface. The wrapper imports `pillkit-components`
@@ -951,5 +951,119 @@ describe('pillkit-react', () => {
     expect(el?.shadowRoot?.querySelectorAll('.pill')).toHaveLength(1);
     // The default slot carries the legal fine-print.
     expect(el?.querySelector('p')?.textContent).toBe('© 2026');
+  });
+
+  // --- Stories 3.6–3.9: the card family wrappers (display — no events) -----
+
+  it('ships NO registry entries for the card family (passive display components)', () => {
+    // Specs 3.6–3.9: the CTA/link carries the action as native elements in
+    // slots; the cards dispatch nothing — the completeness guard demands NO
+    // event-map entries (the tk-button/tk-footer no-entry precedent).
+    expect(EVENT_MAP['tk-promo-card']).toBeUndefined();
+    expect(EVENT_MAP['tk-feature-card']).toBeUndefined();
+    expect(EVENT_MAP['tk-service-card']).toBeUndefined();
+    expect(EVENT_MAP['tk-article-card']).toBeUndefined();
+  });
+
+  it('renders <PromoCard> as tk-promo-card with props, boolean reflection, and slot children (smoke)', async () => {
+    const container = await renderToContainer(
+      React.createElement(
+        PromoCard,
+        { variant: 'mint', heading: 'ОСАГО', description: 'Страховка за 2 минуты' },
+        React.createElement('div', { slot: 'art' }),
+        React.createElement('button', { slot: 'actions' }, 'Подробнее'),
+      ),
+    );
+    const el = container.querySelector('tk-promo-card') as (Element & {
+      variant?: string;
+      heading?: string;
+      updateComplete?: Promise<unknown>;
+    }) | null;
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    expect(el?.variant).toBe('mint');
+    expect(el?.getAttribute('variant'), 'enum reflects').toBe('mint');
+    expect(el?.heading).toBe('ОСАГО');
+    await (el as { updateComplete: Promise<unknown> }).updateComplete;
+    expect(el?.shadowRoot?.querySelector('.card__heading')?.textContent?.trim()).toBe('ОСАГО');
+    expect(el?.shadowRoot?.querySelector('.card__actions slot')).not.toBeNull();
+  });
+
+  it('renders <FeatureCard> as tk-feature-card with the editorial variant (smoke)', async () => {
+    const container = await renderToContainer(
+      React.createElement(
+        FeatureCard,
+        { variant: 'editorial', heading: 'Платинум' },
+        React.createElement('div', { slot: 'art' }),
+      ),
+    );
+    const el = container.querySelector('tk-feature-card') as (Element & {
+      variant?: string;
+      updateComplete?: Promise<unknown>;
+    }) | null;
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    expect(el?.variant).toBe('editorial');
+    await (el as { updateComplete: Promise<unknown> }).updateComplete;
+    expect(el?.shadowRoot?.querySelector('.card__heading')?.textContent?.trim()).toBe('Платинум');
+    // The art slot projects into the bleed column.
+    expect(el?.shadowRoot?.querySelector('.card__art slot[name="art"]')).not.toBeNull();
+  });
+
+  it('renders <ServiceCard> as tk-service-card with the aria-hidden icon container (smoke)', async () => {
+    const container = await renderToContainer(
+      React.createElement(
+        ServiceCard,
+        { heading: 'Расчетный счет', description: 'Открытие за день' },
+        React.createElement('span', { slot: 'icon' }),
+        React.createElement('a', { slot: 'actions', href: '#rko' }, 'Подробнее'),
+      ),
+    );
+    const el = container.querySelector('tk-service-card') as (Element & {
+      heading?: string;
+      updateComplete?: Promise<unknown>;
+    }) | null;
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    expect(el?.heading).toBe('Расчетный счет');
+    await (el as { updateComplete: Promise<unknown> }).updateComplete;
+    expect(el?.shadowRoot?.querySelector('.card__icon')?.getAttribute('aria-hidden')).toBe('true');
+    expect(el?.shadowRoot?.querySelector('.card__actions slot')).not.toBeNull();
+  });
+
+  it('renders <ArticleCard> as tk-article-card with the whole-card link (smoke)', async () => {
+    const container = await renderToContainer(
+      React.createElement(ArticleCard, {
+        heading: 'Как устроен кэшбэк',
+        description: 'Разбираем механику',
+        href: '/article',
+        linkLabel: 'Читать',
+      }),
+    );
+    const el = container.querySelector('tk-article-card') as (Element & {
+      href?: string;
+      linkLabel?: string;
+      updateComplete?: Promise<unknown>;
+    }) | null;
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    expect(el?.href).toBe('/article');
+    expect(el?.linkLabel).toBe('Читать');
+    expect(el?.hasAttribute('href'), 'string data never reflects').toBe(false);
+    await (el as { updateComplete: Promise<unknown> }).updateComplete;
+    // ONE tab stop: the single focusable is the whole-card anchor.
+    const focusables = el?.shadowRoot?.querySelectorAll('a, button, [tabindex]');
+    expect(focusables).toHaveLength(1);
+    const link = focusables?.[0] as HTMLAnchorElement;
+    expect(link.getAttribute('href')).toBe('/article');
+    expect(link.textContent?.trim()).toBe('Читать');
+  });
+
+  it('card skeletons reach the elements as reflected attributes', async () => {
+    const container = await renderToContainer(
+      React.createElement(PromoCard, { skeleton: true, heading: 'Загрузка' }),
+    );
+    const el = container.querySelector('tk-promo-card');
+    expect(el?.hasAttribute('skeleton')).toBe(true);
+    const container2 = await renderToContainer(
+      React.createElement(ArticleCard, { skeleton: true }),
+    );
+    expect(container2.querySelector('tk-article-card')?.hasAttribute('skeleton')).toBe(true);
   });
 });
