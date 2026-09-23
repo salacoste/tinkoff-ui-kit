@@ -1,0 +1,354 @@
+# SR spot-check — консолидированный дайджест протоколов (VoiceOver / NVDA)
+
+**Назначение.** Maintainer gate 2 — ручные скринридер-спот-чеки по AC историй 5.1–5.3.
+Файл сводит секции «Протокол скринридер-проверки (VoiceOver / NVDA)» из всех 19 историй
+«Доступность» (`packages/components/src/<name>/<name>.stories.ts`) в один документ для одного
+ситтинга мейнтейнера. Шаги и ожидаемые объявления скопированы ДОСЛОВНО из историй — это
+норматив. Контекст отказа: `_bmad-output/implementation-artifacts/deferred-work.md` (запись
+SR spot-checks) и `.playwright-cli/verify/a11y-sweep/METHOD.md` §Screen-reader spot-checks
+(axe-часть — роли/имена/состояния — уже механизирована; вручную остаётся качество реальной
+наррации, live-регионы и чтение ошибок).
+
+## Как запустить
+
+```bash
+pnpm --filter pillkit-docs dev                       # dev-сервер: http://localhost:6006
+# либо статический вариант (собранный bundle):
+pnpm --filter pillkit-docs build && node tests/visual/serve.mjs 6012   # http://localhost:6012
+```
+
+Story URL: `http://localhost:<port>/iframe.html?id=components-<slug>--accessibility&viewMode=story`,
+тёмная тема — добавить `&globals=theme:dark` (shareable-форма тулбара, см. `packages/docs/.storybook/preview.ts`).
+ВАЖНО: `<slug>` — это слаг CSF-тайтла БЕЗ дефисов, а не имя папки: `progressbar`,
+`segmentedradio`, `thumbnailpicker`, `promocard`, `featurecard`, `servicecard`, `articlecard`
+(остальные 12 совпадают с именем папки). Проверено по собранному индексу
+`packages/docs/dist/index.json` — 19/19 историй `--accessibility` присутствуют.
+
+## VoiceOver (macOS)
+
+- Cmd+F5 — включить/выключить VoiceOver
+- Ctrl+Option+←/→/↑/↓ — линейная навигация по элементам (вперёд/назад)
+- Ctrl+Option+Cmd+H (±Shift) — следующее/предыдущее заголовок
+- Ctrl+Option+Cmd+J — следующий форм-контрол (кнопки, поля; в протоколах: бары, триггеры)
+- Ctrl+Option+D — rotor (список ориентиров: «баннер», «дополнительная информация»); Esc в шагах протоколов — обычный Esc при активном VO
+
+> **NVDA (Windows) — TBD.** Если Windows-машины нет, прогон NVDA записывается как
+> deferred (продление записи в deferred-work.md), VoiceOver-часть закрывается этим ситтингом.
+
+Преамбула из каждой истории (дословно; повторяется во всех 19, различается только
+CSS-класс абзаца):
+
+> Протокол исполняется вручную на стороне мейнтейнера: автоматический прогон не управляет
+> скринридером (запись в deferred-work.md). Каждое расхождение с ожидаемым объявлением —
+> дефект, а не особенность.
+
+---
+
+## Группа I — примитивы / индикаторы / оверлеи (7)
+
+### 1. tk-button
+
+Story: [`components-button--accessibility`](http://localhost:6006/iframe.html?id=components-button--accessibility&viewMode=story)
+
+| Шаг | Ожидаемые объявления |
+|---|---|
+| Tab на кнопку | «Подпись, кнопка» — имя и роль; размер/вариант НЕ объявляются |
+| Кнопка в состоянии loading | имя сохраняется: «Подпись, кнопка, занятая» (aria-busy) — подпись не исчезает за спиннером |
+| Disabled-кнопка | «Подпись, кнопка, недоступна» (aria-disabled) — остановка остаётся в порядке Tab |
+| Enter / Space | активация: срабатывает действие; в loading/disabled — тишина |
+
+Наблюдения мейнтейнера:
+
+Вердикт: [ ] соответствует / [ ] отклонение
+
+### 2. tk-link
+
+Story: [`components-link--accessibility`](http://localhost:6006/iframe.html?id=components-link--accessibility&viewMode=story)
+
+| Шаг | Ожидаемые объявления |
+|---|---|
+| Tab на ссылку | «Текст ссылки, ссылка» — роль ссылки у всех вариантов (inline / standalone / legal) |
+| Disabled-ссылка | «Текст ссылки, ссылка, недоступна» (aria-disabled) — навигация по Enter блокируется |
+| Enter | переход по href; standalone-цель 44px не меняет объявлений |
+
+Наблюдения мейнтейнера:
+
+Вердикт: [ ] соответствует / [ ] отклонение
+
+### 3. tk-badge
+
+Story: [`components-badge--accessibility`](http://localhost:6006/iframe.html?id=components-badge--accessibility&viewMode=story)
+
+| Шаг | Ожидаемые объявления |
+|---|---|
+| Линейное чтение (VO: Ctrl+Opt+стрелки) | бейдж читается как текст строки: «99+», «Новое» — отдельной интерактивной остановки НЕТ (span без роли) |
+| Tab-обход | фокус проходит мимо бейджа — он не в порядке табуляции никогда |
+
+Наблюдения мейнтейнера:
+
+Вердикт: [ ] соответствует / [ ] отклонение
+
+### 4. tk-progress-bar
+
+Story: [`components-progressbar--accessibility`](http://localhost:6006/iframe.html?id=components-progressbar--accessibility&viewMode=story)
+
+| Шаг | Ожидаемые объявления |
+|---|---|
+| Tab-обход | фокус проходит мимо — шкала не остановка (нет tabindex); состояние доходит только через атрибуты |
+| Чтение бара (VO: Ctrl+Opt+Cmd+J к следующему) | «Индикатор выполнения, 50 процентов» — aria-valuenow/min/max |
+| announce-режим | смена значения зачитывается ОДИН раз после успокоения: «Заполнено 50%» (aria-live polite) |
+| indeterminate | «занятая» (aria-busy), значение не объявляется |
+
+Наблюдения мейнтейнера:
+
+Вердикт: [ ] соответствует / [ ] отклонение
+
+### 5. tk-modal
+
+Story: [`components-modal--accessibility`](http://localhost:6006/iframe.html?id=components-modal--accessibility&viewMode=story)
+
+| Шаг | Ожидаемые объявления |
+|---|---|
+| Открытие (Enter на триггере) | «Перевести 10 000 ₽?, диалог» — фокус внутри; фон не читается |
+| Tab внутри | цикл по кнопкам действий: «Отмена, кнопка» → «Перевести, кнопка» — выхода из диалога нет |
+| Esc | диалог закрывается; фокус и объявление возвращаются на триггер |
+| Скролл-лок | страница за диалогом не скроллится и не читается жестами |
+
+Наблюдения мейнтейнера:
+
+Вердикт: [ ] соответствует / [ ] отклонение
+
+### 6. tk-tooltip
+
+Story: [`components-tooltip--accessibility`](http://localhost:6006/iframe.html?id=components-tooltip--accessibility&viewMode=story)
+
+| Шаг | Ожидаемые объявления |
+|---|---|
+| Фокус на триггере (Tab) | после имени кнопки зачитывается текст подсказки (aria-describedby): «…Ставка действует первые 4 месяца» |
+| Esc | подсказка скрывается; повторное объявление прекращается |
+| Tab дальше | сама пилюля НЕ является остановкой — фокус проходит мимо (role=tooltip, нет tabindex) |
+
+Наблюдения мейнтейнера:
+
+Вердикт: [ ] соответствует / [ ] отклонение
+
+### 7. tk-toast
+
+Story: [`components-toast--accessibility`](http://localhost:6006/iframe.html?id=components-toast--accessibility&viewMode=story)
+
+| Шаг | Ожидаемые объявления |
+|---|---|
+| Появление тоста | фокус НЕ смещается; текст зачитывается вежливо: «Заявка отправлена…» (aria-live polite) |
+| Destructive-вариант | роль alert — объявление перебивает текущее высказывание |
+| Esc | новейший тост закрывается; фокус остаётся там, где был |
+| Кнопка действия | «Открыть, кнопка» — достижима по Tab внутри тоста |
+
+Наблюдения мейнтейнера:
+
+Вердикт: [ ] соответствует / [ ] отклонение
+
+---
+
+## Группа II — формы (5)
+
+### 8. tk-input
+
+Story: [`components-input--accessibility`](http://localhost:6006/iframe.html?id=components-input--accessibility&viewMode=story)
+
+| Шаг | Ожидаемые объявления |
+|---|---|
+| Tab на поле | «Фамилия, имя и отчество, плюс 20 процентов, поле редактирования текста» — бейдж ПОСЛЕ подписи (aria-labelledby порядок) |
+| Обязательное поле, blur пустым | при возврате фокуса зачитывается сообщение: «Обязательное поле» (aria-describedby + aria-invalid) |
+| Ввод текста | символы эхом; ошибки не перехватывают фокус |
+
+Наблюдения мейнтейнера:
+
+Вердикт: [ ] соответствует / [ ] отклонение
+
+### 9. tk-select
+
+Story: [`components-select--accessibility`](http://localhost:6006/iframe.html?id=components-select--accessibility&viewMode=story)
+
+| Шаг | Ожидаемые объявления |
+|---|---|
+| Tab на триггер | «Выберите повышенный кэшбэк, комбинированный список, Категория» — роль + выбранное |
+| Enter / ArrowDown (открытие) | «развернуто», визуальный фокус: «Категория, 1 из 4» |
+| Стрелки | опции перечисляются по одной: имя + позиция; disabled-строки пропускаются |
+| Enter (выбор) | «Категория выбрана», меню свёрнуто, фокус на триггере |
+| Esc | закрытие без изменения значения |
+
+Наблюдения мейнтейнера:
+
+Вердикт: [ ] соответствует / [ ] отклонение
+
+### 10. tk-checkbox
+
+Story: [`components-checkbox--accessibility`](http://localhost:6006/iframe.html?id=components-checkbox--accessibility&viewMode=story)
+
+| Шаг | Ожидаемые объявления |
+|---|---|
+| Tab на чекбокс | «Согласие, пункт выбора, не отмечен» |
+| Space | «отмечен» — состояние объявляется сразу |
+| Indeterminate | «частично отмечен» (aria-checked=mixed) |
+
+Наблюдения мейнтейнера:
+
+Вердикт: [ ] соответствует / [ ] отклонение
+
+### 11. tk-segmented-radio
+
+Story: [`components-segmentedradio--accessibility`](http://localhost:6006/iframe.html?id=components-segmentedradio--accessibility&viewMode=story)
+
+| Шаг | Ожидаемые объявления |
+|---|---|
+| Tab на группу | «Гражданство РФ?, группа радио, Да, радио-кнопка, выбрана 1 из 2» — одна остановка на группу |
+| ArrowRight / ArrowLeft | объявляется новая опция: «Нет, радио-кнопка, выбрана» — выбор следует за фокусом |
+
+Наблюдения мейнтейнера:
+
+Вердикт: [ ] соответствует / [ ] отклонение
+
+### 12. tk-thumbnail-picker
+
+Story: [`components-thumbnailpicker--accessibility`](http://localhost:6006/iframe.html?id=components-thumbnailpicker--accessibility&viewMode=story)
+
+| Шаг | Ожидаемые объявления |
+|---|---|
+| Tab на сетку | «Выберите дизайн карты, группа радио, Чёрная, радио-кнопка, выбрана 1 из 6» |
+| Стрелки | переход по плиткам построчно; каждая объявляется именем + «выбрана» при активации |
+| Выбор | имя выбранной плитки озвучивается при смене (радио-семантика) |
+
+Наблюдения мейнтейнера:
+
+Вердикт: [ ] соответствует / [ ] отклонение
+
+---
+
+## Группа III — навигация / карточки (7)
+
+### 13. tk-tabs
+
+Story: [`components-tabs--accessibility`](http://localhost:6006/iframe.html?id=components-tabs--accessibility&viewMode=story)
+
+| Шаг | Ожидаемые объявления |
+|---|---|
+| Tab на ленту | «Дебетовая карта, вкладка, выбрана, 1 из 3» — имя включает счётчик бейджа, если есть |
+| ArrowRight / ArrowLeft | вкладка объявляется и АКТИВИРУЕТСЯ: контент панели меняется вместе с фокусом |
+| Home / End | первая / последняя вкладка |
+| Tab в панель | читается содержимое активной панели; неактивные панели недостижимы |
+
+Наблюдения мейнтейнера:
+
+Вердикт: [ ] соответствует / [ ] отклонение
+
+### 14. tk-navbar
+
+Story: [`components-navbar--accessibility`](http://localhost:6006/iframe.html?id=components-navbar--accessibility&viewMode=story)
+
+| Шаг | Ожидаемые объявления |
+|---|---|
+| Чтение сверху | «баннер» (role=banner), затем «навигация, 4 элементов» |
+| Активная ссылка | «Частным лицам, ссылка, текущая страница» (aria-current) |
+| Burger (<768px): открытие | «диалог» — фокус на первой ссылке меню; фон не читается |
+| Esc в drawer | меню закрывается, фокус возвращается на burger: «Меню, кнопка» |
+
+Наблюдения мейнтейнера:
+
+Вердикт: [ ] соответствует / [ ] отклонение
+
+### 15. tk-footer
+
+Story: [`components-footer--accessibility`](http://localhost:6006/iframe.html?id=components-footer--accessibility&viewMode=story)
+
+| Шаг | Ожидаемые объявления |
+|---|---|
+| Переход к подвалу (VO: D-жест / rotor) | «дополнительная информация» (contentinfo landmark) |
+| Колонки | «список, N элементов», затем ссылки по имени — «О картах, ссылка» |
+| Быстрые ссылки-пилюли | «Реквизиты, ссылка» — те же объявления, что у текстовых |
+| Юридический мелкий текст | читается строкой со встроенными ссылками: «ООО „Брокер“, ссылка» |
+
+Наблюдения мейнтейнера:
+
+Вердикт: [ ] соответствует / [ ] отклонение
+
+### 16. tk-promo-card
+
+Story: [`components-promocard--accessibility`](http://localhost:6006/iframe.html?id=components-promocard--accessibility&viewMode=story)
+
+| Шаг | Ожидаемые объявления |
+|---|---|
+| Линейное чтение | карта НЕ интерактивна: заголовок «Платинум, заголовок 3 уровня», затем описание |
+| Tab | единственная остановка — CTA-кнопка: «Оформить, кнопка»; сама карта в порядке табуляции отсутствует |
+
+Наблюдения мейнтейнера:
+
+Вердикт: [ ] соответствует / [ ] отклонение
+
+### 17. tk-feature-card
+
+Story: [`components-featurecard--accessibility`](http://localhost:6006/iframe.html?id=components-featurecard--accessibility&viewMode=story)
+
+| Шаг | Ожидаемые объявления |
+|---|---|
+| Линейное чтение | карта пассивна: «<Заголовок>, заголовок 3 уровня», описание, затем действие |
+| Tab | останавливается только на CTA-кнопке; editorial-вариант объявляется так же |
+
+Наблюдения мейнтейнера:
+
+Вердикт: [ ] соответствует / [ ] отклонение
+
+### 18. tk-service-card
+
+Story: [`components-servicecard--accessibility`](http://localhost:6006/iframe.html?id=components-servicecard--accessibility&viewMode=story)
+
+| Шаг | Ожидаемые объявления |
+|---|---|
+| Линейное чтение | иконка НЕ объявляется (aria-hidden); сразу «РКО для бизнеса, заголовок 3 уровня», описание |
+| Tab | действие — ссылка: «Подробнее, ссылка»; карточка вне порядка табуляции |
+
+Наблюдения мейнтейнера:
+
+Вердикт: [ ] соответствует / [ ] отклонение
+
+### 19. tk-article-card
+
+Story: [`components-articlecard--accessibility`](http://localhost:6006/iframe.html?id=components-articlecard--accessibility&viewMode=story)
+
+| Шаг | Ожидаемые объявления |
+|---|---|
+| Tab на карточку | ОДНА остановка: «Читать, ссылка» — стич покрывает всю карточку, но объявляется только ссылка |
+| Линейное чтение | «<Заголовок>, заголовок 3 уровня», дата, описание — до/вне ссылки |
+| Enter | переход по ссылке |
+
+Наблюдения мейнтейнера:
+
+Вердикт: [ ] соответствует / [ ] отклонение
+
+---
+
+## Итоги ситтинга (заполнить по ходу)
+
+| № | Группа | Компонент | Вердикт (соотв. / отклонение) | Наблюдения (№/ссылка) |
+|---|---|---|---|---|
+| 1 | I | tk-button | | |
+| 2 | I | tk-link | | |
+| 3 | I | tk-badge | | |
+| 4 | I | tk-progress-bar | | |
+| 5 | I | tk-modal | | |
+| 6 | I | tk-tooltip | | |
+| 7 | I | tk-toast | | |
+| 8 | II | tk-input | | |
+| 9 | II | tk-select | | |
+| 10 | II | tk-checkbox | | |
+| 11 | II | tk-segmented-radio | | |
+| 12 | II | tk-thumbnail-picker | | |
+| 13 | III | tk-tabs | | |
+| 14 | III | tk-navbar | | |
+| 15 | III | tk-footer | | |
+| 16 | III | tk-promo-card | | |
+| 17 | III | tk-feature-card | | |
+| 18 | III | tk-service-card | | |
+| 19 | III | tk-article-card | | |
+
+Каждое отклонение — дефект, а не особенность (преамбула протоколов): фиксируется
+наблюдением с номером строки таблицы выше и уходит правкой/тикетом, а не примечанием.
