@@ -63,6 +63,15 @@ export const EVENT_MAP: Readonly<Record<string, Readonly<TkKitElementEventMap>>>
     onValueChange: 'value-change',
   },
   // 'tk-button': none at v1 (native click serves activation).
+  // 'tk-navbar': none at v3.4 — NAVIGATION, NOT A FORM CONTROL (spec 3.4
+  // ruling): `activeValue` is a prop-only input with NO change-event
+  // channel (clicks are native anchor navigation), and the burger drawer is
+  // INTERNAL UI state (not a consumer channel — no open/open-change, the
+  // deliberate §9 deviation the spec itself rules). The completeness
+  // guard's no-entry case, mirrored from tk-button.
+  // 'tk-footer': none at v3.5 — STATELESS DIRECTORY (spec 3.5): pure
+  // landmark layout, nothing dispatches (the completeness guard's no-entry
+  // case, mirrored from tk-button).
   // 'tk-link': none at v3.1 — STATELESS (spec 3.1): navigation is the native
   // anchor's own behavior; the element dispatches nothing (the completeness
   // guard's no-entry case, mirrored from tk-button).

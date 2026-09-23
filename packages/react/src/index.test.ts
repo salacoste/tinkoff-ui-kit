@@ -5,7 +5,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import * as litReact from '@lit/react';
 import { afterAll, describe, expect, it, vi } from 'vitest';
 
-import { Badge, Button, Checkbox, EVENT_MAP, Input, Link, ProgressBar, SegmentedRadio, Select, Tabs, ThumbnailPicker } from './index.js';
+import { Badge, Button, Checkbox, EVENT_MAP, Footer, Input, Link, Navbar, ProgressBar, SegmentedRadio, Select, Tabs, ThumbnailPicker } from './index.js';
 
 /**
  * pillkit-react generated surface. The wrapper imports `pillkit-components`
@@ -525,7 +525,7 @@ describe('pillkit-react', () => {
     expect(buttonRef.current).toBeInstanceOf(HTMLElement);
     expect(buttonRef.current?.tagName).toBe('TK-BUTTON');
   });
-});
+
   // --- Story 2.6: tk-thumbnail-picker wrapper (mirrors the Input/Select smoke) --
 
   it("carries the story 2.6 registry entry: tk-thumbnail-picker's value-change", () => {
@@ -878,3 +878,78 @@ describe('pillkit-react', () => {
     );
     expect(seeded?.textContent).toContain('Кредитная карта');
   });
+
+  // --- Story 3.4/3.5: tk-navbar / tk-footer wrappers (no events) ------------
+
+  it('ships NO registry entries for tk-navbar/tk-footer (navigation + stateless directory)', () => {
+    // Spec 3.4 ruling: activeValue is a prop-only input (no change channel)
+    // and the drawer is internal UI state (no open/open-change); spec 3.5:
+    // the footer dispatches nothing. The completeness guard demands NO
+    // event-map entries (the tk-button no-entry precedent).
+    expect(EVENT_MAP['tk-navbar']).toBeUndefined();
+    expect(EVENT_MAP['tk-footer']).toBeUndefined();
+  });
+
+  it('renders <Navbar> as tk-navbar with element properties and slot children (smoke)', async () => {
+    const container = await renderToContainer(
+      React.createElement(
+        Navbar,
+        {
+          activeValue: 'business',
+          sticky: true,
+          burgerLabel: 'Меню',
+          links: [
+            { value: 'retail', label: 'Частным лицам', href: '#retail' },
+            { value: 'business', label: 'Бизнесу', href: '#business' },
+          ],
+        },
+        React.createElement('span', { slot: 'logo' }, 'ЛОГО'),
+      ),
+    );
+    const el = container.querySelector('tk-navbar') as (Element & {
+      activeValue?: string;
+      burgerLabel?: string;
+      updateComplete?: Promise<unknown>;
+    }) | null;
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    expect(el?.activeValue).toBe('business');
+    expect(el?.burgerLabel).toBe('Меню');
+    expect(el?.hasAttribute('sticky'), 'boolean reflects').toBe(true);
+    await (el as { updateComplete: Promise<unknown> }).updateComplete;
+    const links = [...((el as Element).shadowRoot?.querySelectorAll('.links .link') ?? [])];
+    expect(links).toHaveLength(2);
+    expect(links[1]?.getAttribute('aria-current')).toBe('page');
+    // Slot projection: the logo lands in the named slot.
+    expect(el?.querySelector('[slot="logo"]')?.textContent).toBe('ЛОГО');
+  });
+
+  it('renders <Footer> as tk-footer with element properties and slot children (smoke)', async () => {
+    const container = await renderToContainer(
+      React.createElement(
+        Footer,
+        {
+          phone: '8 800 333-33-33',
+          columns: [
+            { title: 'Банк', links: [{ label: 'Кредиты', href: '#loans' }] },
+            { title: 'Пусто', links: [] },
+          ],
+          quickLinks: [{ label: 'О банке', href: '#about' }],
+        },
+        React.createElement('p', null, '© 2026'),
+      ),
+    );
+    const el = container.querySelector('tk-footer') as (Element & {
+      phone?: string;
+      updateComplete?: Promise<unknown>;
+    }) | null;
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    expect(el?.phone).toBe('8 800 333-33-33');
+    await (el as { updateComplete: Promise<unknown> }).updateComplete;
+    // The landmark renders; the empty column is omitted (the clamp row).
+    expect(el?.shadowRoot?.querySelector('footer.footer')).not.toBeNull();
+    expect(el?.shadowRoot?.querySelectorAll('.column')).toHaveLength(1);
+    expect(el?.shadowRoot?.querySelectorAll('.pill')).toHaveLength(1);
+    // The default slot carries the legal fine-print.
+    expect(el?.querySelector('p')?.textContent).toBe('© 2026');
+  });
+});

@@ -823,6 +823,143 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/footer/footer.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "footerStyles",
+          "default": "css` :host { display: block; } .footer { font-family: var(--tk-font-body); color: var(--tk-color-text-primary); } /* --- The directory: columns ARE LISTS -------------------------------------- */ .directory { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: var(--tk-footer-column-gap, var(--tk-space-40)); align-items: start; } .column { min-width: 0; } /* caps-s UPPERCASE — the transform applied at render (the token carries no case). */ .column__header { margin: 0 0 var(--tk-space-16); font-family: var(--tk-font-body); font-size: var(--tk-text-caps-s-size); font-weight: var(--tk-text-caps-s-weight); letter-spacing: var(--tk-text-caps-s-tracking); text-transform: uppercase; color: var(--tk-footer-header, var(--tk-color-text-secondary)); } .column__list { display: flex; flex-direction: column; gap: var(--tk-space-8); margin: 0; padding: 0; list-style: none; } .column__link { font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-weight); line-height: var(--tk-text-body-m-leading); color: var(--tk-footer-link, var(--tk-color-text-secondary)); text-decoration: none; transition: color var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-standard); } .column__link:hover { color: var(--tk-footer-link-hover, var(--tk-color-text-primary)); } .column__link:focus-visible, .pill:focus-visible { outline: 2px solid var(--tk-color-focus-ring); outline-offset: 2px; } /* --- The bottom zone: pills + phone + legal --------------------------------- */ .bottom { display: flex; flex-direction: column; gap: var(--tk-space-24); margin-top: var(--tk-footer-padding, var(--tk-space-32)); padding-top: var(--tk-footer-padding, var(--tk-space-32)); border-top: 1px solid var(--tk-color-border-default); } .bottom__meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tk-space-24); } .pills { display: flex; flex-wrap: wrap; gap: var(--tk-space-8); margin: 0; padding: 0; list-style: none; } /* The frozen footer-pill-link spec: SELF-FILLED ink pill, white text, radius-full — the reference's dark-strip pill lifted onto any surface. Hover darkens one token step (ink-300 → ink-400) at the 150ms token, through the PAIRED hover hook — never a bare token past a custom fill. */ .pill { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding-inline: var(--tk-space-16); border-radius: var(--tk-radius-full); font-size: var(--tk-text-body-s-size); font-weight: var(--tk-text-body-s-weight); line-height: var(--tk-text-body-s-leading); color: var(--tk-footer-pill-text, var(--tk-color-white)); text-decoration: none; background: var(--tk-footer-pill-fill, var(--tk-color-ink-300)); transition: background var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-standard); } .pill:hover { background: var(--tk-footer-pill-fill-hover, var(--tk-color-ink-400)); } /* The bold contact block (probe: white bold ~18px → body-l-bold 500 — the bold slots carry no leading of their own; the body-l leading serves). */ .phone { margin: 0; margin-inline-start: auto; font-size: var(--tk-text-body-l-bold-size); font-weight: var(--tk-text-body-l-bold-weight); line-height: var(--tk-text-body-l-leading); color: var(--tk-color-text-primary); } /* The legal fine-print slot: body-xs gray; inline links inside are the consumer's tk-link legal instances (composed, not reimplemented). */ .legal { font-size: var(--tk-text-body-xs-size); font-weight: var(--tk-text-body-xs-weight); line-height: var(--tk-text-body-xs-leading); letter-spacing: var(--tk-text-body-xs-tracking); color: var(--tk-color-text-secondary); } `",
+          "description": "tk-footer styles — tokens only (FR-1), zero theme branches (AD-3).\n\nVisual spec: DESIGN.md `components.footer` / `footer-pill-link` (ink-300\nbg, white text, radius-full) + EXPERIENCE.md Footer row + the 3.5 PIXEL\nPROBE of `.playwright-cli/captures/footer.png` (1280×1910), recorded in\n.playwright-cli/verify/footer/NOTES.md:\n\n- GROUP HEADERS (probe): the reference paints 12px uppercase ≈#8A8A8E at\n  ~0.05em tracking (≈ the caps-s slot: 12px / 500 / +1px). The color FAILS\n  AA (≈3.2:1) — the kit's semantic override is text-secondary (5.64:1),\n  the same AA-override ruling DESIGN.md's contrast table applies to\n  failing reference pairs (deviation 2 in NOTES).\n- COLUMN LINKS (probe): ~15px regular gray, ~31px pitch, no underline —\n  body-m at text-secondary with the space-8 row gap (30.5px pitch); hover\n  steps ONE token to text-primary at 150ms (the State Patterns step);\n  focus shows the unified ring.\n- COLUMNS (probe): 6 columns, 40–60px gaps, ~88px container gutters —\n  auto-fill minmax(160px, 1fr) at the space-40 gap inside the container\n  width (the 1200px container rhythm is the CONSUMER's layout; the\n  footer's own grid collapses responsively by the same minmax).\n- PILLS (probe + DESIGN): the reference's #2C2C2E-on-black strip pills\n  become the frozen `footer-pill-link` spec — SELF-FILLED ink-300 pills,\n  white text, radius-full, readable on any surface (the dark strip is a\n  page-level surface, not the component's — the surface ruling in\n  footer.ts). 36px reference height grows to the 44px interactive-target\n  floor (deviation 3); hover darkens one token step (ink-300 → ink-400).\n- PHONE (probe): white bold ~18px on the dark strip — body-l-bold\n  (17px/500) in text-primary on the footer surface.\n- LEGAL (probe): ~13px gray fine print with inline links — body-xs at\n  text-secondary; the links themselves are composed tk-link `legal`.\n- TOP DIVIDER (probe): 1px ~#E6E6E6 rule — border-default above the\n  bottom zone (the reference draws it above the whole directory; the\n  consumer's page grid owns that edge, the footer owns its internal one).\n\nPer-component custom properties (`--tk-footer-*`, CONVENTIONS §6), each\nconsumed WITH its token default:\n- `--tk-footer-header`        caps header color   (default text-secondary — AA override)\n- `--tk-footer-link`          column link color   (default text-secondary)\n- `--tk-footer-link-hover`    hovered link color  (default text-primary — a\n  DEDICATED hook: ink-surface consumers override BOTH link hooks together,\n  the tk-tabs text-hover precedent)\n- `--tk-footer-pill-fill`     pill fill           (default ink-300)\n- `--tk-footer-pill-fill-hover` hovered pill fill (default ink-400 — PAIRS\n  with --tk-footer-pill-fill: override both together on custom surfaces)\n- `--tk-footer-pill-text`     pill text           (default white)\n- `--tk-footer-column-gap`    directory grid gap  (default space-40)\n- `--tk-footer-padding`       zone block padding  (default space-32)\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule: the 160px column minmax floor (keeps ~6 columns per 1200px row and\ncollapses responsibly), and the 44px pill min-height (the ≥44px\ninteractive-target floor)."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "footerStyles",
+          "declaration": {
+            "name": "footerStyles",
+            "module": "src/footer/footer.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/footer/footer.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-footer — the reference's grouped link directory (Story 3.5): a\ncontentinfo landmark whose link columns ARE LISTS, caps-s uppercase group\nheaders (the transform applied at render — the token carries no case),\nink-300 pill quick-links (the DESIGN `footer-pill-link` spec: ink fill,\nwhite text, radius-full), a bold phone block, and body-xs legal\nfine-print through the default slot.\n\nLANDMARK TECHNIQUE (the spec's noted pick): the SHADOW tree renders a\nnative `<footer>` element — implicit contentinfo, no role juggling on the\nhost — so the landmark composes like any built-in and the host stays a\nplain block wrapper.\n\nSTATELESS-OR-NEAR-IT: no channel, no controlled pair, nothing dispatches\n(the event-map no-entry case, tk-button/tk-link precedent). ALL content\narrives via props + the default slot:\n- `columns` — the directory (6–7 columns in the reference); a column with\n  no title or no links is OMITTED (the spec's matrix row);\n- `quickLinks` — the pill strip;\n- `phone` — the bold contact block;\n- default slot — the legal fine-print (body-xs; inline links inside it are\n  the consumer's tk-link `legal` instances, composed not reimplemented).\n\nSURFACE RULING (probe NOTES): the reference's two-zone mega-footer (white\ndirectory + hard-edged black legal strip) paints its dark strip at PAGE\nlevel; the kit ships the flat directory + a divider-separated bottom zone\nand the pills carry their OWN ink fill (they read on any surface). The\n96–120 section rhythm around the footer is the CONSUMER's layout — the\nfooter exposes only its internal paddings as hooks.\n\nSSR-compat (AD-10): rendered via Lit templates only.",
+          "name": "TkFooter",
+          "slots": [
+            {
+              "description": "Legal fine-print (body-xs); inline links compose tk-link `legal`.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "columns",
+              "type": {
+                "text": "TkFooterColumn[]"
+              },
+              "default": "[]",
+              "description": "Link columns; empty/title-less/link-less columns are omitted."
+            },
+            {
+              "kind": "field",
+              "name": "quickLinks",
+              "type": {
+                "text": "TkFooterLink[]"
+              },
+              "default": "[]",
+              "description": "Ink pill quick-links strip."
+            },
+            {
+              "kind": "field",
+              "name": "phone",
+              "type": {
+                "text": "string"
+              },
+              "description": "Bold contact block (plain text — wrap in your own tel link if needed).",
+              "attribute": "phone"
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveColumns",
+              "privacy": "private",
+              "type": {
+                "text": "TkFooterColumn[]"
+              },
+              "description": "Columns with null/undefined clamped to the empty list (null-tolerant props).",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveQuickLinks",
+              "privacy": "private",
+              "type": {
+                "text": "TkFooterLink[]"
+              },
+              "description": "Quick links with null/undefined clamped to the empty list.",
+              "readonly": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "phone",
+              "type": {
+                "text": "string"
+              },
+              "description": "Bold contact block (plain text — wrap in your own tel link if needed).",
+              "fieldName": "phone"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-footer",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkFooter",
+          "declaration": {
+            "name": "TkFooter",
+            "module": "src/footer/footer.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-footer",
+          "declaration": {
+            "name": "TkFooter",
+            "module": "src/footer/footer.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/footer/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/footer/footer.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/index.ts",
       "declarations": [],
       "exports": [
@@ -855,6 +992,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/footer/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/input/index.js"
           }
         },
@@ -864,6 +1009,14 @@
           "declaration": {
             "name": "*",
             "module": "src/link/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/navbar/index.js"
           }
         },
         {
@@ -1737,6 +1890,406 @@
           "declaration": {
             "name": "TkLink",
             "module": "src/link/link.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/navbar/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/navbar/navbar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/navbar/navbar.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "navbarStyles",
+          "default": "css` :host { display: block; } /* --- The bar ------------------------------------------------------------- */ .bar { height: var(--tk-navbar-height, 72px); background: var(--tk-navbar-fill, var(--tk-color-surface-base)); /* Transparent at rest: the hairline appears WITH the shadow on scroll. */ border-bottom: 1px solid transparent; transition: box-shadow var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-standard), border-color var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-standard); } /* Sticky bar: the one sanctioned non-overlay z consumption — the bar is in-flow (sticky), not a floating surface, and must out-paint page content sliding under it. The DRAWER never appears here: its stacking is the overlay controller's. */ :host([sticky]) .bar { position: sticky; top: 0; z-index: var(--tk-z-nav); } /* Past the threshold (the passive scroll listener flips this attribute): shadow-default + hairline fade in over the 150ms token. */ :host([data-scrolled]) .bar { box-shadow: var(--tk-shadow-default); border-bottom-color: var(--tk-color-border-default); } .bar__inner { box-sizing: border-box; display: flex; align-items: stretch; gap: var(--tk-space-8); max-width: var(--tk-space-container); height: 100%; margin-inline: auto; padding-inline: var(--tk-space-24); } .bar__logo { display: flex; align-items: center; flex: none; margin-inline-end: var(--tk-space-48); } .utilities { display: flex; align-items: center; gap: var(--tk-space-12); margin-inline-start: auto; } /* --- Links ---------------------------------------------------------------- */ .links { display: flex; align-items: stretch; min-width: 0; } /* The anchor IS the full-height hit target (the underline sits on the bar's bottom edge); shrink-under-constraint like tabs — the LABEL span carries the ellipsis (an inline-flex anchor's own text-overflow never engages: its text lives in an anonymous box the overflow can't reach; the span is the flex child that finally shrinks, the tabs .tab__label mold). */ .link { position: relative; display: inline-flex; flex: 0 1 auto; min-width: 0; align-items: center; padding-inline: var(--tk-space-12); font-family: var(--tk-font-body); font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-weight); line-height: var(--tk-text-body-m-leading); color: var(--tk-navbar-link, var(--tk-color-text-secondary)); text-decoration: none; transition: color var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-standard); } .link__label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .link:hover { color: var(--tk-navbar-link-hover, var(--tk-color-text-primary)); } .link:focus-visible, .drawer__link:focus-visible { outline: 2px solid var(--tk-color-focus-ring); outline-offset: 2px; } /* ACTIVE: the AA redundancy pair — 700-weight ink text + the 4px yellow-100 underline pinned to the border edge. Yellow NEVER carries the state alone. */ .link[aria-current='page'] { color: var(--tk-navbar-link-active, var(--tk-color-text-primary)); font-weight: var(--tk-text-heading-2-weight); } .link[aria-current='page']::after { content: ''; position: absolute; inset-inline: var(--tk-space-12); bottom: 0; height: 4px; background: var(--tk-navbar-underline, var(--tk-color-yellow-100)); } /* --- Burger (<768px — media query, container queries deferred) ------------- */ .burger { display: none; flex: none; align-self: center; box-sizing: border-box; width: 44px; height: 44px; align-items: center; justify-content: center; padding: 0; margin-inline-start: var(--tk-space-8); border: none; border-radius: var(--tk-radius-full); background: var(--tk-navbar-burger-fill, var(--tk-color-surface-muted)); color: var(--tk-navbar-link-active, var(--tk-color-text-primary)); cursor: pointer; -webkit-tap-highlight-color: transparent; } .burger:focus-visible { outline: 2px solid var(--tk-color-focus-ring); outline-offset: 2px; } .burger svg { flex: none; } /* --- The drawer (bottom sheet; stacking/position/lock/trap are the controller's — this sheet only styles its own surface) ------------------- */ .drawer { box-sizing: border-box; max-height: calc(100dvh - var(--tk-navbar-height, 72px)); overflow-y: auto; padding: var(--tk-space-8) var(--tk-space-16) var(--tk-space-24); background: var(--tk-navbar-drawer-fill, var(--tk-color-surface-base)); border-radius: var(--tk-radius-lg) var(--tk-radius-lg) 0 0; box-shadow: var(--tk-shadow-popover); } .drawer[hidden] { display: none; } /* Entrance: productive-entrance curve (AD-9 overlay mapping), moderate duration. positionFloating owns the inline top/left; the transform rides on top without fighting it. */ .drawer:not([hidden]) { animation: tk-navbar-drawer-in var(--tk-motion-duration-moderate) var(--tk-motion-curve-productive-entrance); } @keyframes tk-navbar-drawer-in { from { opacity: 0; transform: translateY(var(--tk-space-16)); } to { opacity: 1; transform: none; } } @media (prefers-reduced-motion: reduce) { .drawer:not([hidden]) { animation: none; } } .drawer__content { display: block; } .drawer__nav { display: flex; flex-direction: column; padding: 0; margin: 0; } /* Drawer links: the same register as bar links, one per row at the ≥44px target; the active treatment repeats the redundancy pair (700 weight + the 4px underline pinned to the row's bottom edge). */ .drawer__link { position: relative; display: flex; align-items: center; min-height: 44px; padding-inline: var(--tk-space-12); font-family: var(--tk-font-body); font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-weight); line-height: var(--tk-text-body-m-leading); color: var(--tk-navbar-link, var(--tk-color-text-secondary)); text-decoration: none; } .drawer__link[aria-current='page'] { color: var(--tk-navbar-link-active, var(--tk-color-text-primary)); font-weight: var(--tk-text-heading-2-weight); } .drawer__link[aria-current='page']::after { content: ''; position: absolute; inset-inline: var(--tk-space-12); bottom: 0; height: 4px; background: var(--tk-navbar-underline, var(--tk-color-yellow-100)); } /* --- The breakpoint flip --------------------------------------------------- */ @media (max-width: 767px) { .bar { height: var(--tk-navbar-height-mobile, 56px); } /* The sheet hangs from the MOBILE bar — the height cap must subtract the mobile token, not the desktop 72px default above. */ .drawer { max-height: calc(100dvh - var(--tk-navbar-height-mobile, 56px)); } .links { display: none; } .burger { display: inline-flex; } } `",
+          "description": "tk-navbar styles — tokens only (FR-1), zero theme branches (AD-3).\n\nVisual spec: DESIGN.md `components.navbar` (72px height, yellow-100 active\nindicator) + EXPERIENCE.md Navbar row + the 3.4 PIXEL PROBE of\n`.playwright-cli/captures/navbar-desktop.png` (1280×64) and\n`navbar-mobile.png` (360×56 CSS at DPR3), recorded in\n.playwright-cli/verify/navbar/NOTES.md:\n\n- HEIGHT (probe vs DESIGN): the captures measure 64px desktop / 56px\n  mobile; DESIGN.md freezes 72px and «DESIGN and EXPERIENCE win on\n  conflict with any capture» — 72px it is (deviation 1 in NOTES). The\n  mobile 56px has no DESIGN counterpart and ships as the probed value.\n- BAR: surface-base fill, transparent hairline at rest; past the 10px\n  threshold the host's `data-scrolled` attribute fades IN shadow-default\n  + the border-default hairline over the 150ms motion token (instant\n  under reduced motion — the token layer collapses durations).\n- LINKS: body-m regular, text-secondary; hover steps to text-primary\n  (150ms — the State Patterns text step); ACTIVE = 700-weight ink text +\n  the 4px yellow-100 underline pinned to the bar's bottom edge (sitting\n  on the border — the spec's noted offset), the AA redundancy pair.\n  700 comes from a heading weight token (the scale's only 700s — «bold =\n  500, headings 700/500 only»; DESIGN's own AA table pairs the Navbar\n  underline with 700-weight ink).\n- BURGER (<768px, media query per the spec's pick — container queries\n  deferred): 44px round surface-muted target (reference: 40px #F2F3F5 —\n  the 44px a11y floor wins), three-bar inline SVG glyph.\n- DRAWER: full-width bottom sheet anchored by positionFloating on the\n  bar's bottom edge — surface-base, radius-lg TOP corners (the sheet\n  hangs from the bar), shadow-popover, internal scroll under the bar\n  height cap. Entrance = productive-entrance curve (AD-9 overlay\n  mapping); explicit `animation: none` under reduced motion (the token\n  layer already collapsed the duration — the belt kills any final-\n  keyframe flash, the tabs precedent).\n\nPer-component custom properties (`--tk-navbar-*`, CONVENTIONS §6), each\nconsumed WITH its token default:\n- `--tk-navbar-fill`           bar fill          (default surface-base)\n- `--tk-navbar-height`         bar height        (default 72px — DESIGN)\n- `--tk-navbar-height-mobile`  bar height <768px (default 56px — probe)\n- `--tk-navbar-link`           inactive text     (default text-secondary)\n- `--tk-navbar-link-hover`     hovered text      (default text-primary)\n- `--tk-navbar-link-active`    active text       (default text-primary)\n- `--tk-navbar-underline`      active indicator  (default yellow-100)\n- `--tk-navbar-burger-fill`    burger chip fill  (default surface-muted)\n- `--tk-navbar-drawer-fill`    drawer fill       (default surface-base)\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule: the 4px indicator weight (spec-fixed), the 44px burger box (the\n≥44px interactive-target floor), and the underline's inline inset reusing\nthe link's own padding token (the indicator spans the padded hit box).\n\nZ vocabulary: exactly ONE consumption — the sticky bar's `--tk-z-nav`\n(a scale token; the drawer's z is the overlay controller's, never ours)."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "navbarStyles",
+          "declaration": {
+            "name": "navbarStyles",
+            "module": "src/navbar/navbar.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/navbar/navbar.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "TK_NAVBAR_SCROLL_THRESHOLD_PX",
+          "type": {
+            "text": "number"
+          },
+          "default": "10",
+          "description": "Scroll threshold (px) at which the bar's shadow + hairline fade in — the\nspec's noted pick (~8px probed range → 10px), a JS timing constant like\ntk-select's typeahead window (the token layer cannot feed JS comparisons)."
+        },
+        {
+          "kind": "class",
+          "description": "tk-navbar — the reference's sticky site header (Story 3.4): 72px white bar\n(DESIGN `components.navbar.height`; the 64px capture probe is recorded in\n.playwright-cli/verify/navbar/NOTES.md — DESIGN wins over captures), logo\nslot left, links with the yellow active underline + 700-weight ink text\n(the AA redundancy rule: yellow never carries state alone), utilities slot\nright, scroll-shrinking shadow (transparent at top → shadow-default +\nhairline after the 10px threshold, 150ms token fade), and below 768px a\nburger opening a FOCUS-TRAPPED drawer.\n\nNAVIGATION, NOT A FORM CONTROL (the spec's ruling): `activeValue` is a\nprop ONLY — clicking a link is native anchor navigation and the kit does\nnot intercept routing, so there is NO §4 value/defaultValue pair and NO\nchange event (\"no channel events\" is unit-pinned). An `activeValue`\nmatching nothing marks NO link (the spec's matrix pick — unlike tabs,\nthere is no \"always one active\" clamp).\n\nTHE DRAWER (the overlay controller's second real consumer, after\ntk-select): the panel is a shadow-tree child (the 2.3 ratified pattern —\nthe burger's aria-controls id resolves within one tree) mounted through\n`mountOverlay(panel, 'dropdown')` (drawer = overlay layer semantics), so\nALL mechanics are the controller's — zero bespoke z/scroll/trap code in\nthis file (structurally pinned by the unit suite):\n- stacking/z: `mountOverlay` + the `--tk-z-*` scale (the bar itself is\n  sticky, not floating — its `--tk-z-nav` is the one sanctioned non-overlay\n  z consumption in the kit);\n- scroll-lock: `lockBodyScroll()` (refcounted, shared with any modal);\n- focus trap + restore: `trapFocus(panel)` — Tab/Shift-Tab cycle inside\n  the drawer, focus returns on release, and close explicitly re-focuses\n  the burger (the spec's restore demand);\n- positioning: `positionFloating` anchors the sheet to the bar's bottom\n  edge at full width and tracks scroll/resize.\nThe drawer is INTERNAL UI STATE (the spec's ruling: \"internal state, not\nconsumer channel\") — no `open` property, no `open-change`, no React\nevent-map entry. Esc closes; clicking a link closes (navigation itself is\nthe anchor's own); the burger toggles.\n\nBREAKPOINT: `@media (max-width: 767px)` — a media query, per the spec's\nnoted pick (container queries deferred); the drawer's lock/trap mechanics\nlive only while open, at any width.\n\nSSR-compat (AD-10): rendered via Lit templates only; no imperative DOM at\nconstruction; the scroll listener attaches on connect and is passive.",
+          "name": "TkNavbar",
+          "slots": [
+            {
+              "description": "Brand mark, left of the links.",
+              "name": "logo"
+            },
+            {
+              "description": "Utility cluster, right-aligned (search, account).",
+              "name": "utilities"
+            },
+            {
+              "description": "Drawer content override; default = the links list, vertical.",
+              "name": "burger"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "links",
+              "type": {
+                "text": "TkNavbarLink[]"
+              },
+              "default": "[]",
+              "description": "Nav links; duplicate/value-less entries clamp out with a dev warn."
+            },
+            {
+              "kind": "field",
+              "name": "activeValue",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The active section's value — NOT a channel (the spec's ruling): a plain\ninput prop the consumer sets from its router; the element dispatches\nnothing when links are clicked. Accepted from the `active-value`\nattribute, never reflected (value data, CONVENTIONS §2).",
+              "attribute": "active-value"
+            },
+            {
+              "kind": "field",
+              "name": "sticky",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Bar sticks to the viewport top (the reference behavior); reflects (boolean, CONVENTIONS §2).",
+              "attribute": "sticky",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "burgerLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Меню'",
+              "description": "Accessible name of the burger button (also the drawer dialog's label).",
+              "attribute": "burger-label"
+            },
+            {
+              "kind": "field",
+              "name": "#drawerOpen",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The drawer's open state — PRIVATE internal UI state (the spec's ruling: not a consumer channel)."
+            },
+            {
+              "kind": "field",
+              "name": "#scrolled",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The data-scrolled flag driven by the passive scroll listener."
+            },
+            {
+              "kind": "field",
+              "name": "#burgerSlotFilled",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the `burger` slot carries assigned content — the fallback links\nlist renders ONLY while it does not. This keeps the trap's focusable set\nhonest: the trap's shadow-aware traversal cannot see slot-PROJECTED\ncontent (the module's documented selector-level scope), so a lingering\nunrendered fallback list would put display:none links into the cycle.\nWith the fallback absent, an overridden drawer traps EMPTY — the\nmodule's designed degradation (Tab passes through, never sticks)."
+            },
+            {
+              "kind": "field",
+              "name": "#overlayHandle",
+              "privacy": "private",
+              "type": {
+                "text": "TkOverlayHandle | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#positionHandle",
+              "privacy": "private",
+              "type": {
+                "text": "TkPositioningHandle | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#lockHandle",
+              "privacy": "private",
+              "type": {
+                "text": "TkScrollLockHandle | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#trapHandle",
+              "privacy": "private",
+              "type": {
+                "text": "TkFocusTrapHandle | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#drawerEl",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null",
+              "description": "Direct reference to the drawer panel node. The controller's release\nDETACHES the panel (container fallback: removed from the overlay\ncontainer, which is then itself removed) — a detached node answers no\ntree query, so close() must re-home through this field, not a lookup."
+            },
+            {
+              "kind": "field",
+              "name": "#uniqueId",
+              "privacy": "private",
+              "type": {
+                "text": "string | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#nextId",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "static": true,
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#id",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveLinks",
+              "privacy": "private",
+              "type": {
+                "text": "TkNavbarLink[]"
+              },
+              "description": "Links with null/undefined clamped to the empty list (null-tolerant props).",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#onScroll",
+              "privacy": "private",
+              "readonly": true,
+              "description": "The scroll listener — the ONE scroll code in the file (sanctioned by the\nspec's \"scroll listener threshold\" row; scroll-LOCK is the controller's).\nFlips the host's `data-scrolled` attribute at the threshold; the CSS\nfades shadow + hairline over the 150ms motion token (instant under\nreduced motion — the token layer collapses the duration)."
+            },
+            {
+              "kind": "method",
+              "name": "#panel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "description": "The drawer panel — by shadow-tree class, else the captured node\nreference: the controller's fallback path legitimately REPARENTS the\npanel into the overlay container while open (popover-less engines) and\nDETACHES it on release, so tree lookups alone lose it exactly when it\nneeds closing or re-homing."
+            },
+            {
+              "kind": "method",
+              "name": "#burger",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLButtonElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#openDrawer",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#closeDrawer",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#toggleDrawer",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#handleDrawerKeydown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "Esc closes (the spec's matrix row). The Tab cycle lives in the\ncontroller's trap — this handler never touches Tab."
+            },
+            {
+              "kind": "method",
+              "name": "#handleDrawerClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "A clicked link closes the drawer; navigation itself is the anchor's own."
+            },
+            {
+              "kind": "method",
+              "name": "#handleBurgerSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "The burger slot's assignment drives the fallback list's presence (see the field note)."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Bar sticks to the viewport top (the reference behavior); reflects (boolean, CONVENTIONS §2).",
+              "name": "sticky",
+              "default": "true",
+              "fieldName": "sticky"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Accessible name of the burger button (also the drawer dialog's label).",
+              "name": "burger-label",
+              "default": "'Меню'",
+              "fieldName": "burgerLabel"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The active section's value — NOT a channel (the spec's ruling): a plain\ninput prop the consumer sets from its router; the element dispatches\nnothing when links are clicked. Accepted from the `active-value`\nattribute, never reflected (value data, CONVENTIONS §2).",
+              "name": "active-value",
+              "fieldName": "activeValue"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-navbar",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TK_NAVBAR_SCROLL_THRESHOLD_PX",
+          "declaration": {
+            "name": "TK_NAVBAR_SCROLL_THRESHOLD_PX",
+            "module": "src/navbar/navbar.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkNavbar",
+          "declaration": {
+            "name": "TkNavbar",
+            "module": "src/navbar/navbar.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-navbar",
+          "declaration": {
+            "name": "TkNavbar",
+            "module": "src/navbar/navbar.ts"
           }
         }
       ]
