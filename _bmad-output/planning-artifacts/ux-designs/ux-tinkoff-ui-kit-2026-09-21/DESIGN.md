@@ -116,7 +116,7 @@ rounded:
   md: 12px
   lg: 16px
   xl: 24px
-  xxl: 32px
+  xxl: 24px
   full: 9999px
 spacing:
   '4': 4px
@@ -288,11 +288,13 @@ exactly:
 
 ## Layout & Spacing
 
-`[ASSUMPTION]` The site exposes no root spacing scale (utilities inline), so the kit
-systematizes a 4-based scale (`{spacing.4}`…`{spacing.120}`), consistent with the reference's
-grid behavior: `{spacing.container}` (1200px) max content width, `{spacing.grid-gap}` card-grid
-gaps, `{spacing.96}`–`{spacing.120}` vertical section rhythm, two-up and three-up card grids at
-equal columns.
+The site exposes no root spacing scale (utilities inline), so the kit systematizes a 4-based
+scale (`{spacing.4}`…`{spacing.120}`) — a **recorded systematization, re-verified at Story
+5.6**: the scale has nothing to extract verbatim (no capture can confirm or refute the raw
+steps), but its load-bearing steps ARE probe-verified against the reference at composition
+(Story 3.10: `{spacing.container}` 1200px content width probed 64..1216, `{spacing.grid-gap}`
+20px probed on the 3-up grids, `{spacing.96}`–`{spacing.120}` section rhythm probed), two-up
+and three-up card grids at equal columns.
 
 ## Elevation & Depth
 
@@ -307,11 +309,16 @@ reduced to near-invisible; hierarchy comes from `dark-surface-1…3` lightness s
 ## Shapes
 
 The system's signature is the **pill** (`{rounded.full}`): all buttons, badges, segmented
-controls, active tabs. Cards use the marketing radii `{rounded.xxl}` (32px) for feature/promo
-cards and `{rounded.xl}` (24px) for service cards — `[ASSUMPTION]` vision-estimated, verify at
-build. Fields use `{rounded.md}`. The app-layer vars (`{rounded.xs}`/`{rounded.sm}`, 4/8px)
-serve dense UI. Two registers — pill-soft marketing, tight-precise app — never mix within one
-component.
+controls, active tabs. Cards use ONE measured marketing radius: `{rounded.xl}`/`{rounded.xxl}`
+(24px) — **verified at Story 5.6** by pixel-probing the archived Story-2.0 card captures
+(`.playwright-cli/verify/fidelity-verification/radii-probe.mjs`, DPR 1): service and article
+tiles measure 24px (arc staircase pixel-identical to the kit's 24px renders), the promo/feature
+banners measure 22–24px across three captures — **two sub-signatures within the band**
+(banners' arc fits 21.9–22.2; tiles' 23.5–23.9), collapsed to ONE token. The original
+`{rounded.xxl}` 32px vision estimate is thereby CORRECTED to the measured card radius — `xxl`
+now equals `xl`; the reference paints one card-radius band, not two registers. Fields use
+`{rounded.md}`. The app-layer vars (`{rounded.xs}`/`{rounded.sm}`, 4/8px) serve dense UI. Two
+registers — pill-soft marketing, tight-precise app — never mix within one component.
 
 ## Components
 

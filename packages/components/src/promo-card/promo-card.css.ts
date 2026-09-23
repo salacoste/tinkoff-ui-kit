@@ -8,9 +8,10 @@ import { css } from 'lit';
  * tint variant sets pairing; CTA carries the action) + the 2.0 capture
  * notes § PromoCard (promo-card-grid.png, 1280×961):
  *
- * - RADIUS/PADDING (DESIGN frozen): radius-xxl 32, padding space-32 — the
- *   capture's per-card radius readings ranged 16–28 (flagged); the DESIGN
- *   xxl register is the systematized ruling for the card family.
+ * - RADIUS/PADDING: radius-xxl 24 (Story 5.6 corrected — pixel-probe of the
+ *   archived captures measures 22–24; the 32 vision estimate overruled),
+ *   padding space-32 — the DESIGN xxl register is the systematized ruling
+ *   for the card family.
  * - TINTS (probe, computed): pastel surfaces incl. the Story 3.6-closed
  *   mint #D0F4F2 / beige #F1EBD6 — consumed via the tint tokens, never
  *   literals.

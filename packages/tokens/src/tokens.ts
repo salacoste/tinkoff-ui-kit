@@ -131,7 +131,7 @@ export const radiusTokens = {
   '--tk-radius-md': '12px',
   '--tk-radius-lg': '16px',
   '--tk-radius-xl': '24px',
-  '--tk-radius-xxl': '32px',
+  '--tk-radius-xxl': '24px',
   '--tk-radius-full': '9999px',
 } as const;
 

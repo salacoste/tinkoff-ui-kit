@@ -56,7 +56,7 @@ illustration on the surface, never CSS gradient.
 
 | Aspect | Reference (measured) | Kit (measured) | Verdict |
 |---|---|---|---|
-| Radius | ~24px grid reading (range 16–28, flagged) | radius-xxl 32 (DESIGN frozen register) | match on register (xxl ruling) |
+| Radius | ~24px grid reading (range 16–28, flagged) | radius-xxl 32 (DESIGN frozen register) | match on register (xxl ruling) — **SUPERSEDED by the 5.6 probe** (`../fidelity-verification/radii-probe.mjs`, ledger finding R1): pixels overrule vision, the reference banner arcs fit 21.9–22.2, `--tk-radius-xxl` corrected 32→24, kit renders re-probed at the 23.5 tile signature |
 | Tints (computed) | mint #D0F4F2, slate #747B8F, #E2E8F0, #EDE8F6, #D0F4F2 | tint tokens; slate family maps bluegray/mint per story | match (closed tints exact) |
 | Heading | ~24px 600–700, centered | heading-5 24px/500, CENTERED | match (weight = kit 500 discipline, deviation 3) |
 | Body | ~16px / rgba(255,255,255,.7) on slate | body-m 15px text-secondary; white on charcoal | match (token step) |

@@ -20,7 +20,7 @@ Same pinned capture env as the visual suite (see `../promo-card/NOTES.md`).
 
 | Aspect | Reference (measured) | Kit (measured) | Verdict |
 |---|---|---|---|
-| Tile | ~334×230, fill ~#F5F5F7, radius ~16–20px | tint-gray #F5F5F6, radius-lg 16 (exact token in range), padding 32 | match |
+| Tile | ~334×230, fill ~#F5F5F7, radius ~16–20px | tint-gray #F5F5F6, radius-lg 16 (exact token in range), padding 32 | match — **radius verdict SUPERSEDED by the 5.6 probe** (`../fidelity-verification/radii-probe.mjs`, ledger finding R2): pixels overrule the vision reading, the reference tile arc is pixel-identical to a 24px render → radius-xl 24 shipped |
 | Heading | ~#1C1C1E ~20px 600–700, lh 28px, ≤2 lines | heading-6 20px/500 lh 1.35, line-clamp 2 (webkit+standard) | match (weight = discipline) |
 | Description | ~#8E8E93 ~15px/21px, 2–3 lines | body-m 15px text-secondary | match |
 | «Читать» link | blue ~14–15px, no underline/arrow | body-m at link-on-tint, underline on hover/:focus-visible | match (+ AA override, deviation 1) |

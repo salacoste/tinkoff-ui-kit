@@ -135,17 +135,17 @@
   --tk-radius-sm: 8px;
   --tk-radius-md: 12px;
   --tk-radius-lg: 16px;
-  /* [ASSUMPTION] vision-estimated service-card radius — verify at build. Resolved by Stories 3.6/5.6. DESIGN.md Shapes. */
+  /* Verified — Story 5.6 closure: pixel-probe of the archived service-card capture (Story 2.0 pack, DPR 1) measures 24px — the arc staircase is pixel-identical to the kit's 24px render; the 3.8 ~24 reading confirmed. DESIGN.md Shapes. */
   --tk-radius-xl: 24px;
-  /* [ASSUMPTION] vision-estimated feature/promo-card radius — verify at build. Resolved by Stories 3.6/5.6. DESIGN.md Shapes. */
-  --tk-radius-xxl: 32px;
+  /* Verified — Story 5.6 closure: pixel-probes of the archived card captures measure 22–24px (two sub-signatures within the band — banners 21.9–22.2, tiles 23.5–23.9 — collapsed to one token); the 32px vision estimate is corrected to the measured card radius — xxl equals xl. DESIGN.md Shapes. */
+  --tk-radius-xxl: 24px;
   --tk-radius-full: 9999px;
 }
 
 /* Spacing — DESIGN.md `spacing`. */
 :host,
 :root {
-  /* [ASSUMPTION] systematized scale — the reference site exposes no root spacing scale (inline utilities); values follow its grid behavior. DESIGN.md Layout & Spacing. */
+  /* Verified-systematized — Story 5.6 closure: the reference exposes no root spacing scale (inline utilities), so the kit systematizes the 4-based grid; the load-bearing steps are probe-verified at composition (container 1200px, grid-gap 20px, 96–120 section rhythm — Story 3.10 probes). DESIGN.md Layout & Spacing. */
   --tk-space-4: 4px;
   --tk-space-8: 8px;
   --tk-space-12: 12px;

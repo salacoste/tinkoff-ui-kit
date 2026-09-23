@@ -121,10 +121,10 @@ describe('tk-article-card', () => {
     expect(el.shadowRoot?.querySelector('.card__heading slot')?.getAttribute('name')).toBe('heading');
   });
 
-  it('SCALE: radius-lg + padding 32 through their hooks; flat tint surface; charcoal pairs white', () => {
+  it('SCALE: radius-xl + padding 32 through their hooks; flat tint surface; charcoal pairs white', () => {
     const cssText = sheet();
     const cardRule = cssText.match(/\.card\s*\{([^}]*)\}/)?.[1] ?? '';
-    expect(cardRule).toMatch(/border-radius:\s*var\(--tk-article-card-radius, var\(--tk-radius-lg\)\)/);
+    expect(cardRule).toMatch(/border-radius:\s*var\(--tk-article-card-radius, var\(--tk-radius-xl\)\)/);
     expect(cardRule).toMatch(/padding:\s*var\(--tk-article-card-padding, var\(--tk-space-32\)\)/);
     expect(cssText).not.toMatch(/box-shadow/, 'tinted surfaces stay flat');
     expect(cssText).toMatch(

@@ -6,7 +6,7 @@ GENERATED FILE — DO NOT EDIT. Regenerate with `pnpm gen:tokens`.
 - The `components:` frontmatter block is consumer spec prose — never rendered.
 - The z-scale is scaffold mechanics, not an extraction (own section below).
 - The `dark-*` color entries are the palette SOURCE for the dark layer (see "Dark layer") — never emitted as `--tk-color-dark-*` custom properties.
-- `[ASSUMPTION]` flags ship with their values (DESIGN.md body marks them); they are resolved by Stories 3.6/5.4/5.6, never silently dropped.
+- All `[ASSUMPTION]` flags are RESOLVED (mint/beige tints — Story 3.6; dark tints — 5.4; xxl/xl radii + the spacing systematization — 5.6): every flagged value was verified against the archived captures and now carries a `Verified —` annotation; none was silently dropped.
 
 Light layer: **131 tokens** on `:host, :root` (colors 45, typography 42, radius 7, spacing 14, shadows 6, motion 11, z-scale 6) plus the dark layer: **17 semantic overrides + 6 shadow-none re-declarations** on `[data-theme="dark"]`.
 
@@ -136,13 +136,13 @@ Two registers per DESIGN.md Shapes: pill-soft marketing (`lg`/`xl`/`xxl`/`full`)
 | `--tk-radius-sm` | `8px` |  |
 | `--tk-radius-md` | `12px` |  |
 | `--tk-radius-lg` | `16px` |  |
-| `--tk-radius-xl` | `24px` | [ASSUMPTION] vision-estimated service-card radius — verify at build. Resolved by Stories 3.6/5.6. DESIGN.md Shapes. |
-| `--tk-radius-xxl` | `32px` | [ASSUMPTION] vision-estimated feature/promo-card radius — verify at build. Resolved by Stories 3.6/5.6. DESIGN.md Shapes. |
+| `--tk-radius-xl` | `24px` | Verified — Story 5.6 closure: pixel-probe of the archived service-card capture (Story 2.0 pack, DPR 1) measures 24px — the arc staircase is pixel-identical to the kit's 24px render; the 3.8 ~24 reading confirmed. DESIGN.md Shapes. |
+| `--tk-radius-xxl` | `24px` | Verified — Story 5.6 closure: pixel-probes of the archived card captures measure 22–24px (two sub-signatures within the band — banners 21.9–22.2, tiles 23.5–23.9 — collapsed to one token); the 32px vision estimate is corrected to the measured card radius — xxl equals xl. DESIGN.md Shapes. |
 | `--tk-radius-full` | `9999px` |  |
 
 ## Spacing
 
-[ASSUMPTION] systematized scale — the reference site exposes no root spacing scale (inline utilities); values follow its grid behavior. DESIGN.md Layout & Spacing.
+Verified-systematized — Story 5.6 closure: the reference exposes no root spacing scale (inline utilities), so the kit systematizes the 4-based grid; the load-bearing steps are probe-verified at composition (container 1200px, grid-gap 20px, 96–120 section rhythm — Story 3.10 probes). DESIGN.md Layout & Spacing.
 
 | Token | Value | Notes |
 | --- | --- | --- |

@@ -157,7 +157,9 @@ const apiStyles = html`
       padding: var(--tk-space-12) var(--tk-space-16);
       color: var(--tk-color-text-secondary);
       background: var(--tk-color-surface-muted);
-      border-left: var(--tk-space-4) solid var(--tk-color-yellow-100);
+      /* UX-DR17 (Story 5.6 yellow audit): a callout rule is decoration —
+         yellow is reserved for primary actions and active indicators. */
+      border-left: var(--tk-space-4) solid var(--tk-color-border-strong);
       border-radius: var(--tk-radius-xs);
       font-size: var(--tk-text-body-s-size);
       line-height: var(--tk-text-body-s-leading);

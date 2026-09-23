@@ -4,6 +4,13 @@ Autonomous-run captures (maintainer confirms on return; formalized in Story 5.5)
 Reference source throughout: **tbank.ru** (tinkoff.ru redirects there), full-page
 capture `.playwright-cli/tbank-home-full.png` (1280×9221).
 
+## Files
+
+| File | What |
+|---|---|
+| `side-by-side-light.png` | hero reference crop (top) vs kit variants render (bottom), 40px white gutter — **BACKFILLED at Story 5.6** (1.7 predates the 2.1 side-by-side convention; composed from the archived crops below, no live-site capture) |
+| `side-by-side-dark.png` | kit dark theming render (top) vs kit light variants (bottom) on #1A1A1A — same backfill |
+
 ## Kit renders
 
 - `kit-render-variants.png` — story `components-button--variants-and-sizes` (light,

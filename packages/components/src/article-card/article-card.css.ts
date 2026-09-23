@@ -8,9 +8,11 @@ import { css } from 'lit';
  * Components table (Text-only: 2-line title, desc, "Читать" link) + the
  * 2.0 capture notes § ArticleCard (article-card-grid.png, 1280×285):
  *
- * - FILL/RADIUS (probe): ~#F5F5F7 neutral gray at ~16–20px radius →
- *   tint-gray at radius-lg (16px — the exact token inside the probed
- *   range; the family's smaller text-card register), flat, no shadow.
+ * - FILL/RADIUS (probe): ~#F5F5F7 neutral gray at a measured 24px radius →
+ *   tint-gray at radius-xl (24px — Story 5.6 pixel-probe of the archived
+ *   capture overruled the 3.9 vision reading "~16–20": the reference tile's
+ *   arc staircase is pixel-identical to a 24px render; the family's card
+ *   register), flat, no shadow.
  * - TITLE (probe): ~#1C1C1E ~20px 600–700 lh 28px → heading-6 (20px/500
  *   lh 1.35 — kit weight discipline caps card headings at 500),
  *   LINE-CLAMPED to 2 lines (webkit prefix + standard, the spec's noted
@@ -32,7 +34,7 @@ import { css } from 'lit';
  * - `--tk-article-card-text`     title color        (default text-primary; white on charcoal)
  * - `--tk-article-card-text-muted` description color (default text-secondary; white on charcoal)
  * - `--tk-article-card-link`     link color         (default the on-tint AA step link-on-tint; white on charcoal)
- * - `--tk-article-card-radius`   card radius        (default radius-lg)
+ * - `--tk-article-card-radius`   card radius        (default radius-xl)
  * - `--tk-article-card-padding`  card padding       (default space-32)
  * - `--tk-article-card-padding-mobile` <768px padding (default space-24 — the responsive matrix's one-step drop)
  *
@@ -55,7 +57,7 @@ export const articleCardStyles = css`
     height: 100%;
     min-width: 0;
     padding: var(--tk-article-card-padding, var(--tk-space-32));
-    border-radius: var(--tk-article-card-radius, var(--tk-radius-lg));
+    border-radius: var(--tk-article-card-radius, var(--tk-radius-xl));
     background: var(--tk-article-card-fill, var(--tk-color-tint-gray));
     color: var(--tk-article-card-text, var(--tk-color-text-primary));
     font-family: var(--tk-font-body);
