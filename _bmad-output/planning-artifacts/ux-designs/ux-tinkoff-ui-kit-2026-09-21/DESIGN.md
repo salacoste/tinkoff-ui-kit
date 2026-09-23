@@ -242,9 +242,12 @@ gray widgets, no shadows), Taiga UI's ramp (#222/#292929/#2F2F2F/#373737, border
 rgba(255,255,255,.14)). Synthesis: `{colors.dark-base}` canvas, tonal elevation steps
 `dark-surface-1…3` / `dark-elevated` replacing shadows, white-alpha text trio, yellow unchanged
 (yellow-on-dark keeps ink text — contrast holds), borders `{colors.dark-border}`. Tinted cards in
-dark mode follow the derivation rule: darken the tint toward L≈16–20% keeping hue
-(`dark-tint-*` values are first-pass `[ASSUMPTION]`, refined at build with fidelity checks).
-Charcoal tint is theme-invariant (`dark-tint-charcoal` = light value).
+dark mode follow the derivation rule: darken the tint toward L≈16–20% (CIE Lab L*) keeping hue.
+**Verified at Story 5.4 (dark sweep): all four `dark-tint-*` values hold** — Lab L* 14.2 / 13.9 /
+15.7 / 15.4 (max window miss 2.06 pt: sub-JND and in the safer direction), hue kept (bluegray
+Δ2.9°; mint/beige Δ17.3°/15.7°, within the recorded ±20° tolerance at chroma ≤ 0.04; gray
+achromatic), each sitting between tonal steps 1–2 (content tint, not elevated chrome). Charcoal
+tint is theme-invariant (`dark-tint-charcoal` = light value).
 
 **AA contrast adjustments (authored deviations from extraction).** The reference's own values
 fail WCAG 2.1 AA in places; the kit overrides semantics while keeping scales intact (a11y is a
@@ -324,7 +327,7 @@ Visual specs for the 19 v1 components (behaviors live in EXPERIENCE.md):
 | Checkbox | 20px box, `{rounded.xs}`, ink-300 check on yellow-100 fill when checked |
 | SegmentedRadio | Pill track, `{rounded.full}`; selected segment solid fill + dot indicator |
 | ThumbnailPicker | Square tiles `{rounded.md}`, selected gets 2px ink border ring |
-| ProgressBar | 4px track `{colors.gray-200}`, fill blue-100, `{rounded.full}` |
+| ProgressBar | 4px track `{colors.border-default}` (light value = gray-200's hex; dark = white-alpha tonal step — Story 5.4), fill blue-100, `{rounded.full}` |
 | Tabs | Text tabs; active = white pill + `default` shadow inside invisible track |
 | Navbar | 72px, white, logo slot left, nav links with yellow active underline, utilities right |
 | Footer | Uppercase gray group headers (`caps-s`), 6–7 link columns, ink-300 pill quick-links, bold phone block |

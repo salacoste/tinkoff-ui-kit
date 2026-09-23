@@ -203,7 +203,7 @@ describe('tk-feature-card', () => {
     expect(el.shadowRoot?.querySelector('.card__description')?.textContent?.trim()).toBe('Позднее');
   });
 
-  it('SKELETON: gray-200 blocks replace content; static under the skeleton attribute', async () => {
+  it('SKELETON: quiet-rail blocks replace content; static under the skeleton attribute', async () => {
     const el = await mount({ props: { heading: 'Содержимое', skeleton: true } });
     expect(el.hasAttribute('skeleton')).toBe(true);
     expect(el.shadowRoot?.querySelector('.card__heading')).toBeNull();
@@ -220,7 +220,7 @@ describe('tk-feature-card', () => {
       expect(block.getAttribute('aria-hidden')).toBe('true');
     }
     const cssText = sheet();
-    expect(cssText).toMatch(/\.sk\s*\{[^}]*background:\s*var\(--tk-color-gray-200\)/);
+    expect(cssText).toMatch(/\.sk\s*\{[^}]*background:\s*var\(--tk-color-border-default\)/);
     expect(cssText).not.toMatch(/@keyframes|animation:/, 'static skeleton (reduced-motion-safe)');
     el.skeleton = false;
     await elementUpdated(el);

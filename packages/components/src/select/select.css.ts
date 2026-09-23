@@ -233,11 +233,16 @@ export const selectMenuStyles = css`
   /* Visual focus (the active option) and hover: the reference's flat-fill
      language — no borders, no yellow (the capture shows none). The ACTIVE
      step is surface-field (the field fill family — more perceptible than
-     gray-100, which measured invisible against surface-base in the 2.3
-     vision pass); hover stays a whisper lighter. Real focus (the ring)
-     stays on the trigger the whole time the menu is open. */
+     the hover step, which measured invisible against surface-base in the
+     2.3 vision pass); hover stays a whisper lighter. Both are SEMANTICS
+     (5.4 dark sweep): hover = surface-muted (light value byte-identical to
+     the extracted gray-100 #F5F5F6; dark tonal step 1 #222222 — gray-100
+     painted a near-white hover chip on the dark menu), active = surface-
+     field (dark translucent white) — the active > hover perceptibility
+     ordering holds in BOTH themes. Real focus (the ring) stays on the
+     trigger the whole time the menu is open. */
   ::slotted([role='option']:hover) {
-    background: var(--tk-color-gray-100);
+    background: var(--tk-color-surface-muted);
   }
 
   ::slotted([role='option'].tk-active) {

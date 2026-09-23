@@ -246,7 +246,7 @@ describe('tk-promo-card', () => {
     expect(el.shadowRoot?.querySelector('.card__heading')?.textContent?.trim()).toBe('Позднее');
   });
 
-  it('SKELETON: gray-200 blocks replace content; static (no animation) under the skeleton attribute', async () => {
+  it('SKELETON: quiet-rail blocks replace content; static (no animation) under the skeleton attribute', async () => {
     const el = await mount({ props: { heading: 'Содержимое', skeleton: true } });
     expect(el.hasAttribute('skeleton')).toBe(true);
     expect(el.shadowRoot?.querySelector('.card__heading')).toBeNull();
@@ -265,7 +265,7 @@ describe('tk-promo-card', () => {
       expect(block.getAttribute('aria-hidden')).toBe('true');
     }
     const cssText = sheet();
-    expect(cssText).toMatch(/\.sk\s*\{[^}]*background:\s*var\(--tk-color-gray-200\)/);
+    expect(cssText).toMatch(/\.sk\s*\{[^}]*background:\s*var\(--tk-color-border-default\)/);
     expect(cssText).not.toMatch(/@keyframes|animation:/, 'the skeleton is static by design (reduced-motion-safe)');
     // Clearing the flag restores the content anatomy.
     el.skeleton = false;

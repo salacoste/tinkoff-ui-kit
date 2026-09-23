@@ -27,8 +27,9 @@ export type TkArticleCardVariant = 'gray' | 'bluegray' | 'mint' | 'beige' | 'cha
  * Tint auto-pairing and the flat tinted surface follow the tk-promo-card
  * machinery (per-tint token consumption, charcoal → white, no shadows).
  * SKELETON state: EXPERIENCE names ArticleCard skeletons — the shared
- * gray-200 block pattern, static under reduced motion (no animation
- * exists; noted).
+ * quiet-rail block pattern (border-default; light value = gray-200's hex,
+ * dark = the white-alpha tonal step — Story 5.4), static under reduced
+ * motion (no animation exists; noted).
  *
  * STATELESS (the display-component mold): no channel, no controlled pair,
  * nothing dispatches — the event-map no-entry case. SSR-compat (AD-10):
@@ -36,7 +37,7 @@ export type TkArticleCardVariant = 'gray' | 'bluegray' | 'mint' | 'beige' | 'cha
  *
  * @tag tk-article-card
  * @attr {gray|bluegray|mint|beige|charcoal} variant - Tint variant; also decides text pairing (default `gray`).
- * @attr {boolean} skeleton - Gray-200 placeholder blocks matching the final layout.
+ * @attr {boolean} skeleton - Border-default placeholder blocks matching the final layout (light value = gray-200's hex).
  * @prop {string} [heading] - Card title (heading-6, line-clamp 2); the `heading` slot overrides.
  * @prop {string} [description] - Card description (body-m); the `description` slot overrides.
  * @prop {string} [href] - Navigation target for the whole-card «Читать» link.
@@ -68,7 +69,7 @@ export class TkArticleCard extends LitElement {
   @property({ type: String, attribute: 'link-label' })
   linkLabel = 'Читать';
 
-  /** Skeleton state: gray-200 placeholder blocks matching the final layout. */
+  /** Skeleton state: border-default placeholder blocks matching the final layout (light value = gray-200's hex). */
   @property({ type: Boolean, reflect: true })
   skeleton = false;
 

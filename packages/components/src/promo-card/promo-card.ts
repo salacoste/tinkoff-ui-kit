@@ -31,9 +31,11 @@ export type TkPromoCardVariant = 'gray' | 'bluegray' | 'mint' | 'beige' | 'charc
  * collapses when nothing is slotted (see the css header).
  *
  * SKELETON (the shared card pattern, EXPERIENCE State Patterns): the
- * `skeleton` boolean replaces the content with gray-200 placeholder blocks
- * matching the final layout (art block, heading line, description lines,
- * CTA pill). The blocks are STATIC — no shimmer animation exists, so the
+ * `skeleton` boolean replaces the content with border-default placeholder
+ * blocks matching the final layout (art block, heading line, description
+ * lines, CTA pill; light value = gray-200's hex, dark = the white-alpha
+ * tonal step — Story 5.4). The blocks are STATIC — no shimmer animation
+ * exists, so the
  * reduced-motion path is trivially the same render (noted; motion tokens
  * stay unconsumed).
  *
@@ -44,7 +46,7 @@ export type TkPromoCardVariant = 'gray' | 'bluegray' | 'mint' | 'beige' | 'charc
  *
  * @tag tk-promo-card
  * @attr {gray|bluegray|mint|beige|charcoal} variant - Tint variant; also decides text pairing (default `gray`).
- * @attr {boolean} skeleton - Gray-200 placeholder blocks matching the final layout.
+ * @attr {boolean} skeleton - Border-default placeholder blocks matching the final layout (light value = gray-200's hex).
  * @prop {string} [heading] - Card heading (heading-5); the `heading` slot overrides.
  * @prop {string} [description] - Card description (body-m); the `description` slot overrides.
  * @slot art - Card art, TOP (projected imgs get loading=lazy decoding=async enforced).
@@ -68,7 +70,7 @@ export class TkPromoCard extends LitElement {
   @property({ type: String })
   description?: string;
 
-  /** Skeleton state: gray-200 placeholder blocks matching the final layout. */
+  /** Skeleton state: border-default placeholder blocks matching the final layout (light value = gray-200's hex). */
   @property({ type: Boolean, reflect: true })
   skeleton = false;
 

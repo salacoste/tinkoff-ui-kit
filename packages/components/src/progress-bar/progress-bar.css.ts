@@ -4,22 +4,27 @@ import { css } from 'lit';
  * tk-progress-bar styles — tokens only (FR-1), zero theme branches (AD-3).
  *
  * Visual spec: DESIGN.md `components.progressBar` («4px track
- * {colors.gray-200}, fill blue-100, {rounded.full}») + the 2.0 capture notes
+ * {colors.border-default} (light value = gray-200's hex), fill blue-100,
+ * {rounded.full}») + the 2.0 capture notes
  * § ProgressBar (.playwright-cli/captures/progress-bar-fill.png, 568×40:
  * ~4px pill track, blue fill, text row ABOVE with the label left
  * (gray, ~13px) and the % right (near-black, semibold), ~8–10px gap, bar
  * full-width below).
  *
- * DARK THEME (token-layer observation for Story 5.4, per the spec's «note
- * the dark appearance» instruction): gray-200 and blue-100 carry NO dark
- * remaps in the token sheet, so track and fill inherit their light values
- * on a dark canvas — acceptable per the spec (NO new tokens this story);
- * the header text pair re-themes through text-secondary/text-primary. A
- * tonal remap belongs to 5.4's dark refinement pass.
+ * DARK THEME (post-5.4 state): the track consumes the border-default
+ * SEMANTIC — its light value is byte-identical to the extracted gray-200
+ * (#E7E8EA, same hex), and the dark layer remaps it to the white-alpha
+ * tonal step (rgba(255,255,255,.14) on the dark base) instead of the
+ * near-white rail gray-200 painted (the lightblue-200 bug class,
+ * vision-confirmed on the pre-fix dark baseline — .playwright-cli/verify/
+ * dark-sweep). The FILL stays blue-100 in both themes by the redundancy
+ * ruling R2 (aria-valuenow carries the state; blue-100 vs dark-base =
+ * 3.76:1, visible); the header text pair re-themes through
+ * text-secondary/text-primary.
  *
  * Per-component custom properties (`--tk-progress-bar-*`, CONVENTIONS §6),
  * each consumed WITH its token default as the fallback:
- * - `--tk-progress-bar-track`  track fill     (default gray-200)
+ * - `--tk-progress-bar-track`  track fill     (default border-default — light value = gray-200's hex)
  * - `--tk-progress-bar-fill`   progress fill  (default blue-100)
  * - `--tk-progress-bar-radius` track/fill radius (default radius-full)
  * - `--tk-progress-bar-text`   label/zero-copy color (default text-secondary — see below)
@@ -90,13 +95,18 @@ export const progressBarStyles = css`
   }
 
   /* --- Track: 4px full-width pill. overflow:hidden + the shared radius
-     clip the fill to the pill ends at any width. --- */
+     clip the fill to the pill ends at any width. Track fill is the
+     border-default SEMANTIC (5.4 dark sweep): its light value is
+     byte-identical to the extracted gray-200 (#E7E8EA — same hex), and the
+     dark layer remaps it to the white-alpha tonal step instead of the
+     near-white rail gray-200 painted in dark (the lightblue-200 bug class,
+     vision-confirmed on the dark baseline). --- */
   .track {
     box-sizing: border-box;
     width: 100%;
     height: 4px;
     border-radius: var(--tk-progress-bar-radius, var(--tk-radius-full));
-    background: var(--tk-progress-bar-track, var(--tk-color-gray-200));
+    background: var(--tk-progress-bar-track, var(--tk-color-border-default));
     overflow: hidden;
   }
 

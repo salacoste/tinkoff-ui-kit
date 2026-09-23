@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
 import { afterAll, beforeAll, afterEach, describe, expect, it, vi } from 'vitest';
 
+import { selectMenuStyles } from './select.css.js';
 import { TK_SELECT_TYPEAHEAD_RESET_MS, TkSelect, type TkSelectOption } from './select.js';
 
 /**
@@ -125,6 +126,21 @@ describe('tk-select', () => {
   it('registers as tk-select exposing TkSelect', async () => {
     await customElements.whenDefined('tk-select');
     expect(customElements.get('tk-select')).toBe(TkSelect);
+  });
+
+  it('option hover/active steps consume SEMANTICS, not scale tokens (5.4 dark sweep pin)', () => {
+    // The F3 fix's mechanical half: gray-100 painted a near-white hover chip
+    // on the dark menu (scale tokens carry no dark remap). hover =
+    // surface-muted (light value = gray-100's hex), active = surface-field —
+    // a regression back to a scale token fails here, not in a screenshot.
+    const cssText = selectMenuStyles.cssText.replace(/\/\*[\s\S]*?\*\//g, '');
+    expect(cssText).toMatch(
+      /\[role='option'\]:hover\)\s*\{[^}]*background:\s*var\(--tk-color-surface-muted\)/,
+    );
+    expect(cssText).toMatch(
+      /\.tk-active\)\s*\{[^}]*background:\s*var\(--tk-color-surface-field\)/,
+    );
+    expect(cssText).not.toMatch(/var\(--tk-color-gray-100\)/);
   });
 
   it('renders the combobox trigger with field language and aria wiring', async () => {

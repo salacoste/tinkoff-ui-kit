@@ -210,11 +210,14 @@ export const featureCardStyles = css`
     padding-top: var(--tk-space-24);
   }
 
-  /* --- Skeleton (the shared card pattern): gray-200 blocks matching the
-     final layout; STATIC by design (no shimmer — reduced-motion-safe). --- */
+  /* --- Skeleton (the shared card pattern): quiet-rail blocks matching the
+     final layout; STATIC by design (no shimmer — reduced-motion-safe).
+     Fill is the border-default semantic (5.4 dark sweep): light value
+     byte-identical to gray-200 (#E7E8EA), dark remaps to the white-alpha
+     tonal step — gray-200 painted near-white blocks in dark. --- */
 
   .sk {
-    background: var(--tk-color-gray-200);
+    background: var(--tk-color-border-default);
   }
 
   .sk--heading {

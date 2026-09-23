@@ -30,7 +30,7 @@ export type TkFeatureCardVariant = 'gray' | 'bluegray' | 'mint' | 'beige' | 'edi
  *
  * @tag tk-feature-card
  * @attr {gray|bluegray|mint|beige|editorial} variant - Tint variant; `editorial` = charcoal with right-bleed art (default `gray`).
- * @attr {boolean} skeleton - Gray-200 placeholder blocks matching the final layout.
+ * @attr {boolean} skeleton - Border-default placeholder blocks matching the final layout (light value = gray-200's hex).
  * @prop {string} [heading] - Card heading (heading-4); the `heading` slot overrides.
  * @prop {string} [description] - Card description (body-m); the `description` slot overrides.
  * @slot art - Card art; TOP on tint variants, RIGHT-BLEED column on editorial (imgs lazy-enforced).
@@ -54,7 +54,7 @@ export class TkFeatureCard extends LitElement {
   @property({ type: String })
   description?: string;
 
-  /** Skeleton state: gray-200 placeholder blocks matching the final layout. */
+  /** Skeleton state: border-default placeholder blocks matching the final layout (light value = gray-200's hex). */
   @property({ type: Boolean, reflect: true })
   skeleton = false;
 

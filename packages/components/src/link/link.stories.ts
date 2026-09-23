@@ -42,6 +42,12 @@ const canvasStyles = html`
       flex-direction: column;
       gap: var(--tk-space-24);
       padding: var(--tk-space-32) var(--tk-space-24);
+      /* Canvas follows the theme's base surface (the tk-input story's 2.1
+         precedent): without an explicit paint the browser canvas stays
+         WHITE in dark while text remaps to white — story chrome invisible
+         (5.4 dark-sweep finding, the axe transparent-background blind
+         spot). Same token, zero branches. */
+      background: var(--tk-color-surface-base);
       font-family: var(--tk-font-body);
       font-size: var(--tk-text-body-m-size);
       line-height: var(--tk-text-body-m-leading);

@@ -239,10 +239,10 @@ Setting `data-theme="dark"` on `<html>` re-resolves every SEMANTIC color token �
 | `--tk-color-error` | `#E01F19` | `#FF7B74` | `colors.dark-error` |  |
 | `--tk-color-link-on-tint` | `#1464CC` | `#66A3FF` | `colors.dark-link` | Alias — dark reuses `dark-link` (the light-only on-tint step exists because blue-100 fails on light fields). |
 | `--tk-color-error-on-field` | `#D3120E` | `#FF7B74` | `colors.dark-error` | Alias — dark reuses `dark-error` (the light-only on-field step exists because red-100 fails on light field/muted surfaces). |
-| `--tk-color-tint-gray` | `#F5F5F6` | `#242424` | `colors.dark-tint-gray` | [ASSUMPTION] first-pass dark tint — darken toward L≈16–20% keeping hue; refinement owned by Story 5.4. DESIGN.md Colors. |
-| `--tk-color-tint-bluegray` | `#ECF1F7` | `#1E242C` | `colors.dark-tint-bluegray` | [ASSUMPTION] first-pass dark tint — darken toward L≈16–20% keeping hue; refinement owned by Story 5.4. DESIGN.md Colors. |
-| `--tk-color-tint-mint` | `#D0F4F2` | `#1C2A26` | `colors.dark-tint-mint` | [ASSUMPTION] first-pass dark tint — darken toward L≈16–20% keeping hue; refinement owned by Story 5.4. DESIGN.md Colors. |
-| `--tk-color-tint-beige` | `#F1EBD6` | `#2A2620` | `colors.dark-tint-beige` | [ASSUMPTION] first-pass dark tint — darken toward L≈16–20% keeping hue; refinement owned by Story 5.4. DESIGN.md Colors. |
+| `--tk-color-tint-gray` | `#F5F5F6` | `#242424` | `colors.dark-tint-gray` | Verified — Story 5.4 dark sweep: Lab L* 14.2, OKLCH L 26.0% C 0.000 (achromatic, like the light tint); held — 1.8 pt under the rule window, inside the 2-pt correction threshold; sits between tonal steps 1–2 (content tint, not elevated chrome). DESIGN.md Colors. |
+| `--tk-color-tint-bluegray` | `#ECF1F7` | `#1E242C` | `colors.dark-tint-bluegray` | Verified — Story 5.4 dark sweep: Lab L* 13.9, OKLCH L 25.8%, hue 255.7° vs light 252.8° (Δ2.9° — kept); held — 2.06 pt under the window exceeds the 2-pt threshold by 0.06 but fails the visually-meaningful conjunct (sub-JND, safer direction: darker tint, more text contrast). DESIGN.md Colors. |
+| `--tk-color-tint-mint` | `#D0F4F2` | `#1C2A26` | `colors.dark-tint-mint` | Verified — Story 5.4 dark sweep: Lab L* 15.7, OKLCH L 27.1%, hue 175.1° vs light 192.4° (Δ17.3° — within the recorded ±20° tolerance at C ≤ 0.04); held — 0.3 pt under the window. DESIGN.md Colors. |
+| `--tk-color-tint-beige` | `#F1EBD6` | `#2A2620` | `colors.dark-tint-beige` | Verified — Story 5.4 dark sweep: Lab L* 15.4, OKLCH L 27.1%, hue 78.1° vs light 93.8° (Δ15.7° — within the recorded ±20° tolerance at C ≤ 0.04); held — 0.6 pt under the window. DESIGN.md Colors. |
 
 ### Theme invariants
 
