@@ -41,7 +41,9 @@ import { css } from 'lit';
  * this sheet's cssText.
  *
  * PANEL SWAP TECHNIQUE (spec Design Notes): every tab's panel is a DISTINCT
- * element; activation toggles `hidden`. A CSS animation on
+ * element; activation toggles `hidden`; the panel carries the 24px
+ * track→panel rhythm (margin-block-start --tk-space-24, so content never
+ * starts flush under the 44px track). A CSS animation on
  * `.panel:not([hidden])` therefore RESTARTS on every activation — an element
  * going display:none → block starts its animations fresh, no keyed re-render
  * or imperative class juggling needed. Curve/duration per AD-9's «tab swaps
@@ -198,9 +200,11 @@ export const tabsStyles = css`
   /* --- Panels: distinct per-tab elements; the hidden attribute toggling both
      removes an inactive panel from the tab order / a11y tree AND restarts the
      visible one's swap animation (display:none → block restarts CSS
-     animations). --- */
+     animations). The margin-block-start is the track→panel rhythm: panel text
+     never starts flush under the 44px track. --- */
   .panel {
     display: block;
+    margin-block-start: var(--tk-space-24);
   }
 
   .panel[hidden] {

@@ -470,6 +470,16 @@ describe('tk-tabs', () => {
     expect(cssText).toMatch(/@media \(prefers-reduced-motion: reduce\)[\s\S]*animation:\s*none/);
   });
 
+  it('PANEL RHYTHM pin: the panel opens 24px below the track (margin-block-start --tk-space-24)', () => {
+    // Same convention as the bar pin: comments stripped, declarations guarded
+    // to the exact selector — the plain `.panel` rule (the `:not([hidden])`
+    // sibling never matches `.panel` + whitespace/brace here).
+    const cssText = tabsStyles.cssText.replace(/\/\*[\s\S]*?\*\//g, '');
+    const panel = cssText.match(/\.panel\s*\{([^}]*)\}/)?.[1] ?? '';
+    expect(panel, 'the .panel rule exists').not.toBe('');
+    expect(panel).toMatch(/margin-block-start:\s*var\(--tk-space-24\)/);
+  });
+
   it('panel swap: activation flips hidden so the visible panel restarts its animation (the technique)', async () => {
     const el = await mount({ props: { tabs: CARDS }, slotChildren: 3 });
     // The rule targets .panel:not([hidden]) — the swap runs on CONTENT, and
