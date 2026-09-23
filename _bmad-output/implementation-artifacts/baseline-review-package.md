@@ -1,5 +1,19 @@
 # Пакет пакетного подтверждения provisional-базлайнов (Story 5.6, 2026-09-23)
 
+> ## ✅ РЕЗУЛЬТАТ ГЕЙТА (закрыт мейнтейнером, 2026-09-23, тот же присест)
+>
+> - **F1 (dark progress-bar): ПЕРЕЗАПИСЬ.** Устаревшая рельса была видна во ВСЕХ 8 тёмных
+>   ногах сюиты (не только в двух названных ниже — формулировка «playground, variants» была
+>   приблизительной, истории variants не существует; нейминг-паттерн: `--<story>-dark-1-chromium.png`,
+>   один дефис). Все 8 удалены + перегенерированы update-флоу.
+> - **Все группы подтверждены мейнтейнером по side-by-side в живой сессии** (поштучно, в
+>   порядке §1→карты→E2→E3→E4→доки): карты ×4 (promo/feature/article/service), форма ×7
+>   (input/select/checkbox/segmented-radio/thumbnail-picker/progress-bar/showcase), навигация
+>   (link+badge/tabs/navbar/footer), homepage + оверлеи ×3 (modal/tooltip/toast), tk-button
+>   и дока-поверхности (token-reference/theming-guide/getting-started).
+> - Базлайны переведены из PROVISIONAL в CONFIRMED; drift-охрана продолжается compare-режимом.
+
+
 **Для мейнтейнера.** Все визуальные базлайны (`tests/visual/**/*-snapshots/`)
 были записаны автономным прогоном без человека и с тех пор работают как
 drift-эталон (сравнение при каждом прогоне, порог 1.5% пикселей + axe в обеих
