@@ -4,27 +4,38 @@ UI kit based on the Tinkoff (T-Bank) design language — **copy the existing sit
 Study project: the reference site (tinkoff.ru) is the design source of truth; we extract its design system
 (colors, typography, spacing, components, motion) and rebuild it as a proper, improved UI kit.
 
-**Stack: NOT chosen yet — deliberate gate.** BMAD planning (`bmad-architecture`) decides the stack with full
-PRD context; the user triggers BMAD planning himself. Never pick a stack or scaffold ad hoc before that.
+**Stack: chosen by BMAD architecture (d1bfa05) — core-and-adapters.** Lit 3.3.3 core (shadow DOM,
+`--tk-*` token pipeline) in `packages/components`; React 19 wrapper package generated from CEM
+(`@lit/react`); pnpm workspace `pillkit-{tokens,components,react,docs}`; TS 7 strict, Vite 8, Vitest,
+Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) live in `_bmad-output/planning-artifacts/`.
 
-## Project state (updated 2026-09-22 — autonomous build run)
+## Project state (updated 2026-09-23 — autonomous build run)
 
-- **BMAD chain complete through epics**; **Epic 1 (foundation) FULLY BUILT**: workspace scaffold,
-  tokens (light 131 + dark 17 semantic overrides, generator from DESIGN.md, drift-guarded),
-  CONVENTIONS.md (all pilot decisions resolved), Storybook 10.6 docs w/ theme toggle + disclaimer,
-  Playwright visual harness (0.015, story auto-discovery, axe both themes), tk-button pilot
-  (CEM→@lit/react gen pipeline), GitHub Actions CI green (full gate chain incl. detector)
+- **BMAD chain complete through epics; EPICS 1–4 FULLY BUILT — ALL 19 v1 COMPONENTS SHIPPED**
+  (commits 19b12a6 → fb8980c). Epic 1 foundation (scaffold, tokens light 131 + dark 17 semantic
+  overrides, CONVENTIONS.md, Storybook 10.6 docs, Playwright visual harness, tk-button pilot,
+  CI green) · Epic 2 forms + API FREEZE (Input 2.1 froze §4/§9; overlay controller 2.2; Select/
+  Checkbox/SegmentedRadio/ThumbnailPicker/ProgressBar; composed-form walkthrough) · Epic 3
+  navigation/cards/homepage (Link, Badge, Tabs, Navbar+burger drawer, Footer, 4 cards, homepage
+  composition + UX-DR14 matrix; mint/beige tint closures) · Epic 4 overlays (tk-modal, tk-tooltip,
+  tk-toast + showToast; UJ-3 Toast leg closed; popover-UA-reset lesson hit twice — scrim AND toast host)
+- **Kit totals: 604 unit tests + 472 visual/axe baselines ×2 + walkthrough 31/31; 19 React wrappers**
 - Packages: `pillkit-{tokens,components,react,docs}` (npm names resolved at OQ-3, verified free; still
   `private: true` until first publish). The `tk-` element prefix and `--tk-*` properties are KEPT
   (OQ-3 decision — generic abbreviation, zero trademark collision).
   Scripts: `pnpm build|test|lint|typecheck|gen|check:gen|test:visual|test:visual:update|check:tokens-drift`
 - **Lit on this stack requires `experimentalDecorators: true`** (vite8/rolldown drops TC39
   decorators silently) — do not "fix" this
-- Next per epics.md: **Epic 2** (capture pack 2.0 → Input 2.1 = React/overlay API FREEZE →
-  overlay controller → forms → composed form walkthrough), then E3 content, E4 overlays, E5 release
-- Maintainer queue: ~~OQ-2 font pick, OQ-3 npm names, OQ-4 docs language~~ (all resolved
-  2026-09-22 — faithful font stacks + Inter default; pillkit-* names; docs RU), ratify bounce-easing
-  detector ignore, batch-confirm provisional visual baselines; deferred-work.md tracks the rest
+- Fonts: DaytonaSans (400/500/600) + DaytonaPragma (400/500/700) bundled in `packages/tokens/fonts/`
+  under LICENSE-FONTS.md (separately licensed, NOT MIT) — topic fully closed
+- Next per epics.md: **Epic 5 release readiness** — 5.1–5.3 a11y sweeps (method + 3 groups,
+  VoiceOver+NVDA), 5.4 dark sweep + dark-tint refinement, 5.5 docs completion (token reference,
+  theming guide, getting-started, RU), 5.6 fidelity+discipline verification (16/16+3/3, kit-wide
+  impeccable, yellow-discipline audit, maintainer PROVISIONAL baseline batch gate), 5.7 publish
+  (MAINTAINER GATE: MIT/semver/changelog/disclaimer; pillkit-* names stand)
+- Maintainer queue: ratify bounce-easing detector ignore, batch-confirm provisional baselines (5.6);
+  deferred-work.md tracks the rest (LICENSE file, AD-4 single-source, react peer range, mono font
+  slot, iOS real-device scroll-lock, fallback-path projection limitation)
 
 ## Toolchain (installed & configured)
 
@@ -46,8 +57,8 @@ PRD context; the user triggers BMAD planning himself. Never pick a stack or scaf
 
 ### transitions.dev — UI motion
 - Skill with 32 transition references at `.claude/skills/transitions-dev/` + `transitions-polish`
-- **CSS not added yet (planned):** run `npx transitions-dev add --free` once `src/` exists (after the stack
-  decision) — do not forget this step at scaffold time
+- Vendored at scaffold (Story 1.1); motion values fold into `--tk-motion-*` tokens per AD-9
+  (the recipes' `:root`-level selectors never match inside shadow stylesheets)
 - All transitions respect `prefers-reduced-motion`; classes namespaced `t-*`
 
 ### inspo MCP — real-site design references
