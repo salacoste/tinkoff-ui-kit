@@ -11,6 +11,10 @@
     "sourceMap": true,
     "isolatedModules": true,
     "esModuleInterop": true,
+    // JSON modules: the docs API tables (Story 5.5) import the GENERATED
+    // custom-elements.json directly — the manifest is the API surface of
+    // record (AD-1), so the tables cannot drift from the component layer.
+    "resolveJsonModule": true,
     "useDefineForClassFields": false, // Lit 3 reactive props are accessor-based; define semantics would overwrite them
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,

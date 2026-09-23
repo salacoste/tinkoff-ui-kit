@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 
+import { apiReferenceDoc } from '../api-reference.js';
+
 import './navbar.js';
 import type { TkNavbarLink } from './navbar.js';
 
@@ -564,4 +566,9 @@ export const Accessibility: Story = {
     </main>
     </div>
   `,
+};
+
+export const Api: Story = {
+  name: 'API',
+  render: () => apiReferenceDoc('tk-navbar'),
 };

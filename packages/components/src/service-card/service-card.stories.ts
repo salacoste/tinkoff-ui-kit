@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 
+import { apiReferenceDoc } from '../api-reference.js';
+
 import '../link/link.js';
 import './service-card.js';
 
@@ -272,4 +274,9 @@ export const Accessibility: Story = {
       </table>
     </main>
   `,
+};
+
+export const Api: Story = {
+  name: 'API',
+  render: () => apiReferenceDoc('tk-service-card'),
 };

@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 
+import { apiReferenceDoc } from '../api-reference.js';
+
 import './thumbnail-picker.js';
 import type { TkThumbnailPickerOption } from './thumbnail-picker.js';
 
@@ -533,4 +535,9 @@ export const Accessibility: Story = {
       </table>
     </main>
   `,
+};
+
+export const Api: Story = {
+  name: 'API',
+  render: () => apiReferenceDoc('tk-thumbnail-picker'),
 };

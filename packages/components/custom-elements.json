@@ -4,6 +4,40 @@
   "modules": [
     {
       "kind": "javascript-module",
+      "path": "src/api-reference.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "apiReferenceDoc",
+          "return": {
+            "type": {
+              "text": "TemplateResult"
+            }
+          },
+          "parameters": [
+            {
+              "name": "tag",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "The generated API page for one kit element: attributes + property-only\nchannels, events, slots — straight from the manifest — plus the\nCONVENTIONS.md contract link every component page carries (5.5 checklist)."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "apiReferenceDoc",
+          "declaration": {
+            "name": "apiReferenceDoc",
+            "module": "src/api-reference.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/article-card/article-card.css.ts",
       "declarations": [
         {

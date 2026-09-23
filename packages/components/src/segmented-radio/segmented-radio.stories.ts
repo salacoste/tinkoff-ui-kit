@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 
+import { apiReferenceDoc } from '../api-reference.js';
+
 import './segmented-radio.js';
 import type { TkSegmentedRadioOption } from './segmented-radio.js';
 
@@ -454,4 +456,9 @@ export const Accessibility: Story = {
       </table>
     </main>
   `,
+};
+
+export const Api: Story = {
+  name: 'API',
+  render: () => apiReferenceDoc('tk-segmented-radio'),
 };

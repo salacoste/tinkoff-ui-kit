@@ -1,15 +1,21 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 
+import './component-search.js';
+
 /**
- * Docs index / getting-started stub (spec 1.5). Skeleton content only —
- * component docs land from Story 1.7 (Button) onward. All styling consumes
- * var(--tk-*) tokens (FR-1); the unofficial disclaimer renders here — the
- * persistent banner is suppressed on this story by id (see .storybook/preview.ts).
+ * Docs index / getting-started (spec 1.5, completed at 5.5): install,
+ * theming quickstart, the font slot with precise Daytona licensing, the
+ * interactive component search with the EXPERIENCE empty state, and the
+ * cold-load skeleton demo (the docs-site states live HERE — see
+ * component-search.ts for the SB-chrome scope ruling). All styling consumes
+ * var(--tk-*) tokens (FR-1); the unofficial disclaimer renders inline — the
+ * persistent banner is suppressed on this story by id (.storybook/preview.ts).
  */
 
 const REPO_URL = 'https://github.com/salacoste/tinkoff-ui-kit';
-const CONVENTIONS_PATH = 'packages/components/CONVENTIONS.md';
+const CONVENTIONS_URL = `${REPO_URL}/blob/main/packages/components/CONVENTIONS.md`;
+const FONTS_LICENSE_URL = `${REPO_URL}/blob/main/packages/tokens/fonts/LICENSE-FONTS.md`;
 
 const pageStyles = html`
   <style>
@@ -23,6 +29,8 @@ const pageStyles = html`
       font-weight: var(--tk-text-body-m-weight);
       line-height: var(--tk-text-body-m-leading);
       color: var(--tk-color-text-primary);
+      /* Canvas follows the theme's base surface (the 5.4 dark-sweep rule):
+         without an explicit paint the browser canvas stays WHITE in dark. */
       background: var(--tk-color-surface-base);
     }
     .tkgs h1 {
@@ -75,6 +83,13 @@ const pageStyles = html`
     .tkgs code {
       font-family: var(--tk-font-body);
     }
+    .tkgs ol {
+      margin: 0 0 var(--tk-space-16);
+      padding-left: var(--tk-space-24);
+    }
+    .tkgs li {
+      margin: 0 0 var(--tk-space-8);
+    }
     .tkgs .tkgs-status {
       margin: var(--tk-space-32) 0 0;
       padding: var(--tk-space-12) var(--tk-space-16);
@@ -85,12 +100,57 @@ const pageStyles = html`
       font-size: var(--tk-text-body-s-size);
       line-height: var(--tk-text-body-s-leading);
     }
-    .tkgs ol {
-      margin: 0 0 var(--tk-space-16);
-      padding-left: var(--tk-space-24);
+    /* Cold-load skeleton (EXPERIENCE State Patterns «Skeleton»): gray blocks
+       matching THIS page's layout; STATIC by design — the kit's skeleton
+       pattern carries no shimmer, so it is reduced-motion-safe as-is. */
+    .tkgs .tkgs-skeleton {
+      box-sizing: border-box;
+      padding: var(--tk-space-24);
+      background: var(--tk-color-surface-base);
+      border: 1px solid var(--tk-color-border-default);
+      border-radius: var(--tk-radius-md);
     }
-    .tkgs li {
-      margin: 0 0 var(--tk-space-8);
+    /* border-default, not gray-200: the token flips in dark — gray-200
+       paints near-white skeleton blocks there (the article-card precedent). */
+    .tkgs .tkgs-skeleton__block {
+      background: var(--tk-color-border-default);
+      border-radius: var(--tk-radius-xs);
+    }
+    .tkgs .tkgs-skeleton__title {
+      width: 40%;
+      height: var(--tk-text-heading-5-size);
+      margin-bottom: var(--tk-space-16);
+    }
+    .tkgs .tkgs-skeleton__line {
+      height: var(--tk-text-body-s-size);
+      margin-bottom: var(--tk-space-8);
+    }
+    .tkgs .tkgs-skeleton__line--90 {
+      width: 90%;
+    }
+    .tkgs .tkgs-skeleton__line--60 {
+      width: 60%;
+    }
+    .tkgs .tkgs-skeleton__field {
+      box-sizing: border-box;
+      width: 100%;
+      height: var(--tk-space-48);
+      margin: var(--tk-space-8) 0 var(--tk-space-16);
+      border-radius: var(--tk-radius-sm);
+    }
+    .tkgs .tkgs-skeleton__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--tk-space-grid-gap);
+    }
+    .tkgs .tkgs-skeleton__card {
+      height: var(--tk-space-96);
+      border-radius: var(--tk-radius-sm);
+    }
+    @media (max-width: 767px) {
+      .tkgs .tkgs-skeleton__grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 `;
@@ -121,9 +181,15 @@ export const Page: Story = {
 
       <h2>Установка</h2>
       <p>
-        Пакеты ещё не опубликованы — <code>npm install pillkit-…</code>
-        появится вместе с первым релизом (Story 5.7). До этого рабочий путь —
-        pnpm-линк воркспейса из checkout'а этого репозитория:
+        Пакеты называются <code>pillkit-tokens</code>,
+        <code>pillkit-components</code> и <code>pillkit-react</code>. Пока они
+        не опубликованы в npm (<code>private: true</code> до первого релиза) —
+        после публикации установка займёт одну команду:
+      </p>
+      <pre><code>pnpm add pillkit-components pillkit-react pillkit-tokens</code></pre>
+      <p>
+        До этого рабочий путь — pnpm-линк воркспейса из checkout'а этого
+        репозитория:
       </p>
       <pre><code>git clone ${REPO_URL}
 cd my-app && pnpm init
@@ -131,15 +197,20 @@ cd my-app && pnpm init
 #   packages:
 #     - .
 #     - ../tinkoff-ui-kit/packages/*
+# соберите пакеты кита — exports указывают на ./dist:
+cd ../tinkoff-ui-kit && pnpm install && pnpm build && cd ../my-app
 pnpm add pillkit-components pillkit-react pillkit-tokens --workspace</code></pre>
       <p>
-        Линк закрепляет <code>workspace:*</code> — кит собирается и обновляется
-        вместе с приложением. Компоненты — Lit custom elements
-        (<code>tk-*</code>); React-обёртки генерируются из манифеста
-        компонентов (см. <code>Button</code> из <code>pillkit-react</code>).
+        Компоненты — Lit custom elements (<code>tk-*</code>); для React
+        используйте сгенерированные обёртки из <code>pillkit-react</code>.
+        Контракт API — пропсы, события, controlled/uncontrolled-режимы, слоты и
+        грамматика темизации — описан в
+        <a href="${CONVENTIONS_URL}" target="_blank" rel="noreferrer noopener"
+          >CONVENTIONS.md</a
+        >; таблицы API каждого компонента — на его странице (история «API»).
       </p>
 
-      <h2>Темизация</h2>
+      <h2>Быстрый старт: темизация</h2>
       <ol>
         <li>
           Подключите токеновый лист один раз на уровне
@@ -156,57 +227,100 @@ pnpm add pillkit-components pillkit-react pillkit-tokens --workspace</code></pre
           Темы переключаются атрибутом на корне документа — без правок разметки,
           классов и inline-стилей внутри приложения:
           <pre><code>&lt;html data-theme="dark"&gt;</code></pre>
-          Попробуйте контрол Theme в тулбаре Storybook.
-        </li>
-        <li>
-          Шрифты: кит бандлит лицензированные переименованные шрифты как
-          отдельно-лицензированный актив (решение мейнтейнера, 2026-09-22) —
-          <strong>DaytonaSans</strong> (переименованная Neue Haas Unica W1G,
-          Monotype; уже в <code>packages/tokens/fonts/</code>) и
-          DaytonaPragma (Pragmatica, ParaType; веса 400/500/700).
-          Они не покрываются MIT-лицензией пакета — см.
-          <code>packages/tokens/fonts/LICENSE-FONTS.md</code>. Подключите
-          <code>pillkit-tokens/daytona.css</code> рядом с
-          <code>tokens.css</code> — слоты уже ведут Daytona-семействами.
-          Проприетарный TinkoffSans (заголовочный шрифт сайта) недоступен —
-          DaytonaSans занимает его роль как ближайший лицензированный
-          гротеск; открытый fallback — <strong>Inter</strong>. Переопределение
-          слота заменяет значение целиком — повторно включите fallback-стек:
-          <pre><code>:root {
-  --tk-font-heading: Inter, sans-serif;
-  --tk-font-body: Inter, sans-serif;
-}</code></pre>
+          Попробуйте контрол Theme в тулбаре Storybook. Как настраивать палитру
+          точечно — в разделе
+          <a href="?path=/story/theming-guide--switching" target="_top"
+            >Theming Guide</a
+          >.
         </li>
       </ol>
 
+      <h2>Шрифты</h2>
       <p>
-        <strong>Точные шрифты локально.</strong> Если у вас есть лицензионные
-        woff2 — положите их в
-        <code>packages/docs/src/local-fonts/</code> (папка gitignored: в
+        Кит бандлит лицензированные переименованные шрифты как
+        <strong>отдельно-лицензированные активы</strong>:
+        <strong>DaytonaSans</strong> — переименованная Neue Haas Unica W1G
+        (© Monotype Imaging Inc.), <strong>DaytonaPragma</strong> —
+        переименованная Pragmatica (© ParaType, веса 400/500/700). Оба
+        используются и распространяются по лицензиям на использование и
+        переименование, принадлежащим мейнтейнеру, и
+        <strong>не покрываются MIT-лицензией пакета</strong> — условия в
+        <a href="${FONTS_LICENSE_URL}" target="_blank" rel="noreferrer noopener"
+          >LICENSE-FONTS.md</a
+        >. Подключаются одной строкой рядом с токенами:
+      </p>
+      <pre><code>import 'pillkit-tokens/tokens.css';
+import 'pillkit-tokens/daytona.css';</code></pre>
+      <p>
+        Проприетарный TinkoffSans (заголовочный шрифт сайта) недоступен —
+        DaytonaSans занимает его роль как ближайший лицензированный гротеск.
+        Открытая альтернатива по умолчанию — <strong>Inter</strong>: если
+        Daytona не подключена, слоты разрешаются в Inter. Свой бренд-шрифт
+        ставьте ПЕРВЫМ в стеке — значение слота заменяется целиком, поэтому
+        fallback повторяют в конце:
+      </p>
+      <pre><code>:root {
+  --tk-font-heading: MyBrandGrotesk, Inter, sans-serif;
+  --tk-font-body: MyBrandGrotesk, Inter, sans-serif;
+}</code></pre>
+      <p>
+        Точные шрифты локально: если у вас есть лицензионные woff2, положите их
+        в <code>packages/docs/src/local-fonts/</code> (папка gitignored — в
         публичный пакет ничего не попадает) по шаблону
-        <code>local-fonts.example.css</code> — доки будут рендериться
-        пиксельно близко к референсу на вашей машине. Шаблон поддерживает и
-        канонические family-имена (авто-подхват), и приватные псевдонимы.
-        Бандлимые DaytonaSans/DaytonaPragma этот шаг не требуют — они уже
-        в ките. Подробности — в README той папки.
+        <code>local-fonts.example.css</code>. Бандлимые Daytona этот шаг не
+        требуют.
       </p>
 
-      <h2>API компонентов</h2>
+      <h2>Токены и темизация — справочники</h2>
       <p>
-        Каждый компонент следует контракту кита — пропсы, события,
-        controlled/uncontrolled-режимы, слоты и грамматика темизации. См.
-        <code>${CONVENTIONS_PATH}</code> в
-        <a href="${REPO_URL}" target="_blank" rel="noreferrer noopener"
-          >репозитории кита</a
+        Полная таблица токенов со значениями светлой и тёмной тем бок о бок — на
+        странице
+        <a href="?path=/story/token-reference--colors" target="_top"
+          >Token Reference</a
+        >
+        (она сгенерирована из того же артефакта, что потребляют компоненты).
+        Правила переопределения и парности в тёмной теме —
+        <a href="?path=/story/theming-guide--overrides" target="_top"
+          >Theming Guide</a
         >.
       </p>
 
+      <h2>Поиск по компонентам</h2>
+      <p>
+        Девятнадцать компонентов кита — от кнопки до модального окна. Начните с
+        поиска или откройте раздел Components в боковой панели.
+      </p>
+      <docs-component-search></docs-component-search>
+
+      <h2>Состояния дока-сайта</h2>
+      <p>
+        Скелетон холодной загрузки повторяет макет этой страницы: заголовок,
+        строки ввода, поле поиска и сетка карточек. Блоки статичны по образцу
+        кита — скелетоны кита не анимируются, поэтому поведение безопасно при
+        <code>prefers-reduced-motion</code> без отдельных правил.
+      </p>
+      <div class="tkgs-skeleton" role="img" aria-label="Скелетон страницы начала работы">
+        <div class="tkgs-skeleton__block tkgs-skeleton__title"></div>
+        <div class="tkgs-skeleton__block tkgs-skeleton__line tkgs-skeleton__line--90"></div>
+        <div class="tkgs-skeleton__block tkgs-skeleton__line tkgs-skeleton__line--60"></div>
+        <div class="tkgs-skeleton__block tkgs-skeleton__field"></div>
+        <div class="tkgs-skeleton__grid">
+          <div class="tkgs-skeleton__block tkgs-skeleton__card"></div>
+          <div class="tkgs-skeleton__block tkgs-skeleton__card"></div>
+          <div class="tkgs-skeleton__block tkgs-skeleton__card"></div>
+        </div>
+      </div>
+      <p>
+        Пустой результат поиска никогда не остаётся пустым местом:
+      </p>
+      <docs-component-search query="несуществующий"></docs-component-search>
+
       <p class="tkgs-status">
-        Статус пайплайна (Story 1.7): первый компонент — Button — уже доступен
-        в разделе Components и прошёл весь конвейер: Lit-ядро, CEM-манифест,
-        сгенерированная React-обёртка, истории с axe-проверками в обеих темах и
-        (предварительный) визуальный baseline. Временное демо токенов-цветов из
-        скелетной фазы удалено.
+        Статус: все 19 компонентов прошли конвейер кита — Lit-ядро с
+        CEM-манифестом, сгенерированные React-обёртки, истории с axe-проверками
+        в обеих темах, визуальные baselines и свипы доступности (клавиатура,
+        контраст, скринридер-протоколы). Дальше — публикация пакетов (Story
+        5.7).
       </p>
     </main>
   `,

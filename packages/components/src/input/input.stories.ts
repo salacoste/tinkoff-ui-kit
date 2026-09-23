@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 
+import { apiReferenceDoc } from '../api-reference.js';
+
 import '../button/button.js';
 import './input.js';
 import type { TkInput, TkInputType } from './input.js';
@@ -519,4 +521,9 @@ export const Accessibility: Story = {
       </table>
     </main>
   `,
+};
+
+export const Api: Story = {
+  name: 'API',
+  render: () => apiReferenceDoc('tk-input'),
 };
