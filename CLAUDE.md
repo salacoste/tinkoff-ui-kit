@@ -9,33 +9,28 @@ Study project: the reference site (tinkoff.ru) is the design source of truth; we
 (`@lit/react`); pnpm workspace `pillkit-{tokens,components,react,docs}`; TS 7 strict, Vite 8, Vitest,
 Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) live in `_bmad-output/planning-artifacts/`.
 
-## Project state (updated 2026-09-23 — autonomous build run)
+## Project state (updated 2026-09-23 — v1 BUILD COMPLETE, maintainer-gate mode)
 
-- **BMAD chain complete through epics; EPICS 1–4 FULLY BUILT — ALL 19 v1 COMPONENTS SHIPPED**
-  (commits 19b12a6 → fb8980c). Epic 1 foundation (scaffold, tokens light 131 + dark 17 semantic
-  overrides, CONVENTIONS.md, Storybook 10.6 docs, Playwright visual harness, tk-button pilot,
-  CI green) · Epic 2 forms + API FREEZE (Input 2.1 froze §4/§9; overlay controller 2.2; Select/
-  Checkbox/SegmentedRadio/ThumbnailPicker/ProgressBar; composed-form walkthrough) · Epic 3
-  navigation/cards/homepage (Link, Badge, Tabs, Navbar+burger drawer, Footer, 4 cards, homepage
-  composition + UX-DR14 matrix; mint/beige tint closures) · Epic 4 overlays (tk-modal, tk-tooltip,
-  tk-toast + showToast; UJ-3 Toast leg closed; popover-UA-reset lesson hit twice — scrim AND toast host)
-- **Kit totals: 604 unit tests + 472 visual/axe baselines ×2 + walkthrough 31/31; 19 React wrappers**
-- Packages: `pillkit-{tokens,components,react,docs}` (npm names resolved at OQ-3, verified free; still
-  `private: true` until first publish). The `tk-` element prefix and `--tk-*` properties are KEPT
-  (OQ-3 decision — generic abbreviation, zero trademark collision).
-  Scripts: `pnpm build|test|lint|typecheck|gen|check:gen|test:visual|test:visual:update|check:tokens-drift`
-- **Lit on this stack requires `experimentalDecorators: true`** (vite8/rolldown drops TC39
-  decorators silently) — do not "fix" this
-- Fonts: DaytonaSans (400/500/600) + DaytonaPragma (400/500/700) bundled in `packages/tokens/fonts/`
-  under LICENSE-FONTS.md (separately licensed, NOT MIT) — topic fully closed
-- Next per epics.md: **Epic 5 release readiness** — 5.1–5.3 a11y sweeps (method + 3 groups,
-  VoiceOver+NVDA), 5.4 dark sweep + dark-tint refinement, 5.5 docs completion (token reference,
-  theming guide, getting-started, RU), 5.6 fidelity+discipline verification (16/16+3/3, kit-wide
-  impeccable, yellow-discipline audit, maintainer PROVISIONAL baseline batch gate), 5.7 publish
-  (MAINTAINER GATE: MIT/semver/changelog/disclaimer; pillkit-* names stand)
-- Maintainer queue: ratify bounce-easing detector ignore, batch-confirm provisional baselines (5.6);
-  deferred-work.md tracks the rest (LICENSE file, AD-4 single-source, react peer range, mono font
-  slot, iOS real-device scroll-lock, fallback-path projection limitation)
+- **BMAD v1 plan FULLY EXECUTED: all 38 stories / 5 epics / 19 components** (commits 19b12a6 → 320232c).
+  Epics 1–4 built the kit (tokens, forms+API freeze, navigation/cards/homepage, overlays); Epic 5
+  verified and prepared release: a11y sweeps (114-cell ledgers + permanent reduced-motion/ring/
+  theme-branch CI guards), dark sweep (4 real bugs fixed; tint assumptions closed), docs completion
+  (generated token reference, theming guide, verified quickstart), fidelity+discipline closure
+  (xxl radius corrected 32→24 by probe; yellow audit; ZERO [ASSUMPTION] flags remain), publish prep
+  (MIT + fonts/transitions carve-outs, per-package LICENSEs, CHANGELOG, SM-6 self-test PASSED,
+  RELEASE.md maintainer checklist)
+- **Totals: 644 unit + 921 visual/axe tests, 274 baselines, 19 React wrappers, CI green**
+- Packages `pillkit-{tokens,components,react,docs}`: `private: true` everywhere, 0 tags, npm untouched
+- **The project now waits on MAINTAINER GATES ONLY — entry point `RELEASE.md`**: baseline batch
+  confirm/re-take (`_bmad-output/implementation-artifacts/baseline-review-package.md`), SR spot-checks
+  (VoiceOver+NVDA protocols in the 19 stories), §0 ratifications (bounce-easing ignore, tokens
+  license field, transitions redistribution, version — 1.0.0-rc.1 recommended), then private-flip →
+  tag → publish
+- Fonts: DaytonaSans/DaytonaPragma in `packages/tokens/fonts/` under LICENSE-FONTS.md (separately
+  licensed, NOT MIT; consumer rights ONLY per that file)
+- **Lit on this stack requires `experimentalDecorators: true`** — do not "fix" this
+- deferred-work.md: 6 entries with revisit conditions (fold literals, AD-4 single-source,
+  AA-derivation, mono slot, iOS scroll-lock, SR execution)
 
 ## Toolchain (installed & configured)
 
