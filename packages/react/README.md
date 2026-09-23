@@ -13,8 +13,15 @@ unwrapped `detail` payload instead of the raw `CustomEvent`. Regenerate with
 
 ## Install
 
+Distributed via the [GitHub repository](https://github.com/salacoste/tinkoff-ui-kit)
+only — the packages are not published to npm. Follow the workspace-link recipe
+in the repository README («Быстрый старт»): clone the repo (pin the release
+tag, e.g. `--branch v1.0.0`), add its `packages/*` to your
+`pnpm-workspace.yaml`, build, then:
+
 ```bash
-pnpm add pillkit-react pillkit-components pillkit-tokens react@^19
+pnpm add -w pillkit-react pillkit-components pillkit-tokens --workspace
+pnpm add -w react@^19 react-dom@^19
 ```
 
 Peer dependency: React 19.x.

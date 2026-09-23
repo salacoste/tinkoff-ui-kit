@@ -1,12 +1,19 @@
-# RELEASE.md — чеклист публикации v1 (для мейнтейнера)
+# RELEASE.md — чеклист релиза v1 (для мейнтейнера)
 
-Подготовлено Story 5.7 (publish prep). Всё до решения о публикации сделано и
-проверено автономным прогоном; **сами шаги ниже исполняет только мейнтейнер**.
-Ничего из этого файла не было исполнено в 5.7: `private: true` стоит во всех
-пакетах, тегов нет, npm-команд не запускалось.
+**Модель дистрибуции (решение мейнтейнера 2026-09-23): только GitHub, npm не
+используется — никогда.** Потребители получают кит клоном/checkout'ом
+репозитория и pnpm-workspace-линком (рецепт — «Быстрый старт» корневого README,
+проверен дословно в SM-6). Релизный маркер — **git-тег `v<X.Y.Z>` на `main`**;
+первый релиз — `v1.0.0`.
 
-Публикуются три пакета: `pillkit-tokens`, `pillkit-components`, `pillkit-react`.
-`pillkit-docs` и корень воркспейса остаются приватными навсегда.
+Подготовлено Story 5.7 (publish prep); развёрнуто на GitHub-модель при том же
+автономном прогоне. Всё до решения о релизе сделано и проверено автономным
+прогоном; **сами шаги ниже исполняет только мейнтейнер**. `private: true`
+стоит во всех пакетах и остаётся навсегда (§3); npm-команд не запускалось.
+
+Распространяются три пакета исходниками в составе checkout'а репозитория:
+`pillkit-tokens`, `pillkit-components`, `pillkit-react`. `pillkit-docs` и
+корень воркспейса — служебные, потреблять снаружи не нужно.
 
 ---
 
@@ -19,6 +26,8 @@
 > SR-чеков — осознанно отложена (Windows-машины нет; VoiceOver 19/19 пройден,
 > дайджест `.playwright-cli/verify/sr-spot-check/PROTOCOL-DIGEST.md`).
 > §0.2 (версия) решается при публикации — гейт 4.
+> **§0.2 решена 2026-09-23: финальная `1.0.0`** — гейты §1 закрыты, правок
+> не потребовалось (rc-путь отпал вместе с npm-публикацией).
 
 ### 0.1 License-поле `pillkit-tokens` = `SEE LICENSE IN LICENSE`
 
@@ -97,90 +106,77 @@ kit не перепродаёт их как transitions-библиотеку —
 
 ## 2. Версия и CHANGELOG
 
-1. Выбрать версию (§0.2): `1.0.0-rc.1` или `1.0.0`.
-2. В `CHANGELOG.md`: заменить заголовок `[Unreleased]` на
-   `[1.0.0-rc.1] - ГГГГ-ММ-ДД` (или `[1.0.0] - …`), добавить пустой
-   `[Unreleased]` сверху.
-3. Во всех трёх публикуемых `package.json` выставить `"version"` из `0.0.0`
-   в выбранную (одинаковую).
+Для **v1.0.0 уже исполнено** (при развороте на GitHub-дистрибуцию,
+2026-09-23): во всех трёх `package.json` стоит `"version": "1.0.0"`,
+`CHANGELOG.md` несёт `[1.0.0] - 2026-09-23` и пустой `[Unreleased]` сверху.
+Ниже — шаблон для следующих релизов:
 
-## 3. Снятие `private` + правка межпакетной зависимости
+1. Выбрать версию по семверу: ломающие изменения — мажор; компоненты/токены/
+   фичи — минор; фиксы — патч.
+2. В `CHANGELOG.md`: заменить заголовок `[Unreleased]` на `[X.Y.Z] - ГГГГ-ММ-ДД`,
+   добавить пустой `[Unreleased]` сверху.
+3. Во всех трёх `packages/{tokens,components,react}/package.json` выставить
+   одинаковую `"version"` (манифесты остаются `private: true` — см. §3).
 
-В `packages/tokens/package.json`, `packages/components/package.json`,
-`packages/react/package.json`: **удалить `"private": true`**.
-`pillkit-docs` и корневой `package.json` не трогать.
+## 3. `private` остаётся навсегда
 
-Важно (plain npm не умеет `workspace:*`): в `packages/react/package.json`
-заменить зависимость
+**Снятия `private` не будет никогда.** Во всех трёх пакетах
+(`tokens`/`components`/`react`) `"private": true` — это не флаг «до первого
+релиза», а постоянная защита: случайный `npm publish` из каталога пакета
+падает с ошибкой вместо ухода в реестр.
 
-```json
-"pillkit-components": "workspace:*"
-```
+- `pillkit-components: "workspace:*"` в `packages/react/package.json`
+  остаётся как есть навсегда — резолв внутри воркспейса и есть рабочий
+  механизм дистрибуции.
+- `npm pack` / `npm publish` не запускаются; состав tarball'ов больше не
+  релевантен (исторические проверки 5.7 зафиксированы в конце файла).
 
-на версию публикуемого компонентного пакета, например `"^1.0.0-rc.1"`
-(точная форма — та же, что выбрана в §2). Без этого tarball `pillkit-react`
-уйдёт в npm с буквальным `workspace:*` и сломает установку потребителям.
-
-Проверка содержимого перед публикацией (из каталога пакета):
-
-```sh
-npm pack --dry-run
-```
-
-Ожидания: `pillkit-tokens` — LICENSE, fonts/ (7 файлов + LICENSE-FONTS.md),
-dist/; `pillkit-components` — LICENSE, dist/ (типы включены, `api-reference.*`
-ИСКЛЮЧЁН files-negation'ом), CONVENTIONS.md, custom-elements.json;
-`pillkit-react` — LICENSE, dist/.
-
-## 4. Публикация (plain npm)
+## 4. Релиз = коммит + тег
 
 ```sh
-npm login
-
-cd packages/tokens     && npm publish --tag rc
-cd ../components       && npm publish --tag rc
-cd ../react            && npm publish --tag rc
+# на чистом main, после закрытия гейтов §1 и свёрстки версии/CHANGELOG (§2):
+git tag v1.0.0
+git push origin main --tags
 ```
 
-- `--tag rc` обязателен для prerelease-версий: без него npm молча ставит
-  `latest` на `1.0.0-rc.1`. Для финальной `1.0.0` — `npm publish` без
-  `--tag` (станет `latest`).
-- Порядок важен: tokens → components → react.
-- Имена `pillkit-*` проверены как свободные (OQ-3, 2026-09-22); unscoped,
-  `--access public` не требуется.
+- Маркер релиза — **тег `v<X.Y.Z>` на `main`**: именно на него пинуются
+  потребители (`git clone --branch vX.Y.Z …`, `git checkout vX.Y.Z`).
+- Для v1.0.0: манифесты уже на `1.0.0`, CHANGELOG уже датирован (§2) — тег
+  ставится на коммит, который это включает.
+- Тег должен указывать на коммит с зелёным CI (§1.1).
 
-## 5. Сразу после публикации — свежая установка из registry
+## 5. Верификация релиза — свежий потребитель по тегу
 
-По молде SM-6 (`.playwright-cli/verify/sm6-self-test/NOTES.md`), но пакеты
-ставятся из npm, без линка. **rc-путь: тег дистрибуции обязателен** — при
-публикации с `--tag rc` тег `latest` никуда не указывает, и bare-установка
-пакета, у которого есть только prerelease-версии, завершается ошибкой
-(`No matching version found`); npm никогда не резолвит prerelease без явного
-указания тега/версии. Для финального `1.0.0`-пути (`latest` указывает на
-релиз) — обычные bare-имена.
+По молде SM-6 (`.playwright-cli/verify/sm6-self-test/NOTES.md`), но клон —
+релизный тег с GitHub (не HEAD рабочего дерева):
 
 ```sh
-d=$(mktemp -d) && cd "$d" && npm init -y
-# rc-путь (§0.2):
-npm i pillkit-tokens@rc pillkit-components@rc pillkit-react@rc react@19 react-dom
-# 1.0.0-путь: npm i pillkit-tokens pillkit-components pillkit-react react@19 react-dom
-npm i -D vite
+d=$(mktemp -d) && cd "$d"
+git clone --depth 1 --branch v1.0.0 https://github.com/salacoste/tinkoff-ui-kit
+mkdir my-app && cd my-app
+pnpm init
+cat > pnpm-workspace.yaml <<'EOF'
+packages:
+  - .
+  - ../tinkoff-ui-kit/packages/*
+EOF
+cd ../tinkoff-ui-kit && pnpm install && pnpm build && cd ../my-app
+pnpm add -w pillkit-components pillkit-react pillkit-tokens --workspace
+pnpm add -w react@19.3.0 react-dom@19.3.0
+pnpm add -w -D vite
 # index.html + main.ts — из «Быстрого старта» корневого README
-npx vite
+pnpm exec vite
 ```
 
-Проверить: обе кнопки рендерятся; `npm view pillkit-tokens license` →
-`SEE LICENSE IN LICENSE`; в `node_modules/pillkit-tokens/` есть `LICENSE`,
-`fonts/LICENSE-FONTS.md` и шрифты; `npm view pillkit-react peerDependencies`
-→ `react@^19.0.0`.
+Проверить (минимум — как в SM-6): обе кнопки рендерятся и стилизуются
+токенами кита; тёмная тема переключается атрибутом `data-theme="dark"`.
+Этот прогон — релизный гейт: до него релиз не считается закрытым.
 
-## 6. Тег и GitHub
+## 6. GitHub-хоускипинг
 
-```sh
-git tag v1.0.0-rc.1 && git push origin main --tags
-```
-
-- Release на GitHub — из раздела CHANGELOG (по желанию).
+- Тег запушен (`git push origin main --tags`, §4).
+- Release на GitHub — заметки из раздела CHANGELOG этого тега (по желанию;
+  источник — `CHANGELOG.md`).
 - **Description репозитория** (настройки GitHub, строка для вставки):
 
   ```
@@ -188,18 +184,15 @@ git tag v1.0.0-rc.1 && git push origin main --tags
   ```
 
 - OQ-3 закрыт этим знаком: имена финальны.
-- **Вернуть `workspace:*`:** в follow-up-коммите после публикации отменить
-  правку §3 — зависимость `pillkit-components` в `packages/react/package.json`
-  обратно на `"workspace:*"` (версионный спес `^1.0.0-rc.1` в воркспейсе будет
-  резолвиться из registry и затенит локальный линк при следующем
-  `pnpm install`). Само снятие `private` остаётся как есть.
 
 ## 7. Откат (если что-то не так)
 
-- В течение ~72 ч: `npm unpublish <pkg>@<version> --force` (окно npm для
-  новых пакетов; все три пакета — никто не успел зависеть).
-- Позже: `npm deprecate <pkg>@<version> "причина"` + патч/минор сверху.
-- Тег удалить: `git tag -d v1.0.0-rc.1 && git push origin :refs/tags/v1.0.0-rc.1`.
+- Реестра нет — откатывать в npm нечего. Сломанный релиз откатывается тегом:
+  `git tag -d vX.Y.Z && git push origin :refs/tags/vX.Y.Z` (если на тег никто
+  не успел пиннуться) либо перемещением тега на исправленный коммит
+  (`git tag -f vX.Y.Z <sha> && git push -f origin vX.Y.Z`) с записью в
+  CHANGELOG.
+- Правка поверх: фикс + патч-релиз (новый тег) следующим номером.
 
 ---
 
@@ -207,8 +200,10 @@ git tag v1.0.0-rc.1 && git push origin main --tags
 
 - SM-6: свежий потребитель по рецепту README рендерит кнопку обоими способами
   (transcript + скриншот + DOM-ассертации — `.playwright-cli/verify/sm6-self-test/`).
-- `npm pack --dry-run` всех трёх пакетов: состав tarball'ов соответствует
-  ожиданиям §3, `api-reference.*` исключён, LICENSE-файлы включены.
+- `npm pack --dry-run` всех трёх пакетов: состав tarball'ов соответствовал
+  ожиданиям (§3 старой npm-модели — до разворота на GitHub-дистрибуцию),
+  `api-reference.*` исключён, LICENSE-файлы включены. Историческая запись:
+  к GitHub-модели эта проверка больше не применяется.
 - Товарный знак: нулевые попадания в published-строках (§1.6).
 - Визуальная сюита после N8-правки: пара getting-started перебазлайнена,
   остальное 919/921 неизменно.

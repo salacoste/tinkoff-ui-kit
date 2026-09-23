@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-09-23
+
 ### Added
 
 - Initial public release of **pillkit** — a UI kit of 19 Lit custom elements
@@ -48,6 +50,4 @@ tokens and features; patch versions fix defects. Deprecations are announced
 in a minor release via this changelog (and `@deprecated` JSDoc markers) and
 are removed no earlier than the next major.
 
-<!-- Maintainer (RELEASE.md §2): at release, replace [Unreleased] with
-     [1.0.0-rc.1] - YYYY-MM-DD (or [1.0.0] - YYYY-MM-DD per the version
-     decision) and start a fresh empty [Unreleased] section above it. -->
+

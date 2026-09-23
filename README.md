@@ -27,9 +27,9 @@ axe в обеих темах, контраст, клавиатура, reduced-mo
 | `pillkit-tokens` | Дизайн-токены — слои custom properties `--tk-*`: светлая база + тёмные переопределения на `[data-theme="dark"]` |
 | `pillkit-components` | Ядро на Lit custom elements: 19 компонентов `tk-*`, общий overlay-контроллер |
 | `pillkit-react` | React-обёртки, генерируемые из Custom Elements Manifest (`@lit/react`) |
-| `pillkit-docs` | Документация — Storybook 10 (RU); приватный пакет, не публикуется |
+| `pillkit-docs` | Документация — Storybook 10 (RU); служебный пакет воркспейса, потреблять снаружи не нужно |
 | `tests/` | Закоммиченные гарантии import-boundary + build-isolation для матрицы AD-4 (запускаются в `pnpm test`) |
-| `transitions/` | Вендорные рецепты transitions.dev (сырые `t-*.css` + `_root.css`) — источник моушна; не публикуются, лицензируются отдельно (см. «Лицензия») |
+| `transitions/` | Вендорные рецепты transitions.dev (сырые `t-*.css` + `_root.css`) — источник моушна; остаются в репозитории, лицензируются отдельно (см. «Лицензия») |
 
 ## Быстрый старт
 
@@ -38,9 +38,14 @@ axe в обеих темах, контраст, клавиатура, reduced-mo
 
 Требования: Node >= 20, pnpm (приходит через `packageManager` + corepack).
 
-Пакеты ещё не опубликованы в npm (`private: true` до первого релиза — план
-релиза для мейнтейнера в `RELEASE.md`). Рабочий путь сегодня — pnpm-линк
-воркспейса из checkout'а репозитория:
+Кит распространяется **только через этот репозиторий GitHub**: это закрытый
+учебный проект, и отдельно-лицензированные шрифты в `pillkit-tokens` делают
+дистрибуцию через реестр npm неудобной — публикации не будет, `private: true`
+во всех пакетах остаётся постоянно (модель релиза — в `RELEASE.md`).
+Каноническая установка — pnpm-линк воркспейса из checkout'а репозитория;
+для воспроизводимости пинуйте релизный тег: `git clone --branch v1.0.0 …` или
+`git checkout v1.0.0` в существующем checkout'е (тег = версия пакета, см.
+«Семверинг и changelog»):
 
 ```bash
 git clone https://github.com/salacoste/tinkoff-ui-kit
@@ -87,8 +92,8 @@ createRoot(document.getElementById('root')!).render(
 Запуск: `pnpm exec vite` → http://localhost:5173 — обе кнопки рендерятся
 и стилизуются токенами кита. Токеновый лист подключается один раз на уровне
 документа; тёмная тема — атрибутом `<html data-theme="dark">`, без правок
-разметки и inline-стилей. После публикации в npm весь блок линка воркспейса
-заменяется на `pnpm add pillkit-components pillkit-react pillkit-tokens`.
+разметки и inline-стилей. Обновление кита — `git fetch --tags && git checkout
+vX.Y.Z` в checkout'е кита и пересборка (`pnpm install && pnpm build`).
 
 ## Документация
 
@@ -122,10 +127,12 @@ Imaging Inc.) и **DaytonaPragma** (переименованная Pragmatica, �
 
 ## Семверинг и changelog
 
-Семантическое версионирование: ломающие изменения — только в мажорах; миноры
-добавляют компоненты/токены/фичи, патчи — фиксы. Депрекации объявляются в
-миноре через [`CHANGELOG.md`](CHANGELOG.md) и `@deprecated`-маркеры, удаление —
-не раньше следующего мажора. История релизов — в [`CHANGELOG.md`](CHANGELOG.md).
+Версии — это **git-теги `v<X.Y.Z>` на `main`**; реестр не используется, тег и
+есть релизный маркер (текущий — `v1.0.0`). Семантика обычная: ломающие
+изменения — только в мажорах; миноры добавляют компоненты/токены/фичи, патчи —
+фиксы. Депрекации объявляются в миноре через [`CHANGELOG.md`](CHANGELOG.md) и
+`@deprecated`-маркеры, удаление — не раньше следующего мажора. История
+релизов — в [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Лицензия
 
@@ -134,8 +141,8 @@ Imaging Inc.) и **DaytonaPragma** (переименованная Pragmatica, �
 бандлимые шрифты (`packages/tokens/fonts/` — условия в
 [`LICENSE-FONTS.md`](packages/tokens/fonts/LICENSE-FONTS.md); пакет
 `pillkit-tokens` — смешанная лицензия, `SEE LICENSE IN LICENSE`) и вендорные
-рецепты transitions.dev (`transitions/` — условия upstream,
-не публикуются в npm). Полная область действия — в [LICENSE](LICENSE).
+рецепты transitions.dev (`transitions/` — условия upstream, распространяются
+только в составе репозитория). Полная область действия — в [LICENSE](LICENSE).
 
 ## Разработка
 

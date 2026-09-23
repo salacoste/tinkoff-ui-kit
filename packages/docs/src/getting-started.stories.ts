@@ -184,14 +184,14 @@ export const Page: Story = {
       <h2>Установка</h2>
       <p>
         Пакеты называются <code>pillkit-tokens</code>,
-        <code>pillkit-components</code> и <code>pillkit-react</code>. Пока они
-        не опубликованы в npm (<code>private: true</code> до первого релиза) —
-        после публикации установка займёт одну команду:
-      </p>
-      <pre><code>pnpm add pillkit-components pillkit-react pillkit-tokens</code></pre>
-      <p>
-        До этого рабочий путь — pnpm-линк воркспейса из checkout'а этого
-        репозитория:
+        <code>pillkit-components</code> и <code>pillkit-react</code>. Кит
+        распространяется только через этот репозиторий GitHub — в npm он не
+        публикуется (<code>private: true</code> стоит постоянно): проект
+        закрытый учебный, и отдельно-лицензированные шрифты делают реестр
+        неудобным каналом. Рабочий путь — pnpm-линк воркспейса из checkout'а
+        репозитория; для воспроизводимости пинуйте релизный тег
+        (<code>git clone --branch v1.0.0 …</code> или
+        <code>git checkout v1.0.0</code> в существующем checkout'е):
       </p>
       <pre><code>git clone ${REPO_URL}
 cd my-app && pnpm init
@@ -326,8 +326,8 @@ import 'pillkit-tokens/daytona.css';</code></pre>
         Статус: все 19 компонентов прошли конвейер кита — Lit-ядро с
         CEM-манифестом, сгенерированные React-обёртки, истории с axe-проверками
         в обеих темах, визуальные baselines и свипы доступности (клавиатура,
-        контраст, скринридер-протоколы). Дальше — публикация пакетов (Story
-        5.7).
+        контраст, скринридер-протоколы). Распространение — только этот
+        репозиторий; релизы отмечаются git-тегами, первый — v1.0.0.
       </p>
     </main>
   `,

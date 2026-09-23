@@ -1,7 +1,6 @@
 {
   "name": "pillkit-components",
-  "version": "0.0.0",
-  "private": true,
+  "version": "1.0.0",
   "description": "Lit custom elements core for pillkit — 19 tk-* components (forms, navigation, cards, overlays) rendered via Shadow DOM and themed with --tk-* custom properties; includes the shared overlay controller.",
   "keywords": [
     "pillkit",
@@ -52,5 +51,6 @@
   "customElements": "custom-elements.json",
   "devDependencies": {
     "@storybook/web-components-vite": "10.6.0"
-  }
+  },
+  "private": true
 }

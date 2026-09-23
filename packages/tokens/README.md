@@ -13,8 +13,14 @@ safe to override per-project.
 
 ## Install
 
+Distributed via the [GitHub repository](https://github.com/salacoste/tinkoff-ui-kit)
+only — the packages are not published to npm. Follow the workspace-link recipe
+in the repository README («Быстрый старт»): clone the repo (pin the release
+tag, e.g. `--branch v1.0.0`), add its `packages/*` to your
+`pnpm-workspace.yaml`, build, then:
+
 ```bash
-pnpm add pillkit-tokens
+pnpm add -w pillkit-tokens --workspace
 ```
 
 ## Usage

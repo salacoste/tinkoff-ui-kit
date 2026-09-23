@@ -14,8 +14,14 @@ behind modal / select / tooltip / toast.
 
 ## Install
 
+Distributed via the [GitHub repository](https://github.com/salacoste/tinkoff-ui-kit)
+only — the packages are not published to npm. Follow the workspace-link recipe
+in the repository README («Быстрый старт»): clone the repo (pin the release
+tag, e.g. `--branch v1.0.0`), add its `packages/*` to your
+`pnpm-workspace.yaml`, build, then:
+
 ```bash
-pnpm add pillkit-components pillkit-tokens
+pnpm add -w pillkit-components pillkit-tokens --workspace
 ```
 
 ## Usage
