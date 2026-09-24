@@ -28,8 +28,10 @@ const REPO_ROOT = fileURLToPath(new URL('..', import.meta.url));
 const COMPONENTS_SRC = join(REPO_ROOT, 'packages', 'components', 'src');
 const MANIFEST_PATH = join(REPO_ROOT, 'packages', 'components', 'custom-elements.json');
 
-/** Kit event-name grammar (CONVENTIONS §3): `<prop>-change` or bare occurrence verbs. */
-const KIT_EVENT_NAME = /-change$|^(open|close|dismiss|select)$/;
+/** Kit event-name grammar (CONVENTIONS §3): `<prop>-change` or bare occurrence
+ * verbs (incl. the hyphenated bare verb `load-more`, Story 6.2 — added here so
+ * the tk-pagination entry is DEMANDED by the net, not hand-guarded only). */
+const KIT_EVENT_NAME = /-change$|^(open|close|dismiss|select|load-more)$/;
 
 /** `new CustomEvent<…>('event-name'` — captures the dispatched event name literal. */
 const CUSTOM_EVENT_DISPATCH = /new CustomEvent(?:<[^>]*>)?\(\s*'([^']+)'/g;

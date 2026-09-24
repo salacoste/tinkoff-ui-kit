@@ -27,13 +27,17 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   gen:tokens consumes `{colors.*}` references + rgba literals; delta/table/cream semantics live
   (6 dark first-pass [ASSUMPTION]s → 8.2); registers documented in TOKENS.md. CONSTRAINT for 6.4:
   delta text sits on surface-base cells only — green-300 fails muted/field/hover composites
-  (4.210/4.039/4.163, pinned in contrast.test.ts). Next: 6.2+6.3 (spec batch) — sequencing in
+  (4.210/4.039/4.163, pinned in contrast.test.ts). **Story 6.2 DONE (spec-6-2 closed):**
+  tk-filter-chips (tablist pills + «Ещё» overlay menu, border-only selection) + tk-pagination
+  (nav landmark, windowing, load-more bar) — geometry pixel-probed (bar 44 / gap 16; frozen
+  radius-full chips kept vs ref r≈10–12, §9-recorded), verify evidence in
+  `.playwright-cli/verify/{filter-chips,pagination}/`. Next: 6.3 (ComboboxSearch) — sequencing in
   epics-v2.md; the v1 component-story gate applies VERBATIM (FR-16). Key v2 decisions: delta
   semantics via AA-override (green-300/red-300); warm-cream family DISTINCT from beige (dark
   first-pass [ASSUMPTION] → 8.2); typography registers = mappings (h1 44→heading-2, 36→heading-3),
   zero new type tokens; keyboard defects of the reference (inert arrows, chip focus-drop) are
   IMPROVED per APG — the sanctioned a11y axis
-- **Kit totals: 662 unit + 921 visual/axe tests, 19 components, 19 React wrappers, v1 design
+- **Kit totals: 730 unit + 995 visual/axe tests, 21 components, 21 React wrappers, v1 design
   assumptions all closed (6 v2 dark first-pass [ASSUMPTION]s open BY DESIGN until 8.2), CI green**
 - Fonts: DaytonaSans/DaytonaPragma in `packages/tokens/fonts/` under LICENSE-FONTS.md (separately
   licensed, NOT MIT; consumer rights ONLY per that file)

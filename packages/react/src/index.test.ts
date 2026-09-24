@@ -5,7 +5,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import * as litReact from '@lit/react';
 import { afterAll, describe, expect, it, vi } from 'vitest';
 
-import { ArticleCard, Badge, Button, Checkbox, EVENT_MAP, FeatureCard, Footer, Input, Link, Modal, Navbar, ProgressBar, PromoCard, SegmentedRadio, Select, ServiceCard, Tabs, ThumbnailPicker, Toast, Tooltip } from './index.js';
+import { ArticleCard, Badge, Button, Checkbox, EVENT_MAP, FeatureCard, FilterChips, Footer, Input, Link, Modal, Navbar, Pagination, ProgressBar, PromoCard, SegmentedRadio, Select, ServiceCard, Tabs, ThumbnailPicker, Toast, Tooltip } from './index.js';
 
 /**
  * pillkit-react generated surface. The wrapper imports `pillkit-components`
@@ -1162,5 +1162,196 @@ describe('pillkit-react', () => {
     // throw removeChild during the suite's root.unmount() cleanup.
     if (el) container.appendChild(el);
     (el as { dismiss: () => void }).dismiss?.();
+  });
+
+  // --- Story 6.2: tk-filter-chips / tk-pagination wrappers (the v2 catalog controls) --
+
+  it("carries the story 6.2 registry entries: tk-filter-chips value-change; tk-pagination page-change + load-more", () => {
+    // The «Ещё» menu's open state is INTERNAL (the navbar-drawer precedent —
+    // spec 6.2): no open-change mapping exists, deliberately.
+    expect(EVENT_MAP['tk-filter-chips']).toEqual({ onValueChange: 'value-change' });
+    expect(EVENT_MAP['tk-pagination']).toEqual({
+      onPageChange: 'page-change',
+      onLoadMore: 'load-more',
+    });
+  });
+
+  it('renders <FilterChips> as tk-filter-chips with element properties set through the wrapper', async () => {
+    const container = await renderToContainer(
+      React.createElement(FilterChips, {
+        label: 'Раздел каталога',
+        visibleCount: 3,
+        items: [
+          { value: 'stocks', label: 'Акции' },
+          { value: 'currency', label: 'Валюта' },
+          { value: 'funds', label: 'Фонды' },
+          { value: 'indexes', label: 'Индексы' },
+        ],
+      }),
+    );
+    const el = container.querySelector('tk-filter-chips');
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    expect((el as unknown as { label?: string }).label).toBe('Раздел каталога');
+    expect((el as unknown as { visibleCount?: number }).visibleCount).toBe(3);
+    expect((el as unknown as { items?: unknown[] }).items).toHaveLength(4);
+    const tabs = (el as Element).shadowRoot?.querySelectorAll('[role="tab"]');
+    expect(tabs, 'the windowed chip row renders').toHaveLength(3);
+    expect((el as Element).shadowRoot?.querySelector('.chip--more'), 'the «Ещё» chip renders').not.toBeNull();
+  });
+
+  it('FilterChips handlers receive the UNWRAPPED string; controlled mode adds no clamping (mirrors Input)', async () => {
+    const ITEMS = [
+      { value: 'stocks', label: 'Акции' },
+      { value: 'currency', label: 'Валюта' },
+    ];
+    let state = 'stocks';
+    const container = await renderToContainer(
+      React.createElement(FilterChips, {
+        items: ITEMS,
+        value: state,
+        onValueChange: (value: unknown) => {
+          expect(typeof value).toBe('string');
+          state = value as string;
+        },
+      }),
+    );
+    const root = roots[roots.length - 1];
+    const el = container.querySelector('tk-filter-chips') as (Element & {
+      value?: string;
+      updateComplete?: Promise<unknown>;
+    }) | null;
+    expect(el?.value).toBe('stocks');
+
+    // Select the second chip through the element's own pipeline.
+    const chips = [...((el as Element).shadowRoot?.querySelectorAll('[role="tab"]') ?? [])];
+    await act(() => {
+      (chips[1] as HTMLElement).click();
+    });
+
+    // Strict: the event fired, the element's channel keeps the consumer value.
+    expect(state).toBe('currency');
+    expect(el?.value).toBe('stocks');
+
+    // The consumer's render answers: value flows back.
+    await act(() => {
+      root.render(
+        React.createElement(FilterChips, {
+          items: ITEMS,
+          value: state,
+          onValueChange: (value: unknown) => {
+            state = value as string;
+          },
+        }),
+      );
+    });
+    expect(el?.value).toBe('currency');
+    const selected = [...((el as Element).shadowRoot?.querySelectorAll('[role="tab"]') ?? [])].find(
+      (tab) => tab.getAttribute('aria-selected') === 'true',
+    );
+    expect(selected?.textContent).toContain('Валюта');
+
+    // Removing the value prop releases the element (frozen §4 semantics).
+    await act(() => {
+      root.render(React.createElement(FilterChips, { items: ITEMS, label: 'Раздел каталога' }));
+    });
+    expect(el?.value).toBeUndefined();
+    const seeded = [...((el as Element).shadowRoot?.querySelectorAll('[role="tab"]') ?? [])].find(
+      (tab) => tab.getAttribute('aria-selected') === 'true',
+    );
+    expect(seeded?.textContent).toContain('Валюта');
+  });
+
+  it('renders <Pagination> as tk-pagination with element properties and boolean reflection', async () => {
+    const container = await renderToContainer(
+      React.createElement(Pagination, { count: 196, showMore: true, moreLabel: 'Показать еще' }),
+    );
+    const el = container.querySelector('tk-pagination') as (Element & {
+      count?: number;
+      updateComplete?: Promise<unknown>;
+    }) | null;
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    expect(el?.count).toBe(196);
+    expect(el?.hasAttribute('show-more'), 'boolean reflects').toBe(true);
+    await (el as { updateComplete: Promise<unknown> }).updateComplete;
+    // count data never reflects; the windowed row renders the capture shape.
+    expect(el?.hasAttribute('count')).toBe(false);
+    const pages = [...((el as Element).shadowRoot?.querySelectorAll('.pages li') ?? [])]
+      .slice(1, -1)
+      .map((li) => (li.querySelector('.page') ? (li.textContent ?? '').trim() : '…'));
+    expect(pages).toEqual(['1', '2', '3', '4', '5', '…', '196']);
+    expect((el as Element).shadowRoot?.querySelector('.load-more')?.textContent?.trim()).toBe(
+      'Показать еще',
+    );
+  });
+
+  it('Pagination handlers receive the UNWRAPPED number (page-change) and the occurrence (load-more)', async () => {
+    const onPageChange = vi.fn();
+    const onLoadMore = vi.fn();
+    const container = await renderToContainer(
+      React.createElement(Pagination, { count: 12, showMore: true, onPageChange, onLoadMore }),
+    );
+    const el = container.querySelector('tk-pagination');
+    expect(el).not.toBeNull();
+
+    el?.dispatchEvent(
+      new CustomEvent('page-change', { detail: { value: 4 }, composed: true, bubbles: true }),
+    );
+    el?.dispatchEvent(new CustomEvent('load-more', { composed: true, bubbles: true }));
+    expect(onPageChange).toHaveBeenCalledTimes(1);
+    expect(onPageChange.mock.calls[0]?.[0]).toBe(4);
+    // Payload-less occurrence: the handler receives the event itself (§9).
+    expect(onLoadMore).toHaveBeenCalledTimes(1);
+  });
+
+  it('Pagination controlled mode: standard page mapping, wrapper adds no clamping (number channel)', async () => {
+    let state = 1;
+    const container = await renderToContainer(
+      React.createElement(Pagination, {
+        count: 12,
+        page: state,
+        onPageChange: (value: unknown) => {
+          expect(typeof value).toBe('number');
+          state = value as number;
+        },
+      }),
+    );
+    const root = roots[roots.length - 1];
+    const el = container.querySelector('tk-pagination') as (Element & {
+      page?: number;
+      updateComplete?: Promise<unknown>;
+    }) | null;
+    expect(el?.page).toBe(1);
+
+    // Press «3» through the element's own pipeline.
+    const buttons = [...((el as Element).shadowRoot?.querySelectorAll('.page') ?? [])];
+    await act(() => {
+      (buttons[2] as HTMLElement).click();
+    });
+
+    // Strict: the event fired, the element's channel keeps the consumer page.
+    expect(state).toBe(3);
+    expect(el?.page).toBe(1);
+
+    // The consumer's render answers: page flows back, the pill moved.
+    await act(() => {
+      root.render(
+        React.createElement(Pagination, {
+          count: 12,
+          page: state,
+          onPageChange: (value: unknown) => {
+            state = value as number;
+          },
+        }),
+      );
+    });
+    expect(el?.page).toBe(3);
+    expect((el as Element).shadowRoot?.querySelector('.page--active')?.textContent?.trim()).toBe('3');
+
+    // Removing the page prop releases the element (frozen §4 semantics).
+    await act(() => {
+      root.render(React.createElement(Pagination, { count: 12, label: 'Пагинация' }));
+    });
+    expect(el?.page).toBeUndefined();
+    expect((el as Element).shadowRoot?.querySelector('.page--active')?.textContent?.trim()).toBe('3');
   });
 });

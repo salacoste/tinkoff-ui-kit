@@ -1429,6 +1429,602 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/filter-chips/filter-chips.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "filterChipsStyles",
+          "default": "css` :host { display: block; max-width: 100%; } /* One NON-wrapping row: the overflow scrolls horizontally (the spec's anatomy — the reference row never wraps). */ .row { box-sizing: border-box; display: flex; align-items: center; gap: var(--tk-space-8); max-width: 100%; overflow-x: auto; } /* The tablist strip: chips only — the «Ещё» button is its SIBLING, never a tablist child (AXM: tablist children are tabs; «Ещё» is a menu button). Same gap so the row reads as one strip. */ .tabs { display: flex; flex: 0 0 auto; align-items: center; gap: var(--tk-space-8); } .chip { /* The full chip box is the interactive target (≥44×44 floor, §8 boxed register — the capture's own 44–46px pills; min-width pads the box out for 1–2-char labels whose text runs narrower). */ box-sizing: border-box; display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; margin: 0; padding: 0 var(--tk-space-16); border: 1px solid var(--tk-color-border-default); border-radius: var(--tk-filter-chips-radius, var(--tk-radius-full)); background: var(--tk-filter-chips-fill, var(--tk-color-surface-base)); font-family: var(--tk-font-body); font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-weight); line-height: var(--tk-text-body-m-leading); color: var(--tk-filter-chips-text, var(--tk-color-text-primary)); white-space: nowrap; cursor: pointer; -webkit-appearance: none; appearance: none; transition: border-color var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-standard); } /* SELECTED: 2px yellow border, fill and text UNCHANGED — selection is the border alone (the frozen ruling). Border-box sizing keeps the outer box fixed, so the 1px→2px step never shifts the row. */ .chip--selected { border: 2px solid var(--tk-filter-chips-selected-border, var(--tk-color-yellow-100)); } /* Unified focus ring (§8): 2px token ring, offset 2px, never removed. */ .chip:focus-visible { outline: 2px solid var(--tk-color-focus-ring); outline-offset: 2px; } /* --- The «Ещё» chip: pill-identical with a chevron to the right. --- */ .chip--more { flex: 0 0 auto; gap: var(--tk-space-4); } .chip__more-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } /* Decorative chevron (aria-hidden in the template), rotating 180° on open on the motion tokens; the token layer collapses durations to 0ms under prefers-reduced-motion, so no separate media query is needed. */ .chip__chevron { flex: none; display: inline-flex; color: var(--tk-color-text-secondary); transition: transform var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-standard); } .chip--more[aria-expanded='true'] .chip__chevron { transform: rotate(180deg); } `",
+          "description": "tk-filter-chips styles — TWO sheets, the select 2.3 mold: the menu panel\ncarries its OWN shadow root while living as a generated child of the\nelement's shadow tree (single-tree aria id refs; the controller's popover\npath promotes the panel in place, the fallback path reparents it across\nthe tree boundary and back — the panel sheet travels with it).\n\nVisual spec: DESIGN.md `components.filterChips` (radius full, body-m,\nsingle-select) + the vision extraction of pattern-catalog-filters.png\n(2026-09-24, pixel-probed in .playwright-cli/verify/filter-chips/NOTES.md):\npills 44px tall, white fill, ~4–6px gaps (the kit pins the 8px token step\n— NOTES deviations), UNSELECTED 1px light hairline +\ndark text; SELECTED 2px yellow border with fill and text UNCHANGED — the\nfrozen spec pins the SELECTED text to text-primary (the capture's yellow\nchip text is 1.16:1 on white — the vision pass's own contrast note; the\nborder alone carries selection). The «Ещё» chip is pill-identical with a\nsmall chevron-down to the right of its label.\n\nTokens only (FR-1), zero theme branches (AD-3).\n\nPer-component custom properties (`--tk-filter-chips-*`, CONVENTIONS §6 —\nthe same-slot-same-role rule vs `--tk-select-*`), each consumed WITH its\ntoken default:\n- `--tk-filter-chips-fill`            chip fill          (default surface-base)\n- `--tk-filter-chips-radius`          chip radius        (default radius-full)\n- `--tk-filter-chips-text`            chip text          (default text-primary)\n- `--tk-filter-chips-selected-border` selected border    (default yellow-100)\n- `--tk-filter-chips-menu-radius`     menu panel radius  (default radius-md — the menu sheet)\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule:\n- the 44px chip min box (capture-measured height 44–46; §8 target floor —\n  short labels pad to the 44×44 box, long ones grow past it);\n- the selected border's 2px vs the idle 1px (capture-measured;\n  border-box sizing absorbs the difference so selection never shifts\n  layout);\n- the chevron's 20px box / 1.5px stroke (icon metrics, no token);\n- option-row min-height 48px and the menu 4px inner inset (the select\n  menu literals);\n- the 4px chip→menu gap (MENU_OFFSET_PX in filter-chips.ts);\n- the menu max-height `calc(var(--tk-space-48) * 7 + var(--tk-space-12))`\n  — spacing-derived, the select long-list row (7 × 48px rows + padding)."
+        },
+        {
+          "kind": "variable",
+          "name": "filterChipsMenuStyles",
+          "default": "css` :host { box-sizing: border-box; display: block; margin: 0; inset: auto; border: none; padding: var(--tk-space-4); background: var(--tk-color-surface-base); color: var(--tk-color-text-primary); font-family: var(--tk-font-body); border-radius: var(--tk-filter-chips-menu-radius, var(--tk-radius-md)); box-shadow: var(--tk-shadow-dropdown); overflow-y: auto; overscroll-behavior: contain; /* Spacing-derived long-list max — the select literal: 7 × 48px rows + the panel's own 2 × 4px vertical padding + a 4px headroom step. */ max-height: calc(var(--tk-space-48) * 7 + var(--tk-space-12)); } /* 'hidden' must actually hide: the 'display: block' above is author-origin and BEATS the UA '[hidden] { display: none }' rule — without this override a closed panel renders as a visible block after the chip row (the 6.2 visual-gate finding; the tooltip/modal ':host([hidden])' mold). */ :host([hidden]) { display: none; } /* Menu rows are the panel's LIGHT children (generated by filter-chips.ts into the panel element itself); one slot projects them. The select menu row language verbatim: 48px rows, radius-sm, 12px inline padding. Real buttons — focus moves physically among them while the menu is open. */ ::slotted([role='menuitemradio']) { display: flex; align-items: center; gap: var(--tk-space-8); box-sizing: border-box; width: 100%; min-height: 48px; padding: var(--tk-space-4) var(--tk-space-12); border: none; background: transparent; font-family: var(--tk-font-body); font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-weight); line-height: var(--tk-text-body-m-leading); color: var(--tk-color-text-primary); text-align: start; border-radius: var(--tk-radius-sm); cursor: pointer; user-select: none; -webkit-appearance: none; appearance: none; } /* Hover: the reference's flat-fill language — surface-muted (the select menu's hover step, semantics not scale — 5.4). */ ::slotted([role='menuitemradio']:hover) { background: var(--tk-color-surface-muted); } /* Real focus lives on the rows while the menu is open — the unified ring paints on the row itself. NOTE: the pseudo sits INSIDE the parens (::slotted(x:focus-visible)) — the 5.1 lesson: outside them the parser silently drops the whole rule. */ ::slotted([role='menuitemradio']:focus-visible) { outline: 2px solid var(--tk-color-focus-ring); outline-offset: 2px; } /* Checked row: medium weight + the ink check glyph (built by filter-chips.ts with size attributes and an inline margin-inline-start, the generated-element class; its color is currentColor inherited). The select menu's selected-row marking, kept kit-coherent. */ ::slotted([role='menuitemradio'][aria-checked='true']) { font-weight: var(--tk-text-body-m-bold-weight); } /* NOTE: the check glyph is NOT styled here — ::slotted reaches only the slotted element itself; see the comment above. */ `",
+          "description": "The PANEL sheet — adopted into the «Ещё» menu's own shadow root (the\nselect menu mold). `:host` resets the popover UA sheet on the popover\nmounting path: UA `[popover]` sets border/padding/background/margin/inset\n— author-origin rules win over UA regardless of specificity, and the\ncontroller's inline top/left/position always win over both.\n\nThe panel is hidden when closed via the `hidden` attribute (set by\nfilter-chips.ts) — never via shadow styles, so the attribute survives the\ncontroller's reparenting."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "filterChipsStyles",
+          "declaration": {
+            "name": "filterChipsStyles",
+            "module": "src/filter-chips/filter-chips.css.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "filterChipsMenuStyles",
+          "declaration": {
+            "name": "filterChipsMenuStyles",
+            "module": "src/filter-chips/filter-chips.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/filter-chips/filter-chips.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "TK_FILTER_CHIPS_DEFAULT_VISIBLE_COUNT",
+          "type": {
+            "text": "number"
+          },
+          "default": "7",
+          "description": "The visible window before the «Ещё» overflow chip appears — the reference's\nown split (7 visible chips on the stocks catalog, NOTES.md §D)."
+        },
+        {
+          "kind": "class",
+          "description": "tk-filter-chips — single-select pill filter row + «Ещё» overflow dropdown\n(Story 6.2), the invest/stocks catalog's chip row.\n\nANATOMY (vision-extracted from pattern-catalog-filters.png): pills\nradius-full, body-m text, surface-base fill, one NON-wrapping row (the row\nscrolls horizontally); UNSELECTED = 1px border-default hairline +\ntext-primary; SELECTED = 2px yellow-100 border with the fill and text\nUNCHANGED — selection is the border alone (the frozen spec's ruling; the\ncapture's own yellow-on-white text would fail AA at 1.16:1, so text stays\ntext-primary — the vision pass's own contrast note).\n\nSEMANTICS: container role=tablist (the reference's own role — the contract\nit implies), chips role=tab + aria-selected, SINGLE-select by construction\n(selecting one deactivates the prior — observed). Each chip is a TAB STOP:\nthe reference exposes 7 observed stops, a deliberate, documented deviation\nfrom APG roving-tabindex recorded in the story a11y notes. ArrowLeft/Right\ncycle FOCUS within the tablist WITHOUT selecting (manual activation — the\nreference's Space-toggles model); Space/Enter select; and FOCUS IS\nPRESERVED on the toggled chip after the value change — the reference's\nfocus-drops-to-body defect is the sanctioned improvement. Re-selecting the\nactive chip KEEPS it active (ruling: no deselect-to-none; the value is\nalways one of the items — the reference checkbox toggle-off is not\nsingle-select-coherent).\n\n«Ещё» OVERFLOW: a chip-styled BUTTON after the visible window (1px\nhairline, chevron-down, aria-haspopup/aria-expanded) opening a menu of the\nremaining items as menuitemradio options. The panel is a generated child\nof this element's shadow root carrying its OWN shadow root (the select\n2.3 mold — single-tree aria idrefs; the controller's popover path promotes\nit in place, the fallback path legally reparents it across the tree\nboundary and back). Mounting is EXCLUSIVELY mountOverlay(panel,\n'dropdown') + positionFloating (anchor = the «Ещё» chip, anchor-min-width\n— the Select mold): zero bespoke positioning/z code. While an\noverflow-resident item is active, the «Ещё» chip itself carries the\nselected border (the border-only selected language — visible-indicator\nruling). Selecting a menu item changes value through the SAME channel as a\nchip press and closes the menu with focus returned to «Ещё». The menu's\nopen state is INTERNAL UI STATE (the tk-navbar drawer precedent): the\nvalue channel is the consumer surface, nothing dispatches open-change.\n\nSTATEFUL API — the §4 contract frozen at 2.1, inherited verbatim with a\nstring channel (tk-select's exact mirror): `value` strict-controlled\n(renders exactly `value`; selecting emits `value-change` and applies\nnothing locally), `defaultValue` seeds uncontrolled (later changes\nignored), releasing `value` goes uncontrolled seeded from the last\ncontrolled value. An unmatched value (not in items) clamps to the FIRST\nitem per §2 — the channel itself is corrected, never a crash (CONVENTIONS\n§2 degrade-to-default).",
+          "name": "TkFilterChips",
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name of the tablist group. Purely an aria-label — the capture\nshows NO inline visual label above the chip row.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Controlled value channel — STRICT semantics (frozen at 2.1, string\nmirror of tk-select): the element renders exactly this (the matching\nchip carries the selected border); selecting emits `value-change` and\napplies nothing locally. Property-only (`attribute: false`); non-strings\nset via JS clamp to their string form; a value not among the item values\nclamps to the first item (§2 — the channel is corrected); null/undefined\nafter control RELEASES to uncontrolled seeded from the last controlled\nvalue."
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Initial value for the UNCONTROLLED mode; ignored after the first update.",
+              "attribute": "default-value"
+            },
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "TkFilterChipsItem[]"
+              },
+              "default": "[]",
+              "description": "The v2 data shape — array of { value, label }; property-only (object data never reflects)."
+            },
+            {
+              "kind": "field",
+              "name": "visibleCount",
+              "default": "7",
+              "description": "How many chips render before the «Ещё» overflow chip. Invalid runtime\nvalues (non-finite, < 1) clamp to the 7 default (§2 — never throws).",
+              "attribute": "visible-count",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#uncontrolledValue",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Live uncontrolled state (the truth whenever `value` is not provided)."
+            },
+            {
+              "kind": "field",
+              "name": "#lastControlledValue",
+              "privacy": "private",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Last string ever provided through the controlled channel — the seed on release."
+            },
+            {
+              "kind": "field",
+              "name": "#isControlled",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the controlled channel has ever supplied a value."
+            },
+            {
+              "kind": "field",
+              "name": "#menuOpen",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The «Ещё» menu open state — INTERNAL UI (the navbar-drawer precedent; no open-change)."
+            },
+            {
+              "kind": "field",
+              "name": "#panel",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLDivElement | null"
+              },
+              "default": "null",
+              "description": "The generated menu panel — a child of the shadow renderRoot (see the class doc), hidden when closed."
+            },
+            {
+              "kind": "field",
+              "name": "#overlayHandle",
+              "privacy": "private",
+              "type": {
+                "text": "TkOverlayHandle | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#positionHandle",
+              "privacy": "private",
+              "type": {
+                "text": "TkPositioningHandle | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#onDocumentPointerDown",
+              "privacy": "private",
+              "description": "Document-level outside-press listener (bound once, added/removed with the menu)."
+            },
+            {
+              "kind": "field",
+              "name": "#uniqueId",
+              "privacy": "private",
+              "type": {
+                "text": "string | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#nextId",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "static": true,
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#id",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveItems",
+              "privacy": "private",
+              "type": {
+                "text": "TkFilterChipsItem[]"
+              },
+              "description": "Items with null/undefined clamped to the empty list (null-tolerant props).",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveVisibleCount",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "description": "Visible-count in force: invalid runtime values degrade to the default (§2).",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#visibleItems",
+              "privacy": "private",
+              "type": {
+                "text": "TkFilterChipsItem[]"
+              },
+              "description": "The items shown as chips (the window before «Ещё»).",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#overflowItems",
+              "privacy": "private",
+              "type": {
+                "text": "TkFilterChipsItem[]"
+              },
+              "description": "The items reachable only through the «Ещё» menu.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveValue",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "description": "The value in force, CLAMPED to a real item: exactly `value` when\ncontrolled, the internal state otherwise — and whenever the raw value is\nempty/unmatched, the FIRST item (the always-one-selected ruling: value\nis always one of the items). Empty items → '' (nothing selectable).",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#selectItem",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "TkFilterChipsItem"
+                  }
+                }
+              ],
+              "description": "Selects `item` — the single channel every path shares (chip press,\nmenuitemradio press). Re-selecting the active item is a NO-OP (the\nno-deselect ruling: value is always one of the items). Controlled mode\napplies nothing locally (strict) — the chips keep their live state until\nthe element's next update reverts to exactly `value`. Focus is PRESERVED\non the toggled chip: the chip buttons are stable DOM nodes and selection\nonly flips classes/aria, so nothing here moves focus (the reference's\nfocus-drops-to-body defect simply cannot occur by construction). A chip\npress while the menu is open closes the menu WITHOUT stealing focus from\nthe chip; a MENU press closes with focus returned to «Ещё» (the matrix's\nfocus-return row — handled by #selectMenuItem below)."
+            },
+            {
+              "kind": "method",
+              "name": "#selectMenuItem",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "TkFilterChipsItem"
+                  }
+                }
+              ],
+              "description": "A menuitemradio press: the SAME value channel as a chip press, plus the\nmenu's own closing discipline — focus returns to «Ещё» whether or not\nthe pressed row changed the value (Enter on the checked row is a\nclose-with-no-change, native menu behavior)."
+            },
+            {
+              "kind": "method",
+              "name": "#emitValueChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#handleRowKeydown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "ArrowLeft/ArrowRight move FOCUS chip-to-chip within the tablist, WRAPPING, without selecting."
+            },
+            {
+              "kind": "method",
+              "name": "#moreButton",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLButtonElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getPanel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLDivElement"
+                }
+              },
+              "description": "The generated panel: role=menu, own shadow root (styles + slot), hidden until open."
+            },
+            {
+              "kind": "method",
+              "name": "#renderMenu",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Renders the menuitemradio rows into the panel's light children — same shadow tree as «Ещё»."
+            },
+            {
+              "kind": "method",
+              "name": "#menuItems",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLButtonElement[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#openMenu",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "edge",
+                  "default": "'first'",
+                  "type": {
+                    "text": "'first' | 'last'"
+                  }
+                }
+              ],
+              "description": "Opens (or keeps open) the «Ещё» menu: rows render fresh, the panel\nmounts through the overlay controller ('dropdown' layer) and positions\nagainst the «Ещё» chip (anchor-min-width — the Select mold), and FOCUS\nmoves to the checked row when one is checked, else the first row (every\nopen establishes focus — menu semantics; never \"nowhere\")."
+            },
+            {
+              "kind": "method",
+              "name": "#focusMenuRows",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "edge",
+                  "type": {
+                    "text": "'first' | 'last'"
+                  }
+                }
+              ],
+              "description": "Focuses the menu's landing row — the CHECKED row when one is checked,\nelse the edge row — and reveals it: a focused row must never sit below\nthe panel's scroll fold (§8 focus-always-visible; the select mold's\n#scrollActiveIntoView pass)."
+            },
+            {
+              "kind": "method",
+              "name": "#revealRow",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "HTMLButtonElement | undefined"
+                  }
+                }
+              ],
+              "description": "Minimal scroll reveal of a menu row (the select literal; guarded for non-visual hosts)."
+            },
+            {
+              "kind": "method",
+              "name": "#closeMenu",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "{ returnFocus: boolean; quiet?: boolean }"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#handleMenuKeydown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "Menu keyboard (menu semantics): ArrowDown/ArrowUp cycle focus (wrapping\n— the kit's noted pick), Home/End jump to the edges, Escape closes\nWITHOUT changing value and returns focus to «Ещё». Enter/Space ride the\nnative button click; Tab is never intercepted — focus follows natural\ntab order and the focusout below closes."
+            },
+            {
+              "kind": "method",
+              "name": "#handleMoreClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#handleMoreKeydown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "The «Ещё» chip's keyboard surface: ArrowDown opens at the first row,\nArrowUp at the last (the APG menu-button edges); Enter/Space ride the\nnative button click. ArrowLeft/Right are NOT handled here — arrow\ncycling belongs to the tablist, the «Ещё» chip is not a tab."
+            },
+            {
+              "kind": "method",
+              "name": "#handleFocusout",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "FocusEvent"
+                  }
+                }
+              ],
+              "description": "Focus leaving the open menu closes it with NO forced focus return —\nfocus follows the natural tab order (the select mold's focus-loss row).\nHeard at BOTH origins: the .row binding covers chip-row exits, the\npanel's own binding (see #getPanel) covers menu-row exits — the panel is\n.row's shadow-tree SIBLING, so panel-origin focusout never crosses .row."
+            }
+          ],
+          "events": [
+            {
+              "name": "value-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "`{ value }` with the unwrapped newly selected item value; composed, bubbles."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name of the tablist group. Purely an aria-label — the capture\nshows NO inline visual label above the chip row.",
+              "name": "label",
+              "fieldName": "label"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Initial value for the UNCONTROLLED mode; ignored after the first update.",
+              "name": "default-value",
+              "fieldName": "defaultValue"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "How many chips render before the «Ещё» overflow chip. Invalid runtime\nvalues (non-finite, < 1) clamp to the 7 default (§2 — never throws).",
+              "name": "visible-count",
+              "default": "TK_FILTER_CHIPS_DEFAULT_VISIBLE_COUNT",
+              "fieldName": "visibleCount"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-filter-chips",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TK_FILTER_CHIPS_DEFAULT_VISIBLE_COUNT",
+          "declaration": {
+            "name": "TK_FILTER_CHIPS_DEFAULT_VISIBLE_COUNT",
+            "module": "src/filter-chips/filter-chips.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkFilterChips",
+          "declaration": {
+            "name": "TkFilterChips",
+            "module": "src/filter-chips/filter-chips.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-filter-chips",
+          "declaration": {
+            "name": "TkFilterChips",
+            "module": "src/filter-chips/filter-chips.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/filter-chips/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/filter-chips/filter-chips.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/footer/footer.css.ts",
       "declarations": [
         {
@@ -1614,6 +2210,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/filter-chips/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/footer/index.js"
           }
         },
@@ -1647,6 +2251,14 @@
           "declaration": {
             "name": "*",
             "module": "src/navbar/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/pagination/index.js"
           }
         },
         {
@@ -3335,6 +3947,413 @@
           "declaration": {
             "name": "TkNavbar",
             "module": "src/navbar/navbar.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/pagination/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/pagination/pagination.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/pagination/pagination.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "paginationStyles",
+          "default": "css` :host { display: block; } .pagination { box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: var(--tk-space-16); } /* --- The «Показать еще» bar: its OWN row above the numbers, full-width, muted fill, centered link-blue label. A button — the whole bar is the target (44px ≥ the §8 floor). The hover step is surface-field (the select menu's own perceptible hover/active neighbor). --- */ .load-more { box-sizing: border-box; width: 100%; min-height: 44px; margin: 0; padding: 0 var(--tk-space-16); border: none; border-radius: var(--tk-pagination-more-radius, var(--tk-radius-md)); background: var(--tk-pagination-more-fill, var(--tk-color-surface-muted)); font-family: var(--tk-font-body); font-size: var(--tk-text-body-l-size); font-weight: var(--tk-text-body-l-weight); line-height: var(--tk-text-body-l-leading); color: var(--tk-pagination-more-text, var(--tk-color-link-on-tint)); text-align: center; cursor: pointer; -webkit-appearance: none; appearance: none; transition: background-color var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-standard); } .load-more:hover { background: var(--tk-color-surface-field); } /* --- The numbers row: centered list; every interactive box ≥44×44. --- */ .pages { display: flex; align-items: center; justify-content: center; gap: var(--tk-space-4); margin: 0; padding: 0; list-style: none; } /* The number button is the FULL 44px hit area; the visual language (text alone, or the 32px active pill) paints on the inner box. */ .page, .step { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; margin: 0; padding: 0; border: none; background: transparent; font-family: var(--tk-font-body); font-size: var(--tk-text-body-l-size); line-height: var(--tk-text-body-l-leading); color: var(--tk-pagination-page-text, var(--tk-color-link)); cursor: pointer; -webkit-appearance: none; appearance: none; } .page__pill { display: inline-flex; align-items: center; justify-content: center; min-width: 32px; height: 32px; padding: 0 var(--tk-space-4); border-radius: var(--tk-pagination-radius, var(--tk-radius-full)); font-size: var(--tk-text-body-m-size); line-height: var(--tk-text-body-m-leading); transition: background-color var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-standard); } /* The ACTIVE page: yellow-100 pill + ink-300 text + weight 700 (capture-measured — see the module header's structural flag). */ .page--active .page__pill { background: var(--tk-pagination-active-fill, var(--tk-color-yellow-100)); color: var(--tk-pagination-active-text, var(--tk-color-ink-300)); font-weight: 700; } /* The active page is FOCUSABLE-BUT-CURRENT (the recorded pick): it stays a real focusable button for the post-change focus landing; activating it is a no-op, so the cursor reads default. */ .page--active { cursor: default; } /* Prev/next chevrons at the boundaries: aria-disabled (kept focusable — the kit pattern) + text-muted; boundary presses emit nothing (guarded in pagination.ts). */ .step[aria-disabled='true'] { color: var(--tk-color-text-muted); cursor: default; } /* The ellipsis slot: a text-secondary non-interactive spacer matching the row's rhythm (aria-hidden in the template — it carries no information beyond the visual gap). */ .ellipsis { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; font-family: var(--tk-font-body); font-size: var(--tk-text-body-m-size); line-height: var(--tk-text-body-m-leading); color: var(--tk-color-text-secondary); user-select: none; } /* Unified focus ring (§8): 2px token ring, offset 2px, never removed — on the pressed box itself (numbers, chevrons, the bar). */ .page:focus-visible, .step:focus-visible, .load-more:focus-visible { outline: 2px solid var(--tk-color-focus-ring); outline-offset: 2px; } `",
+          "description": "tk-pagination styles — tokens only (FR-1), zero theme branches (AD-3).\n\nVisual spec: DESIGN.md `components.pagination` (active-fill yellow-100,\nactive-text ink-300, radius full, more-link-color blue-100) + the vision\nextraction of pattern-table-stocks.png's bottom third (2026-09-24,\nrecorded in .playwright-cli/verify/pagination/NOTES.md): the numbers row\nCENTERED, inactive numbers as link-blue text with no fill ~16px, the\nactive page a ~32px yellow circle with dark 700-weight text, thin\nangle-bracket chevrons flanking the row, the ellipsis styled as a number\nslot, and — its own row above with a wide gap — the full-width\n«Показать еще» bar on a light muted fill with a centered blue label.\n\nThe link color consumes the SEMANTIC alias `--tk-color-link` (blue-100's\ndark-remapped name — the spec's «blue-100 link-blue» text, dark-correct by\nconstruction). The load-more label consumes `--tk-color-link-on-tint`: the\ntoken layer's AA ruling — blue-100 measures under 4.5:1 on the muted fill\n(the link-on-tint precedent, tokens.css).\n\nPer-component custom properties (`--tk-pagination-*`, CONVENTIONS §6),\neach consumed WITH its token default:\n- `--tk-pagination-active-fill`  active page pill fill (default yellow-100)\n- `--tk-pagination-active-text`  active page text     (default ink-300)\n- `--tk-pagination-radius`       active pill radius   (default radius-full)\n- `--tk-pagination-page-text`    inactive page/step text (default link)\n- `--tk-pagination-more-fill`    load-more bar fill   (default surface-muted)\n- `--tk-pagination-more-text`    load-more label      (default link-on-tint)\n- `--tk-pagination-more-radius`  load-more bar radius (default radius-md)\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule:\n- the 44px load-more bar height (probe-measured y308–351, see\n  .playwright-cli/verify/pagination/NOTES.md; the spec's ~44–52 range\n  taken at the measured lower bound — the field language's sibling);\n- the 44px number/step button boxes with the 32px visual pill INSIDE (the\n  §8 floor met by padding the hit area — the capture's visual glyph is a\n  probe-measured 32px circle);\n- the active page's font-weight 700 (capture-measured; the token layer's\n  bold step is 500 — the reference's own weight is the spec's letter);\n- the chevrons' 16px box / 1.5px stroke (icon metrics, no token);\n- the bar→numbers gap var(--tk-space-16) (probe-measured 19px\n  bar-bottom→pill-top; the 44px number boxes center the 32px pill 6px in,\n  so the 16px row gap renders ~22px visual — the token step nearest the\n  measured 19)."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "paginationStyles",
+          "declaration": {
+            "name": "paginationStyles",
+            "module": "src/pagination/pagination.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/pagination/pagination.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "TK_PAGINATION_DEFAULT_NAV_LABEL",
+          "type": {
+            "text": "string"
+          },
+          "default": "'Пагинация'",
+          "description": "The nav landmark's default accessible name («Пагинация» per the spec)."
+        },
+        {
+          "kind": "variable",
+          "name": "TK_PAGINATION_DEFAULT_MORE_LABEL",
+          "type": {
+            "text": "string"
+          },
+          "default": "'Показать еще'",
+          "description": "The load-more bar's default label («Показать еще» per the spec)."
+        },
+        {
+          "kind": "variable",
+          "name": "TK_PAGINATION_FULL_ROW_MAX",
+          "type": {
+            "text": "number"
+          },
+          "default": "7",
+          "description": "Below this page count the row never elides — every number renders (the spec's count≤7 row)."
+        },
+        {
+          "kind": "function",
+          "name": "windowedPages",
+          "return": {
+            "type": {
+              "text": "TkPaginationToken[]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "page",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "count",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "The windowed numbers row — the capture's own shape (active=1, count=196\nrenders `1 2 3 4 5 … 196`): ALWAYS render the first and the last page,\nrender FIVE consecutive pages — the ±2 window around `page`, SHIFTED to\nstay inside [1, count] at the edges (page 1 keeps the capture's full\n1..5 lead; the last pages keep a full five-number tail), collapse every\ngap ≥ 2 between consecutive kept pages into ONE ellipsis, and dedupe when\nthe windows overlap (the Set union). A naive unshifted ±2 set would lose\nthe capture's `4 5` at page 1 — the anchor shift is what the frozen\nblock's own example pins. Pure — unit-tested as a parametrized table."
+        },
+        {
+          "kind": "class",
+          "description": "tk-pagination — the data-view pager (Story 6.2): numbered pages nav with a\nyellow active pill, windowed numbers with ellipsis, prev/next chevrons,\nand a SEPARATE full-width «Показать еще» bar above the numbers.\n\nANATOMY (vision-extracted from pattern-table-stocks.png, bottom third): a\n`<nav>` landmark (aria-label «Пагинация» by default, overridable) with a\nCENTERED row — prev chevron ‹ (text-muted + aria-disabled at the lower\nboundary), page numbers as text buttons in the link blue with NO fill\n(the kit consumes the `--tk-color-link` semantic — blue-100's dark-remapped\nalias), the ACTIVE page a yellow-100 pill (radius-full, ~32px) with ink-300\ntext at weight 700, an ellipsis «…» (text-secondary, aria-hidden) wherever\na number gap ≥ 2 collapses, and the next chevron › (disabled at the upper\nboundary). ABOVE the numbers, its own row: the «Показать еще» bar —\nsurface-muted fill, radius-md, ~44px, link-on-tint centered label (the AA\non-tint step: blue-100 measures under 4.5:1 on the muted fill) — emitting\nthe bare-verb `load-more` occurrence and NOT changing page (the consumer\nappends; focus stays on the bar).\n\nTHE ACTIVE PAGE'S FOCUSABILITY — the recorded pick: FOCUSABLE-BUT-CURRENT.\nThe active number is a real button carrying `aria-current=\"page\"` whose\nactivation is a no-op (it is already the page in force) — not a rendered\nnon-interactive span. Rationale: the focus-discipline row below needs a\nFOCUSABLE target for the newly-active number after every page change, and\na flat tab order over the row keeps Tab = reading order. WCAG sanctions\neither shape; this one composes with the kit's focus guarantees.\n\nFOCUS DISCIPLINE (EXPERIENCE): after a `page-change` the numbers row\nre-renders — focus lands on the NEWLY-ACTIVE page button (never drops to\nbody; the reference defect class the kit improves). Both direct number\npresses and prev/next route through the same landing. Prev/next wrap is\nFORBIDDEN (boundary = aria-disabled, no emit — the reference model).\n\nSTATEFUL API — the §4 contract frozen at 2.1, number channel: `page`\nstrict-controlled (renders exactly `page`; a page press emits\n`page-change` and applies nothing locally), `defaultPage` seeds\nuncontrolled (later changes ignored), releasing `page` goes uncontrolled\nseeded from the last controlled value. Out-of-range pages clamp into\n[1, count] per §2 — the channel itself is corrected (invalid runtime\nvalues degrade, never throw). `count` clamps to ≥ 1; at count = 1 the\nnumbers row is hidden entirely (a single page needs no pager — the nav\nrenders the load-more bar only when `showMore` is set, nothing at all\notherwise).\n\nNumbers are BUTTONS (native focus), not links — the kit component has no\nURL model; consumers needing routes intercept `page-change` (documented in\nthe story notes).",
+          "name": "TkPagination",
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The nav landmark's accessible name.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "count",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Total page count — clamps to ≥ 1 (§2 degrade-to-default, never throws).",
+              "attribute": "count"
+            },
+            {
+              "kind": "field",
+              "name": "page",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Controlled page channel — STRICT semantics (frozen at 2.1, number\nmirror of tk-select's string channel): the element renders exactly this\npage; a press emits `page-change` and applies nothing locally.\nProperty-only (`attribute: false`); non-numbers set via JS clamp to\ntheir numeric form, out-of-range values clamp into [1, count] (§2 — the\nchannel is corrected); null/undefined after control RELEASES to\nuncontrolled seeded from the last controlled page."
+            },
+            {
+              "kind": "field",
+              "name": "defaultPage",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Initial page for the UNCONTROLLED mode; ignored after the first update.",
+              "attribute": "default-page"
+            },
+            {
+              "kind": "field",
+              "name": "showMore",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Renders the separate full-width «Показать еще» bar (reflected — the §2 boolean hook).",
+              "attribute": "show-more",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "moreLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The load-more bar's label.",
+              "attribute": "more-label"
+            },
+            {
+              "kind": "field",
+              "name": "#uncontrolledPage",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Live uncontrolled state (the truth whenever `page` is not provided)."
+            },
+            {
+              "kind": "field",
+              "name": "#lastControlledPage",
+              "privacy": "private",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Last number ever provided through the controlled channel — the seed on release."
+            },
+            {
+              "kind": "field",
+              "name": "#isControlled",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the controlled channel has ever supplied a page."
+            },
+            {
+              "kind": "field",
+              "name": "#focusPage",
+              "privacy": "private",
+              "type": {
+                "text": "number | null"
+              },
+              "default": "null",
+              "description": "The page whose button takes focus once the row re-renders it — set by\nevery user-initiated page change, consumed (and cleared) in `updated()`\nwhen the effective page matches. Strict mode keeps it pending through\nthe consumer's silence and lands it the moment the consumer answers."
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveCount",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "description": "Count in force: invalid runtime values degrade to 1 (§2).",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#effectivePage",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "description": "The page in force: the controlled channel exactly, the internal state otherwise — clamped into [1, count].",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#coercePage",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "raw",
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "fallback",
+                  "type": {
+                    "text": "number | undefined"
+                  }
+                }
+              ],
+              "description": "Numeric coercion for the page channel: Number() first, invalid → fallback (§2)."
+            },
+            {
+              "kind": "method",
+              "name": "#commitPage",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "page",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "The single page-change pipeline (number presses and prev/next both land\nhere): boundary-guarded, a no-op on the current page (clicking the\nactive number emits nothing — it IS the page in force). Uncontrolled\ncommits locally; controlled applies nothing (strict) — the pending\nfocus target survives the consumer's silence and lands when they answer."
+            },
+            {
+              "kind": "method",
+              "name": "#handleLoadMore",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "The load-more occurrence: no payload, page UNCHANGED, focus stays on the bar."
+            },
+            {
+              "kind": "method",
+              "name": "#prevDisabled",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#nextDisabled",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "page-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "`{ value: number }` with the unwrapped newly active page; composed, bubbles."
+            },
+            {
+              "name": "load-more",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "Occurrence (no payload): the bar was pressed; the page does NOT change."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The nav landmark's accessible name.",
+              "name": "label",
+              "fieldName": "label"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "Total page count — clamps to ≥ 1 (§2 degrade-to-default, never throws).",
+              "name": "count",
+              "default": "1",
+              "fieldName": "count"
+            },
+            {
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Initial page for the UNCONTROLLED mode; ignored after the first update.",
+              "name": "default-page",
+              "fieldName": "defaultPage"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Renders the separate full-width «Показать еще» bar (reflected — the §2 boolean hook).",
+              "name": "show-more",
+              "default": "false",
+              "fieldName": "showMore"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The load-more bar's label.",
+              "name": "more-label",
+              "fieldName": "moreLabel"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-pagination",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TK_PAGINATION_DEFAULT_NAV_LABEL",
+          "declaration": {
+            "name": "TK_PAGINATION_DEFAULT_NAV_LABEL",
+            "module": "src/pagination/pagination.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TK_PAGINATION_DEFAULT_MORE_LABEL",
+          "declaration": {
+            "name": "TK_PAGINATION_DEFAULT_MORE_LABEL",
+            "module": "src/pagination/pagination.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TK_PAGINATION_FULL_ROW_MAX",
+          "declaration": {
+            "name": "TK_PAGINATION_FULL_ROW_MAX",
+            "module": "src/pagination/pagination.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "windowedPages",
+          "declaration": {
+            "name": "windowedPages",
+            "module": "src/pagination/pagination.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkPagination",
+          "declaration": {
+            "name": "TkPagination",
+            "module": "src/pagination/pagination.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-pagination",
+          "declaration": {
+            "name": "TkPagination",
+            "module": "src/pagination/pagination.ts"
           }
         }
       ]

@@ -71,6 +71,22 @@ export const EVENT_MAP: Readonly<Record<string, Readonly<TkKitElementEventMap>>>
   'tk-tooltip': {
     onOpenChange: 'open-change',
   },
+  // Story 6.2 — the string state channel (§4 contract on `value`, the same
+  // mapping the form family carries). The «Ещё» menu's open state is
+  // INTERNAL UI (the tk-navbar drawer precedent — spec 6.2): no open-change,
+  // so no onOpenChange (demanded mechanically by
+  // tests/event-map-completeness.test.ts).
+  'tk-filter-chips': {
+    onValueChange: 'value-change',
+  },
+  // Story 6.2 — the number state channel (§4 contract on `page`) + the
+  // load-more occurrence (§3 bare verb, payload-less: the wrapper falls back
+  // to passing the event itself; page-change demanded mechanically by
+  // tests/event-map-completeness.test.ts).
+  'tk-pagination': {
+    onPageChange: 'page-change',
+    onLoadMore: 'load-more',
+  },
   // 'tk-toast': none at v4.3 — FIRE-AND-FORGET (spec 4.3 ruling): no `open`
   // channel and no kit events at all; a toast appears already visible,
   // never takes focus, and the slotted action serves its own native click
