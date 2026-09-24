@@ -56,11 +56,13 @@ const DEFAULT_NAV_LABEL = 'Навигация';
  * inherit — the shadow sits under the LAST row). Sub-nav anatomy is
  * pixel-probed from pattern-header-meganav.png (1280×129) in
  * .playwright-cli/verify/mega-nav/NOTES.md: inactive text-secondary, ACTIVE
- * = 700 text-primary with NO underline (the capture shows no underline in
- * row 2 — row 1's underline language does not cascade down), NO divider
- * between the rows (whitespace on the shared white surface — the spec's
- * frozen ruling; the capture's actual 1px y64 hairline is recorded as a
- * deviation in the NOTES). Without `subLinks` the DOM/CSS/render are
+ * = 700 text-primary + a 2px gray underline at the row's bottom edge and a
+ * 1px hairline divider ON the seam between the rows (BOTH trued to the
+ * capture in the story 7.1 triage — the frozen «no underline, no divider»
+ * rested on the initial probes and was refuted by extended scanlines:
+ * underline 2px #666666 y127–128, divider 1px #DDDFE0 y64 spanning the
+ * container register; token-semantics deltas recorded in the NOTES).
+ * Without `subLinks` the DOM/CSS/render are
  * byte-identical to v1 (unit-pinned; the v1 baselines must not move).
  * Sub-nav is DESKTOP-ONLY chrome: hidden <768px, never in the burger drawer
  * (v1's drawer model stays row-1 links only).
@@ -106,7 +108,7 @@ const DEFAULT_NAV_LABEL = 'Навигация';
  * @attr {boolean} sticky - Bar sticks to the viewport top (default true; the shadow + hairline still track scroll).
  * @attr {string} burger-label - Accessible name of the burger button (also names the drawer dialog). Default «Меню».
  * @attr {string} active-value - The active section's `value` — renders the matching link with the yellow underline + 700 weight; unmatched marks nothing.
- * @attr {string} sub-active-value - The active sub-nav section's `value` (row 2) — renders the matching sub-link at 700 text-primary, no underline; unmatched marks nothing.
+ * @attr {string} sub-active-value - The active sub-nav section's `value` (row 2) — renders the matching sub-link at 700 text-primary + a 2px underline; unmatched marks nothing.
  * @attr {string} sub-label - Accessible name of the second nav landmark (row 2). Default «Разделы».
  * @prop {TkNavbarLink[]} [links] - Nav links; duplicate/value-less entries clamp out with a dev warn.
  * @prop {TkNavbarLink[]} [subLinks] - Optional sub-nav row (SAME shape as `links`); an empty list renders NO second row and NO second nav landmark; entries clamp out with a dev warn like `links`.

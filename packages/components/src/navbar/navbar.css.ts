@@ -48,14 +48,20 @@ import { css } from 'lit';
  *
  * - ROW 2 LINKS: body-m, inactive text-secondary (probe: #75–#8A glyph
  *   cores), ACTIVE = 700 text-primary (probe: #333 cores — the same
- *   heading-weight source as row 1) with NO underline: the capture shows
- *   NO indicator band in row 2 (y118–120 probed all-white) — row 1's
- *   underline language does NOT cascade down. No ::after exists for
- *   .sublink[aria-current] (unit-pinned).
- * - NO DIVIDER: the spec's frozen ruling — separation is whitespace on the
- *   shared white surface-base (the capture actually paints a 1px #DDDFE0
- *   hairline at y64 spanning the content container x88–1191; implemented
- *   per the frozen contract, recorded as deviation 2 in the NOTES).
+ *   heading-weight source as row 1) + a 2px underline at the row's bottom
+ *   edge (TRUED, story 7.1 triage: the capture DOES paint one — 2px #666666
+ *   at y127–128, x150–196 under «Каталог», the row's last 2px; the frozen
+ *   «no underline» rested on the initial y118–120 probes, refuted by
+ *   extended scanlines + vision). Mechanism mirrors row 1's ::after
+ *   (inset-inline space-12, bottom 0) at half the stroke; the stripe is
+ *   gray, not yellow — token semantics text-secondary (#616871) vs the
+ *   capture's #666666, delta recorded in the NOTES.
+ * - DIVIDER between the rows (TRUED with it): the capture paints a 1px
+ *   #DDDFE0 hairline at y64 spanning the content container x88–1191 —
+ *   implemented as a 1px ::before on .subnav__inner (the container
+ *   register), border-default token semantics (#E7E8EA vs #DDDFE0,
+ *   recorded). Only the sub-nav row carries it — without subLinks the
+ *   sheet is byte-identical v1 (no divider node exists).
  * - REGISTER: .subnav__inner mirrors .bar__inner's container math exactly
  *   (max-width container, auto margins, space-24 padding) — the sub-nav
  *   link BOXES start at the same content-box register where row 1's flow
@@ -244,9 +250,17 @@ export const navbarStyles = css`
      container, auto margins, space-24 inline padding) — the sub-nav link
      boxes start at the content-box register where row 1's flow starts
      (probe: row-2 links x88 == the container edge, NOT the row-1 post-logo
-     text position x124). NO divider: the rows share the white surface, the
-     hairline stays on .bar's bottom edge only (the spec's frozen ruling). */
+     text position x124). DIVIDER between the rows (TRUED, story 7.1
+     triage): the reference paints a 1px hairline ON the seam spanning the
+     CONTAINER register only (probe: y64, x88–1191 — nothing outside it),
+     so it is a ::before on this container box, NOT a .subnav border (a
+     border there would span the full bar width) and NOT on .bar (v1's
+     bottom hairline must stay where it is). Token semantics:
+     border-default (#E7E8EA) vs the capture's #DDDFE0 — nearest token,
+     delta recorded in verify/mega-nav/NOTES.md. Without subLinks none of
+     these nodes render — v1 stays byte-identical, no divider. */
   .subnav__inner {
+    position: relative;
     box-sizing: border-box;
     display: flex;
     align-items: stretch;
@@ -256,12 +270,23 @@ export const navbarStyles = css`
     padding-inline: var(--tk-space-24);
   }
 
-  /* Plain text links — the .link mold minus the underline machinery:
-     full-row-height hit target (≥44px), padding-inline for the gap rhythm
-     (probe: ~26px between row-2 label ends ≈ the two space-12 paddings),
-     the label span as the shrinking ellipsis child (the .link__label
-     precedent — an inline-flex anchor's own text-overflow never engages). */
+  .subnav__inner::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 1px;
+    background: var(--tk-color-border-default);
+  }
+
+  /* Plain text links — the .link mold: full-row-height hit target (≥44px),
+     padding-inline for the gap rhythm (probe: ~26px between row-2 label
+     ends ≈ the two space-12 paddings), the label span as the shrinking
+     ellipsis child (the .link__label precedent — an inline-flex anchor's
+     own text-overflow never engages). position:relative anchors the ACTIVE
+     underline's ::after exactly as .link anchors row 1's. */
   .sublink {
+    position: relative;
     display: inline-flex;
     flex: 0 1 auto;
     min-width: 0;
@@ -287,14 +312,27 @@ export const navbarStyles = css`
     color: var(--tk-navbar-sublink-hover, var(--tk-color-text-primary));
   }
 
-  /* ACTIVE: 700 text-primary and NOTHING else — the capture shows NO
-     indicator band in row 2 (y118–120 probed all-white; the capture's own
-     row-1 indicator does not cascade down). Deliberately NO ::after — the
-     weight + color pair alone carries the state (unit-pinned: the sheet
-     has no .sublink[aria-current] pseudo rule). */
+  /* ACTIVE (TRUED, story 7.1 triage): 700 text-primary + a 2px underline at
+     the row's bottom edge — the reference DOES paint one (probe: 2px
+     #666666 at y127–128, x150–196 under «Каталог» — the row's last 2px;
+     the initial y118–120 probes missed it, vision + extended scanlines
+     found it). The mechanism mirrors row 1's ::after verbatim
+     (inset-inline space-12 = the label box, bottom 0) at HALF the stroke
+     and WITHOUT a yellow: the reference stripe is gray — token semantics
+     text-secondary (#616871) vs the capture's #666666, delta recorded in
+     verify/mega-nav/NOTES.md. */
   .sublink[aria-current='page'] {
     color: var(--tk-navbar-sublink-active, var(--tk-color-text-primary));
     font-weight: var(--tk-text-heading-2-weight);
+  }
+
+  .sublink[aria-current='page']::after {
+    content: '';
+    position: absolute;
+    inset-inline: var(--tk-space-12);
+    bottom: 0;
+    height: 2px;
+    background: var(--tk-color-text-secondary);
   }
 
   /* --- Burger (<768px — media query, container queries deferred) ------------- */

@@ -542,6 +542,11 @@ describe('tk-navbar', () => {
     expect(header?.children[0]?.classList.contains('bar__inner')).toBe(true);
     expect(el.shadowRoot?.querySelector('.subnav')).toBeNull();
     expect(el.shadowRoot?.querySelector('.sublink')).toBeNull();
+    // The trued row-2 chrome (divider pseudo, underline pseudo) lives ONLY
+    // on sub-nav nodes — without subLinks neither renders: the divider is
+    // .subnav__inner::before and the underline .sublink::after, so a v1
+    // render carries no node they could ever attach to.
+    expect(el.shadowRoot?.querySelector('.subnav__inner')).toBeNull();
     // The nav landmark set is v1's: links + the drawer fallback (no third nav).
     expect(el.shadowRoot?.querySelectorAll('nav')).toHaveLength(2);
   });
@@ -560,7 +565,7 @@ describe('tk-navbar', () => {
 
   // --- Matrix row 2: two-deep ----------------------------------------------------
 
-  it('MEGA two-deep: subLinks render a second row INSIDE the same header; active sub-link = 700 text-primary, NO underline', async () => {
+  it('MEGA two-deep: subLinks render a second row INSIDE the same header; active sub-link = 700 text-primary + 2px underline (trued)', async () => {
     const el = await mount({
       props: {
         links: MEGA_LINKS,
@@ -597,9 +602,11 @@ describe('tk-navbar', () => {
       barLinks(el).find((link) => link.getAttribute('aria-current') === 'page')?.textContent?.trim(),
     ).toBe('Инвестиции');
 
-    // Structural anatomy pins (the capture literals): 64px row height via
-    // the flagged hook; ACTIVE carries weight + color and NO ::after —
-    // row 1's underline language does not cascade down.
+    // Structural anatomy pins (the capture literals, TRUED in the story 7.1
+    // triage): 64px row height via the flagged hook; ACTIVE carries weight
+    // + color AND a 2px underline at the row's bottom edge — the reference
+    // paints one (2px #666666 y127–128 under «Каталог»); the mechanism
+    // mirrors row 1's ::after at half the stroke, gray token semantics.
     const cssText = navbarStyles.cssText.replace(/\/\*[\s\S]*?\*\//g, '');
     expect(cssText).toMatch(
       /\.subnav\s*\{[^}]*height:\s*var\(--tk-navbar-subnav-height, 64px\)/,
@@ -607,14 +614,31 @@ describe('tk-navbar', () => {
     const active = cssText.match(/\.sublink\[aria-current='page'\]\s*\{([^}]*)\}/)?.[1] ?? '';
     expect(active).toMatch(/font-weight:\s*var\(--tk-text-heading-2-weight\)/);
     expect(active).toMatch(/color:\s*var\(--tk-navbar-sublink-active, var\(--tk-color-text-primary\)\)/);
-    expect(
-      cssText,
-      'NO sublink underline pseudo exists anywhere in the sheet',
-    ).not.toMatch(/\.sublink\[aria-current='page'\]::after/);
-    // No divider: the subnav rule paints no border — separation is
-    // whitespace on the shared surface.
+    // The underline pseudo (trued): row 1's mechanism verbatim — absolute,
+    // inset-inline = the link's own padding token (the label box),
+    // bottom 0 — at 2px in text-secondary (the capture's gray stripe).
+    const subUnderline = cssText.match(
+      /\.sublink\[aria-current='page'\]::after\s*\{([^}]*)\}/,
+    )?.[1];
+    expect(subUnderline, 'the trued row-2 active underline pseudo').toBeDefined();
+    expect(subUnderline).toMatch(/position:\s*absolute/);
+    expect(subUnderline).toMatch(/inset-inline:\s*var\(--tk-space-12\)/);
+    expect(subUnderline).toMatch(/bottom:\s*0/);
+    expect(subUnderline).toMatch(/height:\s*2px/);
+    expect(subUnderline).toMatch(/background:\s*var\(--tk-color-text-secondary\)/);
+    // Its positioning anchor rides the .sublink rule (the .link precedent).
+    const sublinkRule = cssText.match(/\.sublink\s*\{([^}]*)\}/)?.[1] ?? '';
+    expect(sublinkRule).toMatch(/position:\s*relative/);
+    // The DIVIDER (trued): a 1px ::before ON the row-2 container — the
+    // capture's hairline spans the container register only (y64,
+    // x88–1191), NOT the full bar width, so .subnav itself still paints no
+    // border.
+    const divider = cssText.match(/\.subnav__inner::before\s*\{([^}]*)\}/)?.[1];
+    expect(divider, 'the trued inter-row divider pseudo').toBeDefined();
+    expect(divider).toMatch(/height:\s*1px/);
+    expect(divider).toMatch(/background:\s*var\(--tk-color-border-default\)/);
     const subnavRule = cssText.match(/\.subnav\s*\{([^}]*)\}/)?.[1] ?? '';
-    expect(subnavRule).not.toMatch(/border/);
+    expect(subnavRule, 'the divider is the container ::before, not a full-width border').not.toMatch(/border/);
     // The register: .subnav__inner mirrors .bar__inner's container math.
     const inner = cssText.match(/\.subnav__inner\s*\{([^}]*)\}/)?.[1] ?? '';
     const barInner = cssText.match(/\.bar__inner\s*\{([^}]*)\}/)?.[1] ?? '';

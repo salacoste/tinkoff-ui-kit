@@ -61,9 +61,9 @@ luminance threshold 249 for "ink" (light) / brightest-pixel for dark.
 | Whole bar | 137px; one sticky unit; shadow/border gated on the 10px scroll threshold (bottom rows clean at scroll 0: y133–137 = 0 px) |
 | Row-1 active «Инвестиции» | #333 700; underline 4px #FFDD2D y69–72, ~x292–385 (v1 DESIGN language, v1-identical css) |
 | Row-1 inactive | (97,104,113) = `--tk-color-text-secondary`, 400 / dark: #BABABA core |
-| Row-2 active «Каталог» | #333 700, NO underline (y128–137 clean — spec pin) / dark: up to #FFF core |
+| Row-2 active «Каталог» | #333 700 + UNDERLINE 2px #616871 (`--tk-color-text-secondary`) at y135–136, x144–201 (the label box — inset-inline space-12 of the x132–213 link box; TRUED, see deviations) / dark: up to #FFF core text |
 | Row-2 inactive | `--tk-color-text-secondary` 400 (same token as row 1) |
-| Seam y72–76 | clean (93 px at y72 = the row-1 underline's bottom row only); NO divider |
+| Seam | DIVIDER 1px #E7E8EA (`--tk-color-border-default`) rasterized at y73 (subpixel row — the seam's fractional top lands one device row below the ideal y72), spanning the container register x40–1239 only (TRUED); y74+ clean |
 | Registers | `.bar__inner` left == `.subnav__inner` left == x40 (1200px container centered at 1280) — both rows share the container content register, mirroring the capture's x88/x88 |
 | Row-2 first box | x64 (container edge + 24 container padding), text x76 (+12 link padding); row-1 link boxes start x148 (after the slotted logo) |
 
@@ -85,17 +85,29 @@ the 2px #666666 stripe at y127–128 x150–196; (5) row-2 active darker/bold �
 
 ## Deviations (kit vs reference capture)
 
-1. **Row-1 active underline color/weight** — capture: 2px #666666 gray; kit:
+1. **Row-2 active underline — TRUED THIS ROUND (triage).** Before: the frozen
+   spec's «NO underline» (based on the initial y118–120 probes) → kit rendered
+   weight/color only. After: the reference DOES paint one — 2px #666666 at
+   y127–128, x150–196 under «Каталог» (the row's last 2px) — found by extended
+   scanlines + vision after the initial probes missed it; the coordinator
+   sanctioned true-to-reference (pixels are ground truth). Kit now renders
+   `.sublink[aria-current='page']::after`: the row-1 mechanism verbatim
+   (absolute, inset-inline space-12, bottom 0) at 2px. Token-semantics delta:
+   `--tk-color-text-secondary` = #616871 vs the capture's #666666 (nearest
+   token; no dedicated hook — deliberate, recorded here).
+2. **Inter-row divider — TRUED THIS ROUND (triage).** Before: frozen «NO
+   divider» (initial x0–40 divider window missed it) → whitespace separation.
+   After: the reference paints 1px #DDDFE0 at y64 spanning the container
+   register x88–1191 (nothing outside it). Kit now renders 1px
+   `.subnav__inner::before` (border-top-position pseudo on the row-2
+   container, spanning the container register only — NOT a `.subnav` border,
+   which would span the full bar width). Token-semantics delta:
+   `--tk-color-border-default` = #E7E8EA vs the capture's #DDDFE0. Without
+   subLinks no `.subnav__inner` node exists — v1 stays byte-identical, no
+   divider (unit-pinned).
+3. **Row-1 active underline color/weight** — capture: 2px #666666 gray; kit:
    4px #FFDD2D yellow. Row 1 is frozen v1-verbatim (DESIGN-wins ruling from the
    v1 story); kit renders the v1 language. Reported, not changed.
-2. **Row-2 active underline EXISTS in the capture** — 2px #666666 y127–128
-   x150–196 under «Каталог». The frozen spec pins NO underline for row 2
-   ("700 text-primary, no underline"; unit-pinned by the absent
-   `.sublink[aria-current]::after`). Implemented per spec; reported as the
-   single largest capture-vs-spec contradiction. The story copy's old claim
-   "полос нет на y118–120" was probe-refuted and reworded.
-3. **Divider between rows** — capture HAS 1px #DDDFE0 at y64 (x88–1191); spec
-   froze NO divider (white-field separation). Implemented per spec; reported.
 4. **Register phrasing** — spec: row 2 aligns with the row-1 LINK register
    "NOT the logo register" (x≈88). In the capture x88 is simultaneously the
    container content edge AND the logo left edge — the two coincide, so the
@@ -117,6 +129,13 @@ the 2px #666666 stripe at y127–128 x150–196; (5) row-2 active darker/bold �
 
 ## Incidents (recorded for the orchestrator)
 
+- **TRUING ROUND (post-triage commit 2)**: the coordinator sanctioned
+  true-to-reference for the row-2 underline + inter-row divider (deviations
+  1–2 above); the 8 mega baselines were DELIBERATELY re-taken after the css
+  change, and the 2 api baselines re-taken again because the
+  `sub-active-value` attr description in the CEM changed («no underline» →
+  «+ a 2px underline»). The kit renders + composites in this directory are
+  POST-truing.
 - **Story bug caught by probes**: the MegaNav story inherited the file-level
   Storybook `args.activeValue: 'retail'`, which matches no MEGA_LINKS value —
   row-1 rendered with NO active link (helper `?? 'invest'` never fired because
