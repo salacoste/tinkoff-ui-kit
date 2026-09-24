@@ -73,6 +73,15 @@ Behavioral contracts. Visual specs live in DESIGN.md.Components.
 | Modal | Focus trap + restore on close; Esc and overlay-click dismiss (destructive actions require explicit button); body scroll locked; opens with productive-entrance curve, closes productive-exit; one level deep. |
 | Tooltip | Hover + focus show (delay 300ms), Esc/hide-on-blur dismiss; never contains focusable content; positioning flips near viewport edges; icon trigger gets accessible name. |
 | Toast | Auto-dismiss 5s default (configurable), pause on hover/focus; aria-live="polite"; destructive variant role="alert"; stack bottom-right, max 3 visible (oldest collapses); supports imperative and declarative usage patterns (final API shape set at architecture per FR-3). |
+| DataTable | Typographic rows as links (two-line cells, 81px); **reference baseline (observed 2026-09-24): rows are plain anchors — Tab visits each, arrows inert, Enter navigates same-tab; hover = surface tint, no underline. Kit IMPROVES (the sanctioned a11y axis): roving tabindex with ArrowUp/Down row focus, Home/End first/last row, Enter/Space activate the row link — reference visuals, APG keyboard.** Deltas are color-carried (delta-positive/negative semantics; sign optional). Column headers non-interactive (static ordering, v2). |
+| FilterChips | Chip row over data views: single-select semantics (activating one deactivates the prior — observed), pill selected state, overflow «Ещё» opens a dropdown with the rest. **Reference defect (observed): focus drops to body after each toggle — the kit PRESERVES focus on the toggled chip** (improvement axis). Chips are tab stops; arrows cycle within the group (the tablist contract the reference implies). |
+| Pagination | Numbered pages nav landmark; active page = yellow pill + 700 (not a link); «Показать еще» = secondary load-more button; on page change focus stays on the nav (the list re-renders beneath). |
+| ComboboxSearch | Field-language search with typeahead listbox (the Select 2.3 mold): opens on typing, arrows navigate options, Enter selects, Esc closes returning focus to the field; result count announced politely. |
+| MegaNav | Two-deep header: bank-wide row + domain sub-nav row, both plain link rows (observed — no panels on the invest stocks header; the business header's mega-menu panels are volatile A/B → out of scope v2). Sub-nav marks the active section like tk-navbar; sticky/shadow/burger behaviors inherit tk-navbar. |
+| CookieBanner | Consent dialog on load: dialog semantics, consent link + accept; Esc does NOT dismiss (consent is explicit, observed); the component renders and emits a consent-choice event — storage/persistence is the consumer's. |
+| Stepper | Numbered step cards (brown number badge overlapping the top edge); display-only — steps are content, not a wizard (no per-step navigation in the reference); optional per-step CTA slot. |
+| StoreBadges | App-store badge row (AppGallery/RuStore/Samsung molds): muted pill, brand icon RIGHT, uniform size; each badge is a plain external link — native focus, `rel="noopener"`, no traps. |
+| QrBlock | QR install block: platform tablist (the Tabs contract verbatim) + monochrome QR in a white tile + security copy («Переходите по ссылкам только с этой страницы…»); the QR image's accessible name derives from the active platform tab. |
 
 ## State Patterns
 
@@ -93,8 +102,11 @@ Behavioral contracts. Visual specs live in DESIGN.md.Components.
 
 - **Pointer:** click to act; hover is enhancement, never the only path (touch parity).
 - **Keyboard:** every interactive component operable — Tab/Shift-Tab, arrows (Select, Tabs,
-  SegmentedRadio, ThumbnailPicker), Space (Button, Checkbox), Esc (Modal, Tooltip, Select,
-  Toast action), Home/End (Tabs). Tab order = reading order.
+  SegmentedRadio, ThumbnailPicker, DataTable rows, FilterChips), Space (Button, Checkbox),
+  Esc (Modal, Tooltip, Select, Toast action), Home/End (Tabs, DataTable). Tab order = reading
+  order. **v2 note:** where the reference ships inert arrows (DataTable) or focus drops
+  (FilterChips), the kit implements the APG behavior — the sanctioned improve-axis; fidelity
+  covers visuals, not keyboard defects.
 - **Focus management:** Modal traps and restores; Navbar drawer traps; Toast never takes focus;
   Select returns focus to trigger on close. Focus ring is a **unified token**: 2px
   `{colors.focus-ring}` (light) / `{colors.dark-focus-ring}` (dark), offset 2px — never ink

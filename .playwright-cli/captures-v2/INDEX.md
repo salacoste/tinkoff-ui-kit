@@ -30,4 +30,12 @@ invest domains inline — same method.)
 | `invest-mobile/pattern-header-consumer.png` | invest/mobile | consumer-style header (Частным лицам/Бизнесу/Премиум/Еще) |
 | `invest-mobile/pattern-hero.png` | invest/mobile | h1 crop (44px, bold) — full hero anatomy TBD at UX (re-capture with scroll) |
 | `invest-mobile/pattern-qr-tabs.png` | invest/mobile | QR-code install tablist |
-| `invest-mobile/pattern-store-badges.png` | invest/mobile | store-badges section heading (badges lazy below fold — re-capture at UX) |
+| `invest-mobile/pattern-store-badges.png` | invest/mobile | store-badges section heading (superseded by pattern-store-badges-loaded.png) |
+| `business/full-scrolled.png` | business | whole page re-shot after full scroll (lazy art loaded) — UX addendum |
+| `business/pattern-steps-open-account-detail.png` | business | steps anatomy: 3 white cards, brown number badges overlapping top edge — UX addendum |
+| `business/pattern-application-form-detail.png` | business | form anatomy: segmented toggle + phone input + consent/yellow submit row — UX addendum |
+| `business/pattern-footer-detail.png` | business | full link-directory footer (1543px) — UX addendum |
+| `business/probe-beige-card-hires.png` | business | tint-probe card (#E9E0D1, 24px radius, no shadow) at native pixels — UX addendum |
+| `invest-mobile/pattern-hero-full.png` | invest/mobile | full hero: h1+subcopy+yellow CTA+secondary link+phone visual — UX addendum |
+| `invest-mobile/pattern-qr-loaded.png` | invest/mobile | QR tablist + loaded QR (2 Android-version tabs) — UX addendum |
+| `invest-mobile/pattern-store-badges-loaded.png` | invest/mobile | AppGallery/RuStore/Samsung Store pill badges (icon right, custom light-gray) — UX addendum |

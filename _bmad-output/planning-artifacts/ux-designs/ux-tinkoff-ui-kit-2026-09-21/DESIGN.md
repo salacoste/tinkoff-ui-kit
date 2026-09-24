@@ -3,7 +3,7 @@ name: tinkoff-ui-kit
 description: Open-source recreation of the T-Bank (ex-Tinkoff) consumer web design language — yellow-black, pill-shaped, pastel-carded — as a token-first component kit with an authored dark theme.
 status: final
 created: 2026-09-21
-updated: 2026-09-23
+updated: 2026-09-24
 sources:
   - ../../prds/prd-tinkoff-ui-kit-2026-09-21/prd.md
   - ../../briefs/brief-tinkoff-ui-kit-2026-09-21/brief.md
@@ -76,6 +76,19 @@ colors:
   dark-tint-mint: '#1C2A26'
   dark-tint-beige: '#2A2620'
   dark-tint-charcoal: '#333333'
+  # v2 — table semantics (invest/stocks; extracted values in the Colors body notes;
+  # semantic aliases are the AA-override pattern: the site's #00A328/#F52222 fail 4.5:1
+  # on white — 3.4:1 / 4.2:1 — so the semantics point at the existing darker scale steps)
+  delta-positive: '{colors.green-300}'
+  delta-negative: '{colors.red-300}'
+  border-table: 'rgba(0,16,36,0.12)'
+  surface-row-hover: 'rgba(36,74,127,0.06)'
+  # v2 — warm-cream family (business; computed 2026-09-24: page #F1EEE8 OKLCH 0.950/0.009/84.6°,
+  # card #E9E0D1 0.910/0.022/80.7° — hue ~13° toward orange vs tint-beige 93.8° → DISTINCT family)
+  tint-cream: '#F1EEE8'
+  tint-cream-raised: '#E9E0D1'
+  dark-tint-cream: '#232220'
+  dark-tint-cream-raised: '#2B2823'
 shadows:
   default: '0 4px 24px rgba(0,0,0,.12)'
   default-hover: '0 12px 36px rgba(0,0,0,.2)'
@@ -182,6 +195,43 @@ components:
   card-feature:
     radius: '{rounded.xxl}'
     min-height: 320px
+  # v2 components (FR-12..14; terse — behavioral contracts live in EXPERIENCE.md)
+  data-table:
+    divider: '{colors.border-table}'
+    row-height: 81px
+    row-fill-hover: '{colors.surface-row-hover}'
+    delta-positive: '{colors.delta-positive}'
+    delta-negative: '{colors.delta-negative}'
+    cell-primary: '{typography.body-m}'
+    cell-secondary: '{typography.body-s}'
+    header-typography: '{typography.body-m}'
+  filter-chips:
+    radius: '{rounded.full}'
+    typography: '{typography.body-m}'
+    single-select: true
+  pagination:
+    active-fill: '{colors.yellow-100}'
+    active-text: '{colors.ink-300}'
+    radius: '{rounded.full}'
+    more-link-color: '{colors.blue-100}'
+  combobox-search:
+    radius: '{rounded.md}'
+    height: 52px
+  mega-nav:
+    height: 72px
+    subnav-height: 56px
+  cookie-banner:
+    radius: '{rounded.lg}'
+    shadow: default
+  stepper:
+    badge-radius: '{rounded.sm}'
+    card-radius: '{rounded.lg}'
+  store-badges:
+    radius: '{rounded.full}'
+    fill: '{colors.surface-muted}'
+  qr-block:
+    tile-radius: '{rounded.lg}'
+    tile-fill: '{colors.white}'
   card-service:
     radius: '{rounded.xl}'
     padding: '{spacing.24}'
@@ -345,6 +395,36 @@ Visual specs for the 19 v1 components (behaviors live in EXPERIENCE.md):
 | Modal | White panel `{rounded.lg}`, `modal` shadow; dark theme tonal step 3 |
 | Tooltip | Ink-300 bg, white text-xs, `{rounded.sm}`, `tooltip` shadow |
 | Toast | White card `{rounded.lg}`, `default` shadow, icon + message + optional action |
+| DataTable | Typographic rows (NO charts): row-as-link, two-line cells (body-m name/price + body-s ticker/lot), 1px `{colors.border-table}` dividers, no zebra, 81px rows, hover `{colors.surface-row-hover}`; delta text `{colors.delta-positive/negative}` — color carries direction (v2, invest/stocks) |
+| FilterChips | Checkbox-tablist chips, pill radius, single-select semantics, overflow «Ещё» (v2) |
+| Pagination | Numbered nav, active = yellow-100 pill + ink text, «Показать еще» blue text button (v2) |
+| ComboboxSearch | Field-language search with typeahead listbox (v2) |
+| MegaNav | Two-deep header: bank-wide row (72px) + domain sub-nav row (56px) — extension of tk-navbar (v2, business/invest) |
+| CookieBanner | Consent dialog, `{rounded.lg}` card + default shadow, link + accept (v2) |
+| Stepper | Numbered steps: white cards `{rounded.lg}`, brown number badge overlapping the top edge, white numeral (v2, business) |
+| StoreBadges | App-store pill badges (AppGallery/RuStore/Samsung molds), muted fill, brand icon RIGHT (v2, invest-mobile) |
+| QrBlock | QR install tablist + monochrome QR in white tile `{rounded.lg}` (v2, invest-mobile) |
+
+**Registers (v2, cross-domain finding 2026-09-24).** The three domains carry the SAME token
+base at three typography registers — mappings onto the existing scale, no new type tokens:
+**marketing** (business, invest landing: h1 = `heading-2` 44/700, Daytona stacks — the kit's
+shipped default), **product-UI** (invest/stocks: h1 = `heading-3` 36/500, dense body data
+typography — body-m/body-s with tighter 24/20px leadings in table cells), and the v1 consumer
+register (h1 50). Components declare their register; nothing branches at the token layer.
+
+**Table delta semantics (AA-override pattern).** invest/stocks paints deltas green
+`#00A328` / red `#F52222` (computed 2026-09-24) — both FAIL 4.5:1 on white (3.4:1 / 4.2:1);
+per this file's AA-override discipline the semantic tokens point at the existing darker scale
+steps (`delta-positive` = green-300 `#168821` 4.7:1 ✓, `delta-negative` = red-300 `#C40B08`
+6.3:1 ✓); the extracted values are recorded here as the extraction-note anchor. Row hover
+`rgba(36,74,127,0.06)`, divider `rgba(0,16,36,0.12)` — extracted verbatim.
+
+**Warm-cream family (v2, business).** Distinct from tint-beige (computed OKLCH: cream
+`#F1EEE8` 0.950/0.009/84.6° and raised `#E9E0D1` 0.910/0.022/80.7° vs beige 0.939/0.029/93.8°
+— hue −13° toward orange, chroma halved). `tint-cream`/`tint-cream-raised` +
+dark first-pass `[ASSUMPTION — verify at the v2 dark phase per the 5.4 rule]`. Business bento
+cards: flat (no shadow), `{rounded.xl}`, floating white 111×44 pill CTA over 3D art; yellow
+appears only inside illustrations.
 
 **Reference anchors.** Fidelity baseline capture: `.playwright-cli/tbank-home-full.png`
 (repo root, homepage, 2026-09-21). Extraction provenance (live computed styles, 1112 root
