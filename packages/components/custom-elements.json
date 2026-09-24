@@ -1138,6 +1138,721 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/combobox-search/combobox-search.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "comboboxSearchStyles",
+          "default": "css` :host { display: block; max-width: 100%; } :host([disabled]) { opacity: 0.4; pointer-events: none; } /* The borderless search register: surface fill, no hairline (the capture — distinct from tk-input's boxed register). The ring paints on the WHOLE field box via :focus-within — the input itself carries no ring. */ .field { box-sizing: border-box; display: flex; align-items: center; width: 100%; height: 52px; border: none; border-radius: var(--tk-combobox-search-radius, var(--tk-radius-md)); background: var(--tk-combobox-search-fill, var(--tk-color-surface-base)); } .field:focus-within { outline: 2px solid var(--tk-color-focus-ring); outline-offset: 2px; } /* Decorative magnifier (aria-hidden in the template) — the leading glyph of the capture, 20px box in the muted role. The trailing gap trues the reference arithmetic (reference-measurements.md: placeholder x52 = 16 padding + 20 icon box + 16 gap). */ .field__icon { flex: none; display: inline-flex; margin-inline-start: var(--tk-space-16); margin-inline-end: var(--tk-space-16); color: var(--tk-combobox-search-icon, var(--tk-color-text-muted)); } .field__control { box-sizing: border-box; flex: 1; min-width: 0; height: 100%; margin: 0; border: none; padding: 0; padding-inline-end: var(--tk-space-16); background: transparent; font-family: var(--tk-font-body); font-size: var(--tk-text-body-l-size); line-height: var(--tk-text-body-l-leading); color: var(--tk-combobox-search-text, var(--tk-color-text-primary)); -webkit-appearance: none; appearance: none; } /* The input never paints its own ring — the field box carries it (:focus-within above); dedup only. */ .field__control:focus-visible { outline: none; } .field__control::placeholder { color: var(--tk-combobox-search-placeholder, var(--tk-color-text-muted)); opacity: 1; } /* --- Results-count announcement region: visually hidden, never display:none — aria-live content must stay in the accessibility tree. The 1px clip box is the standard sr-only utility shape (structural, flagged in the header). --- */ .status { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; } `",
+          "description": "tk-combobox-search styles — TWO sheets, the select 2.3 / filter-chips 6.2\nmold: the suggestion panel carries its OWN shadow root while living as a\ngenerated child of the element's shadow tree (single-tree aria id refs;\nthe controller's popover path promotes the panel in place, the fallback\npath reparents it across the tree boundary and back — the panel sheet\ntravels with it).\n\nVisual spec (spec 6.3): the invest/stocks catalog search field — the\nTOP REGION of pattern-catalog-filters.png (provenance: the spec 6.3\nfrontmatter +\n.playwright-cli/verify/combobox-search/reference-measurements.md). A\nBORDERLESS 52px pill-register field\n(surface fill, radius-md, no hairline — the search register, distinct\nfrom tk-input's boxed register), a 20px leading magnifier glyph in\ntext-muted, body-l control text, the reference placeholder «Название или\nтикер». The menu is the select menu language verbatim: surface-base,\nradius-md, dropdown shadow, 48px rows.\n\nTokens only (FR-1), zero theme branches (AD-3).\n\nPer-component custom properties (`--tk-combobox-search-*`, CONVENTIONS §6\n— the same-slot-same-role rule), each consumed WITH its token default:\n- `--tk-combobox-search-fill`            field fill         (default surface-base)\n- `--tk-combobox-search-radius`          field radius       (default radius-md)\n- `--tk-combobox-search-text`            control text       (default text-primary)\n- `--tk-combobox-search-placeholder`     placeholder text   (default text-muted)\n- `--tk-combobox-search-icon`            magnifier glyph    (default text-muted)\n- `--tk-combobox-search-menu-radius`     menu panel radius  (default radius-md — the menu sheet)\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule:\n- the 52px field height (capture-measured; the ≥44px floor of §8 with the\n  reference's own comfortable box);\n- the icon's 20px box / 1.5px stroke (icon metrics, no token — the\n  filter-chips chevron literal);\n- the field's 16px inline paddings (icon gutter + control tail — the\n  boxed-register padding step, spacing-scaled);\n- option-row min-height 48px and the menu 4px inner inset (the select\n  menu literals);\n- the 4px field→menu gap (MENU_OFFSET_PX in combobox-search.ts);\n- the menu max-height `calc(var(--tk-space-48) * 7 + var(--tk-space-12))`\n  — spacing-derived, the select long-list row (7 × 48px rows + padding);\n- the sr-only announcement metrics (1px clip box — the standard\n  visually-hidden utility shape)."
+        },
+        {
+          "kind": "variable",
+          "name": "comboboxSearchMenuStyles",
+          "default": "css` :host { box-sizing: border-box; display: block; margin: 0; inset: auto; border: none; padding: var(--tk-space-4); background: var(--tk-color-surface-base); color: var(--tk-color-text-primary); font-family: var(--tk-font-body); border-radius: var(--tk-combobox-search-menu-radius, var(--tk-radius-md)); box-shadow: var(--tk-shadow-dropdown); overflow-y: auto; overscroll-behavior: contain; /* Spacing-derived long-list max — the select literal: 7 × 48px rows + the panel's own 2 × 4px vertical padding + a 4px headroom step. */ max-height: calc(var(--tk-space-48) * 7 + var(--tk-space-12)); } /* 'hidden' must actually hide: the 'display: block' above is author-origin and BEATS the UA '[hidden] { display: none }' rule — without this override a closed panel renders as a visible block under the field (the 6.2 visual-gate finding; the filter-chips ':host([hidden])' mold). */ :host([hidden]) { display: none; } /* Menu rows are the panel's LIGHT children (generated by combobox-search.ts into the panel element itself); one slot projects them. The select menu row language: 48px rows, radius-sm, 12px inline padding. NOT real buttons — focus never leaves the field; the rows are pointer targets with aria-selected marking (combobox semantics). */ ::slotted([role='option']) { display: flex; align-items: center; gap: var(--tk-space-8); box-sizing: border-box; width: 100%; min-height: 48px; padding: var(--tk-space-4) var(--tk-space-12); font-family: var(--tk-font-body); font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-weight); line-height: var(--tk-text-body-m-leading); color: var(--tk-color-text-primary); text-align: start; border-radius: var(--tk-radius-sm); cursor: pointer; user-select: none; } /* Hover: the reference's flat-fill language — surface-muted (the select menu's hover step, semantics not scale). */ ::slotted([role='option']:hover) { background: var(--tk-color-surface-muted); } /* The ACTIVE row (aria-activedescendant's target — keyboard navigation marks it with .tk-active): the same surface-field step the select menu gives its active row. */ ::slotted([role='option'].tk-active) { background: var(--tk-color-surface-field); } /* Committed row: medium weight + the ink check glyph (built by combobox-search.ts with size attributes and an inline margin-inline-start, the generated-element class; its color is currentColor inherited) — the select/filter-chips selected-row marking, kept kit-coherent. */ ::slotted([role='option'][aria-selected='true']) { font-weight: var(--tk-text-body-m-bold-weight); } /* The zero-matches row (aria-disabled): muted text, no pointer language. */ ::slotted([role='option'][aria-disabled='true']) { color: var(--tk-color-text-muted); cursor: default; } ::slotted([role='option'][aria-disabled='true']:hover) { background: transparent; } `",
+          "description": "The PANEL sheet — adopted into the suggestion listbox's own shadow root\n(the select menu mold). `:host` resets the popover UA sheet on the popover\nmounting path: UA `[popover]` sets border/padding/background/margin/inset\n— author-origin rules win over UA regardless of specificity, and the\ncontroller's inline top/left/position always win over both.\n\nThe panel is hidden when closed via the `hidden` attribute (set by\ncombobox-search.ts) — never via shadow styles, so the attribute survives\nthe controller's reparenting."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "comboboxSearchStyles",
+          "declaration": {
+            "name": "comboboxSearchStyles",
+            "module": "src/combobox-search/combobox-search.css.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "comboboxSearchMenuStyles",
+          "declaration": {
+            "name": "comboboxSearchMenuStyles",
+            "module": "src/combobox-search/combobox-search.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/combobox-search/combobox-search.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-combobox-search — borderless search field with a filtering suggestion\nlistbox (Story 6.3), the invest/stocks catalog's instrument search.\n\nANATOMY (vision-extracted from the search field in the TOP REGION of\npattern-catalog-filters.png — provenance:\n.playwright-cli/verify/combobox-search/reference-measurements.md): a 52px\nborderless field (surface fill, radius-md, 20px leading magnifier in\ntext-muted, body-l control text, the placeholder «Название или тикер»)\nthat stays an input — the suggestion panel is a generated overlay, never\nan inline growth of the field.\n\nSEMANTICS (APG combobox, selection follows focus on the ACTIVE row only):\nthe input is role=combobox (aria-expanded/controls/activedescendant,\naria-autocomplete=\"list\"); the panel is role=listbox of role=option rows;\nfocus NEVER leaves the field — navigation moves `aria-activedescendant`\nover the filtered rows and marks the active row `.tk-active` (the\ntrigger-scope focus pattern, the 6.2 lesson a). Printable keys are never\nintercepted: they ride the native input event and RE-FILTER (a search\nfield, not a typeahead jump-buffer). IME pauses the pipeline: input\nevents with `isComposing` (and keyCode 229) are ignored until\ncomposition settles — the native contract; compositionstart/end are\ntracked so re-renders never clobber provisional text mid-composition,\nwhile the commit/Escape restore still lands (see #forceFieldSync). While\nthe menu is open,\nHome/End jump the active row (menu semantics); while CLOSED they pass\nthrough as native caret moves — a single-line input owns them (documented\nin the story a11y notes). Space is a query character, never a menu key\n(the tk-select Space-inert rule does NOT cross over).\n\nOPEN MODEL: typing opens the panel filtered to the query; ArrowDown opens\nat the first row, ArrowUp at the last (the APG combobox edges); Enter\ncommits the active row through `value-change`; Escape closes AND restores\nthe field to the committed value's label (the query is transient input\nstate, never a value state); an outside press closes with focus returned\nto the field while KEEPING the transient query (only Escape restores the\ncommitted label — the outside press is not a text decision); focus loss\ncloses along the natural tab order. The open\nstate is INTERNAL UI (the tk-filter-chips/tk-navbar precedent — spec 6.3\nruled it; recorded in the §9 exception log): no `open` channel, nothing\ndispatches open-change.\n\nANNOUNCEMENTS (spec 6.3): a visually-hidden polite status region carries\n«Найдено N инструментов» / «Ничего не найдено» after each filter settles\n— template-bound, so the text mutates in the SAME update pass as the rows\n(never mid-flight); it clears when the menu closes. The count message is\nprop-overridable: `resultsMessage` (a template where `{n}` substitutes\nthe count) and `noResultsMessage`. The RU default pluralizes correctly\n(инструмент/инструмента/инструментов).\n\nFILTERING: case-insensitive substring over BOTH the label and the value\n(ticker-first users type `GAZP`, label-first type «Газ»; a\nwhitespace-only query is NO filter — trimmed) — deterministic,\nstable-order (the options array's own order; no relevance ranking in v2).\n\nSTATEFUL API — the §4 contract frozen at 2.1, inherited verbatim with a\nstring channel (tk-select's exact mirror): `value` strict-controlled\n(renders exactly `value` — the field shows the matching label, a foreign\nvalue renders as itself, nothing clamps; committing emits `value-change`\nand applies nothing locally), `defaultValue` seeds uncontrolled (later\nchanges ignored), releasing `value` goes uncontrolled seeded from the\nlast controlled value. The LIVE QUERY is not the value channel: while\ntyping, the field keeps its live text between updates (the frozen\ncaret-sanity carve-out) and the committed channel stays untouched until\na row is committed.\n\nMOUNTING: the panel is a generated child of this element's shadow root\ncarrying its OWN shadow root (the select 2.3 mold — single-tree aria\nidrefs). Mounting is EXCLUSIVELY mountOverlay(panel, 'dropdown') +\npositionFloating (anchor = the field box — the select lesson, not the\nicon; matchAnchorWidth: true — the panel width-matches the field): zero\nbespoke positioning/z code.",
+          "name": "TkComboboxSearch",
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name of the combobox. Purely an aria-label — the capture\nshows NO inline visual label above the field.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "default": "'Название или тикер'",
+              "description": "The field placeholder (the reference's own default).",
+              "attribute": "placeholder",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Controlled value channel — STRICT semantics (frozen at 2.1, string\nmirror of tk-select): the element renders exactly this (the field shows\nthe matching label; a foreign value renders as itself — search fields\nhold free text, so nothing clamps the channel); committing emits\n`value-change` and applies nothing locally. Property-only\n(`attribute: false`); non-strings set via JS coerce to their string\nform; null/undefined after control RELEASES to uncontrolled seeded from\nthe last controlled value."
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Initial value for the UNCONTROLLED mode; ignored after the first update.",
+              "attribute": "default-value"
+            },
+            {
+              "kind": "field",
+              "name": "options",
+              "type": {
+                "text": "TkComboboxSearchOption[]"
+              },
+              "default": "[]",
+              "description": "The v2 data shape — array of { value, label }; property-only (object data never reflects)."
+            },
+            {
+              "kind": "field",
+              "name": "resultsMessage",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Live-region template for the match count — `{n}` substitutes the count\n(e.g. `'{n} matches'`). Absent/empty → the RU pluralizing default.",
+              "attribute": "results-message"
+            },
+            {
+              "kind": "field",
+              "name": "noResultsMessage",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The zero-matches message (the live region AND the empty row).",
+              "attribute": "no-results-message"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the field (readonly + inert styling) and closes any open panel.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "#uncontrolledValue",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Live uncontrolled state (the truth whenever `value` is not provided)."
+            },
+            {
+              "kind": "field",
+              "name": "#lastControlledValue",
+              "privacy": "private",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Last string ever provided through the controlled channel — the seed on release."
+            },
+            {
+              "kind": "field",
+              "name": "#isControlled",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the controlled channel has ever supplied a value."
+            },
+            {
+              "kind": "field",
+              "name": "#query",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "The transient search text — INPUT state, never the value channel.\n`null` = the field shows the committed value's label."
+            },
+            {
+              "kind": "field",
+              "name": "#menuOpen",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The suggestion panel open state — INTERNAL UI (the filter-chips precedent; no open-change)."
+            },
+            {
+              "kind": "field",
+              "name": "#composing",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "IME composition in flight (compositionstart..compositionend on the control)."
+            },
+            {
+              "kind": "field",
+              "name": "#forceFieldSync",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Forces the live-text re-sync on the NEXT update even mid-composition —\nset by the commit/Escape-restore paths, whose field rewrite is\nload-bearing (an orphaned provisional text would otherwise survive\nthem; consumed and cleared in updated())."
+            },
+            {
+              "kind": "field",
+              "name": "#activeIndex",
+              "privacy": "private",
+              "type": {
+                "text": "number | null"
+              },
+              "default": "null",
+              "description": "Active row over the FILTERED list (aria-activedescendant's target); null when none."
+            },
+            {
+              "kind": "field",
+              "name": "#panel",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLDivElement | null"
+              },
+              "default": "null",
+              "description": "The generated suggestion panel — a child of the shadow renderRoot (see the class doc), hidden when closed."
+            },
+            {
+              "kind": "field",
+              "name": "#overlayHandle",
+              "privacy": "private",
+              "type": {
+                "text": "TkOverlayHandle | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#positionHandle",
+              "privacy": "private",
+              "type": {
+                "text": "TkPositioningHandle | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#onDocumentPointerDown",
+              "privacy": "private",
+              "description": "Document-level outside-press listener (bound once, added/removed with the menu)."
+            },
+            {
+              "kind": "field",
+              "name": "#uniqueId",
+              "privacy": "private",
+              "type": {
+                "text": "string | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#nextId",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "static": true,
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#id",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveOptions",
+              "privacy": "private",
+              "type": {
+                "text": "TkComboboxSearchOption[]"
+              },
+              "description": "Options with null/undefined clamped to the empty list (null-tolerant props).",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveValue",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "description": "The value channel in force: exactly `value` when controlled, the internal state otherwise.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#committedOption",
+              "privacy": "private",
+              "type": {
+                "text": "TkComboboxSearchOption | null"
+              },
+              "description": "The committed option — matched by value; null when the value is empty/foreign.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#committedDisplay",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "description": "What the field shows when no query is live: the committed label, a foreign value as itself, else ''.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#filteredOptions",
+              "privacy": "private",
+              "type": {
+                "text": "TkComboboxSearchOption[]"
+              },
+              "description": "The filtered list — case-insensitive substring over label AND value,\nstable order. An empty/null query means no filtering (the whole list).\nNullish labels degrade to '' (§2 — never throws; the option stays\nreachable through its value).",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#handleCompositionStart",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "compositionstart — an IME session begins: provisional text is coming."
+            },
+            {
+              "kind": "method",
+              "name": "#handleCompositionEnd",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "compositionend — the session settled. The platform ALWAYS follows with a\ntrailing input event (isComposing=false), which refilters through\n#handleInput; this handler only clears the flag (and the re-sync guard)."
+            },
+            {
+              "kind": "method",
+              "name": "#handleInput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "The input event — the filter engine. IME composition is a PAUSE:\nisComposing input events are dropped until composition settles, so the\nlist never flickers mid-composition (the native contract, the tk-input\nlesson; the 229 keyCode guard lives on keydown below). Typing OPENS the menu when closed;\nevery keystroke re-filters, re-homes the active row (the committed\noption when it still matches, else the edge row) and updates the\nresults-count announcement."
+            },
+            {
+              "kind": "method",
+              "name": "#commitOption",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "text": "TkComboboxSearchOption"
+                  }
+                }
+              ],
+              "description": "Commits `option` — the single channel every path shares (Enter on the\nactive row, pointer press on a row). The transient query clears (the\nfield re-renders to the committed label), the menu closes with focus\nstill in the field, and the value flows through `value-change` —\ncontrolled mode applies nothing locally (strict)."
+            },
+            {
+              "kind": "method",
+              "name": "#emitValueChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#resultsStatus",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "count",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "The live-region text: the count template, the no-matches message, or '' when closed."
+            },
+            {
+              "kind": "method",
+              "name": "#noResultsText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#handleKeydown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "The combobox keyboard surface. OPEN: Enter commits the active row,\nEscape closes AND restores the field to the committed label (the query\nis transient), arrows step the active row (wrapping), Home/End jump it.\nCLOSED: ArrowDown opens at the first row, ArrowUp at the last (the APG\ncombobox edges); Enter/Escape are inert; Home/End pass through as\nnative caret moves — a single-line input owns them. Printable keys are\nNEVER intercepted in either state: they ride the native input event and\nre-filter (a search field, not a typeahead jump-buffer). IME pauses:\nisComposing/229 events drop until composition settles."
+            },
+            {
+              "kind": "method",
+              "name": "#initialActiveIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "edge",
+                  "type": {
+                    "text": "'first' | 'last'"
+                  }
+                }
+              ],
+              "description": "The landing row on open/refilter: the COMMITTED option when it survives the filter, else the edge."
+            },
+            {
+              "kind": "method",
+              "name": "#clampActiveIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number | null"
+                  }
+                }
+              ],
+              "description": "Re-clamps a stale active index into the current filtered range (data shrank under it)."
+            },
+            {
+              "kind": "method",
+              "name": "#setActiveIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#control",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLInputElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#panelName",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getPanel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLDivElement"
+                }
+              },
+              "description": "The generated panel: role=listbox, own shadow root (styles + slot), hidden until open."
+            },
+            {
+              "kind": "method",
+              "name": "#renderMenu",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Renders the option rows into the panel's light children — same shadow tree as the field."
+            },
+            {
+              "kind": "field",
+              "name": "#activeDescendantId",
+              "privacy": "private",
+              "type": {
+                "text": "string | typeof nothing"
+              },
+              "description": "The active row's id for aria-activedescendant — nothing when the menu is closed/rowless.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#openMenu",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "edge",
+                  "type": {
+                    "text": "'first' | 'last'"
+                  }
+                }
+              ],
+              "description": "Opens the suggestion panel: rows render filtered, the panel mounts\nthrough the overlay controller ('dropdown' layer) and positions against\nthe FIELD BOX (the select lesson — never the icon; matchAnchorWidth:\ntrue — the panel width-matches the field), and the active row lands on\nthe committed option (when it survives the filter) or the edge row."
+            },
+            {
+              "kind": "method",
+              "name": "#closeMenu",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "{ returnFocus?: boolean; quiet?: boolean; restoreQuery?: boolean }"
+                  }
+                }
+              ],
+              "description": "Closes the panel. `restoreQuery` (Escape) drops the transient query —\nthe field re-renders to the committed label; `returnFocus` re-lands\nfocus on the field (outside-press/commit/Escape); `quiet` tears down\nwithout a re-render (detach). The status region clears with the same\nupdate (empty text mutates silently — nothing announced)."
+            },
+            {
+              "kind": "method",
+              "name": "#scrollActiveIntoView",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Minimal scroll reveal of the active row (the select literal; guarded for non-visual hosts)."
+            },
+            {
+              "kind": "method",
+              "name": "#handleFocusout",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "FocusEvent"
+                  }
+                }
+              ],
+              "description": "Focus leaving the FIELD closes the menu along the natural tab order —\nno forced focus return (the select mold's focus-loss row). Focus never\nenters the panel (rows are divs; the combobox model keeps focus in the\nfield), so this field-scope binding hears every real exit — the\ntrigger-scope pattern the 6.2 lessons sanctioned for comboboxes."
+            }
+          ],
+          "events": [
+            {
+              "name": "value-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "`{ value }` with the unwrapped committed option value; composed, bubbles."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name of the combobox. Purely an aria-label — the capture\nshows NO inline visual label above the field.",
+              "name": "label",
+              "fieldName": "label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The field placeholder (the reference's own default).",
+              "name": "placeholder",
+              "default": "DEFAULT_PLACEHOLDER",
+              "fieldName": "placeholder"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Initial value for the UNCONTROLLED mode; ignored after the first update.",
+              "name": "default-value",
+              "fieldName": "defaultValue"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Live-region template for the match count — `{n}` substitutes the count\n(e.g. `'{n} matches'`). Absent/empty → the RU pluralizing default.",
+              "name": "results-message",
+              "fieldName": "resultsMessage"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The zero-matches message (the live region AND the empty row).",
+              "name": "no-results-message",
+              "fieldName": "noResultsMessage"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disables the field (readonly + inert styling) and closes any open panel.",
+              "name": "disabled",
+              "default": "false",
+              "fieldName": "disabled"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-combobox-search",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkComboboxSearch",
+          "declaration": {
+            "name": "TkComboboxSearch",
+            "module": "src/combobox-search/combobox-search.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-combobox-search",
+          "declaration": {
+            "name": "TkComboboxSearch",
+            "module": "src/combobox-search/combobox-search.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/combobox-search/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/combobox-search/combobox-search.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/feature-card/feature-card.css.ts",
       "declarations": [
         {
@@ -2195,6 +2910,14 @@
           "declaration": {
             "name": "*",
             "module": "src/checkbox/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/combobox-search/index.js"
           }
         },
         {

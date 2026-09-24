@@ -5,7 +5,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import * as litReact from '@lit/react';
 import { afterAll, describe, expect, it, vi } from 'vitest';
 
-import { ArticleCard, Badge, Button, Checkbox, EVENT_MAP, FeatureCard, FilterChips, Footer, Input, Link, Modal, Navbar, Pagination, ProgressBar, PromoCard, SegmentedRadio, Select, ServiceCard, Tabs, ThumbnailPicker, Toast, Tooltip } from './index.js';
+import { ArticleCard, Badge, Button, Checkbox, ComboboxSearch, EVENT_MAP, FeatureCard, FilterChips, Footer, Input, Link, Modal, Navbar, Pagination, ProgressBar, PromoCard, SegmentedRadio, Select, ServiceCard, Tabs, ThumbnailPicker, Toast, Tooltip } from './index.js';
 
 /**
  * pillkit-react generated surface. The wrapper imports `pillkit-components`
@@ -1353,5 +1353,114 @@ describe('pillkit-react', () => {
     });
     expect(el?.page).toBeUndefined();
     expect((el as Element).shadowRoot?.querySelector('.page--active')?.textContent?.trim()).toBe('3');
+  });
+
+  // --- Story 6.3: tk-combobox-search wrapper (mirrors the Select smoke) ------
+
+  it("carries the story 6.3 registry entry: tk-combobox-search's value-change", () => {
+    expect(EVENT_MAP['tk-combobox-search']).toEqual({
+      onValueChange: 'value-change',
+    });
+  });
+
+  it('renders <ComboboxSearch> as tk-combobox-search with element properties set through the wrapper', async () => {
+    const container = await renderToContainer(
+      React.createElement(ComboboxSearch, {
+        label: 'Поиск инструментов',
+        placeholder: 'Название или тикер',
+        options: [
+          { value: 'GAZP', label: 'Газпром' },
+          { value: 'SBER', label: 'Сбербанк' },
+        ],
+      }),
+    );
+    const el = container.querySelector('tk-combobox-search');
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    expect((el as unknown as { label?: string }).label).toBe('Поиск инструментов');
+    expect((el as unknown as { placeholder?: string }).placeholder).toBe('Название или тикер');
+    expect((el as unknown as { options?: unknown[] }).options).toHaveLength(2);
+    expect(
+      el?.shadowRoot?.querySelector('input[role="combobox"]'),
+      'the combobox control renders',
+    ).not.toBeNull();
+  });
+
+  it('ComboboxSearch handlers receive the UNWRAPPED string — never the CustomEvent (AD-1)', async () => {
+    const onValueChange = vi.fn();
+    const container = await renderToContainer(
+      React.createElement(ComboboxSearch, { onValueChange }),
+    );
+    const el = container.querySelector('tk-combobox-search');
+    el?.dispatchEvent(
+      new CustomEvent('value-change', { detail: { value: 'GAZP' }, composed: true, bubbles: true }),
+    );
+    expect(onValueChange).toHaveBeenCalledTimes(1);
+    expect(onValueChange.mock.calls[0]?.[0]).toBe('GAZP');
+  });
+
+  it('ComboboxSearch controlled mode: typing never emits, commit emits; standard value mapping, wrapper adds no clamping', async () => {
+    const OPTIONS = [
+      { value: 'GAZP', label: 'Газпром' },
+      { value: 'SBER', label: 'Сбербанк' },
+    ];
+    let state = 'GAZP';
+    let commits = 0;
+    const render = () =>
+      React.createElement(ComboboxSearch, {
+        options: OPTIONS,
+        value: state,
+        onValueChange: (value: unknown) => {
+          expect(typeof value).toBe('string');
+          state = value as string;
+          commits += 1;
+        },
+      });
+    const container = await renderToContainer(render());
+    const root = roots[roots.length - 1];
+    const el = container.querySelector('tk-combobox-search') as (Element & {
+      value?: string;
+      updateComplete?: Promise<unknown>;
+    }) | null;
+    const control = el?.shadowRoot?.querySelector('input');
+    expect(el?.value).toBe('GAZP');
+    expect(control?.value, 'renders exactly the consumer value').toBe('Газпром');
+
+    // TYPING through the element's own pipeline: live text only — the §4
+    // strict carve-out. No event may reach the handler.
+    await act(() => {
+      (control as HTMLInputElement).value = 'сб';
+      control?.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+    });
+    await (el as { updateComplete: Promise<unknown> }).updateComplete;
+    expect(commits, 'typing NEVER emits').toBe(0);
+    expect(el?.value, 'strict: the channel is untouched by typing').toBe('GAZP');
+    expect(control?.value, 'the live text holds between updates').toBe('сб');
+
+    // Commit the active (first) row through the element's own pipeline.
+    await act(() => {
+      control?.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }),
+      );
+    });
+    await (el as { updateComplete: Promise<unknown> }).updateComplete;
+    expect(commits).toBe(1);
+    expect(state).toBe('SBER');
+    expect(el?.value, 'strict: the channel is untouched by commit').toBe('GAZP');
+    expect(control?.value, 'reverts to exactly the consumer value until it answers').toBe('Газпром');
+
+    // The consumer's render answers: value flows back.
+    await act(() => {
+      root.render(render());
+    });
+    expect(el?.value).toBe('SBER');
+    expect(control?.value).toBe('Сбербанк');
+
+    // Removing the value prop releases the element (frozen §4 semantics) —
+    // seeded from the last controlled value, the field still shows «Сбербанк».
+    await act(() => {
+      root.render(React.createElement(ComboboxSearch, { options: OPTIONS, label: 'Поиск' }));
+    });
+    expect(el?.value).toBeUndefined();
+    expect(control?.value).toBe('Сбербанк');
   });
 });

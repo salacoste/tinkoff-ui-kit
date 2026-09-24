@@ -87,6 +87,15 @@ export const EVENT_MAP: Readonly<Record<string, Readonly<TkKitElementEventMap>>>
     onPageChange: 'page-change',
     onLoadMore: 'load-more',
   },
+  // Story 6.3 — the string state channel (§4 contract on `value`, the same
+  // mapping the form family carries; value-change is what the element
+  // dispatches, so the completeness guard demands exactly this entry). The
+  // suggestion menu's open state is INTERNAL UI (the tk-filter-chips/tk-
+  // navbar precedent — spec 6.3): no open-change event exists, so none is
+  // mapped.
+  'tk-combobox-search': {
+    onValueChange: 'value-change',
+  },
   // 'tk-toast': none at v4.3 — FIRE-AND-FORGET (spec 4.3 ruling): no `open`
   // channel and no kit events at all; a toast appears already visible,
   // never takes focus, and the slotted action serves its own native click

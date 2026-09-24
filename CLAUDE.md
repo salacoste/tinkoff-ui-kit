@@ -31,7 +31,15 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   tk-filter-chips (tablist pills + «Ещё» overlay menu, border-only selection) + tk-pagination
   (nav landmark, windowing, load-more bar) — geometry pixel-probed (bar 44 / gap 16; frozen
   radius-full chips kept vs ref r≈10–12, §9-recorded), verify evidence in
-  `.playwright-cli/verify/{filter-chips,pagination}/`. Next: 6.3 (ComboboxSearch) — sequencing in
+  `.playwright-cli/verify/{filter-chips,pagination}/`. **Story 6.3 DONE (spec-6-3 closed):**
+  tk-combobox-search (borderless 52px search register + controller-mounted suggestion panel,
+  aria-activedescendant, IME-composition-safe live-text re-sync, RU-pluralized announcements;
+  icon-gap trued to the reference x52 arithmetic; §9 row for the internal panel state) —
+  772 unit + visual 1041/1041, verify evidence in `.playwright-cli/verify/combobox-search/`.
+  PARALLEL-TRACK RULE (paid for 2026-09-24): the visual harness's webServer port 6007 is
+  machine-global — NEVER run two `pnpm test:visual` concurrently (worktrees/agents); kill
+  stray 6007 servers before gate rounds (see deferred-work.md). Next: 7.1 (MegaNav — extends
+  tk-navbar in place, ran in an isolated worktree in parallel) — sequencing in
   epics-v2.md; the v1 component-story gate applies VERBATIM (FR-16). Key v2 decisions: delta
   semantics via AA-override (green-300/red-300); warm-cream family DISTINCT from beige (dark
   first-pass [ASSUMPTION] → 8.2); typography registers = mappings (h1 44→heading-2, 36→heading-3),

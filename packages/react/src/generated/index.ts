@@ -3,6 +3,7 @@ export * from './article-card.js';
 export * from './badge.js';
 export * from './button.js';
 export * from './checkbox.js';
+export * from './combobox-search.js';
 export * from './feature-card.js';
 export * from './filter-chips.js';
 export * from './footer.js';

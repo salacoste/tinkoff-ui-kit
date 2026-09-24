@@ -62,3 +62,6 @@ _bmad/render/
 packages/docs/src/local-fonts/*
 !packages/docs/src/local-fonts/README.md
 !packages/docs/src/local-fonts/local-fonts.example.css
+
+# Claude Code isolated agent worktrees
+.claude/worktrees/
