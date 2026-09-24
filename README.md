@@ -67,6 +67,9 @@ pnpm add -w -D vite
 ```html
 <!doctype html>
 <html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+  </head>
   <body>
     <tk-button variant="primary">Как элемент</tk-button>
     <div id="root"></div>
