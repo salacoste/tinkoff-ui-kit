@@ -132,6 +132,9 @@ export const storeBadgesStyles = css`
 
   /* Zero state (badges=[]): the documented empty copy slot — never blank. */
   .badges--empty {
+    /* The ul's flex row lays slotted copy out at flex-start — center the
+       zero-state line (the stepper's zero-state register; lens W1). */
+    justify-content: center;
     margin: 0;
     padding: var(--tk-space-24);
     border-radius: var(--tk-store-badges-radius, var(--tk-radius-xl));

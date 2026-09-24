@@ -95,7 +95,7 @@ export class TkStoreBadges extends LitElement {
                       <img
                         class="badge__icon"
                         src=${badge.iconSrc}
-                        alt=${badge.iconAlt ?? badge.label}
+                        alt=${badge.iconAlt ?? ''}
                         loading="lazy"
                         decoding="async"
                       />

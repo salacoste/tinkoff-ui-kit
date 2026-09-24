@@ -96,11 +96,19 @@ describe('tk-store-badges', () => {
     expect(ruleBody('.badge')).toMatch(/min-height:\s*80px/);
   });
 
-  it('iconAlt defaults to the store name (decorative-friendly alt)', async () => {
+  it('icon is DECORATIVE by default (alt=""); iconAlt overrides — accname stays the visible label alone', async () => {
     const el = await mount({
-      props: { badges: [{ href: 'https://example.com', label: 'RuStore', iconSrc: 'x.svg' }] },
+      props: {
+        badges: [
+          { href: 'https://example.com', label: 'RuStore', iconSrc: 'x.svg' },
+          { href: 'https://example.com', label: 'App Store', iconSrc: 'y.svg', iconAlt: 'Загрузите в App Store' },
+        ],
+      },
     });
-    expect(pills(el)[0]?.querySelector('.badge__icon')?.getAttribute('alt')).toBe('RuStore');
+    // The pill's visible span already names the link; a default alt copying
+    // the label would double the accname («RuStore RuStore») — lens W2.
+    expect(pills(el)[0]?.querySelector('.badge__icon')?.getAttribute('alt')).toBe('');
+    expect(pills(el)[1]?.querySelector('.badge__icon')?.getAttribute('alt')).toBe('Загрузите в App Store');
   });
 
   // --- Matrix row 8: the external-link contract -----------------------------------------
@@ -146,6 +154,13 @@ describe('tk-store-badges', () => {
   it('null badges clamp to the zero state without throwing (§2)', async () => {
     const el = await mount({ props: { badges: null as unknown as TkStoreBadges['badges'] } });
     expect(el.shadowRoot?.querySelector('.badges--empty')).not.toBeNull();
+  });
+
+  it('zero-state copy is CENTERED — the empty rule overrides the ul flex row (lens W1 pin)', async () => {
+    // .badges--empty rides the same ul flex row; without the justify override
+    // the slotted copy sits at flex-start and text-align:center never fires
+    // (display:contents children are flex items, not inline text).
+    expect(ruleBody('.badges--empty')).toMatch(/justify-content:\s*center/);
   });
 
   // --- Guards -------------------------------------------------------------------------------------
