@@ -5,7 +5,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import * as litReact from '@lit/react';
 import { afterAll, describe, expect, it, vi } from 'vitest';
 
-import { ArticleCard, Badge, Button, Checkbox, ComboboxSearch, CookieBanner, DataTable, EVENT_MAP, FeatureCard, FilterChips, Footer, Input, Link, Modal, Navbar, Pagination, ProgressBar, PromoCard, SegmentedRadio, Select, ServiceCard, Tabs, ThumbnailPicker, Toast, Tooltip } from './index.js';
+import { ArticleCard, Badge, Button, Checkbox, ComboboxSearch, CookieBanner, DataTable, EVENT_MAP, FeatureCard, FilterChips, Footer, Input, Link, Modal, Navbar, Pagination, ProgressBar, PromoCard, QrBlock, SegmentedRadio, Select, ServiceCard, Stepper, StoreBadges, Tabs, ThumbnailPicker, Toast, Tooltip } from './index.js';
 
 /**
  * pillkit-react generated surface. The wrapper imports `pillkit-components`
@@ -1600,5 +1600,93 @@ describe('pillkit-react', () => {
     });
     await (el as { updateComplete: Promise<unknown> }).updateComplete;
     expect(el?.hasAttribute('open'), 'the card unmounts when open flips false').toBe(false);
+  });
+
+  // --- Story 7.3: the marketing display trio (property passthrough — the
+  // display components dispatch NOTHING of their own; tk-qr-block's tab
+  // switching is the COMPOSED tk-tabs element's contract, not the block's) --
+
+  it('carries the story 7.3 no-entry ruling: the display trio maps NOTHING in the event registry', () => {
+    expect(EVENT_MAP['tk-stepper']).toBeUndefined();
+    expect(EVENT_MAP['tk-store-badges']).toBeUndefined();
+    expect(EVENT_MAP['tk-qr-block']).toBeUndefined();
+  });
+
+  it('renders <Stepper> as tk-stepper with element properties set through the wrapper', async () => {
+    const container = await renderToContainer(
+      React.createElement(Stepper, {
+        heading: 'Откройте счет для бизнеса',
+        steps: [
+          { title: 'Заполните заявку', text: 'Это займет не более 10 минут' },
+          { title: 'Дождитесь решения', text: 'Мы рассмотрим заявку в течение 1 дня' },
+          { title: 'Начните работать', text: 'Откройте счет и подключите инструменты' },
+        ],
+      }),
+    );
+    const el = container.querySelector('tk-stepper') as (Element & {
+      heading?: string;
+      updateComplete?: Promise<unknown>;
+    }) | null;
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    expect(el?.heading).toBe('Откройте счет для бизнеса');
+    await (el as { updateComplete: Promise<unknown> }).updateComplete;
+    // Array data passes through as the element property; numbering is chrome.
+    expect(el?.shadowRoot?.querySelectorAll('.step')).toHaveLength(3);
+    expect(el?.shadowRoot?.querySelector('.step__number')?.textContent?.trim()).toBe('1');
+    expect(el?.hasAttribute('heading'), 'string data never reflects').toBe(false);
+  });
+
+  it('renders <StoreBadges> as tk-store-badges with the external-link contract intact', async () => {
+    const container = await renderToContainer(
+      React.createElement(StoreBadges, {
+        badges: [
+          { href: 'https://example.com/rustore', label: 'RuStore' },
+          { href: 'https://example.com/appgallery', label: 'AppGallery', iconSrc: 'x.svg' },
+        ],
+      }),
+    );
+    const el = container.querySelector('tk-store-badges') as (Element & {
+      badges?: unknown[];
+      updateComplete?: Promise<unknown>;
+    }) | null;
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    expect(el?.badges).toHaveLength(2);
+    await (el as { updateComplete: Promise<unknown> }).updateComplete;
+    const pills = [...((el as Element).shadowRoot?.querySelectorAll('a.badge') ?? [])];
+    expect(pills).toHaveLength(2);
+    for (const pill of pills) {
+      expect(pill.getAttribute('target')).toBe('_blank');
+      expect(pill.getAttribute('rel')).toBe('noopener noreferrer');
+    }
+    // The label-only degrade holds through the wrapper (no icon element).
+    expect(pills[0]?.querySelector('.badge__icon')).toBeNull();
+    expect(pills[1]?.querySelector('.badge__icon')).not.toBeNull();
+  });
+
+  it('renders <QrBlock> as tk-qr-block composing the v1 tk-tabs element', async () => {
+    const container = await renderToContainer(
+      React.createElement(QrBlock, {
+        title: 'Вариант 2. Отсканируйте QR-код',
+        tabs: [
+          { label: 'Android 9.0 и выше', qrSrc: 'qr-modern.svg', note: 'Наведите камеру' },
+          { label: 'Android ниже 9.0', qrSrc: 'qr-legacy.svg' },
+        ],
+      }),
+    );
+    const el = container.querySelector('tk-qr-block') as (Element & {
+      title?: string;
+      updateComplete?: Promise<unknown>;
+    }) | null;
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    expect(el?.title).toBe('Вариант 2. Отсканируйте QR-код');
+    await (el as { updateComplete: Promise<unknown> }).updateComplete;
+    // The tablist is the composed element with its panels in named slots.
+    const inner = el?.shadowRoot?.querySelector('tk-tabs');
+    expect(inner?.shadowRoot?.querySelectorAll('[role="tab"]')).toHaveLength(2);
+    expect(inner?.querySelectorAll('.panel')).toHaveLength(2);
+    expect(inner?.querySelector('.panel__note')?.textContent?.trim()).toBe('Наведите камеру');
+    expect(inner?.querySelector('.panel__qr')?.getAttribute('alt')).toBe(
+      'QR-код для Android 9.0 и выше',
+    );
   });
 });

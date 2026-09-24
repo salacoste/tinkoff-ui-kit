@@ -3807,6 +3807,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/qr-block/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/segmented-radio/index.js"
           }
         },
@@ -3824,6 +3832,22 @@
           "declaration": {
             "name": "*",
             "module": "src/service-card/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/stepper/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/store-badges/index.js"
           }
         },
         {
@@ -6646,6 +6670,139 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/qr-block/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/qr-block/qr-block.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/qr-block/qr-block.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "qrBlockStyles",
+          "default": "css` :host { display: block; max-width: 100%; } /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */ :host([hidden]) { display: none; } .qr-block { box-sizing: border-box; display: flex; flex-direction: column; align-items: center; } /* The block title — heading-4 (the probe's ~28px bold; the ramp's bold step 500), centered. Rendered ONLY when the prop is set. */ .qr-block__title { margin: 0; text-align: center; font-family: var(--tk-font-heading); font-size: var(--tk-text-heading-4-size); font-weight: var(--tk-text-heading-4-weight); line-height: var(--tk-text-heading-4-leading); color: var(--tk-qr-block-title, var(--tk-color-text-primary)); } /* Title→tablist rhythm (the reference's own section gap). */ .qr-block__title + tk-tabs { margin-block-start: var(--tk-space-40); } /* The composed tablist — GEOMETRY ONLY (see the header): fit-content + auto margins center the strip like the capture; every visual token is tk-tabs' own. */ tk-tabs { box-sizing: border-box; width: fit-content; min-width: 0; max-width: 100%; margin-inline: auto; } /* Panel content lives in tk-tabs' named slots (its shadow distributes them); this sheet reaches the projected children normally — they are light-DOM content of this template. DOM ORDER = the capture's: tile first, then the note line UNDER it (the tile's caption). Note: body-l secondary ink, centered (the capture's light-gray camera-pointer line, AA-pinned — see the header). */ .panel { display: flex; flex-direction: column; align-items: center; } .panel__note { margin: 0; text-align: center; font-family: var(--tk-font-body); font-size: var(--tk-text-body-l-size); font-weight: var(--tk-text-body-l-weight); line-height: var(--tk-text-body-l-leading); color: var(--tk-qr-block-note, var(--tk-color-text-secondary)); } /* Tile→note rhythm — 12px in the capture, EXACTLY the token; the adjacent-sibling gate keeps the note-less panel the tile alone. */ .panel__tile + .panel__note { margin-block-start: var(--tk-space-12); } /* The QR tile: white surface-base rounded card, padding 16 (probe-EXACT), the soft drop shadow (shadow-default). Sized to the image — no width pinned; max-width keeps the block responsive. */ .panel__tile { box-sizing: border-box; max-width: 100%; padding: var(--tk-space-16); border-radius: var(--tk-qr-block-tile-radius, var(--tk-radius-lg)); background: var(--tk-qr-block-tile-fill, var(--tk-color-surface-base)); box-shadow: var(--tk-qr-block-tile-shadow, var(--tk-shadow-default)); } .panel__qr { display: block; max-width: 100%; height: auto; } `",
+          "description": "tk-qr-block styles — tokens only (FR-1), zero theme branches (AD-3).\n\nVisual spec: the PIXEL PROBE of\n`.playwright-cli/captures-v2/invest-mobile/pattern-qr-loaded.png`\n(2026-09-24-25, runs.awk + threshold-trim method, recorded in\n.playwright-cli/verify/qr-block/): the install block = centered bold\ntitle, a two-tab switcher, and under the active tab a WHITE rounded tile\ncarrying the QR image with the centered note line UNDER the tile (rows:\ntabs ≈16-58, gap ≈43, tile ≈101-291, note text ≈303-323 — the note is the\ntile's caption, NOT an intro line above it).\n\nTHE TABLIST IS COMPOSED, NOT STYLED: `<tk-tabs>` renders inside this\nshadow root with ZERO `--tk-tabs-*` hook overrides — the v1 element's own\nactive treatment (white pill + shadow-default + border-default hairline;\nprobe #EEF0F3 fill / #E7E9EC hairline ≈ surface-base / border-default)\nmatches the loaded capture EXACTLY. The ONE thing hooks cannot express —\nthe capture's INACTIVE light-gray fill (#F2F4F7) on an otherwise invisible\ntrack — stays unexpressed: the track is frozen invisible by the v1 DESIGN\nruling (tabs.css.ts header), the same ruling that recorded the identical\ndelta on v1 tabs' own capture. Delta RECORDED in NOTES.md, not worked\naround (a gray-track override would be the forbidden reimplementation).\nThis sheet touches ONLY the composed element's geometry: fit-content +\nauto margins center the strip (the capture centers it) without touching\nits internals.\n\nToken mappings RECORDED (measured → token): title ~26-28px/700 →\nheading-4 (28/500 — the ramp's bold step; the 700→500 delta recorded);\nnote ink core ≈#C5C5C5 (a very light caption gray, ~2.1:1 on white —\nAA-hostile) → text-secondary #616871 (4.99:1) — the AA-over-capture\nruling, the SAME call the stepper's brown badge made: the capture's\ncaption tier sits under the AA floor, the kit pins the layer's\nAA-sanctioned secondary tier (text-muted #959BA4 would also fail at\n2.8:1 — the visual round's axe run proved it live); note size ink span\n21px ⇒ ≈19-20px → body-l (17 — nearest ramp step, Δ2-3 recorded);\ntile→note gap 12px EXACTLY → --tk-space-12; tile fill #FCFBFC →\nsurface-base (ΔE<1); tile radius ≈13-16 → radius-lg (16); tile padding\n16 EXACTLY → --tk-space-16; tile soft drop shadow → shadow-default.\n\nMOTION: none of the block's OWN — panel swaps ride tk-tabs' v1 swap\nanimation (its tokens, its reduced-motion belts); the note/tile carry no\ntransitions.\n\nPer-component custom properties (`--tk-qr-block-*`, CONVENTIONS §6), each\nconsumed WITH its token default:\n- `--tk-qr-block-title`      title color     (default text-primary)\n- `--tk-qr-block-note`       note color      (default text-secondary)\n- `--tk-qr-block-tile-fill`  tile fill       (default surface-base)\n- `--tk-qr-block-tile-radius` tile radius    (default radius-lg = 16)\n- `--tk-qr-block-tile-shadow` tile shadow    (default shadow-default)\n\nKnown structural (non-token) values, flagged per the flag-don't-invent rule:\n- NONE beyond the composed tk-tabs' own (the 44px track etc. live in\n  tabs.css.ts); the QR image renders at its natural size — the tile is\n  sized to the image (spec Anatomy), so no dimension is pinned here."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "qrBlockStyles",
+          "declaration": {
+            "name": "qrBlockStyles",
+            "module": "src/qr-block/qr-block.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/qr-block/qr-block.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-qr-block — the app-install QR section (Story 7.3): an optional centered\ntitle, a two-tab platform switcher, and per-tab panels (the QR image in a\nwhite rounded tile, the security copy line UNDER the tile) per the\ninvest-mobile capture (probe recorded in .playwright-cli/verify/qr-block/).\n\nTHE TABLIST IS THE v1 tk-tabs CONTRACT COMPOSED — the `<tk-tabs>` element\nitself renders inside this shadow root carrying its own keyboard matrix,\ntab semantics, strict value channel and swap motion (NOT reimplemented;\nthe spec's STOP-and-report case never fired — the API expresses the\nblock). tk-qr-block adds NO value channel of its own: the block is a\ndisplay surface; the consumer drives selection through tk-tabs directly\n(its `value`/`value-change` API, or uncontrolled by default — the\nreference's plain switcher). The composed element is reachable as the\nblock's only tablist (`querySelector('tk-tabs')`), and the spec freeze\n«no events beyond what tk-tabs itself owns» holds: `value-change` bubbles\nout of this shadow root composed (tk-tabs' OWN event verbatim — nothing\nhere re-dispatches or maps it).\n\nVALUE MAPPING: this block identifies tabs by INDEX (`String(index)`) —\n`TkQrTab` has no `value` field; the stable string key is the position,\nwhich the per-index panel slots already assume (tk-tabs names panels\n`tab-0..N`).\n\nSTATELESS DISPLAY MOLD: no §4 channel, no events, nothing dispatches (the\nevent-map no-entry case — tk-tabs' own value-change is the composed\nelement's, not this class's). Degrades, never throws (§2):\nnull/undefined `tabs` clamps to the empty list; `tabs=[]` renders the\noptional title and NO tablist (a tab strip with zero tabs is no strip);\na panel without `note` is the tile only (the matrix's no-note row).\n\nSSR-compat (AD-10): rendered via Lit templates only; no construction-time\nDOM access.",
+          "name": "TkQrBlock",
+          "members": [
+            {
+              "kind": "field",
+              "name": "title",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Optional block heading — string DATA; unset ('' — the clamp) renders no\nheading. TYPING NOTE: the name is the spec-FROZEN API and collides with\nthe native `HTMLElement.title` (typed `string`, never optional), so the\nfield is `string` defaulting to '' instead of `string | undefined` —\nruntime optionality survives through the '' clamp below. Lit never\nREFLECTS the property (no attribute is created — no native hover\ntooltip from property use); a consumer who sets the ATTRIBUTE explicitly\ngets the browser's own native-tooltip behavior on top, their call.",
+              "attribute": "title"
+            },
+            {
+              "kind": "field",
+              "name": "tabs",
+              "type": {
+                "text": "TkQrTab[]"
+              },
+              "default": "[]",
+              "description": "The platform tabs; each panel = note? + the QR tile."
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveTabs",
+              "privacy": "private",
+              "type": {
+                "text": "TkQrTab[]"
+              },
+              "description": "Tabs with null/undefined clamped to the empty list (null-tolerant props).",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#toTabs",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TkTab[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "tabs",
+                  "type": {
+                    "text": "TkQrTab[]"
+                  }
+                }
+              ],
+              "description": "The v1 tab shape for the composed element — index-keyed values (see the class header)."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Optional block heading — string DATA; unset ('' — the clamp) renders no\nheading. TYPING NOTE: the name is the spec-FROZEN API and collides with\nthe native `HTMLElement.title` (typed `string`, never optional), so the\nfield is `string` defaulting to '' instead of `string | undefined` —\nruntime optionality survives through the '' clamp below. Lit never\nREFLECTS the property (no attribute is created — no native hover\ntooltip from property use); a consumer who sets the ATTRIBUTE explicitly\ngets the browser's own native-tooltip behavior on top, their call.",
+              "name": "title",
+              "default": "''",
+              "fieldName": "title"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-qr-block",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkQrBlock",
+          "declaration": {
+            "name": "TkQrBlock",
+            "module": "src/qr-block/qr-block.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-qr-block",
+          "declaration": {
+            "name": "TkQrBlock",
+            "module": "src/qr-block/qr-block.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/segmented-radio/index.ts",
       "declarations": [],
       "exports": [
@@ -8132,6 +8289,299 @@
           "declaration": {
             "name": "TkServiceCard",
             "module": "src/service-card/service-card.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/stepper/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/stepper/stepper.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/stepper/stepper.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "stepperStyles",
+          "default": "css` :host { display: block; max-width: 100%; } /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */ :host([hidden]) { display: none; } .stepper { box-sizing: border-box; display: flex; flex-direction: column; align-items: center; } /* The block heading — heading-2 (the marketing register's section scale, probe-measured ~44/700 centered). Rendered ONLY when the prop is set. */ .stepper__heading { margin: 0; text-align: center; font-family: var(--tk-font-heading); font-size: var(--tk-text-heading-2-size); font-weight: var(--tk-text-heading-2-weight); line-height: var(--tk-text-heading-2-leading); color: var(--tk-stepper-heading, var(--tk-color-text-primary)); } /* The equal-height card row — the v1 card-grid mold: grid stretch keeps cards equal-height; auto-fit collapses 3→2→1 columns responsively. */ .stepper__steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--tk-space-48); width: 100%; margin: 0; padding: 0; list-style: none; } /* Heading→cards rhythm (the reference's own section gap; also keeps the overlap badge's top half clear when a heading is rendered above). */ .stepper__heading + .stepper__steps { margin-block-start: var(--tk-space-64); /* The badge's above-card half (28px) needs clearance from the heading — the token step nearest that covers it. */ padding-block-start: var(--tk-space-32); } /* One step card: white surface, radius 24, centered copy. The padding-top reserves the badge's BELOW-card half (28) + the badge→copy gap (40 total visual to the first text line per the probe). */ .step { box-sizing: border-box; position: relative; display: flex; flex-direction: column; align-items: center; padding: 68px var(--tk-space-24) var(--tk-space-40); border-radius: var(--tk-stepper-card-radius, var(--tk-radius-xl)); background: var(--tk-stepper-card-fill, var(--tk-color-surface-base)); text-align: center; } /* The number badge: 56×56 rounded square, centered on the card's centerline with its center EXACTLY on the card's top edge (the probe's half-overlap) — translate(-50%, -50%) against the card top achieves it by construction. aria-hidden in the template: the list semantics already announce «item N», the painted numeral is the visual duplicate. */ .step__badge { position: absolute; top: 0; left: 50%; display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; transform: translate(-50%, -50%); border-radius: var(--tk-stepper-badge-radius, var(--tk-radius-lg)); background: var(--tk-stepper-badge-fill, var(--tk-color-tint-cream-raised)); } .step__number { font-family: var(--tk-font-heading); font-size: var(--tk-text-heading-6-size); font-weight: var(--tk-text-heading-6-weight); line-height: 1; color: var(--tk-stepper-badge-number, var(--tk-color-text-primary)); } /* Title/text: body-l both, SAME ink (probe), weight-only distinction — the API's title carries the emphasis, text stays regular. */ .step__title { margin: 0; font-family: var(--tk-font-body); font-size: var(--tk-text-body-l-size); font-weight: var(--tk-text-body-l-bold-weight); line-height: var(--tk-text-body-l-leading); color: var(--tk-stepper-title, var(--tk-color-text-primary)); } .step__text { margin: var(--tk-space-4) 0 0; font-family: var(--tk-font-body); font-size: var(--tk-text-body-l-size); font-weight: var(--tk-text-body-l-weight); line-height: var(--tk-text-body-l-leading); color: var(--tk-stepper-text, var(--tk-color-text-primary)); } /* The optional CTA row under the cards — the UNNAMED slot. The container carries NO rhythm until content is assigned: the data-has-cta host attribute (toggled by slotchange, the promo-card data-has-art mold) gates the margin, so the reference's CTA-less block renders exactly as captured. */ .stepper__cta { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--tk-space-12); } :host([data-has-cta]) .stepper__cta { margin-block-start: var(--tk-space-40); } /* Zero state (steps=[]): the documented empty copy slot — never blank. */ .stepper__empty { box-sizing: border-box; width: 100%; padding: var(--tk-space-40) var(--tk-space-24) var(--tk-space-24); border-radius: var(--tk-stepper-card-radius, var(--tk-radius-xl)); background: var(--tk-stepper-card-fill, var(--tk-color-surface-base)); text-align: center; font-family: var(--tk-font-body); font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-weight); line-height: var(--tk-text-body-m-leading); color: var(--tk-color-text-secondary); } `",
+          "description": "tk-stepper styles — tokens only (FR-1), zero theme branches (AD-3).\n\nVisual spec: the PIXEL PROBE of\n`.playwright-cli/captures-v2/business/pattern-steps-open-account{,-detail}.png`\n(2026-09-24, runs.awk method, recorded in .playwright-cli/verify/stepper/):\n3 WHITE cards (surface-base, probe-measured 336px wide × ~136px, radius 24 —\nEXACTLY --tk-radius-xl, gap 48 — EXACTLY --tk-space-48) on the page cream;\nthe number = a 56×56 rounded-square badge (probe-fit radius 18 — see the\nflag below) centered on each card's centerline with its center ON the card's\ntop edge (EXACT half-overlap), white bold numeral; title + text centered\nunder it, both lines the SAME text-primary ink at body-l (the probe refutes\na secondary-colored text line — title/text differ by WEIGHT only).\n\nTHE BROWN MAPPING — FLAGGED (flag-don't-invent): the reference badge is\n#8D6040 (probe-measured), a mid warm-brown with NO honest-near token in the\nlayer (the warm family tops out at tint-cream-raised #E9E0D1, ~3× lighter;\nnothing brown exists anywhere in the palette). Per the no-invention rule the\nbadge ships on the nearest WARM-FAMILY surface token — tint-cream-raised —\nwith the layer's own AA-sanctioned pairing text-primary on cream-raised\n(TOKENS.md: 9.655:1; white numerals on #E9E0D1 would measure ~1.4:1). The\nreference's white-on-brown numeral becomes ink-on-cream. The chromatic gap\nis RECORDED in .playwright-cli/verify/stepper/NOTES.md for the maintainer —\na brown token decision belongs to the token layer, never here.\n\nTHE HEADING REGISTER: the reference block heading («Откройте счет для\nбизнеса», probe-measured ~44px/700 — a 30px dense cap core, refuting the\nspec's heading-4 guess) maps to heading-2 — the marketing register's own h1\nslot (TOKENS.md Registers: business = marketing → h1 at heading-2 44/700).\n\nMOTION: none — the spec's never-list («no motion on stepper/badges»); the\ncomponent ships zero transitions/animations (display surface; hover states\nare absent on cards by the same ruling — «No hover elevation (display)»).\n\nPer-component custom properties (`--tk-stepper-*`, CONVENTIONS §6), each\nconsumed WITH its token default:\n- `--tk-stepper-heading`   block heading color (default text-primary)\n- `--tk-stepper-card-fill` card fill          (default surface-base)\n- `--tk-stepper-card-radius` card radius      (default radius-xl = 24)\n- `--tk-stepper-badge-fill` number badge fill (default tint-cream-raised —\n  the FLAGGED brown mapping, see above)\n- `--tk-stepper-badge-number` numeral color   (default text-primary — the\n  cream-raised AA pairing; white belongs to the unmapped brown)\n- `--tk-stepper-badge-radius` badge radius    (default radius-lg)\n- `--tk-stepper-title` step title color       (default text-primary)\n- `--tk-stepper-text` step text color         (default text-primary — the\n  probe: both lines the same ink)\n\nKnown structural (non-token) values, flagged per the flag-don't-invent rule:\n- the 56×56 badge box with its EXACT half-overlap (probe-measured; the\n  overlap is computed FROM that box — translate -50% on the card top edge)\n  and the card's 68px top padding (the badge's 28px below-card half + the\n  40px badge→copy gap — the composite of the two flagged probe metrics);\n- the numeral's heading-6 slot (probe-measured ~20px bold — the token ramp\n  has no 700-weight step at 20px; the delta is recorded in NOTES.md);\n- the 240px auto-fit column floor (the responsive 1-2-3 collapse of the\n  reference's fixed 336px row at the standard breakpoints);\n- the badge→copy 40px gap (probe-measured 38px badge-bottom→title-top; the\n  token step nearest — --tk-space-40);\n- the empty-state top rhythm (the badge zone reserves its 28px half even in\n  the zero state so a heading + empty copy never collapses flush)."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "stepperStyles",
+          "declaration": {
+            "name": "stepperStyles",
+            "module": "src/stepper/stepper.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/stepper/stepper.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "TK_STEPPER_DEFAULT_EMPTY_COPY",
+          "type": {
+            "text": "string"
+          },
+          "default": "'Нет доступных шагов'",
+          "description": "Zero-state copy (EXPERIENCE State Patterns: «zero-state copy slot; never\nblank» — the tk-thumbnail-picker mold): the default text inside the `empty`\nslot; consumers project their own copy through `<* slot=\"empty\">`."
+        },
+        {
+          "kind": "class",
+          "description": "tk-stepper — the numbered marketing steps block (Story 7.3): white rounded\ncards on the page surface, each with a rounded-square number badge\nEXACTLY half-overlapping the card's top edge (centered on the card's\ncenterline), centered title/text under it — the business domain's\n«Откройте счет для бизнеса» anatomy (probe: 336×136 cards, radius 24, gap\n48, 56×56 badge, body-l copy — see .playwright-cli/verify/stepper/).\n\nNUMBERING IS AUTOMATIC: the painted numeral is `aria-hidden` decoration on\ntop of an ordered list — «item N» comes from list semantics, and a number\nin the data has nowhere to go (the shape has no field for it).\n\nSTATELESS (the display-component mold — tk-promo-card precedent): no §4\nchannel, no events, nothing dispatches (the event-map no-entry case).\nDegrades, never throws (§2): null/undefined `steps` clamps to the empty\nlist; `steps=[]` renders the documented zero-state copy slot.\n\nThe optional UNNAMED slot is a CTA row under the cards — empty by default\n(the reference block has NO CTA; the default story matches the reference).\nThe CTA container renders ONLY when the slot carries content, so an unset\nslot adds no rhythm.\n\nMOTION: none (the spec's never-list — no transitions, no animations, no\nhover elevation on the cards).\n\nSSR-compat (AD-10): rendered via Lit templates only; the slotchange\nlistener is event-driven post-mount access, never construction-time.",
+          "name": "TkStepper",
+          "slots": [
+            {
+              "description": "Optional CTA row under the cards (renders only when slotted).",
+              "name": ""
+            },
+            {
+              "description": "Zero-state copy for steps=[] (default «Нет доступных шагов»).",
+              "name": "empty"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional block heading — string DATA (never reflects); unset renders no heading.",
+              "attribute": "heading"
+            },
+            {
+              "kind": "field",
+              "name": "steps",
+              "type": {
+                "text": "TkStepperStep[]"
+              },
+              "default": "[]",
+              "description": "The steps; numbering is rendered 1..n automatically."
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveSteps",
+              "privacy": "private",
+              "type": {
+                "text": "TkStepperStep[]"
+              },
+              "description": "Steps with null/undefined clamped to the empty list (null-tolerant props).",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#slotHasContent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLSlotElement"
+                  }
+                }
+              ],
+              "description": "A slot carries projectable content when an element or non-empty text is assigned (tk-promo-card mold)."
+            },
+            {
+              "kind": "method",
+              "name": "#handleCtaSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "CTA rhythm gate: data-has-cta toggles with slot assignment (pure attribute — no re-render needed)."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Optional block heading — string DATA (never reflects); unset renders no heading.",
+              "name": "heading",
+              "fieldName": "heading"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-stepper",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TK_STEPPER_DEFAULT_EMPTY_COPY",
+          "declaration": {
+            "name": "TK_STEPPER_DEFAULT_EMPTY_COPY",
+            "module": "src/stepper/stepper.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkStepper",
+          "declaration": {
+            "name": "TkStepper",
+            "module": "src/stepper/stepper.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-stepper",
+          "declaration": {
+            "name": "TkStepper",
+            "module": "src/stepper/stepper.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/store-badges/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/store-badges/store-badges.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/store-badges/store-badges.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "storeBadgesStyles",
+          "default": "css` :host { display: block; max-width: 100%; } /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */ :host([hidden]) { display: none; } .badges { display: flex; flex-wrap: wrap; gap: var(--tk-space-64); margin: 0; padding: 0; list-style: none; } /* One pill — the WHOLE surface is the external link (native focus, the §8 target, unified ring below). Inline-flex keeps label and icon on one baseline-ish row; min-width holds the uniform size class while long labels may grow it. */ .badge { box-sizing: border-box; display: inline-flex; flex: 0 1 auto; align-items: center; justify-content: flex-start; gap: var(--tk-space-12); min-width: 324px; min-height: 80px; padding: var(--tk-space-16) var(--tk-space-16) var(--tk-space-16) var(--tk-space-12); border-radius: var(--tk-store-badges-radius, var(--tk-radius-xl)); background: var(--tk-store-badges-fill, var(--tk-color-surface-muted)); text-decoration: none; cursor: pointer; -webkit-tap-highlight-color: transparent; } /* Hover: the surface family's perceptible fill step — INSTANT (the never-list's no-motion ruling; no transition property exists here). */ .badge:hover { background: var(--tk-store-badges-fill-hover, var(--tk-color-surface-field)); } /* Label: body-m bold-step ink, left-aligned (probe); ellipsizes only past the pill's grown width — the uniform class keeps labels whole. */ .badge__label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--tk-font-body); font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-bold-weight); line-height: var(--tk-text-body-m-leading); color: var(--tk-store-badges-label, var(--tk-color-text-primary)); } /* The consumer-supplied brand mark (the kit ships ZERO brand art): a 48×48 rounded square pinned RIGHT of the label — margin-inline-start:auto pushes it to the far edge on short labels, exactly the reference's big-gap layout. Label-only degrade: no iconSrc → no img, the pill keeps its size class (the min-width above). */ .badge__icon { flex: none; width: 48px; height: 48px; margin-inline-start: auto; border-radius: var(--tk-store-badges-icon-radius, var(--tk-radius-lg)); object-fit: contain; } /* Unified focus ring (§8): 2px token ring, offset 2px, never removed. */ .badge:focus-visible { outline: 2px solid var(--tk-color-focus-ring); outline-offset: 2px; } /* Zero state (badges=[]): the documented empty copy slot — never blank. */ .badges--empty { margin: 0; padding: var(--tk-space-24); border-radius: var(--tk-store-badges-radius, var(--tk-radius-xl)); background: var(--tk-store-badges-fill, var(--tk-color-surface-muted)); text-align: center; font-family: var(--tk-font-body); font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-weight); line-height: var(--tk-text-body-m-leading); color: var(--tk-color-text-secondary); } `",
+          "description": "tk-store-badges styles — tokens only (FR-1), zero theme branches (AD-3).\n\nVisual spec: the PIXEL PROBE of\n`.playwright-cli/captures-v2/invest-mobile/pattern-store-badges-loaded.png`\n(2026-09-24, runs.awk + threshold-trim method, recorded in\n.playwright-cli/verify/store-badges/): THREE uniform light pills, probe\nfill #F6F7F8 → **surface-muted** #F5F5F6 (ΔE≈1 — the honest-near NEUTRAL\nmap; the spec's surface-field guess is blue-tinted and farther), EXACTLY\n324×80 each, gap 64 — EXACTLY --tk-space-64, radius ≈24 — EXACTLY\n--tk-radius-xl (three-depth arc fit on the pill's top-left corner: chord\ninsets ≈6/1.5/1px at dy 8/16/20 → r≈24); label #313132 →\ntext-primary, ~15px/600 (label bboxes 74/52/101px fit 10/7/13-char bare\nstore names — «Скачать в …» vision reads are REFUTED by the bbox\narithmetic); label LEFT-aligned ~12px in; icon squircle ~48px on the RIGHT\n~16px from the edge (the reference's own inverted layout — official badges\ncarry the icon left).\n\nToken mappings RECORDED (measured → token): pill fill #F6F7F8 →\nsurface-muted; label #313132 → text-primary; label 600 → the ramp's bold\nstep 500 (body-m-bold — no 600 exists); gap 64 → --tk-space-64 (probe\nEXACT); pill radius ≈24 → --tk-radius-xl (arc-fit, probe); height 80 /\nwidth 324 / icon 48 → structural flags below.\n\nHOVER: the standard surface hover family — the muted fill steps to\nsurface-field (the tk-pagination load-more's own perceptible hover\nneighbor). MOTION: NONE — the spec's never-list («no motion on\nstepper/badges») outranks the generic 150ms State-Pattern duration; the\nfill step applies INSTANTLY (a state, not an animation — recorded in\nNOTES.md).\n\nHIT TARGET: the whole pill IS the anchor — 80px tall ≥ the §8 floor; no\npadding-up needed (unlike the navbar drawer-link mold).\n\nPer-component custom properties (`--tk-store-badges-*`, CONVENTIONS §6),\neach consumed WITH its token default:\n- `--tk-store-badges-fill` pill fill        (default surface-muted)\n- `--tk-store-badges-fill-hover` hover fill (default surface-field)\n- `--tk-store-badges-radius` pill radius    (default radius-xl = 24, probe)\n- `--tk-store-badges-label` label color     (default text-primary)\n- `--tk-store-badges-icon-radius` icon radius (default radius-lg)\n\nKnown structural (non-token) values, flagged per the flag-don't-invent rule:\n- the 80px pill height (probe-measured y24–103; the §8 target rides it);\n- the 324px pill basis (probe-measured EXACT uniform width ×3 — the size\n  class the spec freezes; pills may grow past it for long labels but never\n  shrink, keeping the row uniform);\n- the 48px icon box (probe-measured squircle)."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "storeBadgesStyles",
+          "declaration": {
+            "name": "storeBadgesStyles",
+            "module": "src/store-badges/store-badges.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/store-badges/store-badges.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "TK_STORE_BADGES_DEFAULT_EMPTY_COPY",
+          "type": {
+            "text": "string"
+          },
+          "default": "'Нет доступных магазинов'",
+          "description": "Zero-state copy (EXPERIENCE State Patterns — «never blank»): the default\ntext inside the `empty` slot; consumers project their own copy through\n`<* slot=\"empty\">`."
+        },
+        {
+          "kind": "class",
+          "description": "tk-store-badges — the app-store badge row (Story 7.3): uniform light pills\n— bare store name left, consumer-supplied mark right — each pill a whole-\nsurface external link, per the invest-mobile capture (probe: 324×80 pills,\nradius 16, gap 60→space-64 — see .playwright-cli/verify/store-badges/).\n\nNO BRAND ART IN THE REPO (the spec's iron rule): the mark is `iconSrc`\ndata the consumer owns; the kit's own stories carry neutral placeholder\nmarks, never real store logos.\n\nEXTERNAL-LINK CONTRACT: every pill renders `target=\"_blank\"` +\n`rel=\"noopener noreferrer\"` unconditionally (a badge row is by definition\nthird-party destinations).\n\nSTATELESS (the display-component mold): no §4 channel, no events, nothing\ndispatches (the event-map no-entry case). Degrades, never throws (§2):\nnull/undefined `badges` clamps to the empty list; `badges=[]` renders the\ndocumented zero-state copy slot; a badge without `iconSrc` renders\nlabel-only at the same size class.\n\nMOTION: none (the spec's never-list) — the hover fill step is instant.\n\nSSR-compat (AD-10): Lit templates only; no construction-time DOM access.",
+          "name": "TkStoreBadges",
+          "slots": [
+            {
+              "description": "Zero-state copy for badges=[] (default «Нет доступных магазинов»).",
+              "name": "empty"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "badges",
+              "type": {
+                "text": "TkStoreBadge[]"
+              },
+              "default": "[]",
+              "description": "The store entries (label + external href + optional mark)."
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveBadges",
+              "privacy": "private",
+              "type": {
+                "text": "TkStoreBadge[]"
+              },
+              "description": "Badges with null/undefined clamped to the empty list (null-tolerant props).",
+              "readonly": true
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-store-badges",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TK_STORE_BADGES_DEFAULT_EMPTY_COPY",
+          "declaration": {
+            "name": "TK_STORE_BADGES_DEFAULT_EMPTY_COPY",
+            "module": "src/store-badges/store-badges.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkStoreBadges",
+          "declaration": {
+            "name": "TkStoreBadges",
+            "module": "src/store-badges/store-badges.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-store-badges",
+          "declaration": {
+            "name": "TkStoreBadges",
+            "module": "src/store-badges/store-badges.ts"
           }
         }
       ]
