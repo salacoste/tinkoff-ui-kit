@@ -9,28 +9,24 @@ Study project: the reference site (tinkoff.ru) is the design source of truth; we
 (`@lit/react`); pnpm workspace `pillkit-{tokens,components,react,docs}`; TS 7 strict, Vite 8, Vitest,
 Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) live in `_bmad-output/planning-artifacts/`.
 
-## Project state (updated 2026-09-23 — v1 BUILD COMPLETE, maintainer-gate mode)
+## Project state (updated 2026-09-24 — v1.0.0 RELEASED, GitHub-distribution)
 
-- **BMAD v1 plan FULLY EXECUTED: all 38 stories / 5 epics / 19 components** (commits 19b12a6 → 320232c).
-  Epics 1–4 built the kit (tokens, forms+API freeze, navigation/cards/homepage, overlays); Epic 5
-  verified and prepared release: a11y sweeps (114-cell ledgers + permanent reduced-motion/ring/
-  theme-branch CI guards), dark sweep (4 real bugs fixed; tint assumptions closed), docs completion
-  (generated token reference, theming guide, verified quickstart), fidelity+discipline closure
-  (xxl radius corrected 32→24 by probe; yellow audit; ZERO [ASSUMPTION] flags remain), publish prep
-  (MIT + fonts/transitions carve-outs, per-package LICENSEs, CHANGELOG, SM-6 self-test PASSED,
-  RELEASE.md maintainer checklist)
-- **Totals: 644 unit + 921 visual/axe tests, 274 baselines, 19 React wrappers, CI green**
-- Packages `pillkit-{tokens,components,react,docs}`: `private: true` everywhere, 0 tags, npm untouched
-- **The project now waits on MAINTAINER GATES ONLY — entry point `RELEASE.md`**: baseline batch
-  confirm/re-take (`_bmad-output/implementation-artifacts/baseline-review-package.md`), SR spot-checks
-  (VoiceOver+NVDA protocols in the 19 stories), §0 ratifications (bounce-easing ignore, tokens
-  license field, transitions redistribution, version — 1.0.0-rc.1 recommended), then private-flip →
-  tag → publish
+- **v1.0.0 SHIPPED as git tag `v1.0.0`** (maintainer gate session 2026-09-23/24). All maintainer
+  gates closed: 274/274 baselines CONFIRMED (F1 re-taken), VoiceOver SR walk 19/19 (tabs
+  track→panel rhythm fixed in-session), §0 ratifications recorded in RELEASE.md
+- **Distribution model: GitHub-only — NO npm, ever (maintainer decision 2026-09-23).** Consumers
+  clone/checkout a tag and use the workspace-link recipe (README quickstart — SM-6-verified AND
+  verified live from the tag; the quickstart html REQUIRES `<meta charset="utf-8">` — a real
+  mojibake bug the release gate caught and fixed). `private: true` in all packages is PERMANENT.
+  Releases = commit + `git tag vX.Y.Z` + push; the release gate = fresh consumer clones the tag
+  and runs the README recipe end-to-end (RELEASE.md §4–§5)
+- **Kit totals: 645 unit + 921 visual/axe tests, 19 components, 19 React wrappers, zero design
+  assumptions open, CI green** (commits 19b12a6 → f02f4a0)
 - Fonts: DaytonaSans/DaytonaPragma in `packages/tokens/fonts/` under LICENSE-FONTS.md (separately
   licensed, NOT MIT; consumer rights ONLY per that file)
 - **Lit on this stack requires `experimentalDecorators: true`** — do not "fix" this
-- deferred-work.md: 6 entries with revisit conditions (fold literals, AD-4 single-source,
-  AA-derivation, mono slot, iOS scroll-lock, SR execution)
+- deferred-work.md: revisit-condition entries (axe re-entrancy serialization, mono slot, iOS
+  scroll-lock, AD-4 single-source, AA-derivation, fold literals, preview.ts canvas bg)
 
 ## Toolchain (installed & configured)
 
