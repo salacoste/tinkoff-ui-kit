@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { describe, expect, it } from 'vitest';
 
-import { TkButton, TkComboboxSearch, TkFilterChips, TkPagination } from './index.js';
+import { TkButton, TkComboboxSearch, TkCookieBanner, TkFilterChips, TkPagination } from './index.js';
 
 /**
  * Package entry: every component's public surface is reachable from
@@ -23,6 +23,7 @@ describe('pillkit-components entry', () => {
       ['tk-filter-chips', TkFilterChips],
       ['tk-pagination', TkPagination],
       ['tk-combobox-search', TkComboboxSearch],
+      ['tk-cookie-banner', TkCookieBanner],
     ];
     for (const [tag, klass] of pinned) {
       expect(klass, `${tag} class re-exported`).toBeDefined();

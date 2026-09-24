@@ -1853,6 +1853,406 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/cookie-banner/cookie-banner.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "cookieBannerStyles",
+          "default": "css` :host { display: contents; } `",
+          "description": "The host sheet — the host renders nothing of its own."
+        },
+        {
+          "kind": "variable",
+          "name": "cookieBannerSurfaceStyles",
+          "default": "css` :host { box-sizing: border-box; display: flex; flex-direction: column; align-items: flex-start; gap: var(--tk-cookie-banner-gap, var(--tk-space-12)); /* Viewport-anchored bottom-left placement (see the file header): fixed like tk-modal's centring frame, the geometry this surface owns. The 16px gap is the FLAGGED house judgment (standard T-Bank placement; the live viewport capture did not settle in time to pin it — NOTES.md). */ position: fixed; inset: auto; left: var(--tk-space-16); bottom: var(--tk-space-16); width: fit-content; min-width: 180px; max-width: var(--tk-cookie-banner-max-width, 212px); margin: 0; border: none; padding: var(--tk-space-16); overflow: visible; background: var(--tk-cookie-banner-fill, var(--tk-color-surface-base)); color: var(--tk-cookie-banner-text, var(--tk-color-text-secondary)); font-family: var(--tk-font-body); font-size: var(--tk-text-body-s-size); font-weight: var(--tk-text-body-s-weight); line-height: var(--tk-text-body-s-leading); border-radius: var(--tk-cookie-banner-radius, var(--tk-radius-lg)); box-shadow: var(--tk-shadow-default); } /* :host display:flex beats the UA [hidden] rule — enforce closedness (the 6.2 computed-display pin, asserted by the visual spec). */ :host([hidden]) { display: none; } /* The message area: the DEFAULT slot's light text nodes inherit the host's text-secondary body-s from the SLOT chain; only the slotted ANCHORS need explicit rules (::slotted reaches slotted elements only). The pseudo lives INSIDE the parens — ::slotted(a:hover), the select sheet's ::slotted([role='option']:hover) convention. At rest NO underline (the reference link sits plain); underline on hover only (the frozen ruling), plus on keyboard focus — the tk-link exception language: the underline IS the link register's focus affordance (an ADDITION over the frozen \"hover only\" text for §8 hover-never-the-only-path parity, recorded as a story-7.2 judgment). */ .banner__message { min-width: 0; } ::slotted(a) { color: var(--tk-cookie-banner-link, var(--tk-color-text-secondary)); text-decoration: none; } ::slotted(a:hover), ::slotted(a:focus-visible) { text-decoration: underline; } /* The accept button: the FULL 44px hit box (§8 floor) with the visual language painted on the inner pill — the navbar drawer-link / pagination page-box pattern. NO hover restyle and NO transition: the frozen no-motion ruling (the reference shows a flat affirmative pill). */ .banner__accept { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; margin: 0; padding: 0; border: none; background: transparent; font-family: var(--tk-font-body); cursor: pointer; -webkit-appearance: none; appearance: none; } .banner__accept-pill { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 0 var(--tk-space-12); border-radius: var(--tk-radius-full); background: var(--tk-cookie-banner-accept-fill, var(--tk-color-surface-field)); color: var(--tk-cookie-banner-accept-text, var(--tk-color-text-primary)); font-size: var(--tk-text-body-s-size); font-weight: 600; line-height: var(--tk-text-body-s-leading); } /* Unified focus ring (§8): 2px token ring, offset 2px, never removed — on the hit box itself (the pagination load-more precedent). */ .banner__accept:focus-visible { outline: 2px solid var(--tk-color-focus-ring); outline-offset: 2px; } `",
+          "description": "The CARD sheet, adopted into the card's own shadow root."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "cookieBannerStyles",
+          "declaration": {
+            "name": "cookieBannerStyles",
+            "module": "src/cookie-banner/cookie-banner.css.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "cookieBannerSurfaceStyles",
+          "declaration": {
+            "name": "cookieBannerSurfaceStyles",
+            "module": "src/cookie-banner/cookie-banner.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/cookie-banner/cookie-banner.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "TK_COOKIE_BANNER_DEFAULT_LABEL",
+          "type": {
+            "text": "string"
+          },
+          "default": "'Баннер согласия использования cookies'",
+          "description": "The dialog's default accessible name (the live DOM snapshot's own string)."
+        },
+        {
+          "kind": "variable",
+          "name": "TK_COOKIE_BANNER_DEFAULT_ACCEPT_LABEL",
+          "type": {
+            "text": "string"
+          },
+          "default": "'Хорошо'",
+          "description": "The accept button's default label («Хорошо» per the live DOM snapshot)."
+        },
+        {
+          "kind": "class",
+          "description": "tk-cookie-banner — the compact NON-MODAL consent dialog (Story 7.2): a\nscrimless, scroll-lock-free, trap-free consent card on the 2.2 overlay\ncontroller's MODAL layer (top-layer promotion + the modal z class), fixed\nto the viewport's bottom-left. Consent is a POSITIVE ACT: the only close\npath is the consumer's `open` prop after `consent-choice` — the kit NEVER\ncloses itself (no internal close path, no X button), Esc and outside\npresses change nothing, and the page behind stays fully interactive.\n\nOPEN CHANNEL — the tk-modal/tk-select mold verbatim (the frozen §9\noverlay-surface state): `open` attribute/property (reflects) +\n`open-change` `detail: { value: boolean }` composed/bubbles, POST-mount on\nopen and POST-release on close, flip-only (the §9 change-guard: Lit lists\nevery reactive property in the FIRST update's change map, so\n`wasOpen !== undefined` spares a mount-time false). Because the banner has\nno internal close path, every flip the channel reports is CONSUMER-driven\n— the echo tells the consumer the mount/release actually happened, the\nsame post-mount/post-release timing the modal guarantees.\n\nSURFACE (the 2.3 ratified panel-in-shadow pattern, the select mold): the\ncard is a generated div child of tk-cookie-banner's shadow tree carrying\nits OWN shadow root (styles + the accept button + the message slot),\nhidden while closed, mounted by `mountOverlay(card, 'modal')` — the\npopover path promotes it in place; the fallback container reparents it\nacross the tree boundary (slotted consumer content stops projecting on\nthat legacy path — the documented modal/select limitation, engines without\nthe popover API; happy-dom unit tests assert structure only, the molds'\nrule). The card's light child is one FORWARDING `<slot>` (it lives in\ntk-cookie-banner's shadow tree, so it gathers the host's light DOM) picked\nup by the message slot inside the card's shadow root.\n\nMECHANICS (all controller, minus the modal's modalities — this surface's\nNever list): NO scroll-lock, NO focus trap, NO scrim. What remains is the\ncontroller's mount + the modal LAYER token; the fixed bottom-left geometry\nis this sheet's own (the exact split tk-modal makes for its centered\nframe — the controller owns mounting/z, a viewport-anchored surface owns\nits frame).\n\nFOCUS: on open, focus moves to the accept button (the natural next act —\n`preventScroll`: the card is fixed, always in view). Tab NEVER wraps —\nnon-modal: focus flows card → page natively. On close, focus returns to\nthe previously-focused element ONLY when it is still connected AND focus\ncurrently sits inside the banner (a non-modal page is interactive — a\nconsumer closing the banner from a click elsewhere must not be yanked).\nThis trapless restore mirrors the controller trap's restore semantics\n(snapshot at open, connected-check at close); the controller has no\nrestore-without-trap primitive and this surface deliberately traps\nnothing — recorded in NOTES.md/cookie-banner.\n\nESC: while open, a document-capture keydown answers Escape with\npreventDefault AND NOTHING ELSE — no dismiss, no open-change (the frozen\nruling: consent is a positive act; the prevention marks the keypress\nconsumed by the banner's contract, documented in the a11y story). Outside\npointerdown: NO listener exists — nothing dismisses.\n\nSTORAGE: the CONSUMER's, exclusively — the kit never reads or writes\nlocalStorage/cookies (the structural unit pin).\n\nSSR-compat (AD-10): no imperative DOM at construction; the card is\ngenerated on first open/label write, client-side.",
+          "name": "TkCookieBanner",
+          "slots": [
+            {
+              "description": "The consent message (rich content: inline links are consumer composition; the kit styles ::slotted(a) — text-secondary via the §6 hook, underline on hover).",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Open state — the frozen §9 overlay-surface property (reflects; the kit never flips it itself).",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The dialog's accessible name (aria-label on the card).",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "acceptLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The accept pill's label.",
+              "attribute": "accept-label"
+            },
+            {
+              "kind": "field",
+              "name": "#card",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLDivElement | null"
+              },
+              "default": "null",
+              "description": "The generated card (role=dialog), a shadow-tree child, hidden while closed."
+            },
+            {
+              "kind": "field",
+              "name": "#overlayHandle",
+              "privacy": "private",
+              "type": {
+                "text": "TkOverlayHandle | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#previouslyFocused",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null",
+              "description": "The pre-open focus target — restored on close when still relevant (see the class doc)."
+            },
+            {
+              "kind": "field",
+              "name": "#onDocumentKeydown",
+              "privacy": "private",
+              "readonly": true,
+              "description": "Document-capture Esc: preventDefault and NOTHING else (the frozen\nruling — see the class doc). Attached only while open; torn down on\nclose and on disconnect."
+            },
+            {
+              "kind": "method",
+              "name": "#effectiveLabel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "description": "The effective accessible name: the label, else the default constant."
+            },
+            {
+              "kind": "method",
+              "name": "#effectiveAcceptLabel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "description": "The effective accept label: the prop, else the default constant."
+            },
+            {
+              "kind": "method",
+              "name": "#getCard",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLDivElement"
+                }
+              },
+              "description": "The generated card: role=dialog (aria-modal deliberately ABSENT — the\nnon-modal contract), own shadow root (styles + accept button + message\nslot), hidden until open. Eagerly creatable so name sync has a target;\nappended OUTSIDE Lit's template markers (the select mold) so the\ncontroller's fallback reparenting never fights the template."
+            },
+            {
+              "kind": "method",
+              "name": "#syncCardName",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncCardNameOn",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "card",
+                  "type": {
+                    "text": "HTMLDivElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#renderCard",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "(Re)renders the card's shadow content — label props are live while open."
+            },
+            {
+              "kind": "method",
+              "name": "#acceptButton",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLButtonElement | null"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#handleAccept",
+              "privacy": "private",
+              "readonly": true,
+              "description": "The ONLY interactive path: `consent-choice` (§3 bare verb, no payload —\nthe load-more mold) and NOTHING else — no close, no focus move, no\nstate. The consumer records consent (storage is THEIRS) and flips\n`open`; focus stays on the button either way (a native click keeps it)."
+            },
+            {
+              "kind": "method",
+              "name": "#openCard",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "flipped",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "OPEN (synchronous — the card is generated, so no render await and no\nrace window): mount on the controller's MODAL layer (top-layer with\nfallback; scrimless — nothing else is acquired), snapshot the opener,\nfocus the accept button, then dispatch `open-change(true)` post-mount."
+            },
+            {
+              "kind": "method",
+              "name": "#closeCard",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "flipped",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "CLOSE: release the mount synchronously (no exit animation — the frozen\nno-motion ruling), re-home the card into the shadow tree (the container\nfallback detaches it), restore focus when it is still relevant, then\ndispatch `open-change(false)` post-release. Idempotent — a close with\nnothing mounted (the disconnect path already released) only echoes."
+            },
+            {
+              "kind": "method",
+              "name": "#releaseCard",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Releases everything the open path acquired (idempotent): the document\nEsc listener, the controller mount; the card re-homes into the shadow\ntree and hides. Focus returns to the opener only when it is still\nconnected AND focus currently sits inside the banner's composed subtree\n(non-modal pages are interactive — a consumer closing from elsewhere\nmust not be yanked; the deliberate refinement over the trap's\nunconditional restore, recorded in NOTES.md)."
+            },
+            {
+              "kind": "method",
+              "name": "#focusInsideBanner",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Document-level activeElement is the card host while focus is inside its shadow root."
+            },
+            {
+              "kind": "method",
+              "name": "#emitOpenChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "open-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "`{ value: boolean }` — the frozen §9 overlay-surface state event; composed, bubbles; post-mount on open, post-release on close. Consumer-driven flips only (no internal close path)."
+            },
+            {
+              "description": "Occurrence (§3 bare verb, NO payload): the accept button was pressed. The kit changes NOTHING else — no close, no focus move; the consumer records consent and flips `open`.",
+              "name": "consent-choice"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Open state — the frozen §9 overlay-surface property (reflects; the kit never flips it itself).",
+              "name": "open",
+              "default": "false",
+              "fieldName": "open"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The dialog's accessible name (aria-label on the card).",
+              "name": "label",
+              "fieldName": "label"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The accept pill's label.",
+              "name": "accept-label",
+              "fieldName": "acceptLabel"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-cookie-banner",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TK_COOKIE_BANNER_DEFAULT_LABEL",
+          "declaration": {
+            "name": "TK_COOKIE_BANNER_DEFAULT_LABEL",
+            "module": "src/cookie-banner/cookie-banner.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TK_COOKIE_BANNER_DEFAULT_ACCEPT_LABEL",
+          "declaration": {
+            "name": "TK_COOKIE_BANNER_DEFAULT_ACCEPT_LABEL",
+            "module": "src/cookie-banner/cookie-banner.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkCookieBanner",
+          "declaration": {
+            "name": "TkCookieBanner",
+            "module": "src/cookie-banner/cookie-banner.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-cookie-banner",
+          "declaration": {
+            "name": "TkCookieBanner",
+            "module": "src/cookie-banner/cookie-banner.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/cookie-banner/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/cookie-banner/cookie-banner.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/feature-card/feature-card.css.ts",
       "declarations": [
         {
@@ -2918,6 +3318,14 @@
           "declaration": {
             "name": "*",
             "module": "src/combobox-search/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/cookie-banner/index.js"
           }
         },
         {
