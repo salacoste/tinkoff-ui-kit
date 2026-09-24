@@ -1853,12 +1853,412 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/cookie-banner/cookie-banner.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "cookieBannerStyles",
+          "default": "css` :host { display: contents; } `",
+          "description": "The host sheet — the host renders nothing of its own."
+        },
+        {
+          "kind": "variable",
+          "name": "cookieBannerSurfaceStyles",
+          "default": "css` :host { box-sizing: border-box; display: flex; flex-direction: column; align-items: flex-start; gap: var(--tk-cookie-banner-gap, var(--tk-space-12)); /* Viewport-anchored bottom-left placement (see the file header): fixed like tk-modal's centring frame, the geometry this surface owns. The 16px gap is the FLAGGED house judgment (standard T-Bank placement; the live viewport capture did not settle in time to pin it — NOTES.md). */ position: fixed; inset: auto; left: var(--tk-space-16); bottom: var(--tk-space-16); width: fit-content; min-width: 180px; max-width: var(--tk-cookie-banner-max-width, 212px); margin: 0; border: none; padding: var(--tk-space-16); overflow: visible; background: var(--tk-cookie-banner-fill, var(--tk-color-surface-base)); color: var(--tk-cookie-banner-text, var(--tk-color-text-secondary)); font-family: var(--tk-font-body); font-size: var(--tk-text-body-s-size); font-weight: var(--tk-text-body-s-weight); line-height: var(--tk-text-body-s-leading); border-radius: var(--tk-cookie-banner-radius, var(--tk-radius-lg)); box-shadow: var(--tk-shadow-default); } /* :host display:flex beats the UA [hidden] rule — enforce closedness (the 6.2 computed-display pin, asserted by the visual spec). */ :host([hidden]) { display: none; } /* The message area: the DEFAULT slot's light text nodes inherit the host's text-secondary body-s from the SLOT chain; only the slotted ANCHORS need explicit rules (::slotted reaches slotted elements only). The pseudo lives INSIDE the parens — ::slotted(a:hover), the select sheet's ::slotted([role='option']:hover) convention. At rest NO underline (the reference link sits plain); underline on hover only (the frozen ruling), plus on keyboard focus — the tk-link exception language: the underline IS the link register's focus affordance (an ADDITION over the frozen \"hover only\" text for §8 hover-never-the-only-path parity, recorded as a story-7.2 judgment). */ .banner__message { min-width: 0; } ::slotted(a) { color: var(--tk-cookie-banner-link, var(--tk-color-text-secondary)); text-decoration: none; } ::slotted(a:hover), ::slotted(a:focus-visible) { text-decoration: underline; } /* The accept button: the FULL 44px hit box (§8 floor) with the visual language painted on the inner pill — the navbar drawer-link / pagination page-box pattern. NO hover restyle and NO transition: the frozen no-motion ruling (the reference shows a flat affirmative pill). */ .banner__accept { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; margin: 0; padding: 0; border: none; background: transparent; font-family: var(--tk-font-body); cursor: pointer; -webkit-appearance: none; appearance: none; } .banner__accept-pill { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 0 var(--tk-space-12); border-radius: var(--tk-radius-full); background: var(--tk-cookie-banner-accept-fill, var(--tk-color-surface-field)); color: var(--tk-cookie-banner-accept-text, var(--tk-color-text-primary)); font-size: var(--tk-text-body-s-size); font-weight: 600; line-height: var(--tk-text-body-s-leading); } /* Unified focus ring (§8): 2px token ring, offset 2px, never removed — on the hit box itself (the pagination load-more precedent). */ .banner__accept:focus-visible { outline: 2px solid var(--tk-color-focus-ring); outline-offset: 2px; } `",
+          "description": "The CARD sheet, adopted into the card's own shadow root."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "cookieBannerStyles",
+          "declaration": {
+            "name": "cookieBannerStyles",
+            "module": "src/cookie-banner/cookie-banner.css.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "cookieBannerSurfaceStyles",
+          "declaration": {
+            "name": "cookieBannerSurfaceStyles",
+            "module": "src/cookie-banner/cookie-banner.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/cookie-banner/cookie-banner.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "TK_COOKIE_BANNER_DEFAULT_LABEL",
+          "type": {
+            "text": "string"
+          },
+          "default": "'Баннер согласия использования cookies'",
+          "description": "The dialog's default accessible name (the live DOM snapshot's own string)."
+        },
+        {
+          "kind": "variable",
+          "name": "TK_COOKIE_BANNER_DEFAULT_ACCEPT_LABEL",
+          "type": {
+            "text": "string"
+          },
+          "default": "'Хорошо'",
+          "description": "The accept button's default label («Хорошо» per the live DOM snapshot)."
+        },
+        {
+          "kind": "class",
+          "description": "tk-cookie-banner — the compact NON-MODAL consent dialog (Story 7.2): a\nscrimless, scroll-lock-free, trap-free consent card on the 2.2 overlay\ncontroller's MODAL layer (top-layer promotion + the modal z class), fixed\nto the viewport's bottom-left. Consent is a POSITIVE ACT: the only close\npath is the consumer's `open` prop after `consent-choice` — the kit NEVER\ncloses itself (no internal close path, no X button), Esc and outside\npresses change nothing, and the page behind stays fully interactive.\n\nOPEN CHANNEL — the tk-modal/tk-select mold verbatim (the frozen §9\noverlay-surface state): `open` attribute/property (reflects) +\n`open-change` `detail: { value: boolean }` composed/bubbles, POST-mount on\nopen and POST-release on close, flip-only (the §9 change-guard: Lit lists\nevery reactive property in the FIRST update's change map, so\n`wasOpen !== undefined` spares a mount-time false). Because the banner has\nno internal close path, every flip the channel reports is CONSUMER-driven\n— the echo tells the consumer the mount/release actually happened, the\nsame post-mount/post-release timing the modal guarantees.\n\nSURFACE (the 2.3 ratified panel-in-shadow pattern, the select mold): the\ncard is a generated div child of tk-cookie-banner's shadow tree carrying\nits OWN shadow root (styles + the accept button + the message slot),\nhidden while closed, mounted by `mountOverlay(card, 'modal')` — the\npopover path promotes it in place; the fallback container reparents it\nacross the tree boundary (slotted consumer content stops projecting on\nthat legacy path — the documented modal/select limitation, engines without\nthe popover API; happy-dom unit tests assert structure only, the molds'\nrule). The card's light child is one FORWARDING `<slot>` (it lives in\ntk-cookie-banner's shadow tree, so it gathers the host's light DOM) picked\nup by the message slot inside the card's shadow root.\n\nMECHANICS (all controller, minus the modal's modalities — this surface's\nNever list): NO scroll-lock, NO focus trap, NO scrim. What remains is the\ncontroller's mount + the modal LAYER token; the fixed bottom-left geometry\nis this sheet's own (the exact split tk-modal makes for its centered\nframe — the controller owns mounting/z, a viewport-anchored surface owns\nits frame).\n\nFOCUS: on open, focus moves to the accept button (the natural next act —\n`preventScroll`: the card is fixed, always in view). Tab NEVER wraps —\nnon-modal: focus flows card → page natively. On close, focus returns to\nthe previously-focused element ONLY when it is still connected AND focus\ncurrently sits inside the banner (a non-modal page is interactive — a\nconsumer closing the banner from a click elsewhere must not be yanked).\nThis trapless restore mirrors the controller trap's restore semantics\n(snapshot at open, connected-check at close); the controller has no\nrestore-without-trap primitive and this surface deliberately traps\nnothing — recorded in NOTES.md/cookie-banner.\n\nESC: while open, a document-capture keydown answers Escape with\npreventDefault AND NOTHING ELSE — no dismiss, no open-change (the frozen\nruling: consent is a positive act; the prevention marks the keypress\nconsumed by the banner's contract, documented in the a11y story). Outside\npointerdown: NO listener exists — nothing dismisses.\n\nSTORAGE: the CONSUMER's, exclusively — the kit never reads or writes\nlocalStorage/cookies (the structural unit pin).\n\nSSR-compat (AD-10): no imperative DOM at construction; the card is\ngenerated on first open/label write, client-side.",
+          "name": "TkCookieBanner",
+          "slots": [
+            {
+              "description": "The consent message (rich content: inline links are consumer composition; the kit styles ::slotted(a) — text-secondary via the §6 hook, underline on hover).",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Open state — the frozen §9 overlay-surface property (reflects; the kit never flips it itself).",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The dialog's accessible name (aria-label on the card).",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "acceptLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The accept pill's label.",
+              "attribute": "accept-label"
+            },
+            {
+              "kind": "field",
+              "name": "#card",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLDivElement | null"
+              },
+              "default": "null",
+              "description": "The generated card (role=dialog), a shadow-tree child, hidden while closed."
+            },
+            {
+              "kind": "field",
+              "name": "#overlayHandle",
+              "privacy": "private",
+              "type": {
+                "text": "TkOverlayHandle | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#previouslyFocused",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null",
+              "description": "The pre-open focus target — restored on close when still relevant (see the class doc)."
+            },
+            {
+              "kind": "field",
+              "name": "#onDocumentKeydown",
+              "privacy": "private",
+              "readonly": true,
+              "description": "Document-capture Esc: preventDefault and NOTHING else (the frozen\nruling — see the class doc). Attached only while open; torn down on\nclose and on disconnect."
+            },
+            {
+              "kind": "method",
+              "name": "#effectiveLabel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "description": "The effective accessible name: the label, else the default constant."
+            },
+            {
+              "kind": "method",
+              "name": "#effectiveAcceptLabel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "description": "The effective accept label: the prop, else the default constant."
+            },
+            {
+              "kind": "method",
+              "name": "#getCard",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLDivElement"
+                }
+              },
+              "description": "The generated card: role=dialog (aria-modal deliberately ABSENT — the\nnon-modal contract), own shadow root (styles + accept button + message\nslot), hidden until open. Eagerly creatable so name sync has a target;\nappended OUTSIDE Lit's template markers (the select mold) so the\ncontroller's fallback reparenting never fights the template."
+            },
+            {
+              "kind": "method",
+              "name": "#syncCardName",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncCardNameOn",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "card",
+                  "type": {
+                    "text": "HTMLDivElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#renderCard",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "(Re)renders the card's shadow content — label props are live while open."
+            },
+            {
+              "kind": "method",
+              "name": "#acceptButton",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLButtonElement | null"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#handleAccept",
+              "privacy": "private",
+              "readonly": true,
+              "description": "The ONLY interactive path: `consent-choice` (§3 bare verb, no payload —\nthe load-more mold) and NOTHING else — no close, no focus move, no\nstate. The consumer records consent (storage is THEIRS) and flips\n`open`; focus stays on the button either way (a native click keeps it)."
+            },
+            {
+              "kind": "method",
+              "name": "#openCard",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "flipped",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "OPEN (synchronous — the card is generated, so no render await and no\nrace window): mount on the controller's MODAL layer (top-layer with\nfallback; scrimless — nothing else is acquired), snapshot the opener,\nfocus the accept button, then dispatch `open-change(true)` post-mount."
+            },
+            {
+              "kind": "method",
+              "name": "#closeCard",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "flipped",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "CLOSE: release the mount synchronously (no exit animation — the frozen\nno-motion ruling), re-home the card into the shadow tree (the container\nfallback detaches it), restore focus when it is still relevant, then\ndispatch `open-change(false)` post-release. Idempotent — a close with\nnothing mounted (the disconnect path already released) only echoes."
+            },
+            {
+              "kind": "method",
+              "name": "#releaseCard",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Releases everything the open path acquired (idempotent): the document\nEsc listener, the controller mount; the card re-homes into the shadow\ntree and hides. Focus returns to the opener only when it is still\nconnected AND focus currently sits inside the banner's composed subtree\n(non-modal pages are interactive — a consumer closing from elsewhere\nmust not be yanked; the deliberate refinement over the trap's\nunconditional restore, recorded in NOTES.md)."
+            },
+            {
+              "kind": "method",
+              "name": "#focusInsideBanner",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Document-level activeElement is the card host while focus is inside its shadow root."
+            },
+            {
+              "kind": "method",
+              "name": "#emitOpenChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "open-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "`{ value: boolean }` — the frozen §9 overlay-surface state event; composed, bubbles; post-mount on open, post-release on close. Consumer-driven flips only (no internal close path)."
+            },
+            {
+              "description": "Occurrence (§3 bare verb, NO payload): the accept button was pressed. The kit changes NOTHING else — no close, no focus move; the consumer records consent and flips `open`.",
+              "name": "consent-choice"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Open state — the frozen §9 overlay-surface property (reflects; the kit never flips it itself).",
+              "name": "open",
+              "default": "false",
+              "fieldName": "open"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The dialog's accessible name (aria-label on the card).",
+              "name": "label",
+              "fieldName": "label"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The accept pill's label.",
+              "name": "accept-label",
+              "fieldName": "acceptLabel"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-cookie-banner",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TK_COOKIE_BANNER_DEFAULT_LABEL",
+          "declaration": {
+            "name": "TK_COOKIE_BANNER_DEFAULT_LABEL",
+            "module": "src/cookie-banner/cookie-banner.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TK_COOKIE_BANNER_DEFAULT_ACCEPT_LABEL",
+          "declaration": {
+            "name": "TK_COOKIE_BANNER_DEFAULT_ACCEPT_LABEL",
+            "module": "src/cookie-banner/cookie-banner.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkCookieBanner",
+          "declaration": {
+            "name": "TkCookieBanner",
+            "module": "src/cookie-banner/cookie-banner.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-cookie-banner",
+          "declaration": {
+            "name": "TkCookieBanner",
+            "module": "src/cookie-banner/cookie-banner.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/cookie-banner/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/cookie-banner/cookie-banner.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/data-table/data-table.css.ts",
       "declarations": [
         {
           "kind": "variable",
           "name": "dataTableStyles",
-          "default": "css` :host { display: block; /* The narrow-viewport fence: the inner table keeps its min-width and the HOST scrolls horizontally — columns never reflow (spec). */ overflow-x: auto; } /* 'hidden' must actually hide: the 'display: block' above is author-origin and BEATS the UA '[hidden] { display: none }' rule — without this guard a hidden table keeps painting (the 6.2/6.3 visual-gate lesson). */ :host([hidden]) { display: none; } .table { min-width: 640px; font-family: var(--tk-font-body); } /* --- Header row: 15px/500 text-secondary, STATIC (no sort v2) ----------- */ .row--header { box-sizing: border-box; display: grid; align-items: center; column-gap: var(--tk-space-24); padding: var(--tk-space-16) var(--tk-space-16); border-bottom: 1px solid var(--tk-color-border-table); } .cell--header { font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-bold-weight); line-height: 24px; color: var(--tk-color-text-secondary); letter-spacing: normal; } /* --- Body rows: 81px, grid tracks, 1px divider on the row ---------------- */ .row { position: relative; /* the stitching context the link's ::after resolves against */ box-sizing: border-box; display: grid; align-items: center; column-gap: var(--tk-space-24); min-height: var(--tk-data-table-row-min-height, 81px); padding: var(--tk-space-8) var(--tk-space-16); border-bottom: 1px solid var(--tk-color-border-table); transition: background-color var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-standard); } /* Hover rides the whole row — and only rows that GO somewhere (the §C real-hover fill; inert rows do not borrow the affordance). */ .row--link:hover { background: var(--tk-color-surface-row-hover); } .row--link { cursor: pointer; } .cell { display: flex; flex-direction: column; justify-content: center; gap: var(--tk-space-4); min-width: 0; /* grid item discipline: long names shrink, never blow the track */ } .cell--align-end { text-align: end; } /* Two-line anatomy (§E): primary 15/24 ink, secondary 13/20 muted. */ .cell__primary, .cell__link { font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-weight); line-height: 24px; color: var(--tk-color-text-primary); } .cell__secondary { font-size: var(--tk-text-body-s-size); font-weight: var(--tk-text-body-s-weight); line-height: 20px; color: var(--tk-color-text-secondary); } /* Deltas (6.1 semantics): the direction color paints BOTH lines of the cell — the reference's ₽-line and %-line share it (§E). */ .cell--delta-positive .cell__primary, .cell--delta-positive .cell__secondary { color: var(--tk-color-delta-positive); } .cell--delta-negative .cell__primary, .cell--delta-negative .cell__secondary { color: var(--tk-color-delta-negative); } /* --- The row-as-link stitch (the 3.9 article-card pick) ------------------ The anchor carries ONLY the first cell's primary text; its ::after covers the positioned row, so clicks anywhere on the row navigate natively — one anchor, one tab stop per row. Ink text, no underline (the reference's net visual; the anchor's blue base is not used). */ .row__link { color: var(--tk-color-text-primary); text-decoration: none; } .row__link::after { content: ''; position: absolute; inset: 0; } /* --- Focus: the §8 unified ring around the WHOLE row --------------------- Keyboard focus (focus-visible) on any row's anchor rings the row box — the boxed register; the anchor itself carries no ring. :has() keys the ring to KEYBOARD focus only (see the module header). */ .row__link:focus-visible { outline: none; } .row:has(.row__link:focus-visible) { outline: 2px solid var(--tk-color-focus-ring); outline-offset: 2px; } /* --- Zero state: never blank, outside the table role --------------------- (role=table demands row children — aria-required-children — so the message renders as the table's sibling, not inside it.) */ .empty { margin: 0; padding: var(--tk-space-16); font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-weight); line-height: var(--tk-text-body-m-leading); color: var(--tk-color-text-secondary); } `",
+          "default": "css` :host { display: block; /* The narrow-viewport fence: the inner table keeps its min-width and the HOST scrolls horizontally — columns never reflow (spec). */ overflow-x: auto; } /* 'hidden' must actually hide: the 'display: block' above is author-origin and BEATS the UA '[hidden] { display: none }' rule — without this guard a hidden table keeps painting (the 6.2/6.3 visual-gate lesson). */ :host([hidden]) { display: none; } .table { min-width: 640px; font-family: var(--tk-font-body); } /* --- Header row cells: 15px/500 text-secondary, STATIC (no sort v2) ------ */ .cell--header { font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-bold-weight); line-height: 24px; color: var(--tk-color-text-secondary); letter-spacing: normal; } /* --- Body rows: 81px, grid tracks, 1px divider on the row ---------------- */ .row { position: relative; /* the stitching context the link's ::after resolves against */ box-sizing: border-box; display: grid; align-items: center; column-gap: var(--tk-space-24); min-height: var(--tk-data-table-row-min-height, 81px); padding: var(--tk-space-8) var(--tk-space-16); border-bottom: 1px solid var(--tk-color-border-table); transition: background-color var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-standard); } /* The header row override — AFTER the .row rule on purpose: the element carries BOTH classes, and the 81px rhythm belongs to the BODY rows only (NOTES §E). The reference header band measures 61px; natural padding+line (16+24+16=56px) is the token-nearest pick, so the inherited row min-height is zeroed here (source order decides equal specificity). */ .row--header { min-height: 0; padding: var(--tk-space-16) var(--tk-space-16); } /* Hover rides the whole row — and only rows that GO somewhere (the §C real-hover fill; inert rows do not borrow the affordance). */ .row--link:hover { background: var(--tk-color-surface-row-hover); } .row--link { cursor: pointer; } .cell { display: flex; flex-direction: column; justify-content: center; gap: var(--tk-space-4); min-width: 0; /* grid item discipline: long names shrink, never blow the track */ } .cell--align-end { text-align: end; } /* Two-line anatomy (§E): primary 15/24 ink, secondary 13/20 muted. */ .cell__primary, .cell__link { font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-weight); line-height: 24px; color: var(--tk-color-text-primary); } .cell__secondary { font-size: var(--tk-text-body-s-size); font-weight: var(--tk-text-body-s-weight); line-height: 20px; color: var(--tk-color-text-secondary); } /* Deltas (6.1 semantics): the direction color paints BOTH lines of the cell — the reference's ₽-line and %-line share it (§E). */ .cell--delta-positive .cell__primary, .cell--delta-positive .cell__secondary { color: var(--tk-color-delta-positive); } .cell--delta-negative .cell__primary, .cell--delta-negative .cell__secondary { color: var(--tk-color-delta-negative); } /* --- The row-as-link stitch (the 3.9 article-card pick) ------------------ The anchor carries ONLY the first cell's primary text; its ::after covers the positioned row, so clicks anywhere on the row navigate natively — one anchor, one tab stop per row. Ink text, no underline (the reference's net visual; the anchor's blue base is not used). */ .row__link { color: var(--tk-color-text-primary); text-decoration: none; } .row__link::after { content: ''; position: absolute; inset: 0; } /* --- Focus: the §8 unified ring around the WHOLE row --------------------- Keyboard focus (focus-visible) on any row's anchor rings the row box — the boxed register; the anchor itself carries no ring. :has() keys the ring to KEYBOARD focus only (see the module header). */ .row__link:focus-visible { outline: none; } .row:has(.row__link:focus-visible) { outline: 2px solid var(--tk-color-focus-ring); outline-offset: 2px; } /* --- Zero state: never blank, outside the table role --------------------- (role=table demands row children — aria-required-children — so the message renders as the table's sibling, not inside it.) */ .empty { margin: 0; padding: var(--tk-space-16); font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-weight); line-height: var(--tk-text-body-m-leading); color: var(--tk-color-text-secondary); } `",
           "description": "tk-data-table styles — tokens only (FR-1), zero theme branches (AD-3).\n\nVisual spec: the invest/stocks catalog table as MEASURED in captures-v2\nNOTES §C/§E (the project's ground truth — every load-bearing value below\ncites it) + DESIGN.md Colors (Table delta semantics):\n\n- ROW: 81px (NOTES §E «row height 81px (two-line cells)» — capture\n  literal, FLAGGED, no token: `min-height` not `height` so a 3-line cell\n  GROWS instead of clipping consumer content — §2 degrade, visually\n  identical for one/two-line cells).\n- DIVIDER: 1px `--tk-color-border-table` on the row's border-bottom\n  (§C «1px solid rgba(0,16,36,0.12) painted on TD border-bottom» — the\n  kit paints it on the ROW, same visual); no zebra.\n- HOVER: `--tk-color-surface-row-hover` on the whole row (§C real-hover\n  probe rgba(36,74,127,0.06)); name stays ink, NO underline (the\n  reference's net visual — the anchor's raw blue base is overridden, the\n  kit renders ink directly).\n- TYPOGRAPHY (§E): primary 15/24 text-primary (product-UI ink\n  rgba(0,0,0,0.8) = the kit's text-primary mapping), secondary 13/20\n  text-secondary; header 15px/500 text-secondary, letter-spacing normal,\n  aligned with the body tracks. Sizes ride the text tokens; the 24px/20px\n  line-heights are capture literals (FLAGGED — the token layer's leading\n  is 1.5, the table's is measured).\n- DELTAS: `--tk-color-delta-{positive,negative}` on BOTH lines of the\n  cell (§E: the ₽-line and %-line share the direction color) — the 6.1\n  AA-override semantics; the site's #00A328/#F52222 are DESIGN.md\n  anchors, NOT consumed.\n- STITCH (the 3.9 article-card pick): the first cell's primary text is a\n  real `<a>` whose ::after stretches `inset: 0` over the positioned row —\n  the WHOLE row is the link's hit area, one anchor per row.\n- FOCUS: the §8 unified ring around the WHOLE ROW — keyed on\n  `:has(.row__link:focus-visible)` so a MOUSE click (focus without\n  focus-visible) does not paint the keyboard ring; the bare\n  `:focus-within` letter of the spec would ring on every click-focus.\n  :has() is evergreen-supported (chromium ≥105) and declarative — the\n  recorded kit pick of the CSS state over a JS-mirrored attribute.\n\nPer-component custom properties (`--tk-data-table-*`, CONVENTIONS §6),\neach consumed WITH its literal/structural default:\n- `--tk-data-table-row-min-height` body row height (default 81px — the\n  capture literal; a themed table can re-rhythm without a new token)\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule: the 81px row height and 24px/20px line-heights (capture literals,\nNOTES §E), the 640px table min-width (the narrow-viewport fence — below\nit the host scrolls, columns never reflow; picked for the three-column\nreference anatomy), and the 4px inter-line gap (the token step nearest\nthe measured 6px line-box gap; sub-pixel against 81px rows)."
         }
       ],
@@ -3304,6 +3704,14 @@
           "declaration": {
             "name": "*",
             "module": "src/combobox-search/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/cookie-banner/index.js"
           }
         },
         {

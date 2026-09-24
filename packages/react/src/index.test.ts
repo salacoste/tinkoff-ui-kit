@@ -5,7 +5,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import * as litReact from '@lit/react';
 import { afterAll, describe, expect, it, vi } from 'vitest';
 
-import { ArticleCard, Badge, Button, Checkbox, ComboboxSearch, DataTable, EVENT_MAP, FeatureCard, FilterChips, Footer, Input, Link, Modal, Navbar, Pagination, ProgressBar, PromoCard, SegmentedRadio, Select, ServiceCard, Tabs, ThumbnailPicker, Toast, Tooltip } from './index.js';
+import { ArticleCard, Badge, Button, Checkbox, ComboboxSearch, CookieBanner, DataTable, EVENT_MAP, FeatureCard, FilterChips, Footer, Input, Link, Modal, Navbar, Pagination, ProgressBar, PromoCard, SegmentedRadio, Select, ServiceCard, Tabs, ThumbnailPicker, Toast, Tooltip } from './index.js';
 
 /**
  * pillkit-react generated surface. The wrapper imports `pillkit-components`
@@ -1513,5 +1513,92 @@ describe('pillkit-react', () => {
     expect(anchor?.getAttribute('href')).toBe('/invest/stocks/SBER/');
     expect(anchor?.getAttribute('tabindex')).toBe('0');
     expect(el?.shadowRoot?.querySelector('a[data-index="1"]')).toBeNull(); // inert row: no anchor
+  });
+
+  // --- Story 7.2: tk-cookie-banner wrapper (the non-modal consent dialog) ---
+
+  it('carries the story 7.2 registry entries: open-change + consent-choice (bare verb)', () => {
+    expect(EVENT_MAP['tk-cookie-banner']).toEqual({
+      onOpenChange: 'open-change',
+      onConsentChoice: 'consent-choice',
+    });
+  });
+
+  it('renders <CookieBanner> as tk-cookie-banner: open prop passes through and reflects, the card mounts non-modal with the accept button', async () => {
+    const container = await renderToContainer(
+      React.createElement(CookieBanner, {
+        open: true,
+        label: 'Использование cookie',
+        acceptLabel: 'Принять',
+      }),
+    );
+    const el = container.querySelector('tk-cookie-banner') as (Element & {
+      open?: boolean;
+      label?: string;
+      acceptLabel?: string;
+      updateComplete?: Promise<unknown>;
+    }) | null;
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    expect(el?.open, 'the open prop passes through').toBe(true);
+    expect(el?.hasAttribute('open'), 'boolean reflects').toBe(true);
+    expect(el?.label).toBe('Использование cookie');
+    expect(el?.acceptLabel).toBe('Принять');
+    await (el as { updateComplete: Promise<unknown> }).updateComplete;
+
+    // The generated card (container-fallback path in happy-dom): non-modal
+    // dialog, named, accept pill rendered with the consumer label.
+    const card =
+      (el as Element).shadowRoot?.querySelector('div[role="dialog"]') ??
+      document.querySelector('#tk-overlay-root > div[role="dialog"]');
+    expect(card, 'the open card is mounted').not.toBeNull();
+    expect(card?.getAttribute('aria-modal')).toBeNull(); // non-modal by contract
+    expect(card?.getAttribute('aria-label')).toBe('Использование cookie');
+    const accept = card?.shadowRoot?.querySelector('button.banner__accept');
+    expect(accept?.textContent?.trim()).toBe('Принять');
+  });
+
+  it('CookieBanner handlers: open-change receives the UNWRAPPED boolean; consent-choice is the payload-less occurrence', async () => {
+    const onOpenChange = vi.fn();
+    const onConsentChoice = vi.fn();
+    const container = await renderToContainer(
+      React.createElement(CookieBanner, { open: true, onOpenChange, onConsentChoice }),
+    );
+    const el = container.querySelector('tk-cookie-banner');
+    expect(el).not.toBeNull();
+
+    el?.dispatchEvent(
+      new CustomEvent('open-change', { detail: { value: false }, composed: true, bubbles: true }),
+    );
+    el?.dispatchEvent(new CustomEvent('consent-choice', { composed: true, bubbles: true }));
+    expect(onOpenChange).toHaveBeenCalledTimes(1);
+    expect(onOpenChange.mock.calls[0]?.[0]).toBe(false); // unwrapped detail.value (AD-1)
+    // Payload-less occurrence: the handler receives the event itself (§9).
+    expect(onConsentChoice).toHaveBeenCalledTimes(1);
+  });
+
+  it('CookieBanner open prop flip: false closes through the element (the wrapper adds no logic of its own)', async () => {
+    let state = true;
+    const render = () =>
+      React.createElement(CookieBanner, {
+        open: state,
+        onOpenChange: (value: unknown) => {
+          state = value as boolean;
+        },
+      });
+    const container = await renderToContainer(render());
+    const root = roots[roots.length - 1];
+    const el = container.querySelector('tk-cookie-banner') as (Element & {
+      updateComplete?: Promise<unknown>;
+    }) | null;
+    expect(el?.hasAttribute('open')).toBe(true);
+
+    // The consumer's render answers a consent by flipping open — the ONLY
+    // close path (the element never closes itself).
+    state = false;
+    await act(() => {
+      root.render(render());
+    });
+    await (el as { updateComplete: Promise<unknown> }).updateComplete;
+    expect(el?.hasAttribute('open'), 'the card unmounts when open flips false').toBe(false);
   });
 });

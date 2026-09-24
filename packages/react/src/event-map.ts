@@ -96,6 +96,17 @@ export const EVENT_MAP: Readonly<Record<string, Readonly<TkKitElementEventMap>>>
   'tk-combobox-search': {
     onValueChange: 'value-change',
   },
+  // Story 7.2 — the frozen §9 overlay-surface state event (every consumer-
+  // driven open flip echoes post-mount/post-release; the banner has NO
+  // internal close path) + the consent occurrence (§3 bare verb, payload-
+  // less: the wrapper falls back to passing the event itself). open-change
+  // is demanded mechanically by tests/event-map-completeness.test.ts;
+  // consent-choice sits outside that grammar's literal list (the load-more
+  // precedent exists there; this verb is hand-guarded by the wrapper smoke).
+  'tk-cookie-banner': {
+    onOpenChange: 'open-change',
+    onConsentChoice: 'consent-choice',
+  },
   // 'tk-toast': none at v4.3 — FIRE-AND-FORGET (spec 4.3 ruling): no `open`
   // channel and no kit events at all; a toast appears already visible,
   // never takes focus, and the slotted action serves its own native click
