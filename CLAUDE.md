@@ -23,14 +23,18 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
 - **v2 IN PROGRESS (designated 2026-09-24):** three new domains — tbank.ru/business,
   /invest/mobile-application, /invest/stocks. BMAD chain COMPLETE (brief/PRD §4.8 FR-12..16,
   UX spines, architecture delta = zero, **epics-v2.md: 3 epics / 13 stories**). Recon + UX-phase
-  captures in `.playwright-cli/captures-v2/`. Next: story 6.1 (v2 token layer) — sequencing in
+  captures in `.playwright-cli/captures-v2/`. **Story 6.1 DONE (c999e12, spec-6-1 closed):**
+  gen:tokens consumes `{colors.*}` references + rgba literals; delta/table/cream semantics live
+  (6 dark first-pass [ASSUMPTION]s → 8.2); registers documented in TOKENS.md. CONSTRAINT for 6.4:
+  delta text sits on surface-base cells only — green-300 fails muted/field/hover composites
+  (4.210/4.039/4.163, pinned in contrast.test.ts). Next: 6.2+6.3 (spec batch) — sequencing in
   epics-v2.md; the v1 component-story gate applies VERBATIM (FR-16). Key v2 decisions: delta
   semantics via AA-override (green-300/red-300); warm-cream family DISTINCT from beige (dark
   first-pass [ASSUMPTION] → 8.2); typography registers = mappings (h1 44→heading-2, 36→heading-3),
   zero new type tokens; keyboard defects of the reference (inert arrows, chip focus-drop) are
   IMPROVED per APG — the sanctioned a11y axis
-- **Kit totals: 645 unit + 921 visual/axe tests, 19 components, 19 React wrappers, zero design
-  assumptions open, CI green**
+- **Kit totals: 662 unit + 921 visual/axe tests, 19 components, 19 React wrappers, v1 design
+  assumptions all closed (6 v2 dark first-pass [ASSUMPTION]s open BY DESIGN until 8.2), CI green**
 - Fonts: DaytonaSans/DaytonaPragma in `packages/tokens/fonts/` under LICENSE-FONTS.md (separately
   licensed, NOT MIT; consumer rights ONLY per that file)
 - **Lit on this stack requires `experimentalDecorators: true`** — do not "fix" this
