@@ -48,8 +48,10 @@ async function waitForStorySettled(page: Page): Promise<void> {
   );
 }
 
-/** The story stand's activation log (newest first, one line per activation). */
-const activationLog = (page: Page): Promise<string> =>
+/** The story stand's activation log (newest first, one line per activation).
+ *  textContent() is nullable before the stand's first paint — expect.poll()
+ *  at the call sites rides exactly that until a line matches. */
+const activationLog = (page: Page): Promise<string | null> =>
   page.locator('#tkd-log-keyboard').textContent();
 
 test.describe('tk-data-table keyboard contract (chromium)', () => {
