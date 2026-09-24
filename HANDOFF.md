@@ -27,7 +27,7 @@
 | | |
 |---|---|
 | **v1** | ✅ RELEASED `v1.0.0` (2026-09-24). 38 стори / 5 эпиков BMAD-плана исполнены. 19 компонентов, 645 юнит + 921 visual/axe тестов, CI зелёный, ноль открытых дизайнерских допущений |
-| **v2** | 🚧 6.2+6.3 ИСПОЛНЕНЫ (6.2: tk-filter-chips + tk-pagination; 6.3: tk-combobox-search — 22 компонента/обёртки, 772 unit + visual 1041/1041; пруфы — `.playwright-cli/verify/{filter-chips,pagination,combobox-search}/`, спеки закрыты). 6.1 до них (c999e12: токен-слой). 7.1 (MegaNav) исполнялся ПАРАЛЛЕЛЬНО в изолированном worktree; далее 6.4 (DataTable). НОВОЕ ПРАВИНО: порт 6007 visual-харнесса машинно-глобален — два `test:visual` параллельно НЕ запускать (см. deferred-work) |
+| **v2** | 🚧 6.2+6.3+7.1 ИСПОЛНЕНЫ (6.2: tk-filter-chips + tk-pagination; 6.3: tk-combobox-search; 7.1: MegaNav — расширение tk-navbar в place, трьюинг-раунд исправил два замороженных преквиза через Spec Change Log — 784 unit + visual 1065/1065 ×2; пруфы — `.playwright-cli/verify/{filter-chips,pagination,combobox-search,mega-nav}/`, спеки закрыты). 6.1 до них (c999e12: токен-слой). В РАБОТЕ ПАРАЛЛЕЛЬНО: 6.4 (DataTable, executor на main, спек 1bc8ee5) + 7.2 (CookieBanner, executor в worktree, спек 2b77d31). НОВОЕ ПРАВИНО: порт 6007 visual-харнесса машинно-глобален — два `test:visual` параллельно НЕ запускать (см. deferred-work) |
 | Репо | `github.com/salacoste/tinkoff-ui-kit`, ветка `main`. HEAD документирован в CLAUDE.md |
 
 Стек (ЗАМОРОЖЕН, пере-планирование не требуется): Lit 3.3.3 core (shadow DOM) в
@@ -168,9 +168,12 @@ CI (GitHub Actions) гоняет всё это + impeccable headless детек�
    ворктри после зависшей сессии исполнителя — аудиторский след восстановлен из
    транскрипта, триаж/фиксы/верификация довершены оркестратором). Стори 6.3 — ✅
    исполнена 2026-09-24 (spec-6-3 закрыт: combobox-search; полный цикл с параллельным
-   треком 7.1 в worktree — родилось правило сериализации test:visual). Стори 7.1 —
-   спек be80195, раунд исполнителя шёл в изолированном worktree (merge → regen →
-   полные гейты на main — см. spec-7-1 Verification).
+   треком 7.1 в worktree — родилось правило сериализации test:visual). Стори 7.1 — ✅
+   исполнена 2026-09-24 (spec-7-1 закрыт: 736191e + truing b068bb8 в worktree, merge 0ec0790,
+   гейты на main 784 unit / visual 1065×2; прецедент Spec Change Log: пиксели опровергли два
+   замороженных утверждения анатомии — активный саблинк ИМЕЕТ подчёркивание 2px + межрядный
+   разделитель 1px существуют). В работе: 6.4 + 7.2 параллельно (executor на main +
+   executor в worktree; спеки 1bc8ee5 / 2b77d31).
 4. Вопросы мейнтейнеру — только на гейтах: базлайны-партия (8.4), релизный тег, всё
    остальное автономно по плану.
 
