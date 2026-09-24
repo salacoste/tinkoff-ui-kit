@@ -28,6 +28,10 @@
  *   rendered into the light layer. Every `dark-*` key must be consumed by
  *   DARK_OVERRIDES or DARK_DEFERRED or generation aborts (no silent drops).
  * - Never hand-edit the artifacts; change DESIGN.md and regenerate.
+ * - Colors-block values are hex literals, verbatim `rgba()` extractions, or
+ *   `{colors.<key>}` references (Story 6.1) — references resolve transitively
+ *   to their terminal literal (missing targets and cycles abort naming the
+ *   key), and emitted declarations always carry the RESOLVED value.
  */
 import { readFileSync, realpathSync, writeFileSync } from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -104,6 +108,14 @@ function parseFrontmatter(designText) {
 // ---------------------------------------------------------------------------
 
 const HEX_RE = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
+/**
+ * v2 value grammar (Story 6.1, colors block only) — beyond hex, DESIGN.md may
+ * carry verbatim rgba() extractions (table divider/hover fills) and references
+ * `{colors.<key>}` (semantic aliases that resolve to a referenced entry's
+ * value at render time; the v2 delta semantics alias the green/red scales).
+ */
+const RGBA_RE = /^rgba\((\d{1,3}),(\d{1,3}),(\d{1,3}),(\d(?:\.\d+)?)\)$/;
+const COLOR_REFERENCE_RE = /^\{colors\.([a-z0-9-]+)\}$/;
 const PX_RE = /^\d+(\.\d+)?px$/;
 const SIGNED_PX_RE = /^-?\d+(\.\d+)?px$/;
 /** Key grammar: a single lowercase/digit/dash segment — anything else emits an invalid custom property. */
@@ -140,19 +152,100 @@ const LIGHT_SEMANTIC_ALIASES = [
   { name: '--tk-color-error-on-field', scale: 'red-200' },
 ];
 
-/** Colors: scales + light semantic aliases + card tints; `dark-*` keys feed the dark layer. */
+/**
+ * Validate one colors value against the literal grammar (pass 1) — hex,
+ * rgba(r,g,b,a) literal, or a `{colors.<key>}` reference. Reference SYNTAX is
+ * validated here; the target's existence and terminal value are resolved in
+ * pass 2 (`resolveColorReferences`). Range checks live here so a malformed
+ * rgba aborts even when it is never referenced by anything.
+ */
+function assertColorValue(value, at) {
+  assert(typeof value === 'string', `${at}: expected a color string, got ${JSON.stringify(value)}`);
+  if (HEX_RE.test(value)) return;
+  const rgba = RGBA_RE.exec(value);
+  if (rgba !== null) {
+    const [r, g, b, a] = rgba.slice(1).map(Number);
+    assert(
+      r <= 255 && g <= 255 && b <= 255 && a <= 1,
+      `${at}: rgba channels must be 0-255 ints with a 0-1 alpha float, got ${JSON.stringify(value)}`,
+    );
+    return;
+  }
+  if (COLOR_REFERENCE_RE.test(value)) return;
+  fail(
+    `${at}: expected a hex color, rgba(r,g,b,a) literal, or {colors.<key>} reference, got ${JSON.stringify(value)}`,
+  );
+}
+
+/**
+ * Pass 2 — resolve `{colors.<key>}` references transitively: a chain resolves
+ * to its terminal literal (spec 6.1). Loud failures NAME the key: a missing
+ * target aborts naming key and target; a cycle aborts naming the whole chain.
+ * The resolved value is re-validated (a terminal must satisfy the literal
+ * grammar) — pass-1 syntax validation alone cannot guarantee that.
+ */
+function resolveColorReferences(colors) {
+  const resolved = new Map();
+  const resolveKey = (key, chain) => {
+    if (resolved.has(key)) return resolved.get(key);
+    const value = colors[key];
+    const reference = COLOR_REFERENCE_RE.exec(value);
+    if (reference === null) {
+      resolved.set(key, value);
+      return value;
+    }
+    const target = reference[1];
+    assert(
+      target in colors,
+      `colors.${key}: reference target 'colors.${target}' does not exist — references must name a key declared in the colors block`,
+    );
+    // Hardening (6.1 triage): a light-layer declaration would emit the dark
+    // value verbatim — the flow is one-way (the dark layer sources dark-*
+    // keys; nothing in the light layer ever resolves to them).
+    assert(
+      !target.startsWith('dark-'),
+      `colors.${key}: reference target 'colors.${target}' is a dark-* palette key — a light-layer declaration would emit a dark value; point the reference at a light key`,
+    );
+    assert(
+      !chain.includes(target),
+      `colors.${key}: reference cycle ${[...chain, target].map((k) => `colors.${k}`).join(' -> ')} — a reference chain must terminate at a literal value`,
+    );
+    const terminal = resolveKey(target, [...chain, target]);
+    resolved.set(key, terminal);
+    return terminal;
+  };
+  const byKey = {};
+  for (const key of Object.keys(colors)) {
+    const value = resolveKey(key, [key]);
+    assertColorValue(value, `colors.${key} (reference-resolved)`);
+    assertValue(value, `colors.${key} (reference-resolved)`);
+    byKey[key] = value;
+  }
+  return byKey;
+}
+
+/**
+ * Colors: scales + light semantic aliases + card tints; `dark-*` keys feed the
+ * dark layer. Two-pass (spec 6.1): pass 1 validates every value's literal
+ * grammar, pass 2 resolves `{colors.<key>}` references — emitted declarations
+ * carry the RESOLVED value (the v1 LIGHT_SEMANTIC_ALIASES precedent: consumers
+ * see real values, contrast math stays trivial).
+ */
 function colorsModel(colors) {
   assertNonEmptyMapping(colors, 'colors');
-  const entries = [];
   for (const [key, value] of Object.entries(colors)) {
     assertKey(key, `colors.${key}`);
-    assert(
-      typeof value === 'string' && HEX_RE.test(value),
-      `colors.${key}: expected a hex color string, got ${JSON.stringify(value)}`,
-    );
+    assertColorValue(value, `colors.${key}`);
+    // References never emit as-is — the raw value's `}` would trip the
+    // emission guard; the RESOLVED terminal is value-checked in pass 2.
+    if (COLOR_REFERENCE_RE.test(value)) continue;
     assertValue(value, `colors.${key}`);
+  }
+  const byKey = resolveColorReferences(colors);
+  const entries = [];
+  for (const key of Object.keys(colors)) {
     if (!key.startsWith('dark-')) {
-      entries.push({ name: `--tk-color-${key}`, value });
+      entries.push({ name: `--tk-color-${key}`, value: byKey[key] });
     }
   }
   for (const alias of LIGHT_SEMANTIC_ALIASES) {
@@ -160,9 +253,9 @@ function colorsModel(colors) {
       alias.scale in colors,
       `LIGHT_SEMANTIC_ALIASES: '${alias.name}' aliases scale '${alias.scale}' which does not exist in colors — update the alias after a DESIGN.md rename`,
     );
-    entries.push({ name: alias.name, value: colors[alias.scale] });
+    entries.push({ name: alias.name, value: byKey[alias.scale] });
   }
-  return { entries, byKey: colors };
+  return { entries, byKey };
 }
 
 // ---------------------------------------------------------------------------
@@ -196,6 +289,16 @@ const DARK_OVERRIDES = [
   { name: '--tk-color-tint-bluegray', source: 'dark-tint-bluegray' },
   { name: '--tk-color-tint-mint', source: 'dark-tint-mint' },
   { name: '--tk-color-tint-beige', source: 'dark-tint-beige' },
+  // v2 additions (Story 6.1): the warm-cream tint pair continues the tint
+  // block; the table-semantics quartet (deltas, divider, row hover) maps the
+  // four v2 dark first-pass palette keys. All carry DARK_TOKEN_NOTES
+  // [ASSUMPTION] annotations for the 8.2 dark sweep (the 5.4 rule).
+  { name: '--tk-color-tint-cream', source: 'dark-tint-cream' },
+  { name: '--tk-color-tint-cream-raised', source: 'dark-tint-cream-raised' },
+  { name: '--tk-color-delta-positive', source: 'dark-delta-positive' },
+  { name: '--tk-color-delta-negative', source: 'dark-delta-negative' },
+  { name: '--tk-color-border-table', source: 'dark-border-table' },
+  { name: '--tk-color-surface-row-hover', source: 'dark-surface-row-hover' },
 ];
 
 /**
@@ -262,6 +365,33 @@ const DARK_TOKEN_NOTES = new Map([
   [
     '--tk-color-tint-beige',
     'Verified — Story 5.4 dark sweep: Lab L* 15.4, OKLCH L 27.1%, hue 78.1° vs light 93.8° (Δ15.7° — within the recorded ±20° tolerance at C ≤ 0.04); held — 0.6 pt under the window. DESIGN.md Colors.',
+  ],
+  // v2 additions (Story 6.1) — dark FIRST-PASS values: every entry states its
+  // derivation facts and carries the 8.2 verification flag in brackets (the
+  // 5.4 rule) — the TOKENS.md assumption bullet quotes the flag literally.
+  [
+    '--tk-color-tint-cream',
+    '[ASSUMPTION — verify at the v2 dark phase (8.2) per the 5.4 rule]. Warm-cream dark first-pass (v2, business; DESIGN.md Colors): follows the 5.4 tint derivation window at the sweep; AA holds by construction — text-primary 15.895:1 / text-secondary 8.461:1 on it (tests/contrast.test.ts).',
+  ],
+  [
+    '--tk-color-tint-cream-raised',
+    '[ASSUMPTION — verify at the v2 dark phase (8.2) per the 5.4 rule]. Raised step of the warm-cream dark first-pass (DESIGN.md Colors); AA holds by construction — text-primary 14.680:1 / text-secondary 7.989:1 on it (tests/contrast.test.ts).',
+  ],
+  [
+    '--tk-color-delta-positive',
+    '[ASSUMPTION — verify at the v2 dark phase (8.2) per the 5.4 rule]. AA first-pass sourced from green-100 `#39B54A` (6.533:1 on dark-base): the existing lightest green step clears 4.5:1 as-is, so no value was authored — green-300 (the light override) measures 3.794:1 in dark. Holds on the real composites too — row-hover `#313131` 4.883:1, tonal step 1 `#222222` 5.972:1. Site anchors live in DESIGN.md Colors (Table delta semantics).',
+  ],
+  [
+    '--tk-color-delta-negative',
+    '[ASSUMPTION — verify at the v2 dark phase (8.2) per the 5.4 rule]. AA first-pass authored `#F63434` (4.525:1 on dark-base) per the dark-error `#FF7B74` precedent — least-lightened delta red clearing 4.5:1; NO red scale step passes (red-100 = 3.630:1) and the site delta red `#F52222` = 4.255:1 fails. RULING: sanctioned on dark surface-base only — the row-hover composite `#313131` (3.382:1) and tonal step 1 `#222222` (4.136:1) fail AA; 6.2/6.4 hold deltas on unhovered rows or re-derive at 8.2. Site anchors live in DESIGN.md Colors (Table delta semantics).',
+  ],
+  [
+    '--tk-color-border-table',
+    '[ASSUMPTION — verify at the v2 dark phase (8.2) per the 5.4 rule]. White-alpha hairline grammar (dark-border `#FFFFFF24` / dark-field `#FFFFFF1A` family) at the extracted divider\'s own alpha: 0x1F ≈ 12% white mirrors light rgba(0,16,36,0.12), one step under dark-border — dividers are quieter than control borders. Decorative structure (non-text; 1.4.11 does not apply).',
+  ],
+  [
+    '--tk-color-surface-row-hover',
+    '[ASSUMPTION — verify at the v2 dark phase (8.2) per the 5.4 rule]. White-alpha fill grammar: reuses the family\'s established fill step `#FFFFFF1A` (10% white, dark-field) rather than authoring a new one; transient hover fill, decorative (non-text).',
   ],
 ]);
 
@@ -551,12 +681,46 @@ const TOKEN_NOTES = new Map([
     '--tk-radius-xxl',
     'Verified — Story 5.6 closure: pixel-probes of the archived card captures measure 22–24px (two sub-signatures within the band — banners 21.9–22.2, tiles 23.5–23.9 — collapsed to one token); the 32px vision estimate is corrected to the measured card radius — xxl equals xl. DESIGN.md Shapes.',
   ],
+  // v2 additions (Story 6.1) — the delta aliases state the AA-override fact
+  // (site anchors fail; anchors live in DESIGN.md Colors), cross-checked in
+  // assertAnnotationConsistency via the resolved reference values.
+  [
+    '--tk-color-delta-positive',
+    'AA override — DESIGN.md reference `{colors.green-300}` resolves to `#168821` (4.587:1 on surface-base): the site\'s delta green `#00A328` = 3.350:1 fails 4.5:1. RULING: sanctioned on surface-base only — green-300 fails on surface-muted (4.210:1), surface-field (4.039:1) and the row-hover composite `#F2F4F7` (4.163:1); 6.2/6.4 hold deltas on unhovered rows or re-derive at 8.2. Anchors live in DESIGN.md Colors (Table delta semantics).',
+  ],
+  [
+    '--tk-color-delta-negative',
+    'AA override — DESIGN.md reference `{colors.red-300}` resolves to `#C40B08` (6.179:1 on surface-base): the site\'s delta red `#F52222` = 4.090:1 fails 4.5:1. RULING: sanctioned on surface-base only — red-300 itself clears the adjacent surfaces (muted 5.671:1, field 5.441:1, hover `#F2F4F7` 5.608:1) but the green leg does not, so the pair-level ruling holds: 6.2/6.4 keep deltas on unhovered base-surface rows or re-derive at 8.2. Anchors live in DESIGN.md Colors (Table delta semantics).',
+  ],
+  [
+    '--tk-color-border-table',
+    'Extracted verbatim (v2, invest/stocks table divider) — `rgba(0,16,36,0.12)`; decorative structure (non-text), dark first-pass in the dark layer. DESIGN.md Colors (Table delta semantics).',
+  ],
+  [
+    '--tk-color-surface-row-hover',
+    'Extracted verbatim (v2, invest/stocks row hover fill) — `rgba(36,74,127,0.06)`; decorative fill (non-text), dark first-pass in the dark layer. DESIGN.md Colors (Table delta semantics).',
+  ],
+  [
+    '--tk-color-tint-cream',
+    'Warm-cream family (v2, business) — DISTINCT from tint-beige per step (computed OKLCH vs beige 93.8°/C0.029: base 84.6°/C0.009, raised 80.7°/C0.022 — 9–13° toward orange, chroma 0.31×–0.76×; DESIGN.md Colors). AA sanctioned: text-primary 10.911:1 / text-secondary 4.866:1 on the tint (tests/contrast.test.ts).',
+  ],
+  [
+    '--tk-color-tint-cream-raised',
+    'Warm-cream raised step (v2, business). AA sanctioned: text-primary 9.655:1; text-secondary = 4.306:1 FAILS 4.5:1 — NOT sanctioned on raised cream, use text-primary there (the v1 on-tint ruling precedent; tests/contrast.test.ts).',
+  ],
 ]);
 
 const BLOCK_NOTE_SPACING =
   'Verified-systematized — Story 5.6 closure: the reference exposes no root spacing scale (inline utilities), so the kit systematizes the 4-based grid; the load-bearing steps are probe-verified at composition (container 1200px, grid-gap 20px, 96–120 section rhythm — Story 3.10 probes). DESIGN.md Layout & Spacing.';
 
-/** The AA-override annotations state alias-to-scale equalities — assert they still hold. */
+/**
+ * The AA-override annotations state alias-to-scale equalities — assert they
+ * still hold. `byKey` carries REFERENCE-RESOLVED values, so the v2 delta
+ * aliases (`{colors.green-300}` / `{colors.red-300}` in DESIGN.md) are checked
+ * the same way as the in-generator aliases: re-pointing a reference at a
+ * different scale breaks the equality and aborts, so the annotation has to be
+ * re-recorded deliberately.
+ */
 function assertAnnotationConsistency(model, allNames) {
   const colors = model.colors.byKey;
   const expectAlias = (semantic, scale) => {
@@ -569,6 +733,8 @@ function assertAnnotationConsistency(model, allNames) {
   expectAlias('text-secondary', 'gray-600');
   expectAlias('focus-ring', 'blue-100');
   expectAlias('link-on-tint', 'blue-200');
+  expectAlias('delta-positive', 'green-300');
+  expectAlias('delta-negative', 'red-300');
   for (const alias of LIGHT_SEMANTIC_ALIASES) {
     const rendered = model.colors.entries.find((entry) => entry.name === alias.name);
     assert(
@@ -835,7 +1001,7 @@ function renderMd(model, dark) {
     '- The `components:` frontmatter block is consumer spec prose — never rendered.',
     '- The z-scale is scaffold mechanics, not an extraction (own section below).',
     '- The `dark-*` color entries are the palette SOURCE for the dark layer (see "Dark layer") — never emitted as `--tk-color-dark-*` custom properties.',
-    '- All `[ASSUMPTION]` flags are RESOLVED (mint/beige tints — Story 3.6; dark tints — 5.4; xxl/xl radii + the spacing systematization — 5.6): every flagged value was verified against the archived captures and now carries a `Verified —` annotation; none was silently dropped.',
+    '- All v1 `[ASSUMPTION]` flags are RESOLVED (mint/beige tints — Story 3.6; dark tints — 5.4; xxl/xl radii + the spacing systematization — 5.6): every flagged value was verified against the archived captures and now carries a `Verified —` annotation; none was silently dropped. The v2 dark first-pass keys (Story 6.1) are the standing exception — each states `[ASSUMPTION — verify at the v2 dark phase (8.2) per the 5.4 rule]` in its dark-layer Notes.',
     '',
   );
   lines.push(
@@ -865,6 +1031,17 @@ function renderMd(model, dark) {
     '```',
     '',
     'An override replaces the whole value: re-include the fallback stack so the DESIGN.md fallbacks stay preserved.',
+    '',
+  );
+  lines.push('### Typography registers (v2)', '');
+  lines.push(
+    'The three v2 domains carry the SAME token base at three typography registers — MAPPINGS onto the slots above, zero new type tokens (DESIGN.md Components → Registers). Components declare their register; nothing branches at the token layer:',
+    '',
+    '| Register | Domains | h1 mapping | Body data usage |',
+    '| --- | --- | --- | --- |',
+    '| marketing | tbank.ru/business, invest landing | `--tk-text-heading-2-*` (44px / 700, Daytona stacks) — the kit\'s shipped default | body slots as shipped |',
+    '| product-UI | invest/stocks | `--tk-text-heading-3-*` (36px / 500) | dense body data — body-m / body-s with tighter 24/20px leadings in table cells (set at usage, not in tokens) |',
+    '| consumer | v1 consumer pages | `--tk-text-heading-1-*` (50px / 700) — the extracted site ramp as-is | body slots as shipped |',
     '',
   );
 

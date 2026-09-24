@@ -69,4 +69,61 @@ describe('token-pipeline drift (spec 1.2 review)', () => {
     expect(mutated, 'mutation did not apply — the text-muted anchor moved').not.toBe(original);
     expect(() => renderArtifacts(mutated)).toThrow(/--tk-color-text-muted/);
   });
+
+  it('renderer fails loudly on a reference to a missing target, naming the key (spec 6.1, negative self-check)', () => {
+    const original = readFileSync(DESIGN_MD, 'utf8');
+    const mutated = original.replace(
+      "delta-positive: '{colors.green-300}'",
+      "delta-positive: '{colors.green-999}'",
+    );
+    expect(mutated, 'mutation did not apply — the delta-positive anchor moved').not.toBe(original);
+    expect(() => renderArtifacts(mutated)).toThrow(/delta-positive.*green-999/s);
+  });
+
+  it('renderer fails loudly on a reference cycle, naming the chain (spec 6.1, negative self-check)', () => {
+    const original = readFileSync(DESIGN_MD, 'utf8');
+    const mutated = original.replace(
+      "  white: '#FFFFFF'\n",
+      "  white: '#FFFFFF'\n  ref-a: '{colors.ref-b}'\n  ref-b: '{colors.ref-a}'\n",
+    );
+    expect(mutated, 'mutation did not apply — the white anchor moved').not.toBe(original);
+    expect(() => renderArtifacts(mutated)).toThrow(/cycle.*colors\.ref-a.*colors\.ref-b.*colors\.ref-a/s);
+  });
+
+  it('renderer fails loudly on a reference targeting a dark-* palette key, naming key and target (spec 6.1 hardening, negative self-check)', () => {
+    // A light key must never resolve to a dark-* value — emitting it into the
+    // light layer is the one-way-flow footgun the guard exists for.
+    const original = readFileSync(DESIGN_MD, 'utf8');
+    const mutated = original.replace(
+      "delta-positive: '{colors.green-300}'",
+      "delta-positive: '{colors.dark-base}'",
+    );
+    expect(mutated, 'mutation did not apply — the delta-positive anchor moved').not.toBe(original);
+    expect(() => renderArtifacts(mutated)).toThrow(
+      /delta-positive.*colors\.dark-base.*is a dark-\* palette key.*point the reference at a light key/s,
+    );
+  });
+
+  it('renderer fails loudly on a malformed rgba literal, naming the key (spec 6.1, negative self-check)', () => {
+    const original = readFileSync(DESIGN_MD, 'utf8');
+    const mutated = original.replace(
+      "border-table: 'rgba(0,16,36,0.12)'",
+      "border-table: 'rgba(0,16,999,0.12)'",
+    );
+    expect(mutated, 'mutation did not apply — the border-table anchor moved').not.toBe(original);
+    expect(() => renderArtifacts(mutated)).toThrow(/border-table/);
+  });
+
+  it('renderer fails loudly on a grammar-invalid rgba literal, naming the key (spec 6.1, negative self-check)', () => {
+    // The probe above exercises the range branch (channels match the grammar,
+    // 999 is out of range); this one exercises grammar REJECTION — a missing
+    // alpha matches neither rgba() nor hex nor a reference.
+    const original = readFileSync(DESIGN_MD, 'utf8');
+    const mutated = original.replace(
+      "border-table: 'rgba(0,16,36,0.12)'",
+      "border-table: 'rgba(0,16,36)'",
+    );
+    expect(mutated, 'mutation did not apply — the border-table anchor moved').not.toBe(original);
+    expect(() => renderArtifacts(mutated)).toThrow(/border-table/);
+  });
 });

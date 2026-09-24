@@ -46,6 +46,21 @@ function composite(fgHex: string, bgHex: string): string {
   return `#${hex(mix(fg.rgb[0], bg.rgb[0]))}${hex(mix(fg.rgb[1], bg.rgb[1]))}${hex(mix(fg.rgb[2], bg.rgb[2]))}`;
 }
 
+/**
+ * A generated rgba() literal (the v2 table-chrome extractions) → the equivalent
+ * `#rrggbbaa` hex so composite() can consume it — the VALUE stays
+ * generated-sourced (converted, never re-typed). Alpha rounds to 1/255 steps;
+ * the composites this file pins are insensitive to that rounding.
+ */
+function rgbaLiteralToHex(value: string): string {
+  const match = /^rgba\((\d+),(\d+),(\d+),(0?\.\d+|1)\)$/.exec(value);
+  if (match === null) throw new Error(`contrast: not an rgba() literal: ${value}`);
+  const [r, g, b] = match.slice(1, 4).map(Number);
+  const alpha = Math.round(Number(match[4]) * 255);
+  const hex = (n: number) => n.toString(16).padStart(2, '0');
+  return `#${hex(r)}${hex(g)}${hex(b)}${hex(alpha)}`;
+}
+
 function luminance(hex: string): number {
   const [r, g, b] = parseHex(hex).rgb;
   const linearize = (channel: number) => {
@@ -176,13 +191,38 @@ const AA_PAIRS: readonly AaPair[] = [
   // white/ink-300 in BOTH themes (the 3.7 review-fix pair), so light-map
   // values are the truth in dark too.
   { theme: 'dark', name: 'invariant charcoal-card CTA pair (ink-300 label on white pill)', fg: colorTokens['--tk-color-ink-300'], bg: colorTokens['--tk-color-white'], min: AA_TEXT, recorded: 12.635 },
+  // --- 6.1 v2 table semantics: deltas are the AA-override pattern in BOTH
+  // themes. Light: the DESIGN.md references resolve to green-300/red-300 (the
+  // site's #00A328/#F52222 fail on white — pinned in the rationale-anchors
+  // test). Dark: first-pass values REQUIRED ≥4.5:1 on dark-base (green-100
+  // clears as-is; the red is authored per the dark-error precedent).
+  // SCOPE RULING: deltas are sanctioned on BASE surfaces only — the failing
+  // composites (light green on hover/muted/field; dark red on hover/step-1)
+  // are pinned with numbers in the rationale-anchors test; 6.2/6.4 hold
+  // deltas on unhovered rows or re-derive at 8.2.
+  { theme: 'light', name: 'delta-positive (green-300 reference) on surface-base', fg: colorTokens['--tk-color-delta-positive'], bg: colorTokens['--tk-color-surface-base'], min: AA_TEXT, recorded: 4.587 },
+  { theme: 'light', name: 'delta-negative (red-300 reference) on surface-base', fg: colorTokens['--tk-color-delta-negative'], bg: colorTokens['--tk-color-surface-base'], min: AA_TEXT, recorded: 6.179 },
+  { theme: 'dark', name: 'dark delta-positive (green-100 first-pass) on dark surface-base', fg: dark('--tk-color-delta-positive'), bg: dark('--tk-color-surface-base'), min: AA_TEXT, recorded: 6.533 },
+  { theme: 'dark', name: 'dark delta-negative (#F63434 first-pass) on dark surface-base', fg: dark('--tk-color-delta-negative'), bg: dark('--tk-color-surface-base'), min: AA_TEXT, recorded: 4.525 },
+  // --- 6.1 v2 warm-cream pairs, both themes. RULING (the v1 on-tint
+  // precedent — a failing pair is dropped WITH a recorded ruling, never
+  // silently omitted): text-secondary on tint-cream-raised computes 4.306:1
+  // and FAILS 4.5:1 — the pair is NOT sanctioned; on raised cream use
+  // text-primary. The failing ratio is pinned in the rationale-anchors test.
+  { theme: 'light', name: 'text-primary on tint-cream (cream card)', fg: colorTokens['--tk-color-text-primary'], bg: colorTokens['--tk-color-tint-cream'], min: AA_TEXT, recorded: 10.911 },
+  { theme: 'light', name: 'text-secondary (cream card description) on tint-cream', fg: colorTokens['--tk-color-text-secondary'], bg: colorTokens['--tk-color-tint-cream'], min: AA_TEXT, recorded: 4.866 },
+  { theme: 'light', name: 'text-primary on tint-cream-raised (raised cream card)', fg: colorTokens['--tk-color-text-primary'], bg: colorTokens['--tk-color-tint-cream-raised'], min: AA_TEXT, recorded: 9.655 },
+  { theme: 'dark', name: 'text-primary on dark tint-cream', fg: dark('--tk-color-text-primary'), bg: dark('--tk-color-tint-cream'), min: AA_TEXT, recorded: 15.895 },
+  { theme: 'dark', name: 'text-secondary (cream card description) on dark tint-cream', fg: dark('--tk-color-text-secondary'), bg: dark('--tk-color-tint-cream'), min: AA_TEXT, recorded: 8.461 },
+  { theme: 'dark', name: 'text-primary on dark tint-cream-raised', fg: dark('--tk-color-text-primary'), bg: dark('--tk-color-tint-cream-raised'), min: AA_TEXT, recorded: 14.68 },
+  { theme: 'dark', name: 'text-secondary (cream card description) on dark tint-cream-raised', fg: dark('--tk-color-text-secondary'), bg: dark('--tk-color-tint-cream-raised'), min: AA_TEXT, recorded: 7.989 },
 ];
 
 describe('WCAG AA contrast — mechanized DESIGN.md table (spec 1.3)', () => {
-  it('consumes the generated darkColorTokens map with all 17 semantic overrides', () => {
+  it('consumes the generated darkColorTokens map with all 23 semantic overrides', () => {
     // Named guard: if generation drops or shrinks the dark map, this fails
     // here instead of surfacing as lookup noise in the pair tests.
-    expect(Object.keys(darkColorTokens)).toHaveLength(17);
+    expect(Object.keys(darkColorTokens)).toHaveLength(23);
   });
 
   it.each(AA_PAIRS)('$theme: $name', (pair) => {
@@ -208,6 +248,45 @@ describe('WCAG AA contrast — mechanized DESIGN.md table (spec 1.3)', () => {
     expect(contrastRatio(colorTokens['--tk-color-blue-100'], dark('--tk-color-surface-base'))).toBeCloseTo(3.764, 3);
     // border-default on white — why the unified focus ring exists (an invisible ring, 1.4.11 fails).
     expect(contrastRatio(colorTokens['--tk-color-border-default'], colorTokens['--tk-color-surface-base'])).toBeCloseTo(1.226, 3);
+    // Site delta anchors (6.1, invest/stocks — recorded in DESIGN.md Colors,
+    // "Table delta semantics"; not palette entries) — why BOTH delta
+    // semantics override: each fails 4.5:1 on white.
+    expect(contrastRatio('#00A328', colorTokens['--tk-color-surface-base'])).toBeCloseTo(3.35, 3);
+    expect(contrastRatio('#F52222', colorTokens['--tk-color-surface-base'])).toBeCloseTo(4.09, 3);
+    // The site delta red fails on dark-base too (4.255:1) — why dark-delta-
+    // negative is authored rather than reusing the extraction. The scale steps
+    // it would alias fail as well: green-300 3.794:1, red-100 3.630:1 on dark.
+    expect(contrastRatio('#F52222', dark('--tk-color-surface-base'))).toBeCloseTo(4.255, 3);
+    expect(contrastRatio(colorTokens['--tk-color-green-300'], dark('--tk-color-surface-base'))).toBeCloseTo(3.794, 3);
+    expect(contrastRatio(colorTokens['--tk-color-red-100'], dark('--tk-color-surface-base'))).toBeCloseTo(3.63, 3);
+    // Delta surface scope (6.1 triage — same ruling style as the cream pin
+    // below): deltas are sanctioned on BASE surfaces only; every other real
+    // table surface fails AA for at least one leg per theme. Pinned so the
+    // ruling has numbers, never a silent omission: the light green fails
+    // everywhere off base; the light red clears all three legs (recorded the
+    // passing way); the dark red fails on both composites; the dark green
+    // holds on both (recorded the passing way).
+    const lightHover = composite(
+      rgbaLiteralToHex(colorTokens['--tk-color-surface-row-hover']),
+      colorTokens['--tk-color-surface-base'],
+    );
+    expect(lightHover.toLowerCase()).toBe('#f2f4f7');
+    expect(contrastRatio(colorTokens['--tk-color-delta-positive'], lightHover)).toBeCloseTo(4.163, 3);
+    expect(contrastRatio(colorTokens['--tk-color-delta-positive'], colorTokens['--tk-color-surface-muted'])).toBeCloseTo(4.21, 3);
+    expect(contrastRatio(colorTokens['--tk-color-delta-positive'], colorTokens['--tk-color-surface-field'])).toBeCloseTo(4.039, 3);
+    expect(contrastRatio(colorTokens['--tk-color-delta-negative'], lightHover)).toBeCloseTo(5.608, 3);
+    expect(contrastRatio(colorTokens['--tk-color-delta-negative'], colorTokens['--tk-color-surface-muted'])).toBeCloseTo(5.671, 3);
+    expect(contrastRatio(colorTokens['--tk-color-delta-negative'], colorTokens['--tk-color-surface-field'])).toBeCloseTo(5.441, 3);
+    const darkHover = composite(dark('--tk-color-surface-row-hover'), dark('--tk-color-surface-base'));
+    expect(darkHover).toBe('#313131');
+    expect(contrastRatio(dark('--tk-color-delta-negative'), darkHover)).toBeCloseTo(3.382, 3);
+    expect(contrastRatio(dark('--tk-color-delta-negative'), dark('--tk-color-surface-muted'))).toBeCloseTo(4.136, 3);
+    expect(contrastRatio(dark('--tk-color-delta-positive'), darkHover)).toBeCloseTo(4.883, 3);
+    expect(contrastRatio(dark('--tk-color-delta-positive'), dark('--tk-color-surface-muted'))).toBeCloseTo(5.972, 3);
+    // Cream ruling (6.1): text-secondary on tint-cream-raised FAILS 4.5:1 —
+    // the pair is not sanctioned (use text-primary there); pinned here so the
+    // ruling has a number, per the no-silent-omission rule.
+    expect(contrastRatio(colorTokens['--tk-color-text-secondary'], colorTokens['--tk-color-tint-cream-raised'])).toBeCloseTo(4.306, 3);
   });
 
   it('computes WCAG ratios per the spec definition (self-check)', () => {

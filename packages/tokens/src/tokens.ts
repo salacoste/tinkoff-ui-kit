@@ -52,6 +52,12 @@ export const colorTokens = {
   '--tk-color-tint-mint': '#D0F4F2',
   '--tk-color-tint-beige': '#F1EBD6',
   '--tk-color-tint-charcoal': '#333333',
+  '--tk-color-delta-positive': '#168821',
+  '--tk-color-delta-negative': '#C40B08',
+  '--tk-color-border-table': 'rgba(0,16,36,0.12)',
+  '--tk-color-surface-row-hover': 'rgba(36,74,127,0.06)',
+  '--tk-color-tint-cream': '#F1EEE8',
+  '--tk-color-tint-cream-raised': '#E9E0D1',
   '--tk-color-link': '#1771E6',
   '--tk-color-error': '#E01F19',
   '--tk-color-error-on-field': '#D3120E',
@@ -76,6 +82,12 @@ export const darkColorTokens = {
   '--tk-color-tint-bluegray': '#1E242C',
   '--tk-color-tint-mint': '#1C2A26',
   '--tk-color-tint-beige': '#2A2620',
+  '--tk-color-tint-cream': '#232220',
+  '--tk-color-tint-cream-raised': '#2B2823',
+  '--tk-color-delta-positive': '#39B54A',
+  '--tk-color-delta-negative': '#F63434',
+  '--tk-color-border-table': '#FFFFFF1F',
+  '--tk-color-surface-row-hover': '#FFFFFF1A',
 } as const;
 
 /** Typography tokens — per-slot size/weight/leading/tracking plus the family slots (values: DESIGN.md `typography`). */

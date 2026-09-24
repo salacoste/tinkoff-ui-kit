@@ -125,6 +125,23 @@ describe('consumed --tk-* tokens exist in the token sheet (spec 1.7 review)', ()
     expect(declaredTokens.size).toBeGreaterThan(50);
   });
 
+  it('the six v2 token-layer declarations exist in the sheet (spec 6.1 fixture pin)', () => {
+    // The 6.1 light declarations the v2 components (6.2+) will consume. Pinned
+    // here so a generator regression that drops one fails with the NAME, not
+    // as an undeclared-consumption violation in a later story.
+    const v2Names = [
+      '--tk-color-delta-positive',
+      '--tk-color-delta-negative',
+      '--tk-color-border-table',
+      '--tk-color-surface-row-hover',
+      '--tk-color-tint-cream',
+      '--tk-color-tint-cream-raised',
+    ] as const;
+    for (const name of v2Names) {
+      expect(declaredTokens, `spec 6.1 declaration '${name}' must exist in tokens.css`).toContain(name);
+    }
+  });
+
   it('derives a real component set (vacuous-exemption guard)', () => {
     expect(componentDirs.size).toBeGreaterThan(0);
     expect(componentDirs, 'the exemption must key off real components').toContain('input');

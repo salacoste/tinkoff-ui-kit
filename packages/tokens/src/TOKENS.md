@@ -6,9 +6,9 @@ GENERATED FILE — DO NOT EDIT. Regenerate with `pnpm gen:tokens`.
 - The `components:` frontmatter block is consumer spec prose — never rendered.
 - The z-scale is scaffold mechanics, not an extraction (own section below).
 - The `dark-*` color entries are the palette SOURCE for the dark layer (see "Dark layer") — never emitted as `--tk-color-dark-*` custom properties.
-- All `[ASSUMPTION]` flags are RESOLVED (mint/beige tints — Story 3.6; dark tints — 5.4; xxl/xl radii + the spacing systematization — 5.6): every flagged value was verified against the archived captures and now carries a `Verified —` annotation; none was silently dropped.
+- All v1 `[ASSUMPTION]` flags are RESOLVED (mint/beige tints — Story 3.6; dark tints — 5.4; xxl/xl radii + the spacing systematization — 5.6): every flagged value was verified against the archived captures and now carries a `Verified —` annotation; none was silently dropped. The v2 dark first-pass keys (Story 6.1) are the standing exception — each states `[ASSUMPTION — verify at the v2 dark phase (8.2) per the 5.4 rule]` in its dark-layer Notes.
 
-Light layer: **131 tokens** on `:host, :root` (colors 45, typography 42, radius 7, spacing 14, shadows 6, motion 11, z-scale 6) plus the dark layer: **17 semantic overrides + 6 shadow-none re-declarations** on `[data-theme="dark"]`.
+Light layer: **137 tokens** on `:host, :root` (colors 51, typography 42, radius 7, spacing 14, shadows 6, motion 11, z-scale 6) plus the dark layer: **23 semantic overrides + 6 shadow-none re-declarations** on `[data-theme="dark"]`.
 
 ## Colors
 
@@ -58,6 +58,12 @@ Light entries from the `colors` block: brand/ink/gray/lightblue/functional scale
 | `--tk-color-tint-mint` | `#D0F4F2` | Verified — Story 3.6 closure: measured `#D0F4F2` on the reference ОСАГО card (computed style + native-zoom crop, Story 2.0 capture pack), replacing the vision-inventory estimate. DESIGN.md Colors. |
 | `--tk-color-tint-beige` | `#F1EBD6` | Verified — Story 3.6 closure: measured `#F1EBD6` on the reference Т-Образование card (computed style + native-zoom crop, Story 2.0 capture pack), replacing the vision-inventory estimate. DESIGN.md Colors. |
 | `--tk-color-tint-charcoal` | `#333333` |  |
+| `--tk-color-delta-positive` | `#168821` | AA override — DESIGN.md reference `{colors.green-300}` resolves to `#168821` (4.587:1 on surface-base): the site's delta green `#00A328` = 3.350:1 fails 4.5:1. RULING: sanctioned on surface-base only — green-300 fails on surface-muted (4.210:1), surface-field (4.039:1) and the row-hover composite `#F2F4F7` (4.163:1); 6.2/6.4 hold deltas on unhovered rows or re-derive at 8.2. Anchors live in DESIGN.md Colors (Table delta semantics). |
+| `--tk-color-delta-negative` | `#C40B08` | AA override — DESIGN.md reference `{colors.red-300}` resolves to `#C40B08` (6.179:1 on surface-base): the site's delta red `#F52222` = 4.090:1 fails 4.5:1. RULING: sanctioned on surface-base only — red-300 itself clears the adjacent surfaces (muted 5.671:1, field 5.441:1, hover `#F2F4F7` 5.608:1) but the green leg does not, so the pair-level ruling holds: 6.2/6.4 keep deltas on unhovered base-surface rows or re-derive at 8.2. Anchors live in DESIGN.md Colors (Table delta semantics). |
+| `--tk-color-border-table` | `rgba(0,16,36,0.12)` | Extracted verbatim (v2, invest/stocks table divider) — `rgba(0,16,36,0.12)`; decorative structure (non-text), dark first-pass in the dark layer. DESIGN.md Colors (Table delta semantics). |
+| `--tk-color-surface-row-hover` | `rgba(36,74,127,0.06)` | Extracted verbatim (v2, invest/stocks row hover fill) — `rgba(36,74,127,0.06)`; decorative fill (non-text), dark first-pass in the dark layer. DESIGN.md Colors (Table delta semantics). |
+| `--tk-color-tint-cream` | `#F1EEE8` | Warm-cream family (v2, business) — DISTINCT from tint-beige per step (computed OKLCH vs beige 93.8°/C0.029: base 84.6°/C0.009, raised 80.7°/C0.022 — 9–13° toward orange, chroma 0.31×–0.76×; DESIGN.md Colors). AA sanctioned: text-primary 10.911:1 / text-secondary 4.866:1 on the tint (tests/contrast.test.ts). |
+| `--tk-color-tint-cream-raised` | `#E9E0D1` | Warm-cream raised step (v2, business). AA sanctioned: text-primary 9.655:1; text-secondary = 4.306:1 FAILS 4.5:1 — NOT sanctioned on raised cream, use text-primary there (the v1 on-tint ruling precedent; tests/contrast.test.ts). |
 | `--tk-color-link` | `#1771E6` | Semantic alias — `blue-100`, added in Story 1.3: components consume semantics, not scales (AD-2/AD-3), and the dark layer needs a semantic name to override (`dark-link`). DESIGN.md Colors (TextLink). |
 | `--tk-color-error` | `#E01F19` | Semantic alias — `red-100`, added in Story 1.3 alongside `link` so both themes expose error semantics (the dark layer overrides it with `dark-error`). DESIGN.md Colors. |
 | `--tk-color-error-on-field` | `#D3120E` | AA addition — `red-200` for errors on field/muted surfaces (red-100 = 4.22:1 on surface-field and 4.40:1 on surface-muted — both fail 4.5:1; red-200 passes). Mirrors the link-on-tint precedent. DESIGN.md Colors. |
@@ -125,6 +131,16 @@ Override recipe (custom properties cascade and inherit — declare on `body`/you
 ```
 
 An override replaces the whole value: re-include the fallback stack so the DESIGN.md fallbacks stay preserved.
+
+### Typography registers (v2)
+
+The three v2 domains carry the SAME token base at three typography registers — MAPPINGS onto the slots above, zero new type tokens (DESIGN.md Components → Registers). Components declare their register; nothing branches at the token layer:
+
+| Register | Domains | h1 mapping | Body data usage |
+| --- | --- | --- | --- |
+| marketing | tbank.ru/business, invest landing | `--tk-text-heading-2-*` (44px / 700, Daytona stacks) — the kit's shipped default | body slots as shipped |
+| product-UI | invest/stocks | `--tk-text-heading-3-*` (36px / 500) | dense body data — body-m / body-s with tighter 24/20px leadings in table cells (set at usage, not in tokens) |
+| consumer | v1 consumer pages | `--tk-text-heading-1-*` (50px / 700) — the extracted site ramp as-is | body slots as shipped |
 
 ## Radius
 
@@ -243,6 +259,12 @@ Setting `data-theme="dark"` on `<html>` re-resolves every SEMANTIC color token �
 | `--tk-color-tint-bluegray` | `#ECF1F7` | `#1E242C` | `colors.dark-tint-bluegray` | Verified — Story 5.4 dark sweep: Lab L* 13.9, OKLCH L 25.8%, hue 255.7° vs light 252.8° (Δ2.9° — kept); held — 2.06 pt under the window exceeds the 2-pt threshold by 0.06 but fails the visually-meaningful conjunct (sub-JND, safer direction: darker tint, more text contrast). DESIGN.md Colors. |
 | `--tk-color-tint-mint` | `#D0F4F2` | `#1C2A26` | `colors.dark-tint-mint` | Verified — Story 5.4 dark sweep: Lab L* 15.7, OKLCH L 27.1%, hue 175.1° vs light 192.4° (Δ17.3° — within the recorded ±20° tolerance at C ≤ 0.04); held — 0.3 pt under the window. DESIGN.md Colors. |
 | `--tk-color-tint-beige` | `#F1EBD6` | `#2A2620` | `colors.dark-tint-beige` | Verified — Story 5.4 dark sweep: Lab L* 15.4, OKLCH L 27.1%, hue 78.1° vs light 93.8° (Δ15.7° — within the recorded ±20° tolerance at C ≤ 0.04); held — 0.6 pt under the window. DESIGN.md Colors. |
+| `--tk-color-tint-cream` | `#F1EEE8` | `#232220` | `colors.dark-tint-cream` | [ASSUMPTION — verify at the v2 dark phase (8.2) per the 5.4 rule]. Warm-cream dark first-pass (v2, business; DESIGN.md Colors): follows the 5.4 tint derivation window at the sweep; AA holds by construction — text-primary 15.895:1 / text-secondary 8.461:1 on it (tests/contrast.test.ts). |
+| `--tk-color-tint-cream-raised` | `#E9E0D1` | `#2B2823` | `colors.dark-tint-cream-raised` | [ASSUMPTION — verify at the v2 dark phase (8.2) per the 5.4 rule]. Raised step of the warm-cream dark first-pass (DESIGN.md Colors); AA holds by construction — text-primary 14.680:1 / text-secondary 7.989:1 on it (tests/contrast.test.ts). |
+| `--tk-color-delta-positive` | `#168821` | `#39B54A` | `colors.dark-delta-positive` | [ASSUMPTION — verify at the v2 dark phase (8.2) per the 5.4 rule]. AA first-pass sourced from green-100 `#39B54A` (6.533:1 on dark-base): the existing lightest green step clears 4.5:1 as-is, so no value was authored — green-300 (the light override) measures 3.794:1 in dark. Holds on the real composites too — row-hover `#313131` 4.883:1, tonal step 1 `#222222` 5.972:1. Site anchors live in DESIGN.md Colors (Table delta semantics). |
+| `--tk-color-delta-negative` | `#C40B08` | `#F63434` | `colors.dark-delta-negative` | [ASSUMPTION — verify at the v2 dark phase (8.2) per the 5.4 rule]. AA first-pass authored `#F63434` (4.525:1 on dark-base) per the dark-error `#FF7B74` precedent — least-lightened delta red clearing 4.5:1; NO red scale step passes (red-100 = 3.630:1) and the site delta red `#F52222` = 4.255:1 fails. RULING: sanctioned on dark surface-base only — the row-hover composite `#313131` (3.382:1) and tonal step 1 `#222222` (4.136:1) fail AA; 6.2/6.4 hold deltas on unhovered rows or re-derive at 8.2. Site anchors live in DESIGN.md Colors (Table delta semantics). |
+| `--tk-color-border-table` | `rgba(0,16,36,0.12)` | `#FFFFFF1F` | `colors.dark-border-table` | [ASSUMPTION — verify at the v2 dark phase (8.2) per the 5.4 rule]. White-alpha hairline grammar (dark-border `#FFFFFF24` / dark-field `#FFFFFF1A` family) at the extracted divider's own alpha: 0x1F ≈ 12% white mirrors light rgba(0,16,36,0.12), one step under dark-border — dividers are quieter than control borders. Decorative structure (non-text; 1.4.11 does not apply). |
+| `--tk-color-surface-row-hover` | `rgba(36,74,127,0.06)` | `#FFFFFF1A` | `colors.dark-surface-row-hover` | [ASSUMPTION — verify at the v2 dark phase (8.2) per the 5.4 rule]. White-alpha fill grammar: reuses the family's established fill step `#FFFFFF1A` (10% white, dark-field) rather than authoring a new one; transient hover fill, decorative (non-text). |
 
 ### Theme invariants
 

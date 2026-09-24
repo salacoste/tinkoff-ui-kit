@@ -114,7 +114,7 @@ describe('pillkit-tokens dark layer (Story 1.3)', () => {
     expect(darkSection).toContain('--tk-color-tint-beige: #2A2620;');
   });
 
-  it('declares EXACTLY the 17 mapped semantic colors + 6 shadow-none tokens — nothing else', () => {
+  it('declares EXACTLY the 23 mapped semantic colors + 6 shadow-none tokens — nothing else', () => {
     const expected = [
       '--tk-color-surface-base',
       '--tk-color-surface-muted',
@@ -133,6 +133,13 @@ describe('pillkit-tokens dark layer (Story 1.3)', () => {
       '--tk-color-tint-bluegray',
       '--tk-color-tint-mint',
       '--tk-color-tint-beige',
+      // v2 additions (Story 6.1) — warm-cream tints + table semantics.
+      '--tk-color-tint-cream',
+      '--tk-color-tint-cream-raised',
+      '--tk-color-delta-positive',
+      '--tk-color-delta-negative',
+      '--tk-color-border-table',
+      '--tk-color-surface-row-hover',
       ...Object.keys(shadowTokens),
     ].sort();
     expect([...darkNames].sort()).toEqual(expected);
