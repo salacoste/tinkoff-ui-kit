@@ -499,4 +499,357 @@ describe('tk-navbar', () => {
     expect(source).not.toMatch(/===\s*'Tab'/);
     expect(source).not.toMatch(/keydown.*Tab/s);
   });
+
+  // ===========================================================================
+  // Story 7.1 — MEGA-NAV: the sub-nav row (spec 7.1 matrix, 8 rows).
+  // The v1 suite above is the REGRESSION half (untouched, still green);
+  // everything below is additive.
+  // ===========================================================================
+
+  /** The reference mega-nav (invest domain): 6 + 6 sections. */
+  const MEGA_LINKS: TkNavbarLink[] = [
+    { value: 'bank', label: 'Банк', href: '/bank' },
+    { value: 'business', label: 'Бизнесу', href: '/business' },
+    { value: 'invest', label: 'Инвестиции', href: '/invest' },
+    { value: 'mobile', label: 'Мобильная связь', href: '/mobile' },
+    { value: 'insurance', label: 'Страхование', href: '/insurance' },
+    { value: 'travel', label: 'Путешествия', href: '/travel' },
+  ];
+
+  const SUB_LINKS: TkNavbarLink[] = [
+    { value: 'overview', label: 'Обзор', href: '/overview' },
+    { value: 'catalog', label: 'Каталог', href: '/catalog' },
+    { value: 'pulse', label: 'Пульс', href: '/pulse' },
+    { value: 'analytics', label: 'Аналитика', href: '/analytics' },
+    { value: 'academy', label: 'Академия', href: '/academy' },
+    { value: 'terminal', label: 'Терминал', href: '/terminal' },
+  ];
+
+  const subLinks = (el: TkNavbar): HTMLAnchorElement[] => [
+    ...(el.shadowRoot?.querySelectorAll<HTMLAnchorElement>('.subnav .sublink') ?? []),
+  ];
+
+  // --- Matrix row 1: v1 regression (byte-identity without subLinks) -------------
+
+  it('MEGA v1 regression: without subLinks the DOM is byte-identical to v1 — class="bar" verbatim, one .bar__inner child, no subnav node', async () => {
+    const el = await mount({ props: { links: MEGA_LINKS, activeValue: 'invest' } });
+    const header = el.shadowRoot?.querySelector('header.bar');
+    expect(header, 'the v1 header element').not.toBeNull();
+    // The class attribute is EXACTLY "bar" — no conditional remnant.
+    expect(header?.getAttribute('class')).toBe('bar');
+    // The header's ONLY child is the row-1 inner (no subnav wrapper, no text).
+    expect(header?.children).toHaveLength(1);
+    expect(header?.children[0]?.classList.contains('bar__inner')).toBe(true);
+    expect(el.shadowRoot?.querySelector('.subnav')).toBeNull();
+    expect(el.shadowRoot?.querySelector('.sublink')).toBeNull();
+    // The nav landmark set is v1's: links + the drawer fallback (no third nav).
+    expect(el.shadowRoot?.querySelectorAll('nav')).toHaveLength(2);
+  });
+
+  it('MEGA v1 css identity: the sheet has NO rule matching a plain .bar/.link outside the v1 selectors (row-2 rules all scope under .subnav/.sublink/.bar--subnav)', () => {
+    const cssText = navbarStyles.cssText.replace(/\/\*[\s\S]*?\*\//g, '');
+    // The three structural hooks of row 2 are class-scoped additions; the
+    // v1 selectors themselves are untouched (their declarations are pinned
+    // by the v1 tests above — this pin guards against accidental v1-rule
+    // edits by asserting the row-2 selectors only ever appear as their own
+    // rules, never merged into a v1 rule).
+    expect(cssText).toMatch(/\.bar--subnav\s*\{[^}]*height:\s*auto/);
+    expect(cssText).toMatch(/\.bar--subnav \.bar__inner\s*\{[^}]*height:\s*var\(--tk-navbar-height, 72px\)/);
+    expect(cssText).not.toMatch(/\.bar,\.bar--subnav/);
+  });
+
+  // --- Matrix row 2: two-deep ----------------------------------------------------
+
+  it('MEGA two-deep: subLinks render a second row INSIDE the same header; active sub-link = 700 text-primary, NO underline', async () => {
+    const el = await mount({
+      props: {
+        links: MEGA_LINKS,
+        activeValue: 'invest',
+        subLinks: SUB_LINKS,
+        subActiveValue: 'catalog',
+      },
+    });
+    const header = el.shadowRoot?.querySelector('header.bar');
+    expect(header?.classList.contains('bar--subnav'), 'the two-row hook class').toBe(true);
+    // Row 2 is the header's SECOND child — one sticky unit with row 1.
+    expect(header?.children[1]?.classList.contains('subnav')).toBe(true);
+    const rows = subLinks(el);
+    expect(rows).toHaveLength(6);
+    expect(rows.map((link) => link.textContent?.trim())).toEqual([
+      'Обзор',
+      'Каталог',
+      'Пульс',
+      'Аналитика',
+      'Академия',
+      'Терминал',
+    ]);
+    const marked = rows.filter((link) => link.getAttribute('aria-current') === 'page');
+    expect(marked).toHaveLength(1);
+    expect(marked[0]?.textContent?.trim()).toBe('Каталог');
+    expect(marked[0]?.getAttribute('href')).toBe('/catalog');
+
+    // Row-1 wiring is untouched by the sub-nav props: «Инвестиции» still
+    // the single row-1 active.
+    expect(
+      barLinks(el).filter((link) => link.getAttribute('aria-current') === 'page'),
+    ).toHaveLength(1);
+    expect(
+      barLinks(el).find((link) => link.getAttribute('aria-current') === 'page')?.textContent?.trim(),
+    ).toBe('Инвестиции');
+
+    // Structural anatomy pins (the capture literals): 64px row height via
+    // the flagged hook; ACTIVE carries weight + color and NO ::after —
+    // row 1's underline language does not cascade down.
+    const cssText = navbarStyles.cssText.replace(/\/\*[\s\S]*?\*\//g, '');
+    expect(cssText).toMatch(
+      /\.subnav\s*\{[^}]*height:\s*var\(--tk-navbar-subnav-height, 64px\)/,
+    );
+    const active = cssText.match(/\.sublink\[aria-current='page'\]\s*\{([^}]*)\}/)?.[1] ?? '';
+    expect(active).toMatch(/font-weight:\s*var\(--tk-text-heading-2-weight\)/);
+    expect(active).toMatch(/color:\s*var\(--tk-navbar-sublink-active, var\(--tk-color-text-primary\)\)/);
+    expect(
+      cssText,
+      'NO sublink underline pseudo exists anywhere in the sheet',
+    ).not.toMatch(/\.sublink\[aria-current='page'\]::after/);
+    // No divider: the subnav rule paints no border — separation is
+    // whitespace on the shared surface.
+    const subnavRule = cssText.match(/\.subnav\s*\{([^}]*)\}/)?.[1] ?? '';
+    expect(subnavRule).not.toMatch(/border/);
+    // The register: .subnav__inner mirrors .bar__inner's container math.
+    const inner = cssText.match(/\.subnav__inner\s*\{([^}]*)\}/)?.[1] ?? '';
+    const barInner = cssText.match(/\.bar__inner\s*\{([^}]*)\}/)?.[1] ?? '';
+    for (const decl of [
+      /max-width:\s*var\(--tk-space-container\)/,
+      /margin-inline:\s*auto/,
+      /padding-inline:\s*var\(--tk-space-24\)/,
+    ]) {
+      expect(inner).toMatch(decl);
+      expect(barInner).toMatch(decl);
+    }
+  });
+
+  it('MEGA subLinks run the SAME duplicate/value-less clamp as links (dev warn, first occurrence wins)', async () => {
+    const el = await mount({
+      props: {
+        links: MEGA_LINKS,
+        subLinks: [
+          { value: 'overview', label: 'Обзор', href: '/o' },
+          { value: 'overview', label: 'Обзор (дубль)', href: '/o2' },
+          { value: 'catalog', label: 'Каталог', href: '/c' },
+          { value: '', label: 'Пусто', href: '/x' },
+        ] as unknown as TkNavbarLink[],
+      },
+    });
+    await elementUpdated(el);
+    expect(subLinks(el)).toHaveLength(2);
+    expect(subLinks(el).map((link) => link.textContent?.trim())).toEqual(['Обзор', 'Каталог']);
+    expect(warnSpy).toHaveBeenCalled();
+  });
+
+  // --- Matrix row 3: unmatched subActiveValue --------------------------------------
+
+  it('MEGA unmatched subActiveValue marks NOTHING (the v1 matrix pick, row 2)', async () => {
+    const el = await mount({
+      props: { links: MEGA_LINKS, subLinks: SUB_LINKS, subActiveValue: 'nope' },
+    });
+    expect(subLinks(el).every((link) => link.getAttribute('aria-current') === null)).toBe(true);
+    el.subActiveValue = 'pulse';
+    await elementUpdated(el);
+    expect(
+      subLinks(el).filter((link) => link.getAttribute('aria-current') === 'page'),
+    ).toHaveLength(1);
+  });
+
+  // --- Matrix row 4: sticky shadow under the LAST row --------------------------------
+
+  it('MEGA sticky scroll: the data-scrolled shadow/hairline stay on the bar WRAPPER — with subLinks they paint under row 2 (one sticky unit)', async () => {
+    const el = await mount({
+      props: { links: MEGA_LINKS, subLinks: SUB_LINKS, subActiveValue: 'catalog' },
+    });
+    scrollTo(9);
+    expect(el.hasAttribute('data-scrolled'), 'below the threshold: no shadow').toBe(false);
+    scrollTo(10);
+    expect(el.hasAttribute('data-scrolled'), 'at the threshold: shadow in').toBe(true);
+    scrollTo(0);
+    expect(el.hasAttribute('data-scrolled')).toBe(false);
+
+    // Structural: the scrolled rule targets .bar — the element that WRAPS
+    // .subnav — so the shadow sits under the LAST row without new CSS.
+    const cssText = navbarStyles.cssText.replace(/\/\*[\s\S]*?\*\//g, '');
+    expect(cssText).toMatch(
+      /:host\(\[data-scrolled\]\)\s*\.bar\s*\{[^}]*box-shadow:\s*var\(--tk-shadow-default\)/,
+    );
+    // …and the sticky positioning is on the same wrapper (v1 selector,
+    // byte-identical — the whole two-row bar is one sticky unit).
+    expect(cssText).toMatch(/:host\(\[sticky\]\)\s*\.bar\s*\{[^}]*position:\s*sticky/);
+  });
+
+  // --- Matrix row 5: burger <768px hides the sub-nav ----------------------------------
+
+  it('MEGA MEDIA-QUERY PIN: <768 hides the sub-nav row and restores the mobile bar height; ≥768 the row shows', () => {
+    const cssText = navbarStyles.cssText.replace(/\/\*[\s\S]*?\*\//g, '');
+    const media = cssText.match(/@media \(max-width: 767px\)\s*\{([\s\S]*)\}\s*$/)?.[1] ?? '';
+    expect(media, 'the breakpoint rule exists').not.toBe('');
+    expect(media).toMatch(/\.subnav\s*\{[^}]*display:\s*none/);
+    // The explicit .bar--subnav .bar__inner height must restate the MOBILE
+    // token inside the breakpoint (the desktop 72px rule would otherwise
+    // over-rule the mobile .bar flip).
+    expect(media).toMatch(
+      /\.bar--subnav \.bar__inner\s*\{[^}]*height:\s*var\(--tk-navbar-height-mobile, 56px\)/,
+    );
+    // Base (desktop) rules: the sub-nav row lays out by default.
+    expect(cssText.match(/\.subnav\s*\{([^}]*)\}/)?.[1] ?? '').not.toMatch(/display:\s*none/);
+  });
+
+  it('MEGA <768 model: the drawer stays v1 — row-1 links only, no sub-nav in the drawer', async () => {
+    const el = await mount({
+      props: {
+        links: MEGA_LINKS,
+        activeValue: 'invest',
+        subLinks: SUB_LINKS,
+        subActiveValue: 'catalog',
+      },
+    });
+    // The drawer's fallback list renders the row-1 links ONLY (v1 template,
+    // untouched by the sub-nav props) — the sub-nav is desktop chrome and
+    // never enters the drawer.
+    expect(drawerLinks(el)).toHaveLength(6);
+    expect(drawerLinks(el).map((link) => link.textContent?.trim())).toEqual([
+      'Банк',
+      'Бизнесу',
+      'Инвестиции',
+      'Мобильная связь',
+      'Страхование',
+      'Путешествия',
+    ]);
+    expect(drawerLinks(el)[2]?.getAttribute('aria-current')).toBe('page');
+    expect(drawerPanel(el)?.querySelector('.sublink')).toBeNull();
+  });
+
+  // --- Matrix row 6: keyboard order ----------------------------------------------------
+
+  it('MEGA keyboard order: row-1 links → utilities slot → row-2 links — every stop a real anchor (§D observed order)', async () => {
+    const login = document.createElement('a');
+    login.setAttribute('slot', 'utilities');
+    login.setAttribute('href', '/login');
+    login.textContent = 'Войти';
+    const el = await mount({
+      props: { links: MEGA_LINKS, subLinks: SUB_LINKS, subActiveValue: 'catalog' },
+    });
+    el.appendChild(login);
+    await elementUpdated(el);
+
+    // The composed tab order follows the FLAT tree: the utilities SLOT's
+    // position stands in for the slotted anchor (slot → slot position).
+    // Document order: 6 row-1 links, the utilities slot, then 6 sub-links.
+    const ordered = [
+      ...(el.shadowRoot?.querySelectorAll<HTMLElement>(
+        '.links .link, .utilities, .subnav .sublink',
+      ) ?? []),
+    ];
+    expect(ordered).toHaveLength(13);
+    const classes = ordered.map((node) => (node instanceof HTMLSlotElement ? 'utilities' : node.className));
+    expect(classes.slice(0, 6).every((cls) => cls === 'link')).toBe(true);
+    expect(classes[6]).toBe('utilities');
+    expect(classes.slice(7).every((cls) => cls === 'sublink')).toBe(true);
+
+    // Every stop is a real anchor with a resolved href (native navigation,
+    // the v1 ruling) — rows 1, 2 and the slotted utility alike.
+    for (const anchor of [...barLinks(el), ...subLinks(el)]) {
+      expect(anchor).toBeInstanceOf(HTMLAnchorElement);
+      expect(anchor.getAttribute('href')).toBeTruthy();
+    }
+    const utilSlot = el.shadowRoot?.querySelector('slot[name="utilities"]');
+    expect(
+      utilSlot
+        ?.assignedNodes({ flatten: true })
+        .some((node) => node instanceof HTMLAnchorElement && node.getAttribute('href') === '/login'),
+    ).toBe(true);
+
+    // The burger sits between utilities and row 2 in the shadow tree but is
+    // display:none at desktop (v1's own media pin) — not a desktop stop.
+    const headerChildren = [
+      ...(el.shadowRoot?.querySelector('header.bar')?.children ?? []),
+    ].map((child) => child.className);
+    expect(headerChildren).toEqual(['bar__inner', 'subnav']);
+  });
+
+  // --- Matrix row 7: empty subLinks -------------------------------------------------------
+
+  it('MEGA empty subLinks: no second row, no second nav landmark — the v1 path', async () => {
+    const el = await mount({ props: { links: MEGA_LINKS, subLinks: [] } });
+    expect(el.shadowRoot?.querySelector('.subnav')).toBeNull();
+    expect(subLinks(el)).toHaveLength(0);
+    expect(el.shadowRoot?.querySelector('header.bar')?.getAttribute('class')).toBe('bar');
+    // v1's two navs only (links + drawer fallback) — no third landmark.
+    expect(el.shadowRoot?.querySelectorAll('nav')).toHaveLength(2);
+    // null subLinks is equally empty (null-tolerant props).
+    el.subLinks = null as unknown as TkNavbarLink[];
+    await elementUpdated(el);
+    expect(el.shadowRoot?.querySelector('.subnav')).toBeNull();
+    // Links arriving later render the row (the null-links precedent).
+    el.subLinks = SUB_LINKS;
+    await elementUpdated(el);
+    expect(subLinks(el)).toHaveLength(6);
+  });
+
+  // --- Matrix row 8: two named navs + aria-current ------------------------------------------
+
+  it('MEGA two named navs: «Навигация» + subLabel (default «Разделы», sub-label overrides); aria-current on BOTH actives', async () => {
+    const el = await mount({
+      props: {
+        links: MEGA_LINKS,
+        activeValue: 'invest',
+        subLinks: SUB_LINKS,
+        subActiveValue: 'catalog',
+      },
+    });
+    expect(el.shadowRoot?.querySelector('nav.links')?.getAttribute('aria-label')).toBe(
+      'Навигация',
+    );
+    expect(el.shadowRoot?.querySelector('nav.subnav')?.getAttribute('aria-label')).toBe(
+      'Разделы',
+    );
+    // Both rows carry their own current page.
+    expect(barLinks(el)[2]?.getAttribute('aria-current')).toBe('page');
+    expect(subLinks(el)[1]?.getAttribute('aria-current')).toBe('page');
+
+    // sub-label attribute accepted; the property drives the landmark name.
+    const custom = await mount({
+      props: { links: MEGA_LINKS, subLinks: SUB_LINKS },
+      attributes: { 'sub-label': 'Разделы каталога' },
+    });
+    expect(custom.shadowRoot?.querySelector('nav.subnav')?.getAttribute('aria-label')).toBe(
+      'Разделы каталога',
+    );
+    // Value-data props never reflect (CONVENTIONS §2 — the active-value mirror).
+    custom.subLabel = 'Другое';
+    await elementUpdated(custom);
+    expect(custom.getAttribute('sub-label')).toBe('Разделы каталога');
+    custom.subActiveValue = 'terminal';
+    await elementUpdated(custom);
+    expect(custom.hasAttribute('sub-active-value')).toBe(false);
+    expect(
+      subLinks(custom).filter((link) => link.getAttribute('aria-current') === 'page'),
+    ).toHaveLength(1);
+  });
+
+  it('MEGA no-channel ruling carries into row 2: sub-link clicks dispatch nothing', async () => {
+    const el = await mount({
+      props: { links: MEGA_LINKS, subLinks: SUB_LINKS, subActiveValue: 'catalog' },
+    });
+    const heard = collectChannelEvents(el);
+    for (const name of [
+      'value-change',
+      'sub-value-change',
+      'sub-active-value-change',
+      'select',
+      'close',
+    ]) {
+      el.addEventListener(name, (event) => heard.push(event.type));
+    }
+    subLinks(el)[0]?.click();
+    await settle();
+    expect(heard).toEqual([]);
+  });
 });
