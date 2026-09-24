@@ -283,26 +283,79 @@ the fidelity goal.
 
 **Functional Requirements:**
 
-#### FR-11: npm package, MIT, semver, unofficial labeling
+#### FR-11: Release distribution, MIT, semver, unofficial labeling *(amended at release 2026-09-23)*
 
-The kit publishes to npm under a trademark-safe name (see OQ-3), MIT license, semantic
-versioning, and a changelog per release. Everything published (package, README, repo description,
-docs site) carries unofficial labeling: a study/recreation project, not affiliated with or
-endorsed by T-Bank; no trademark use and no implication of official status anywhere.
+> **Amendment (maintainer decision, 2026-09-23):** the kit does NOT publish to npm. Distribution
+> is **GitHub git-tags only**: consumers clone/checkout a tag and use the workspace-link recipe
+> (README quickstart — verified live from tag v1.0.0). `private: true` is permanent. Semver =
+> git tags `vX.Y.Z`; CHANGELOG per release; the release gate = a fresh consumer clones the tag
+> and renders Button from the README recipe. MIT (code) + separately-licensed fonts and the
+> unofficial labeling requirements are unchanged and shipped.
+
+The kit ships under a trademark-safe name (OQ-3), MIT license, semantic versioning, and a
+changelog per release. Everything published (READMEs, repo description, docs site) carries
+unofficial labeling: a study/recreation project, not affiliated with or endorsed by T-Bank; no
+trademark use and no implication of official status anywhere.
 
 **Consequences (testable):**
-- A consumer can install via `pnpm add <package>` and render Button from the README example.
+- A consumer can follow the README quickstart against a pinned tag and render Button. *(verified
+  from tag v1.0.0, 2026-09-24)*
 - Breaking changes only in major versions; deprecations documented.
 - README/repo/docs contain the unofficial disclaimer; naming contains no T-Bank trademarks.
+
+### 4.8 v2 — Multi-Domain Expansion *(designated 2026-09-24; recon: `.playwright-cli/captures-v2/`)*
+
+Reference domains: **tbank.ru/business**, **tbank.ru/invest/mobile-application**,
+**tbank.ru/invest/stocks**. Same capture-and-improve pipeline as v1; the stack, conventions, and
+quality gates (FR-6/7/8/9/10) apply verbatim to every v2 component.
+
+**Functional Requirements:**
+
+#### FR-12: Data-table family (the stocks-catalog pattern)
+
+Typographic data table (row-as-link, two-line cells, 1px dividers, no zebra; semantic red/green
+delta text where color carries direction), filter-chip group (checkbox-tablist, overflow «Ещё»),
+pagination (numbered pages + yellow active pill + «Показать еще»), and a combobox search field.
+Keyboard-complete per the a11y floor: the table is operable arrow/Home/End + Tab, chips follow
+the tablist contract, pagination is a nav landmark. **No charts** — the recon confirmed the
+reference itself uses pure typography; data-viz stays a non-goal.
+
+#### FR-13: Site chrome — mega-nav and cookie consent
+
+Two-deep navigation as an extension of tk-navbar: the bank-wide mega-nav (Банк/Бизнес/
+Инвестиции/…, with «Войти») plus the domain sub-nav row. Cookie-consent banner/dialog per the
+reference (dialog semantics, consent action, dismiss persistence left to the consumer's storage
+choice — the component renders and emits, it does not store).
+
+#### FR-14: Marketing blocks — stepper, app-distribution cluster, bento recipes
+
+Numbered stepper (business + install how-tos); store-badge row + QR-install block (app
+distribution cluster); bento grid recipes (asymmetric 2+3, floating white-pill CTA over 3D art,
+full-bleed) documented on the existing card family — plus warm-cream surface tokens IF probes
+confirm a distinct tint family (native-zoom probe at UX phase decides; DESIGN.md wins).
+
+#### FR-15: Typography registers (token-layer extension)
+
+Marketing register (h1 44px, haas/pragmatica — already the kit's Daytona stacks) and product-UI
+register (h1 36px, dense table typography) as named token extensions; existing v1 scale
+unchanged. Both themes; dark-mode pairing per the same rules.
+
+#### FR-16: v2 fidelity gate
+
+Every v2 component ships through the v1 component gate verbatim (impeccable zero blockers, axe
+both themes, stories complete, generated React wrapper, provisional baselines + side-by-side vs
+the v2 captures archived in the repo).
 
 ## 5. Non-Goals (Explicit)
 
 - Redesigning the visual language — copy first, improve second; never invent new brand identity.
 - Native mobile patterns — web only.
-- Data visualization (charts, dashboards).
-- Complex business widgets (packaged flows like full application/payment forms).
-- Other T-Bank domains (business, invest, …) — v1 is the consumer homepage only; the maintainer
-  will designate additional domains after v1.
+- Data visualization (charts, dashboards). *(re-confirmed by v2 recon 2026-09-24: the designated
+  invest pages carry typographic tables, not charts — FR-12 copies what exists)*
+- Complex business widgets (packaged flows like full application/payment forms, tariff
+  calculators).
+- ~~Other T-Bank domains~~ — **designated 2026-09-24 (v2): business, invest/mobile-application,
+  invest/stocks — see §4.8**; further domains remain maintainer-designated.
 - Stack choice — decided in bmad-architecture, not here. FRs above are stack-agnostic.
 - Scraping or bundling proprietary assets — an original re-implementation only (see §5.1).
 

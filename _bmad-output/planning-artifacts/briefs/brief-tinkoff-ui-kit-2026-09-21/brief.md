@@ -2,7 +2,7 @@
 title: "Product Brief: tinkoff-ui-kit"
 status: final
 created: 2026-09-21
-updated: 2026-09-21
+updated: 2026-09-24
 ---
 
 # Product Brief: tinkoff-ui-kit
@@ -95,22 +95,40 @@ the user-confirmed priority; external metrics like stars/downloads are explicitl
 
 ## Scope
 
-**In (v1):**
+**In (v1 — SHIPPED 2026-09-24 as git tag v1.0.0):**
 - Design token system extracted from tinkoff.ru (palette, type, spacing, radii, shadows, motion)
-- Core web component set: primitives, forms, navigation, cards, overlays, data display (~15–20)
+- Core web component set: primitives, forms, navigation, cards, overlays, data display (19 shipped)
 - Light + dark themes via tokens; a11y (WCAG 2.1 AA) in every component
 - Interaction motion from transitions.dev recipes (reduced-motion respected)
-- Component documentation with stories; public repo; MIT license; npm package
+- Component documentation with stories; public repo; MIT license (fonts separately licensed);
+  **distribution via GitHub git-tags only — npm publication was consciously rejected by the
+  maintainer at release (2026-09-23); `private: true` is permanent**
 
-**Out (v1, explicit):**
+**In (v2 — designated 2026-09-24; three domains, recon in `.playwright-cli/captures-v2/`):**
+- Reference domains: **tbank.ru/business**, **tbank.ru/invest/mobile-application**,
+  **tbank.ru/invest/stocks**
+- **Data-table family** (ratified): typographic data table (row-as-link, two-line cells,
+  red/green delta semantics), filter-chip group (checkbox-tablist + «Ещё» overflow), pagination
+  (numbered + yellow active pill + «Показать еще»), combobox search — the catalog's real pattern;
+  recon confirmed NO charts exist to copy, so data-viz REMAINS a non-goal
+- **Site chrome** (ratified): two-deep mega-nav extension of tk-navbar (bank-wide + domain
+  sub-nav) and the cookie-consent banner
+- **Marketing blocks** (ratified): stepper (numbered steps), store-badge row + QR-install
+  cluster, bento grid recipes (asymmetric 2+3, floating CTA over art) on existing cards, plus
+  warm-cream surface tokens if probes confirm a new tint family
+- **Typography registers** (ratified): marketing register (h1 44px, haas/pragmatica — the
+  kit's Daytona) and product-UI register (h1 36px, dense dsText-table typography) as token-layer
+  extensions
+
+**Out (explicit):**
 - Brand redesign — the visual language stays the reference's; we copy and improve, never reinvent
 - Native mobile patterns (iOS/Android) — web only
-- Data visualization: charts, diagrams, dashboards
-- Complex business widgets (e.g., full payment forms as packaged features)
-- Other T-Bank/Tinkoff domains beyond tinkoff.ru — the reference base expands to additional
-  domains the maintainer will designate after v1 completes
-- Stack decision — deliberately deferred to the architecture phase (bmad-architecture), not
-  chosen in this brief
+- Data visualization: charts, diagrams, dashboards (re-confirmed by v2 recon — the designated
+  pages carry typographic tables, not charts; if a future domain shows real charts, this
+  non-goal is revisited consciously)
+- Complex business widgets (e.g., full payment forms as packaged features, tariff calculators)
+- Stack decision — settled at v1's architecture (Lit core + generated React adapters); v2 rides
+  the same substrate, no re-planning
 
 ## Vision
 
