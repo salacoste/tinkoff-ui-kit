@@ -69,9 +69,14 @@ type DataTableArgs = {
   rows: TkDataTableRow[];
 };
 
+/** Every demo table is NAMED (lens W2): a role=table without an accessible
+ *  name is announced as a bare «таблица» — the SR protocol below and the
+ *  a11y checklist key on the name, so the helper falls back to the catalog
+ *  caption instead of rendering unnamed tables (Variants/LongList/Theming
+ *  included — same mechanism, one line). */
 const dataTable = (args: Partial<DataTableArgs> = {}) => html`
   <tk-data-table
-    .caption=${args.caption}
+    .caption=${args.caption ?? 'Каталог акций'}
     .columns=${args.columns ?? STOCK_COLUMNS}
     .rows=${args.rows ?? TEN_STOCKS}
   ></tk-data-table>
@@ -508,7 +513,7 @@ export const Accessibility: Story = {
           </tr>
           <tr>
             <td>Скринридер</td>
-            <td>«Каталог акций, таблица, 11 строк, 3 столбца»; ячейка имени — «Сбербанк, ссылка»; deltas читают знак из данных («+12,55 рубля»), цвет — дублирование.</td>
+            <td>«Каталог акций, таблица, 7 строк, 3 столбца» (6 строк данных + шапка — как считает AT); ячейка имени — «Сбербанк, ссылка»; deltas читают знак из данных («+12,55 рубля»), цвет — дублирование.</td>
           </tr>
         </tbody>
       </table>
@@ -530,7 +535,7 @@ export const Accessibility: Story = {
         <tbody>
           <tr>
             <td>Tab на таблицу</td>
-            <td>«Каталог акций, таблица»; фокус на первой строке: «Сбербанк, ссылка» (стоп один — следующая строка только стрелкой)</td>
+            <td>«Каталог акций, таблица, 7 строк, 3 столбца»; фокус на первой строке: «Сбербанк, ссылка» (стоп один — следующая строка только стрелкой)</td>
           </tr>
           <tr>
             <td>↓ ↓ по строкам</td>
@@ -538,7 +543,7 @@ export const Accessibility: Story = {
           </tr>
           <tr>
             <td>Строка без ссылки</td>
-            <td>Инертная строка не получает фокус — стрелка объявляет СЛЕДУЮЩУЮ доступную строку</td>
+            <td>В этой таблице инертных строк нет (все 6 со ссылками); инертную строку проверяют в историях «Клавиатура (интерактивно)» и «Варианты» — она не получает фокус, стрелка объявляет СЛЕДУЮЩУЮ доступную строку</td>
           </tr>
           <tr>
             <td>Enter на строке</td>
