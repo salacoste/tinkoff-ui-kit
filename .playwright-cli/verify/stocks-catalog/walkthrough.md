@@ -35,7 +35,7 @@ REAL focused element and its announcement-relevant semantics.
 | S9 | Tab ×6 | row-2: «Обзор», «Каталог», «Пульс», «Аналитика», «Академия», «Терминал» | «Каталог, ссылка, текущая страница» (subActiveValue) — row 2 reads as the invest section nav (labeled «Разделы инвестиций»). |
 
 Tab order = reading order: row 1 → utilities → row 2 → content. 14 nav stops
-before the first control (matches the mega-nav walkthrough, 7.1).
+before the first control (matches the mega-nav §D keyboard order, 7.1).
 
 ## Leg 2 — search (tk-combobox-search)
 

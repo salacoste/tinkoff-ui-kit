@@ -2,14 +2,14 @@
 title: 'Story 6.5 — Composed stocks catalog + keyboard walkthrough'
 type: 'feature'
 created: '2026-09-24'
-status: 'approved'
+status: 'done'
 route: 'full'
 route_source: 'auto'
 review: 'quick'
 review_source: 'auto'
-lenses_ran: []
-review_loop_iteration: 0
-baseline_commit: '(set at close — runs after 6.4 lands)'
+lenses_ran: ['quick']
+review_loop_iteration: 1
+baseline_commit: 'b1a1b9f (on main); merged-main confirmation in Verification'
 context:
   - '{project-root}/_bmad-output/planning-artifacts/epics-v2.md (Story 6.5 — FR-12 composition consequence)'
   - '{project-root}/packages/components/src/showcase/{homepage,application-form}.stories.ts (THE composition mold — read the jsdoc contracts first)'
@@ -105,12 +105,12 @@ playwright-cli) and the a11y-sweep ledger rows for the v2 cluster.
 
 ## Tasks & Acceptance
 
-- [ ] `packages/components/src/showcase/stocks-catalog.stories.ts` (composition + wiring
+- [x] `packages/components/src/showcase/stocks-catalog.stories.ts` (composition + wiring
       + dataset; RU content, EN meta)
-- [ ] `.playwright-cli/verify/stocks-catalog/` — assembly side-by-side vs full.png top
+- [x] `.playwright-cli/verify/stocks-catalog/` — assembly side-by-side vs full.png top
       region + walkthrough.md (the recorded Tab/arrow journey, live via playwright-cli)
       + a11y-sweep ledger rows extended
-- [ ] baselines ×2 via update flow; axe both themes green; full gates green (VISUAL
+- [x] baselines ×2 via update flow; axe both themes green; full gates green (VISUAL
       SERIALIZED — port 6007 machine-global); spec closed; commit + push
 
 **Acceptance Criteria:**
@@ -124,7 +124,41 @@ playwright-cli) and the a11y-sweep ledger rows for the v2 cluster.
 
 ## Implementation Notes
 
-(to be filled by the executor / triage)
+Executed on main in the 6.5 window, committed `b1a1b9f` (23 files, lane-only):
+`packages/components/src/showcase/stocks-catalog.stories.ts` (591 lines — the
+application-form mold verbatim: one render function keyed to a closure state object,
+re-invoked via Lit `render()` from each `-change` handler; focus survives re-renders —
+PROVEN by the walkthrough's S36/S38 pager discipline and S14 search commit),
+`tests/visual/stocks-catalog.spec.ts` (179 lines — E2E wiring legs: search commit,
+chip select, zero-state, pagination windowing, load-more), 4 new baselines (×2 themes),
+`.playwright-cli/verify/stocks-catalog/` (walkthrough.md — 39 recorded steps S1–S39
+across 6 legs, 8 stills wt-01…08, NOTES, capture recipe, side-by-sides ×2 themes), and
+`.playwright-cli/verify/a11y-sweep/group-IV.md` — the v2 cluster's ledger rows (24/24
+cells, both themes).
+
+**Wiring as specced:** search commit filters by name/ticker substring (S14: «СБ» →
+2 rows); chips filter by facet — the tablist's SINGLE-SELECT contract rules (roving
+focus, Enter/Space commits selection; the frozen block's «OR within chips» clause was
+written against an assumed multi-select and the spec itself ordered: follow the
+ELEMENT's actual selection model — see Triage Log); filters compose AND across kinds
+(S18: «Сбербанк» needle × «Валюта» facet → 0 rows → the table's zero-state, chips stay
+operable — S20 re-selects and the rows return); pagination windows the FILTERED set
+(S36: page 2 = the 3-row slice) and load-more collapses the numbers row at count=1
+(S39); dark theme re-themes the whole page with zero story branches (wt-08).
+
+**Keyboard walkthrough (the deliverable):** 39 steps, every stop probed for the REAL
+focused element through open shadow roots — 14 nav stops before the first control;
+combobox aria-activedescendant roving; chips arrows-move vs Enter-select; table single
+Tab stop + clamped ArrowUp/Down + Home/End + native Enter on the row anchor; pager
+focus lands on the newly-active page number after every page/chevron/load-more change;
+Esc returns focus to the «Ещё» trigger. No dead ends, no dropped focus. On the LIVE
+reference nothing was typed or submitted — the record drives the kit's story page only.
+
+**Visual/axe:** 1154/1154 ×2 green in the executor window (zero axe violations — the
+new axe serializer's first full-field proof after debt #18); a11y-sweep group-IV rows
+24/24. N1 (lens): walkthrough.md:38 cross-ref said «mega-nav walkthrough, 7.1» — no such
+artifact exists (7.1's evidence = NOTES.md + §D); corrected to «the mega-nav §D keyboard
+order, 7.1» (navbar.test.ts:755 pins that order).
 
 ## Spec Change Log
 
@@ -132,8 +166,46 @@ playwright-cli) and the a11y-sweep ledger rows for the v2 cluster.
 
 ## Review Triage Log
 
-(to be filled at quick-review)
+Quick-review lens (qr-lens-6-5) on `b1a1b9f`: **SHIP — 0 BLOCKERS / 0 WARN / 2 NOTEs.**
+
+- **N1 — walkthrough.md:38 named a nonexistent artifact** («matches the mega-nav
+  walkthrough, 7.1» — 7.1's evidence set is NOTES.md + §D, no walkthrough). The claim
+  itself (14 nav stops) verified TRUE. DISPOSITION: FIXED at spec close — one-word
+  correction to «the mega-nav §D keyboard order, 7.1» (the order pinned at
+  navbar.test.ts:755).
+- **N2 — px lengths on the story canvas** = the documented FR-1 blind spot (same as the
+  mold showcase files). DISPOSITION: recorded, no action.
+
+**Provenance note (honest):** the lens's report tail (wiring-map verdict, deviation
+dispositions, hygiene lines) was lost to relay truncation twice; the dispositions below
+were re-verified by the ORCHESTRATOR directly against the commit — they are
+orchestrator-verified facts with cites, not relayed lens words:
+
+- **«OR within chips» vs single-select — NOT a deviation:** the frozen block's own
+  parenthetical rules («verify against the chips element's actual selection model and
+  follow IT, do not invent»); tk-filter-chips is a tablist SINGLE-select (6.2), so the
+  composition's single-select + AND-across-kinds is the spec's letter. Evidenced at
+  walkthrough S18/S20.
+- **Per-component pixel deltas as scope fences — correct:** the frozen block sets the
+  assembly-level standard («no per-pixel truing of the composed page»; deltas live in
+  per-component verify NOTES).
+- **«СБ» → 5 matches — verified:** S11 (Сбербанк, Сбербанк-ап, Т-Инвестиции ТМосбиржа,
+  Сбер MOEX Total Return, Индекс МосБиржи — dataset-wide substring), live-announced
+  «Найдено 5 инструментов».
+- **Port-6007 orphan kill (executor) — protocol-conformant:** foreign orphaned serve.mjs
+  (PPID 1, zero runners, verified twice 60s apart) — exactly the refined rule's kill
+  criteria.
+- **Hygiene:** 23 files ALL lane-only (showcase story + tests/visual specs + baselines +
+  verify evidence — commit file list verified); 4 baselines all-new (2 story + 2
+  region-clip × both themes); event surface untouched (no packages/react files in the
+  commit); ledger extension follows group-IV's existing format (24/24 cells).
 
 ## Verification
 
-(to be filled at gate run)
+| Gate | Result |
+|---|---|
+| Executor window `b1a1b9f` | visual **1154/1154 ×2** green (first full-field proof of the axe serializer after debt #18 — zero axe failures both runs); a11y-sweep group-IV 24/24 both themes |
+| Merged-main full gates (post-6.4-fix merge, this close window) | **ALL GREEN** — tokens 15, components 630, react 66, root 122; gen-drift empty |
+| Merged-main visual (union suite: 1145 + 6.5's 9 legs) | **1154/1154 passed ×2** (7.0m each, private port 6031, temp VISUAL_PORT config deleted before commit) |
+| Matrix rows (9) | each holds — wiring legs E2E-pinned in tests/visual/stocks-catalog.spec.ts (search commit / chip select / zero-state / windowing / load-more) + the recorded walkthrough steps |
+| gen check | showcase story changes no exports — `pnpm gen` clean, index.ts untouched (commit file list) |
