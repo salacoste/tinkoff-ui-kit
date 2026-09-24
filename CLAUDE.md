@@ -36,27 +36,36 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   aria-activedescendant, IME-composition-safe live-text re-sync, RU-pluralized announcements;
   icon-gap trued to the reference x52 arithmetic; §9 row for the internal panel state) —
   772 unit + visual 1041/1041, verify evidence in `.playwright-cli/verify/combobox-search/`.
-  PARALLEL-TRACK RULE (paid for 2026-09-24): the visual harness's webServer port 6007 is
-  machine-global — NEVER run two `pnpm test:visual` concurrently (worktrees/agents); kill
-  stray 6007 servers before gate rounds (see deferred-work.md). **Story 7.1 DONE (736191e +
+  PARALLEL-TRACK RULE (paid for 2026-09-24, sharpened 2026-09-25): the visual harness's
+  webServer port 6007 is machine-global — NEVER run two `pnpm test:visual` concurrently
+  (worktrees/agents); kill stray 6007 servers before gate rounds (see deferred-work.md).
+  SHARPENING (6.4 fix round): `reuseExistingServer` made a run silently test against a
+  STALE orphan dist (foreign serve.mjs whose cwd matched the tree grabbed 6007 within
+  ~40s twice) — ownership is necessary, CONTENT FRESHNESS is the real guarantee; for
+  high-stakes gate rounds use a PRIVATE port via a temporary VISUAL_PORT-overridable
+  playwright config (proven technique, delete before commit). **Story 7.1 DONE (736191e +
   truing b068bb8, merged 0ec0790, spec-7-1 closed):** tk-navbar extended in place with the
   optional 64px sub-nav row (subLinks/subActiveValue/subLabel; two named nav landmarks;
   sub-nav desktop-only; v1 byte-stability pinned) — TRUING corrected two frozen premises
   (row-2 active HAS a 2px underline + inter-row 1px divider; Spec Change Log), 784 unit +
-  visual 1065/1065 ×2, verify evidence in `.playwright-cli/verify/mega-nav/`. **6.4 DONE
-  (e06e844, spec pending lens-close): tk-data-table — typographic row-as-link catalog, APG
-  keyboard layer, §9 delta-on-hover row. 7.2 DONE (773f53d worktree → merge 0f1592d → gate-fix
-  9086551, spec-7-2 closed): tk-cookie-banner — non-modal consent dialog, consent-choice bare
-  verb, 12 baselines, merged visual 1145/1145 ×1 (axe co-driver debt FIXED in the same window:
-  tests/visual/axe-serialize.ts chain + busy-retry).** **IN FLIGHT: 6.5 (stocks-catalog
-  showcase composition, executor on main, spec b558fd6) + 7.3 (stepper/store-badges/qr-block
-  trio, executor in worktree)** — sequencing in
+  visual 1065/1065 ×2, verify evidence in `.playwright-cli/verify/mega-nav/`. **6.4 DONE (e06e844 → §9-fix 13bedc2 → lens fix round
+  eb9fdd7, spec-6-4 closed): tk-data-table — typographic row-as-link catalog, APG keyboard
+  layer, §9 delta-on-hover row (leg map corrected: light-pos 4.163 / dark-neg 3.382 are the
+  dipping legs); lens B1 (dead `.cell__link` selector) fixed — empirically PIXEL-NEUTRAL in
+  the pinned capture env (keyboard baselines md5-identical). 7.2 DONE (773f53d worktree →
+  merge 0f1592d → gate-fix 9086551, spec-7-2 closed): tk-cookie-banner — non-modal consent
+  dialog, consent-choice bare verb, 12 baselines (axe co-driver debt FIXED in the same
+  window: tests/visual/axe-serialize.ts chain + busy-retry). 6.5 DONE (b1a1b9f, spec-6-5
+  closed): stocks-catalog showcase composition — 5 surfaces wired live, 39-step recorded
+  keyboard walkthrough, a11y-ledger group-IV, lens SHIP 0/0/2.** **IN FLIGHT: 7.3
+  (stepper/store-badges/qr-block trio, executor in worktree) — 7.4+7.5 compose its trio,
+  they launch only after its merge** — sequencing in
   epics-v2.md; the v1 component-story gate applies VERBATIM (FR-16). Key v2 decisions: delta
   semantics via AA-override (green-300/red-300); warm-cream family DISTINCT from beige (dark
   first-pass [ASSUMPTION] → 8.2); typography registers = mappings (h1 44→heading-2, 36→heading-3),
   zero new type tokens; keyboard defects of the reference (inert arrows, chip focus-drop) are
   IMPROVED per APG — the sanctioned a11y axis
-- **Kit totals: 833 unit + 1145 visual/axe tests, 24 components, 24 React wrappers, v1 design
+- **Kit totals: 833 unit + 1154 visual/axe tests, 24 components, 24 React wrappers, v1 design
   assumptions all closed (6 v2 dark first-pass [ASSUMPTION]s open BY DESIGN until 8.2), CI green**
 - Fonts: DaytonaSans/DaytonaPragma in `packages/tokens/fonts/` under LICENSE-FONTS.md (separately
   licensed, NOT MIT; consumer rights ONLY per that file)
