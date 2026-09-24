@@ -80,7 +80,13 @@ suite).
 
 ## Spec Change Log
 
-(none — frozen block as approved)
+- **ERRATUM (2026-09-25, inherited from the 6.4 lens W1 — frozen block NOT modified):**
+  line 45 cites «delta-on-hover 4.039 §9 row». The §9 row was corrected on 2026-09-25:
+  the dark-side hover composite pin is delta-NEGATIVE **3.382:1** on #313131
+  (`tests/contrast.test.ts:282` — the FAILING dark leg this sweep's verdict legs must
+  confirm); dark positive PASSES at 4.883 (:284); 4.039 was the surface-FIELD pin, not
+  the hover surface. The sweep's deliverable is unchanged — read «the §9 row's dark-side
+  computation» as 3.382 (negative leg).
 
 ## Review Triage Log
 

@@ -148,7 +148,15 @@ improvement axis, HANDOFF §3: roving tabindex, ArrowUp/Down, Home/End, Enter/Sp
 
 ## Spec Change Log
 
-(none — frozen block as approved)
+- **ERRATUM (2026-09-25, quick-review lens W1 — frozen block NOT modified):** the frozen
+  block's line 63 cites the row-hover delta composite as «4.039:1, pinned
+  contrast.test.ts». The correct number is **4.163:1** — delta-POSITIVE on the LIGHT hover
+  composite #F2F4F7 (`tests/contrast.test.ts:275`); 4.039:1 is the surface-FIELD pin
+  (`:276`), a surface the table never paints. Full leg map (all pinned): light positive
+  4.163 FAIL, light negative 5.608 PASS (:277), dark negative 3.382 FAIL (:282), dark
+  positive 4.883 PASS (:284). The exception's SUBSTANCE (one leg per theme dips below
+  4.5:1 on the transient hover tint) is unchanged — only the number/surface attribution
+  was wrong. The §9 CONVENTIONS row was corrected to match on 2026-09-25.
 
 ## Review Triage Log
 
