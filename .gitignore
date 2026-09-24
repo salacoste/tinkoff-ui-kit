@@ -47,6 +47,7 @@ playwright-report/
 !.playwright-cli/verify/
 # Story 2.0 reference capture pack — tbank.ru side-by-side inputs (dir whitelisted once, files land freely)
 !.playwright-cli/captures/
+!.playwright-cli/captures-v2/
 
 # OMC / Claude Code runtime state (skills, agents, settings.json stay tracked)
 .omc/
