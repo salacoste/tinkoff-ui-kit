@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { describe, expect, it } from 'vitest';
 
-import { TkButton, TkComboboxSearch, TkFilterChips, TkPagination } from './index.js';
+import { TkButton, TkComboboxSearch, TkDataTable, TkFilterChips, TkPagination } from './index.js';
 
 /**
  * Package entry: every component's public surface is reachable from
@@ -18,11 +18,12 @@ describe('pillkit-components entry', () => {
     expect(customElements.get('tk-button')).toBe(TkButton);
   });
 
-  it('re-exports the v2 catalog controls (Stories 6.2–6.3) and registers their tags', async () => {
+  it('re-exports the v2 catalog controls (Stories 6.2–6.4) and registers their tags', async () => {
     const pinned: Array<[string, unknown]> = [
       ['tk-filter-chips', TkFilterChips],
       ['tk-pagination', TkPagination],
       ['tk-combobox-search', TkComboboxSearch],
+      ['tk-data-table', TkDataTable],
     ];
     for (const [tag, klass] of pinned) {
       expect(klass, `${tag} class re-exported`).toBeDefined();

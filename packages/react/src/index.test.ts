@@ -5,7 +5,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import * as litReact from '@lit/react';
 import { afterAll, describe, expect, it, vi } from 'vitest';
 
-import { ArticleCard, Badge, Button, Checkbox, ComboboxSearch, EVENT_MAP, FeatureCard, FilterChips, Footer, Input, Link, Modal, Navbar, Pagination, ProgressBar, PromoCard, SegmentedRadio, Select, ServiceCard, Tabs, ThumbnailPicker, Toast, Tooltip } from './index.js';
+import { ArticleCard, Badge, Button, Checkbox, ComboboxSearch, DataTable, EVENT_MAP, FeatureCard, FilterChips, Footer, Input, Link, Modal, Navbar, Pagination, ProgressBar, PromoCard, SegmentedRadio, Select, ServiceCard, Tabs, ThumbnailPicker, Toast, Tooltip } from './index.js';
 
 /**
  * pillkit-react generated surface. The wrapper imports `pillkit-components`
@@ -1462,5 +1462,56 @@ describe('pillkit-react', () => {
     });
     expect(el?.value).toBeUndefined();
     expect(control?.value).toBe('Сбербанк');
+  });
+
+  // --- Story 6.4: tk-data-table wrapper (navigation — no events) -------------
+
+  it('ships NO registry entry for tk-data-table (navigation, not a form channel)', () => {
+    // Spec 6.4 ruling (the navbar precedent): columns/rows/caption are
+    // prop-only inputs, a row click is native anchor navigation, row focus
+    // is internal UI state — nothing dispatches, so the completeness guard
+    // demands NO event-map entry (the tk-button/tk-footer no-entry case).
+    expect(EVENT_MAP['tk-data-table']).toBeUndefined();
+  });
+
+  it('renders <DataTable> as tk-data-table with element properties and the catalog anatomy (smoke)', async () => {
+    const container = await renderToContainer(
+      React.createElement(DataTable, {
+        caption: 'Каталог акций',
+        columns: [
+          { key: 'name', header: 'Название', width: '1fr' },
+          { key: 'change', header: 'Изменение', align: 'end' },
+        ],
+        rows: [
+          {
+            href: '/invest/stocks/SBER/',
+            cells: {
+              name: { primary: 'Сбербанк', secondary: 'SBER' },
+              change: { primary: '+12,55 ₽', delta: 'positive' },
+            },
+          },
+          { cells: { name: { primary: 'Листинг приостановлен', secondary: 'TROW' } } },
+        ],
+      }),
+    );
+    const el = container.querySelector('tk-data-table') as (Element & {
+      caption?: string;
+      updateComplete?: Promise<unknown>;
+    }) | null;
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    expect(el?.caption, 'string props map onto element properties').toBe('Каталог акций');
+    expect(el?.hasAttribute('caption'), 'caption is a label prop — never reflects (the select label convention)').toBe(false);
+    await (el as { updateComplete: Promise<unknown> }).updateComplete;
+    // The anatomy renders through the element's own pipeline: APG table
+    // roles, the caption as the container's aria-label, one anchor for the
+    // linked row and none for the inert one, the roving tab stop on row 0.
+    const table = el?.shadowRoot?.querySelector('[role="table"]');
+    expect(table?.getAttribute('aria-label')).toBe('Каталог акций');
+    expect(el?.shadowRoot?.querySelectorAll('[role="columnheader"]')).toHaveLength(2);
+    expect(el?.shadowRoot?.querySelectorAll('[role="rowgroup"] > [role="row"]')).toHaveLength(2);
+    const anchor = el?.shadowRoot?.querySelector('a[data-index="0"]');
+    expect(anchor?.getAttribute('href')).toBe('/invest/stocks/SBER/');
+    expect(anchor?.getAttribute('tabindex')).toBe('0');
+    expect(el?.shadowRoot?.querySelector('a[data-index="1"]')).toBeNull(); // inert row: no anchor
   });
 });

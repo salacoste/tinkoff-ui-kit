@@ -12,6 +12,7 @@ export * from './badge/index.js';
 export * from './button/index.js';
 export * from './checkbox/index.js';
 export * from './combobox-search/index.js';
+export * from './data-table/index.js';
 export * from './feature-card/index.js';
 export * from './filter-chips/index.js';
 export * from './footer/index.js';

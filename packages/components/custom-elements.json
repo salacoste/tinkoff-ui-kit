@@ -1853,6 +1853,392 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/data-table/data-table.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "dataTableStyles",
+          "default": "css` :host { display: block; /* The narrow-viewport fence: the inner table keeps its min-width and the HOST scrolls horizontally — columns never reflow (spec). */ overflow-x: auto; } /* 'hidden' must actually hide: the 'display: block' above is author-origin and BEATS the UA '[hidden] { display: none }' rule — without this guard a hidden table keeps painting (the 6.2/6.3 visual-gate lesson). */ :host([hidden]) { display: none; } .table { min-width: 640px; font-family: var(--tk-font-body); } /* --- Header row: 15px/500 text-secondary, STATIC (no sort v2) ----------- */ .row--header { box-sizing: border-box; display: grid; align-items: center; column-gap: var(--tk-space-24); padding: var(--tk-space-16) var(--tk-space-16); border-bottom: 1px solid var(--tk-color-border-table); } .cell--header { font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-bold-weight); line-height: 24px; color: var(--tk-color-text-secondary); letter-spacing: normal; } /* --- Body rows: 81px, grid tracks, 1px divider on the row ---------------- */ .row { position: relative; /* the stitching context the link's ::after resolves against */ box-sizing: border-box; display: grid; align-items: center; column-gap: var(--tk-space-24); min-height: var(--tk-data-table-row-min-height, 81px); padding: var(--tk-space-8) var(--tk-space-16); border-bottom: 1px solid var(--tk-color-border-table); transition: background-color var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-standard); } /* Hover rides the whole row — and only rows that GO somewhere (the §C real-hover fill; inert rows do not borrow the affordance). */ .row--link:hover { background: var(--tk-color-surface-row-hover); } .row--link { cursor: pointer; } .cell { display: flex; flex-direction: column; justify-content: center; gap: var(--tk-space-4); min-width: 0; /* grid item discipline: long names shrink, never blow the track */ } .cell--align-end { text-align: end; } /* Two-line anatomy (§E): primary 15/24 ink, secondary 13/20 muted. */ .cell__primary, .cell__link { font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-weight); line-height: 24px; color: var(--tk-color-text-primary); } .cell__secondary { font-size: var(--tk-text-body-s-size); font-weight: var(--tk-text-body-s-weight); line-height: 20px; color: var(--tk-color-text-secondary); } /* Deltas (6.1 semantics): the direction color paints BOTH lines of the cell — the reference's ₽-line and %-line share it (§E). */ .cell--delta-positive .cell__primary, .cell--delta-positive .cell__secondary { color: var(--tk-color-delta-positive); } .cell--delta-negative .cell__primary, .cell--delta-negative .cell__secondary { color: var(--tk-color-delta-negative); } /* --- The row-as-link stitch (the 3.9 article-card pick) ------------------ The anchor carries ONLY the first cell's primary text; its ::after covers the positioned row, so clicks anywhere on the row navigate natively — one anchor, one tab stop per row. Ink text, no underline (the reference's net visual; the anchor's blue base is not used). */ .row__link { color: var(--tk-color-text-primary); text-decoration: none; } .row__link::after { content: ''; position: absolute; inset: 0; } /* --- Focus: the §8 unified ring around the WHOLE row --------------------- Keyboard focus (focus-visible) on any row's anchor rings the row box — the boxed register; the anchor itself carries no ring. :has() keys the ring to KEYBOARD focus only (see the module header). */ .row__link:focus-visible { outline: none; } .row:has(.row__link:focus-visible) { outline: 2px solid var(--tk-color-focus-ring); outline-offset: 2px; } /* --- Zero state: never blank, outside the table role --------------------- (role=table demands row children — aria-required-children — so the message renders as the table's sibling, not inside it.) */ .empty { margin: 0; padding: var(--tk-space-16); font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-weight); line-height: var(--tk-text-body-m-leading); color: var(--tk-color-text-secondary); } `",
+          "description": "tk-data-table styles — tokens only (FR-1), zero theme branches (AD-3).\n\nVisual spec: the invest/stocks catalog table as MEASURED in captures-v2\nNOTES §C/§E (the project's ground truth — every load-bearing value below\ncites it) + DESIGN.md Colors (Table delta semantics):\n\n- ROW: 81px (NOTES §E «row height 81px (two-line cells)» — capture\n  literal, FLAGGED, no token: `min-height` not `height` so a 3-line cell\n  GROWS instead of clipping consumer content — §2 degrade, visually\n  identical for one/two-line cells).\n- DIVIDER: 1px `--tk-color-border-table` on the row's border-bottom\n  (§C «1px solid rgba(0,16,36,0.12) painted on TD border-bottom» — the\n  kit paints it on the ROW, same visual); no zebra.\n- HOVER: `--tk-color-surface-row-hover` on the whole row (§C real-hover\n  probe rgba(36,74,127,0.06)); name stays ink, NO underline (the\n  reference's net visual — the anchor's raw blue base is overridden, the\n  kit renders ink directly).\n- TYPOGRAPHY (§E): primary 15/24 text-primary (product-UI ink\n  rgba(0,0,0,0.8) = the kit's text-primary mapping), secondary 13/20\n  text-secondary; header 15px/500 text-secondary, letter-spacing normal,\n  aligned with the body tracks. Sizes ride the text tokens; the 24px/20px\n  line-heights are capture literals (FLAGGED — the token layer's leading\n  is 1.5, the table's is measured).\n- DELTAS: `--tk-color-delta-{positive,negative}` on BOTH lines of the\n  cell (§E: the ₽-line and %-line share the direction color) — the 6.1\n  AA-override semantics; the site's #00A328/#F52222 are DESIGN.md\n  anchors, NOT consumed.\n- STITCH (the 3.9 article-card pick): the first cell's primary text is a\n  real `<a>` whose ::after stretches `inset: 0` over the positioned row —\n  the WHOLE row is the link's hit area, one anchor per row.\n- FOCUS: the §8 unified ring around the WHOLE ROW — keyed on\n  `:has(.row__link:focus-visible)` so a MOUSE click (focus without\n  focus-visible) does not paint the keyboard ring; the bare\n  `:focus-within` letter of the spec would ring on every click-focus.\n  :has() is evergreen-supported (chromium ≥105) and declarative — the\n  recorded kit pick of the CSS state over a JS-mirrored attribute.\n\nPer-component custom properties (`--tk-data-table-*`, CONVENTIONS §6),\neach consumed WITH its literal/structural default:\n- `--tk-data-table-row-min-height` body row height (default 81px — the\n  capture literal; a themed table can re-rhythm without a new token)\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule: the 81px row height and 24px/20px line-heights (capture literals,\nNOTES §E), the 640px table min-width (the narrow-viewport fence — below\nit the host scrolls, columns never reflow; picked for the three-column\nreference anatomy), and the 4px inter-line gap (the token step nearest\nthe measured 6px line-box gap; sub-pixel against 81px rows)."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "dataTableStyles",
+          "declaration": {
+            "name": "dataTableStyles",
+            "module": "src/data-table/data-table.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/data-table/data-table.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "TK_DATA_TABLE_DEFAULT_EMPTY_TEXT",
+          "type": {
+            "text": "string"
+          },
+          "default": "'Нет данных'",
+          "description": "The zero-state copy (rows=[]): never blank, rendered as the table's\nsibling (role=table demands row children — see the css module header)."
+        },
+        {
+          "kind": "class",
+          "description": "tk-data-table — the typographic row-as-link catalog table (Story 6.4,\nTHE v2 flagship): two-line cells, deltas whose COLOR carries direction,\n81px rows with 1px hairline dividers, whole-row hover, and every row a\nnative anchor whose ::after stitch makes the WHOLE ROW the hit area —\nthe invest/stocks catalog anatomy (NOTES §C/§E measured) carrying the\nSANCTIONED APG keyboard layer the reference lacks (FR-12's improvement\naxis): roving tabindex, ArrowUp/Down clamped, Home/End, Enter native,\nSpace preventDefaulted + click().\n\nNAVIGATION, NOT A FORM CHANNEL (the navbar/§9 ruling — the spec's own\nAPI decision): `columns`/`rows`/`caption` are prop-ONLY inputs, there is\nNO §4 value/defaultValue pair and NO events — a row click is native\nanchor navigation the kit never intercepts, and row focus is internal UI\nstate (nothing dispatches). The event-map carries no entry (unit-pinned).\n\nSEMANTICS (the APG table pattern): container `role=\"table\"` named by\n`caption` (aria-label — the reference has no visible caption), header\n`role=\"row\"` of `role=\"columnheader\"` cells, body a `role=\"rowgroup\"`\nof `role=\"row\"`s containing `role=\"cell\"`s. Zero rows render NO\nrowgroup — the zero-state copy does (aria-required-children).\n\nKEYBOARD (the roving contract): ONE Tab stop into the table (the focused\nrow's anchor carries tabindex 0, all others −1; initial = first row);\nArrowUp/Down move row-to-row CLAMPED at the ends (no wrap — grid\nconvention), skipping INERT rows (no anchor to focus); Home/End jump\nfirst/last focusable row; Enter navigates natively (never intercepted);\nSpace is preventDefaulted + click() (anchors ignore Space natively);\nTab exits naturally from the focused row. Focus following MOUSE clicks\nmoves the tab stop too (focusin tracking) so Tab-out behaves. The §8\nunified ring paints around the WHOLE row (`:has(a:focus-visible)` — the\ncss module header).\n\nSCOPE FENCES (v2): no selection channel, no sorting (headers static), no\nvirtualization (long lists scroll naturally), no brand-logo column type;\nnarrow viewports scroll the host (`overflow-x: auto`) against the\ntable's min-width — columns never reflow.\n\nSTATELESS against the consumer (no channel, nothing dispatches) but\nSSR-compat (AD-10): rendered via Lit templates only; focus moves happen\nstrictly inside `updated()`-driven renders and event handlers.",
+          "name": "TkDataTable",
+          "members": [
+            {
+              "kind": "field",
+              "name": "columns",
+              "type": {
+                "text": "TkDataTableColumn[]"
+              },
+              "default": "[]",
+              "description": "Column definitions; drive the header row and the shared grid tracks (width consumed as-is)."
+            },
+            {
+              "kind": "field",
+              "name": "rows",
+              "type": {
+                "text": "TkDataTableRow[]"
+              },
+              "default": "[]",
+              "description": "Row data; `href` makes the whole row a native anchor, missing `href` renders an inert row."
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible table name — the role=table container's aria-label.",
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveColumns",
+              "privacy": "private",
+              "type": {
+                "text": "TkDataTableColumn[]"
+              },
+              "description": "Sanitized live column list (null/undefined props clamp to empty).",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveRows",
+              "privacy": "private",
+              "type": {
+                "text": "TkDataTableRow[]"
+              },
+              "description": "Sanitized live row list (null/undefined props clamp to empty).",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#activeIndex",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "The row whose anchor carries the roving tabindex (0; all others −1).\nFollows keyboard moves AND mouse focus (focusin), initial = first row."
+            },
+            {
+              "kind": "method",
+              "name": "#isFocusable",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "A row is focusable when it carries a usable href (inert rows are skipped by roving)."
+            },
+            {
+              "kind": "method",
+              "name": "#stepFocusable",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "from",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "direction",
+                  "type": {
+                    "text": "1 | -1"
+                  }
+                }
+              ],
+              "description": "Next focusable index from `from` toward `direction`, CLAMPED (no wrap — the grid convention). Null at the edge."
+            },
+            {
+              "kind": "method",
+              "name": "#edgeFocusable",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "edge",
+                  "type": {
+                    "text": "'first' | 'last'"
+                  }
+                }
+              ],
+              "description": "First/last focusable row index (null when every row is inert)."
+            },
+            {
+              "kind": "method",
+              "name": "#anchorAt",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLAnchorElement | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "The anchor of row `index` as rendered (null before first paint / on inert rows)."
+            },
+            {
+              "kind": "method",
+              "name": "#setActive",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "options",
+                  "default": "{}",
+                  "type": {
+                    "text": "{ focus?: boolean }"
+                  }
+                }
+              ],
+              "description": "Moves the roving tab stop to `index` and (by default) focuses its\nanchor. Focus moves BEFORE Lit re-renders — the anchors are stable\nin-place nodes, and focus does not depend on tabindex — then the\nreactive tabindex flip re-renders around the new stop. Long lists\nscroll the newly focused row into view (`block: 'nearest'`)."
+            },
+            {
+              "kind": "method",
+              "name": "#focusAnchor",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#handleFocusin",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "FocusEvent"
+                  }
+                }
+              ],
+              "description": "Focus tracking (the roving stop follows REAL focus): a mouse click on\nany row focuses its anchor — the tab stop moves there so the next Tab\nexits from the row the user is on (keyboard moves land here too, via\nthe focus the handler itself set; no-op then)."
+            },
+            {
+              "kind": "method",
+              "name": "#handleKeydown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "The roving contract, delegated on the rowgroup: ArrowUp/Down step\nrow-to-row CLAMPED at the ends (no wrap), Home/End jump first/last\nfocusable row, Space is preventDefaulted + click() (anchors ignore\nSpace natively), Enter is left native (the anchor navigates itself)."
+            },
+            {
+              "kind": "method",
+              "name": "#gridTemplate",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "description": "The shared grid template — identical string on header and body rows keeps the tracks aligned."
+            },
+            {
+              "kind": "method",
+              "name": "#deltaOf",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "'positive' | 'negative' | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cell",
+                  "type": {
+                    "text": "TkDataTableCell | undefined"
+                  }
+                }
+              ],
+              "description": "Cell-level delta semantic (invalid runtime values degrade to no delta)."
+            },
+            {
+              "kind": "method",
+              "name": "#renderHeaderRow",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#renderRow",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "TkDataTableRow"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible table name — the role=table container's aria-label.",
+              "name": "caption",
+              "fieldName": "caption"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-data-table",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TK_DATA_TABLE_DEFAULT_EMPTY_TEXT",
+          "declaration": {
+            "name": "TK_DATA_TABLE_DEFAULT_EMPTY_TEXT",
+            "module": "src/data-table/data-table.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TkDataTable",
+          "declaration": {
+            "name": "TkDataTable",
+            "module": "src/data-table/data-table.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-data-table",
+          "declaration": {
+            "name": "TkDataTable",
+            "module": "src/data-table/data-table.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/data-table/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/data-table/data-table.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/feature-card/feature-card.css.ts",
       "declarations": [
         {
@@ -2918,6 +3304,14 @@
           "declaration": {
             "name": "*",
             "module": "src/combobox-search/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/data-table/index.js"
           }
         },
         {
