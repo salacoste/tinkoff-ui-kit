@@ -57,15 +57,18 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   dialog, consent-choice bare verb, 12 baselines (axe co-driver debt FIXED in the same
   window: tests/visual/axe-serialize.ts chain + busy-retry). 6.5 DONE (b1a1b9f, spec-6-5
   closed): stocks-catalog showcase composition — 5 surfaces wired live, 39-step recorded
-  keyboard walkthrough, a11y-ledger group-IV, lens SHIP 0/0/2.** **IN FLIGHT: 7.3
-  (stepper/store-badges/qr-block trio, executor in worktree) — 7.4+7.5 compose its trio,
-  they launch only after its merge** — sequencing in
+  keyboard walkthrough, a11y-ledger group-IV, lens SHIP 0/0/2.** 7.3 DONE (d199a79 worktree → merge d6a9f2c → lens fix 6cb2234, spec-7-3 closed):
+  tk-stepper + tk-store-badges + tk-qr-block — the marketing display trio (brown badge
+  = deferred-work maintainer flag; qr tablist = v1 tk-tabs composed verbatim; note
+  under the tile). Lens SHIP 0/2/7, both WARNs fixed in-window.** **IN FLIGHT: 7.4
+  (business-landing showcase, worktree, port 6051) ∥ 7.5 (invest-landing showcase,
+  worktree, port 6061) — both compose the landed trio** — sequencing in
   epics-v2.md; the v1 component-story gate applies VERBATIM (FR-16). Key v2 decisions: delta
   semantics via AA-override (green-300/red-300); warm-cream family DISTINCT from beige (dark
   first-pass [ASSUMPTION] → 8.2); typography registers = mappings (h1 44→heading-2, 36→heading-3),
   zero new type tokens; keyboard defects of the reference (inert arrows, chip focus-drop) are
   IMPROVED per APG — the sanctioned a11y axis
-- **Kit totals: 833 unit + 1154 visual/axe tests, 24 components, 24 React wrappers, v1 design
+- **Kit totals: 873 unit + 1244 visual/axe tests, 27 components, 27 React wrappers, v1 design
   assumptions all closed (6 v2 dark first-pass [ASSUMPTION]s open BY DESIGN until 8.2), CI green**
 - Fonts: DaytonaSans/DaytonaPragma in `packages/tokens/fonts/` under LICENSE-FONTS.md (separately
   licensed, NOT MIT; consumer rights ONLY per that file)
