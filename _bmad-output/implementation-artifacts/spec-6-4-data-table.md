@@ -2,14 +2,14 @@
 title: 'Story 6.4 — DataTable: the typographic row-as-link catalog table'
 type: 'feature'
 created: '2026-09-24'
-status: 'approved'
+status: 'done'
 route: 'full'
 route_source: 'auto'
 review: 'quick'
 review_source: 'auto'
-lenses_ran: []
-review_loop_iteration: 0
-baseline_commit: '(set at close — story ran in the 6.3→7.1 parallel window)'
+lenses_ran: ['quick']
+review_loop_iteration: 2
+baseline_commit: 'e06e844 + gate-fix 9086551 + §9-correction 13bedc2 + lens-fix round eb9fdd7 (see Verification)'
 context:
   - '{project-root}/_bmad-output/planning-artifacts/epics-v2.md (Story 6.4 — THE v2 flagship)'
   - '{project-root}/packages/components/CONVENTIONS.md (§2/§4/§6/§8/§9 FROZEN)'
@@ -129,10 +129,10 @@ improvement axis, HANDOFF §3: roving tabindex, ArrowUp/Down, Home/End, Enter/Sp
 
 ## Tasks & Acceptance
 
-- [ ] `packages/components/src/data-table/{index.ts,data-table.ts,data-table.css.ts,data-table.test.ts,data-table.stories.ts}`
-- [ ] event-map UNCHANGED (no events) + `pnpm gen` (wrapper = property passthrough)
-- [ ] `.playwright-cli/verify/data-table/` side-by-side + probes + vision (blocked-protocol)
-- [ ] baselines via update flow + stability ×2; full gates green (VISUAL SERIALIZED — port
+- [x] `packages/components/src/data-table/{index.ts,data-table.ts,data-table.css.ts,data-table.test.ts,data-table.stories.ts}`
+- [x] event-map UNCHANGED (no events) + `pnpm gen` (wrapper = property passthrough)
+- [x] `.playwright-cli/verify/data-table/` side-by-side + probes + vision (blocked-protocol)
+- [x] baselines via update flow + stability ×2; full gates green (VISUAL SERIALIZED — port
   6007 is machine-global, see deferred-work); spec closed; commit + push
 
 **Acceptance Criteria:**
@@ -144,7 +144,41 @@ improvement axis, HANDOFF §3: roving tabindex, ArrowUp/Down, Home/End, Enter/Sp
 
 ## Implementation Notes
 
-(to be filled by the executor / triage)
+Executed on main in the 6.4 window, committed `e06e844` (39 files, +2500): component +
+tests + stories + exports + CEM + generated wrapper + 16 baselines (7 stories × 2 themes +
+2 keyboard-region clips) + verify dir + the §9 delta-on-hover row (later corrected — see
+Spec Change Log). Package deltas: components 585 → 608 (+23 data-table tests), react 62 →
+64 (no-entry + property-pass smoke); visual legs 1065 → 1101 (+36).
+
+Surface as specced: props-driven columns/rows/caption (navigation, not a form channel —
+no §4 pair, no events, event-map UNTOUCHED); APG table roles with sr-only caption as
+aria-label; row-as-link with the 3.9 `::after` stitch (whole-row hit area, one anchor per
+row); roving tabindex + ArrowUp/Down clamped + Home/End + Enter native + Space
+preventDefault+click; inert rows skipped by roving (first-focusable fallback when row 1 is
+inert); zero-state OUTSIDE `role="table"` (aria-required-children compliance); `:has
+(:focus-visible)` ring on the whole row (keyboard-only — mouse clicks do NOT ring, E2E
+pins both directions).
+
+**15 executor deviations — ALL ACCEPTED by the lens** (headline items): inert-skip/
+first-focusable (§2 degrade, pinned); zero-state outside the table role; 81px min-height
+(grow-not-clip); `:has(:focus-visible)` over the letter's `:focus-within` (mouse clicks
+would false-ring contra §8); capture literals in the css header register; single-line rows
+keep 81px; composedPath story handlers; theming reshaped for AA (muted panel delta-free);
+header 57px + source-order override; outline-STYLE pins (chromium quirk); kit 1232px vs
+ref 776px canvas (NOTES deviation 3); the keyboard addition itself (FR-12 sanctioned).
+
+**Process incident (recorded honestly):** e06e844 shipped TWO post-gate edits made after
+the executor's green gate pass — a `#hex`-bearing negative assertion in
+data-table.test.ts (trips the FR-1 scanner) and a `Promise<string>` vs nullable
+`textContent()` mismatch in tests/visual/data-table.spec.ts (trips typecheck). Both caught
+by the merged-main gate round after 7.2's merge; fixed in `9086551` (hex pattern assembled
+via `siteHex()` helper — runtime regex unchanged; return type widened). Lesson: no source
+edit after gates without a re-run.
+
+**Executor-report truing:** the interim claim «final visual includes 7.2's cookie-banner
+baselines» was FALSE — 7.2 never existed on main during 6.4's run; the 1065→1101 delta
+was 6.4's own legs. Cosmetic prose error only (the executor's final message re-attributed
+the cookie-banner files it saw in its tree correctly); zero effect on artifacts.
 
 ## Spec Change Log
 
@@ -160,8 +194,78 @@ improvement axis, HANDOFF §3: roving tabindex, ArrowUp/Down, Home/End, Enter/Sp
 
 ## Review Triage Log
 
-(to be filled at quick-review)
+Quick-review lens on e06e844: **NEEDS-WORK — 1 BLOCKER / 2 WARN / 4 NOTE** (matrix 13/13
+covered with test:line cites; hygiene verified: event-map untouched, CEM purely additive,
+16 baselines all new, wrapper = no-entry + property-pass).
+
+- **B1 (BLOCKER) — dead selector `.cell__link`** (css.ts:133 groups it; template renders
+  `.row__link` at data-table.ts:319; the real `.row__link` rule sets only color+deco):
+  the row-name anchor never received the spec's primary 15/24 typography — it inherited
+  ambient font (canvas: 15/22.5; consumer pages: whatever surrounds it), masked by every
+  gate (baselines baked canvas inheritance; verify probed color/pitch; unit pinned color
+  only). DISPOSITION: **FIXED in `eb9fdd7`** (fix round, isolated worktree) — group member
+  renamed `.cell__link` → `.row__link` (the single typography declaration now reaches the
+  anchor); anchor rule deduped to deco-only; structural font pin added to the unit suite
+  (`\.cell__primary,\s*\.row__link\s*\{[^}]*font-size:…line-height:\s*24px/` + a
+  `not.toMatch(/\.cell__link/)` guard); the broken «no underline» test regex repaired.
+  **Empirical surprise, verified twice:** the fix is PIXEL-NEUTRAL in the pinned capture
+  env — the keyboard-region render post-fix is bit-identical to the committed baseline
+  (md5 match on a private dist/server); the sub-pixel 22.5→24 delta is absorbed by the
+  fixed raster grid and the 81px min-height swallows the +1.5px line-box growth. Only the
+  a11y story's baselines changed (W2 copy growth), and those were re-taken.
+- **W1 — the §9 row (added at e06e844 by the orchestrator) pinned the WRONG number**:
+  cited 4.039:1 (that is the surface-FIELD pin, contrast.test.ts:276) instead of 4.163:1
+  (light delta-positive on the actual #F2F4F7 hover composite, :275), and implied both
+  light legs fail (light negative PASSES at 5.608:1, :277; dark failing leg is NEGATIVE
+  3.382:1, :282). DISPOSITION: FIXED by the orchestrator in `13bedc2` — §9 row rewritten
+  with the full leg map + line cites; errata logged in this spec's Spec Change Log AND
+  spec-8-2's (its line 45 cited «4.039 §9»; frozen blocks untouched per protocol).
+- **W2 — a11y story SR protocol promised announcements its own render cannot produce**
+  (unnamed 7-row table vs «Каталог акций, таблица, 11 строк»; helper had no caption
+  fallback). DISPOSITION: **FIXED in `eb9fdd7`** — `dataTable()` helper gains a caption
+  fallback `args.caption ?? 'Каталог акций'` (every demo table named, one mechanism);
+  SR expectations trued to the render («7 строк, 3 столбца» — AT counts header row as a
+  row, hence 6 data + 1); the inert-row checklist step honestly redirected to the
+  Keyboard/Variants stories where inert rows actually exist.
+- **N1 — E2E «click through the stitch» overclaimed** (clicked the anchor's own bbox; the
+  stitch is structurally pinned at test:178-180). DISPOSITION: **FIXED in `eb9fdd7`** —
+  offset click at `rowBox.right−8, rowBox.center` with a pinned proof the point sits
+  OUTSIDE the anchor's bbox (`expect(stitch.insideAnchorBbox).toBe(false)`) and a
+  deep-active `data-index === '3'` assertion — the ::after hit area is now E2E-proven.
+  Pitfall recorded for the suite: `scrollIntoView({block:'center'})` scrolls the story
+  iframe and shifts viewport-clipped region captures (false-failed BOTH keyboard
+  baselines by ~3% in the fix round's first attempt); the leg now uses a no-op
+  `scrollIntoViewIfNeeded()`.
+- **N2** — `columns=[]`+`rows=[]` renders a childless `role=table` (aria-required-
+  children) — degenerate edge, no story exposure. DISPOSITION: recorded, no action (§2
+  degrade holds; no story drives it).
+- **N3** — inter-line gap 4px token vs 6px measured while line-heights use capture
+  literals — inconsistent pick, sub-pixel. DISPOSITION: recorded as flagged literal
+  (css header register), revisit only if the token layer gains a measured gap step.
+- **N4** — zero-state copy hardcoded (no override prop). DISPOSITION: boundary note —
+  the spec did not ask for one; recorded for a future story if a consumer need appears.
+- **Executor's 15 deviations** — ALL ACCEPTED (see Implementation Notes), including the
+  `:has(:focus-visible)` pick over the letter of the frozen block (`:focus-within`) —
+  the lens ruled the letter selector would ring on every mouse click, contradicting
+  §8's keyboard register; E2E pins both directions.
 
 ## Verification
 
-(to be filled at gate run)
+| Gate | Result |
+|---|---|
+| Executor round `e06e844` | 23 data-table tests green; 36 new visual legs; gates green in its window (see Implementation Notes for the two post-gate edits it wrongly shipped) |
+| Merged-main gate round (with 7.2) | ALL GREEN after gate-fix `9086551`; visual 1145/1145 (axe serializer's proof run) |
+| §9 correction `13bedc2` | CONVENTIONS row rewritten; contrast pins verified at contrast.test.ts:275-284 (W1) |
+| Fix round `eb9fdd7` (worktree) | build/test/lint/typecheck/gen/gen:tokens green (gen-drift caught and committed: `custom-elements.json` cssText); data-table 22/22; visual **1145/1145 ×2** on private port 6021; keyboard baselines BIT-IDENTICAL post-fix (md5) — pixel-neutral; only a11y baselines re-taken (W2 copy growth 1280×1719 → 1280×1764) |
+| Merged-main (post-fix) full gates | **ALL GREEN** — tokens 15, components 630, react 66, root 122; gen-drift empty |
+| Merged-main visual (merged with 6.5's legs) | **1154/1154 passed ×2** (7.0m each, private port 6031) — the union suite incl. 6.5's 9 new legs; zero failures, zero flaky |
+
+**Port-6007 race, escalation recorded:** during the fix round a FOREIGN serve.mjs
+(cwd = the main checkout, i.e. a stale orphan serving pre-merge dist) grabbed 6007 within
+~40s of it freeing — twice — and `reuseExistingServer` silently ran the fix round's
+suites against the WRONG dist (false-green caught by a content probe). The merged-main
+visual round therefore ran on a PRIVATE port via a temporary `VISUAL_PORT`-overridable
+config (the fix round's proven technique; temp config deleted before commit). The
+ownership-check protocol now has a sharper failure mode on record: a listener whose cwd
+matches your tree can still serve STALE content — ownership is necessary, content
+freshness is the real guarantee.
