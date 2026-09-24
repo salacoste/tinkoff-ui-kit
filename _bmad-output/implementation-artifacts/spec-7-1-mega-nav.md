@@ -123,7 +123,21 @@ unchanged. Panels/flyouts OUT of scope (volatile A/B).
 
 ## Spec Change Log
 
-(none — frozen block as approved)
+**2026-09-24 (triage, post-executor):** two factual premises inside the frozen
+«Always — anatomy» bullet are CORRECTED per the standing pixels-are-ground-truth
+methodology (the 6.2 geometry-truing precedent): the reference's row 2 DOES mark
+its active sublink with an underline (2px #666666, y127–128, x150–196) and the
+rows ARE separated by a hairline divider (1px #DDDFE0, y64, container span) —
+the original freeze rested on probes at y118–120 / a partial divider window that
+missed both. Ruling: row 2 active = 700 text-primary **+ 2px underline in
+`--tk-color-text-secondary`** (token semantics vs the #666666 literal — recorded
+deviation), and a **1px `--tk-color-border-default` divider** renders between the
+rows when the subnav row exists (vs #DDDFE0 — recorded deviation). Everything
+else in the frozen block stands (row 1 v1-verbatim yellow-underline DESIGN
+ruling; no-underline cascade still does NOT apply — row 2 has its OWN underline
+language, the reference's). The no-subLinks byte-stability invariant is
+unaffected. Component trued in the worktree triage round; baselines re-taken
+deliberately.
 
 ## Review Triage Log
 
