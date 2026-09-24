@@ -70,7 +70,7 @@ Vision check).
 | Row pitch | 81px (dividers y 64/145/226/307 in crop) | 81px (dividers y 56/137/218/299) | exact |
 | Divider | 1px `#E0E2E4`, full width, on row bottom | 1px `#E0E2E4` — rgba(0,16,36,0.12) over white composites to the same hex | exact |
 | Header band | 61px (y 76–137), text ≈15px/500, rgba(0,0,0,0.54) | 57px (16+24+16+1), text 15px/500 `#616871` | close (deviation 1) |
-| Name primary | 15/24, rgba(0,0,0,0.8) → `#333333` | `#333333` (text-primary over white) | exact |
+| Name primary | 15/24, rgba(0,0,0,0.8) → `#333333` | color `#333333` exact; leading was 22.5px at capture time (deviation 7) | exact after the B1 fix |
 | Secondary line | 13/20, rgba(0,0,0,0.54) | 13/20 `#616871` (text-secondary rgba(0,16,36,0.62)) | close (deviation 2) |
 | Delta positive | green (site anchor #00A328 not consumed) | `#168821` glyph cores — the 6.1 AA token, exact | by-design (6.1 ruling) |
 | Delta negative | red (site anchor #F52222 not consumed) | `#C40B08` — the 6.1 AA token, exact | by-design (6.1 ruling) |
@@ -106,6 +106,24 @@ Vision check).
    `tests/visual/data-table.spec.ts` (real key presses, both themes).
 6. **Dark theme has no reference capture** — the dark renders derive from
    the token-layer remap (6.1 first pass; story 8.2 verifies).
+7. **The name-link leading was 22.5px when this table was measured (lens
+   B1, fixed).** The sheet keyed the primary 15/24 group on a dead
+   `.cell__link` selector while the template renders `.row__link`, so the
+   row-name anchor — the table's most prominent glyph — never received the
+   spec's 24px leading: it inherited the story canvas's 15px/1.5 (22.5px
+   line box; ambient 22.5px vs the anchor's 24px re-verified live in
+   computed styles after the fix). The original «Name primary … exact»
+   row above was exact for the COLOR only; the «15/24» claim was the
+   sheet's intent, not the rendered pixels. Fixed by renaming the group
+   member to `.row__link` (the group stays the single typography
+   declaration; the anchor-specific rule keeps only `text-decoration`).
+   Row pitch never moved — the 81px min-height swallows the +1.5px line —
+   and the pinned-capture-env baselines prove pixel-neutral for it: the
+   keyboard-story region re-rendered post-fix is BIT-IDENTICAL to its
+   committed baseline (md5-equal), the sub-pixel recentering absorbed by
+   the fixed raster grid. The only baseline re-approved with this change
+   is the a11y story's — for the lens-W2 SR-protocol copy truing (its
+   canvas grew ~45px), not the typography.
 
 ## Vision check
 

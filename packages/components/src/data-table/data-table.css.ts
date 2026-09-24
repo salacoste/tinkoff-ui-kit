@@ -128,9 +128,15 @@ export const dataTableStyles = css`
     text-align: end;
   }
 
-  /* Two-line anatomy (§E): primary 15/24 ink, secondary 13/20 muted. */
+  /* Two-line anatomy (§E): primary 15/24 ink, secondary 13/20 muted.
+     The primary GROUP keys on .row__link (lens B1): the first cell of a
+     link row renders its primary line as the row anchor, and the anchor —
+     the table's most prominent glyph — must receive the spec's 15/24
+     DIRECTLY, not inherit the page's ambient leading (pre-fix the group's
+     second member was a dead .cell__link selector the template never
+     rendered, so the anchor rode the canvas's 1.5 leading = 22.5px). */
   .cell__primary,
-  .cell__link {
+  .row__link {
     font-size: var(--tk-text-body-m-size);
     font-weight: var(--tk-text-body-m-weight);
     line-height: 24px;
@@ -160,9 +166,11 @@ export const dataTableStyles = css`
      The anchor carries ONLY the first cell's primary text; its ::after
      covers the positioned row, so clicks anywhere on the row navigate
      natively — one anchor, one tab stop per row. Ink text, no underline
-     (the reference's net visual; the anchor's blue base is not used). */
+     (the reference's net visual; the anchor's blue base is not used).
+     This rule carries ONLY the anchor-specific declaration — the primary
+     typography group above owns size/weight/leading/color for BOTH members
+     (lens B1: no duplicated typography). */
   .row__link {
-    color: var(--tk-color-text-primary);
     text-decoration: none;
   }
 

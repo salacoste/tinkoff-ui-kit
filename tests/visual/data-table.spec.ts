@@ -186,9 +186,28 @@ test.describe('tk-data-table keyboard contract (chromium)', () => {
 
       // A real MOUSE click on a row focuses its anchor (and moves the tab
       // stop via focusin) but must NOT ring — pointer focus, not keyboard
-      // (the :has(:focus-visible) pick, not :focus-within).
-      await page.locator('a[data-index="3"]').click();
-      expect((await deepActive()).index, 'the click focused row 3 (through the whole-row stitch)').toBe('3');
+      // (the :has(:focus-visible) pick, not :focus-within). The click point
+      // is INSIDE the row but OUTSIDE the anchor's own text bbox — only the
+      // ::after stitch can carry it to the anchor (lens N1: a plain locator
+      // click on the anchor proves nothing about the stitch). No forced
+      // scrollIntoView here: it would leave the canvas scrolled and shift
+      // the clip below out from under the viewport-clamped region capture.
+      const anchor = page.locator('a[data-index="3"]');
+      await anchor.scrollIntoViewIfNeeded();
+      const stitch = await anchor.evaluate((node) => {
+        const row = (node as HTMLElement).closest('.row') as HTMLElement;
+        const rowBox = row.getBoundingClientRect();
+        const anchorBox = (node as HTMLElement).getBoundingClientRect();
+        const x = rowBox.right - 8; // the row's far edge — deep in the change column
+        return {
+          x,
+          y: rowBox.top + rowBox.height / 2,
+          insideAnchorBbox: anchorBox.left <= x && x <= anchorBox.right,
+        };
+      });
+      expect(stitch.insideAnchorBbox, 'the click point is outside the anchor text bbox').toBe(false);
+      await page.mouse.click(stitch.x, stitch.y);
+      expect((await deepActive()).index, 'the stitch click focused row 3').toBe('3');
       const quietRing = await table.evaluate((node) => {
         const root = (node as HTMLElement).shadowRoot;
         const anchor = root?.querySelector('a[data-index="3"]');

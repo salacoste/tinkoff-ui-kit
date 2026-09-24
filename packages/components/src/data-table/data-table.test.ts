@@ -105,6 +105,14 @@ describe('tk-data-table', () => {
     const cssText = sheet();
     expect(cssText).toMatch(/min-height:\s*var\(--tk-data-table-row-min-height,\s*81px\)/);
     expect(cssText).toMatch(/border-bottom:\s*1px solid var\(--tk-color-border-table\)/);
+    // Font pin (lens B1): the primary 15/24 typography group keys on the
+    // class the template actually renders — .row__link, NOT a dead
+    // .cell__link — so the row-name anchor receives the spec's primary
+    // size/leading directly instead of inheriting the page's ambient font.
+    expect(cssText).toMatch(
+      /\.cell__primary,\s*\.row__link\s*\{[^}]*font-size:\s*var\(--tk-text-body-m-size\)[^}]*line-height:\s*24px/,
+    );
+    expect(cssText).not.toMatch(/\.cell__link/);
     expect(cssText).toMatch(/\.row--link:hover\s*\{[^}]*background:\s*var\(--tk-color-surface-row-hover\)/);
     expect(cssText).toMatch(/--tk-color-delta-positive/);
     expect(cssText).toMatch(/--tk-color-delta-negative/);
@@ -439,9 +447,17 @@ describe('tk-data-table', () => {
 
   it('the name link renders ink with NO underline (the reference net visual — no synthetic hover in CSS beyond the token)', () => {
     const cssText = sheet();
-    const linkRule = cssText.match(/^ {2}\.row__link\s*\{([^}]*)\}/m)?.[1] ?? '';
-    expect(linkRule).toMatch(/color:\s*var\(--tk-color-text-primary\)/);
-    expect(linkRule).toMatch(/text-decoration:\s*none/);
+    // The link is a TWO-rule member (lens B1): the shared primary group
+    // (`.cell__primary, .row__link`) owns the 15/24 ink typography — its
+    // .row__link arm carries color too — and the anchor-specific rule adds
+    // ONLY text-decoration. Match the rule that actually declares it.
+    const linkRules = cssText.match(/^ {2}\.row__link\s*\{[^}]*\}/gm) ?? [];
+    const anchorRule = linkRules.find((rule) => /text-decoration/.test(rule)) ?? '';
+    expect(anchorRule).toMatch(/text-decoration:\s*none/);
+    expect(anchorRule).not.toMatch(/color:/); // typography is NOT duplicated here
+    expect(cssText).toMatch(
+      /\.cell__primary,\s*\.row__link\s*\{[^}]*color:\s*var\(--tk-color-text-primary\)/,
+    );
     expect(cssText).not.toMatch(/\.row__link:hover/); // hover lives on the ROW fill, never the text
   });
 
