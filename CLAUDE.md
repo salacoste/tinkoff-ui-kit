@@ -86,7 +86,8 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
 
 ### inspo MCP — real-site design references
 - Project-scoped server in `.mcp.json` (hosted https://inspomcp.dev/api/mcp) — **verified operational**
-  (live `get_filters` call, 2026-09-21)
+  (live `get_filters` call, 2026-09-24; taxonomy: 19 macrostructures w/ coverage, 11 styles,
+  10 component types)
 - NOTE: `claude mcp list` may report "⏸ Pending approval" — that is a stale artifact of the non-interactive
   subprocess check. Judge availability by whether `mcp__inspo__*` tools are present in the session
 - Use before writing UI: `recommend(brief)`, 1–2 `search_screens`, then `get_screen` on the 3–5 kept
