@@ -1,6 +1,6 @@
-import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from 'playwright/test';
 
+import { analyzeAxe } from './axe-serialize';
 import { pinDeterministicFonts } from './inject';
 import { buildStoryUrl, readStoryIds, THEMES } from './stories';
 
@@ -124,9 +124,7 @@ for (const id of storyIds) {
       // No story carries an axe exclusion (the 1.6 tokens-demo chip exclusion
       // died with the demo at Story 1.7) — every element of every story is
       // audited in both themes.
-      const results = await new AxeBuilder({ page })
-        .withTags([...AXE_WCAG_TAGS])
-        .analyze();
+      const results = await analyzeAxe(page, AXE_WCAG_TAGS);
       const violations = results.violations.map(
         (violation) =>
           `${violation.id}: ${violation.nodes.map((node) => node.target.join(' ')).join(', ')}`,

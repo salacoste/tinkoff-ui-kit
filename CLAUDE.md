@@ -43,15 +43,20 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   optional 64px sub-nav row (subLinks/subActiveValue/subLabel; two named nav landmarks;
   sub-nav desktop-only; v1 byte-stability pinned) — TRUING corrected two frozen premises
   (row-2 active HAS a 2px underline + inter-row 1px divider; Spec Change Log), 784 unit +
-  visual 1065/1065 ×2, verify evidence in `.playwright-cli/verify/mega-nav/`. **IN FLIGHT:
-  6.4 (tk-data-table, executor on main, spec 1bc8ee5) + 7.2 (tk-cookie-banner, executor in
-  worktree, spec 2b77d31)** — sequencing in
+  visual 1065/1065 ×2, verify evidence in `.playwright-cli/verify/mega-nav/`. **6.4 DONE
+  (e06e844, spec pending lens-close): tk-data-table — typographic row-as-link catalog, APG
+  keyboard layer, §9 delta-on-hover row. 7.2 DONE (773f53d worktree → merge 0f1592d → gate-fix
+  9086551, spec-7-2 closed): tk-cookie-banner — non-modal consent dialog, consent-choice bare
+  verb, 12 baselines, merged visual 1145/1145 ×1 (axe co-driver debt FIXED in the same window:
+  tests/visual/axe-serialize.ts chain + busy-retry).** **IN FLIGHT: 6.5 (stocks-catalog
+  showcase composition, executor on main, spec b558fd6) + 7.3 (stepper/store-badges/qr-block
+  trio, executor in worktree)** — sequencing in
   epics-v2.md; the v1 component-story gate applies VERBATIM (FR-16). Key v2 decisions: delta
   semantics via AA-override (green-300/red-300); warm-cream family DISTINCT from beige (dark
   first-pass [ASSUMPTION] → 8.2); typography registers = mappings (h1 44→heading-2, 36→heading-3),
   zero new type tokens; keyboard defects of the reference (inert arrows, chip focus-drop) are
   IMPROVED per APG — the sanctioned a11y axis
-- **Kit totals: 784 unit + 1065 visual/axe tests, 21 components, 21 React wrappers, v1 design
+- **Kit totals: 833 unit + 1145 visual/axe tests, 24 components, 24 React wrappers, v1 design
   assumptions all closed (6 v2 dark first-pass [ASSUMPTION]s open BY DESIGN until 8.2), CI green**
 - Fonts: DaytonaSans/DaytonaPragma in `packages/tokens/fonts/` under LICENSE-FONTS.md (separately
   licensed, NOT MIT; consumer rights ONLY per that file)

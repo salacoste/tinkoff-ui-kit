@@ -2,14 +2,14 @@
 title: 'Story 7.2 — CookieBanner: the consent dialog'
 type: 'feature'
 created: '2026-09-24'
-status: 'approved'
+status: 'done'
 route: 'full'
 route_source: 'auto'
 review: 'quick'
 review_source: 'auto'
-lenses_ran: []
-review_loop_iteration: 0
-baseline_commit: '(set at close — Track B of the 6.4 window)'
+lenses_ran: ['quick']
+review_loop_iteration: 1
+baseline_commit: '773f53d (worktree) → merged 0f1592d; gate-fix tail 9086551'
 context:
   - '{project-root}/_bmad-output/planning-artifacts/epics-v2.md (Story 7.2)'
   - '{project-root}/packages/components/CONVENTIONS.md (§3 occurrence events, §6, §8, §9 FROZEN)'
@@ -112,11 +112,11 @@ never touches persistence).
 
 ## Tasks & Acceptance
 
-- [ ] `packages/components/src/cookie-banner/{index.ts,cookie-banner.ts,cookie-banner.css.ts,cookie-banner.test.ts,cookie-banner.stories.ts}`
-- [ ] event-map entry (`consent-choice`) + `pnpm gen` + wrapper smoke (bare-verb mapping)
-- [ ] `.playwright-cli/verify/cookie-banner/` side-by-side + probes (+ the longer-settle
+- [x] `packages/components/src/cookie-banner/{index.ts,cookie-banner.ts,cookie-banner.css.ts,cookie-banner.test.ts,cookie-banner.stories.ts}`
+- [x] event-map entry (`consent-choice`) + `pnpm gen` + wrapper smoke (bare-verb mapping)
+- [x] `.playwright-cli/verify/cookie-banner/` side-by-side + probes (+ the longer-settle
       live position re-attempt, honest either way) + vision (blocked-protocol)
-- [ ] baselines via update flow + stability ×2; full gates green (VISUAL SERIALIZED — port
+- [x] baselines via update flow + stability ×2; full gates green (VISUAL SERIALIZED — port
       6007 machine-global); spec closed; commit + push
 
 **Acceptance Criteria:**
@@ -127,16 +127,76 @@ never touches persistence).
 
 ## Implementation Notes
 
-(to be filled by the executor / triage)
+Executed in an isolated worktree (executor round), merged to main as 0f1592d. 31 files,
++2476 lines. Surface: `open`/`open-change` §9 verbatim (flip-only `{value}` echo with the
+`wasOpen !== undefined` first-paint guard), `label`/`acceptLabel` live props, default slot
+= message, `consent-choice` §3 bare-verb occurrence (payload-less; React handler receives
+the event itself). 21 unit tests pin all 10 matrix rows plus the first-paint guard, the
+rapid double-toggle (ONE live mount), conditional focus restore, quiet disconnect, and a
+ZERO-BESPOKE structural pin (modal-layer mount consumed; no lock/trap/positioning/storage
+of its own). The card is TOP-LAYER promoted, so story baselines exclude the host and
+`tests/visual/cookie-banner.spec.ts` carries a page-level region clip (bottom-left,
+44px-effective accept hit) as its own baseline pair.
+
+**Measured truing (the 4× probe + DOM-geometry pass; full table in
+`.playwright-cli/verify/cookie-banner/NOTES.md`):** the spec's «~24px visual» pill trued
+to 32px probe-measured (height match); card width 212px cap = the measured reference
+width (202 interior + halo); radius-lg chord-verified in both renders (r=16); message
+13px/19.5 body-s 2 lines at the 180px content box; gap 12 = space-12. 11 intentional
+deviations documented in NOTES.md — the load-bearing ones: 44px hit box around the 32px
+pill (§8 floor, the navbar-drawer pattern); uniform 16px padding vs the reference's
+ragged L13/T18/B6; 212px width cap as literal; the 16px bottom-left inset stays a FLAGGED
+house judgment (the live re-attempt was honestly NOT made — the site's session/geo gating
+made the earlier settle flaky; the viewport frame pins the corner but not the inset to
+sub-10px); pill fill = surface-field (nearest token to #F2F4F7, recorded); link ink =
+text-secondary (frozen §6 mapping vs #B8B8B8 core); accept label font-weight 600 literal
+(capture-measured; token bold step is 500 — the pagination-700 precedent);
+`::slotted(a:focus-visible)` underline beyond the frozen «hover only» (§8 parity — the
+underline IS the link register's focus affordance); conditional focus restore; no motion
+anywhere (frozen deliberate).
+
+**Vision check: blocked by tooling, zero claims** — the table is entirely ImageMagick
+scanline runs + DOM computed geometry.
 
 ## Spec Change Log
 
-(none — frozen block as approved)
+(none — frozen block as approved; all deltas landed as documented deviations in
+Implementation Notes, not intent changes)
 
 ## Review Triage Log
 
-(to be filled at quick-review)
+Quick-review lens (qr-lens-7-2) on the worktree commit 773f53d: **0 BLOCKERS / 1 WARN /
+3 NOTEs — ship.**
+
+- WARN — `consent-choice` sat outside the event-map-completeness net's `KIT_EVENT_NAME`
+  regex (`tests/event-map-completeness.test.ts:34`): the entry was hand-guarded only,
+  against the load-more precedent's own argument that the net should DEMAND it.
+  DISPOSITION: FIXED in the merge commit 0f1592d itself — `consent-choice` added to the
+  alternation; the net now demands the entry, and the components/react suites assert
+  against it green.
+- NOTE — cookie-banner matrix row 5 (natural Tab flow) covered structurally + by
+  non-interception in happy-dom; no real-browser Tab WALK exists. DISPOSITION: deferred
+  to 8.1 (real-browser keyboard legs land there anyway) — deferred-work.md entry (b).
+- NOTE — the 16px bottom-left inset remains a flagged judgment. DISPOSITION: opportunistic
+  re-measure (deferred-work.md entry (c)).
+- NOTE — stories' SR-protocol section records the walkthrough; execution stays
+  maintainer-side (the standing 5.1–5.3 deferral class). DISPOSITION: no action (recorded).
+
+Merge-window tail (recorded here, not lens output): merged main's gate round caught TWO
+post-gate edits that had ridden in the 6.4 commit e06e844 (not this story's files — see
+spec-6-4's triage log); this story's own merge needed no fixes beyond the regex above.
 
 ## Verification
 
-(to be filled at gate run)
+| Gate | Result |
+|---|---|
+| Worktree unit | components 26/26 cookie-banner files green ×2 stability (604 → 630 pkg total) |
+| Worktree visual | 26/26 cookie-banner legs green ×2; 12 baselines (10 story + 2 region clip) |
+| Merged main `pnpm build && test && lint && typecheck && gen && gen:tokens` | ALL GREEN — tokens 15, components 630, react 66, root 122; gen-drift empty (after gate-fix 9086551) |
+| Merged main `pnpm test:visual` (serialized, port 6007 checked) | 1145/1145 passed, exit 0 — includes the 12 new cookie-banner baselines × both themes. Two preceding runs hit the known axe «already running» co-driver race (7 spurious legs each, unrelated stories) — that deferred debt (#18) was FIXED in this window (`tests/visual/axe-serialize.ts` chain + busy-retry) and this green run is its proof |
+| axe × both themes | zero violations (every cookie-banner story green in the merged run) |
+| React surface | 24 wrappers generated; registry `{ onOpenChange, onConsentChoice }`; handler smoke + open-flip controlled test green |
+
+Worktree artifacts: component + tests + stories + css, event-map entry, CEM + generated
+wrapper, 12 baselines, `.playwright-cli/verify/cookie-banner/` (side-by-sides ×2 themes,
+kit renders, ref-x4, capture recipe, runs.awk, NOTES.md with the measured table).

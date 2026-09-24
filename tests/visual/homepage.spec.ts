@@ -1,6 +1,6 @@
-import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from 'playwright/test';
 
+import { analyzeAxe } from './axe-serialize';
 import { pinDeterministicFonts } from './inject';
 import { buildStoryUrl, THEMES } from './stories';
 
@@ -121,7 +121,7 @@ for (const bp of BREAKPOINTS) {
     for (const theme of THEMES) {
       test(`axe: composed homepage [${bp.name}] [${theme}]`, async ({ page }) => {
         await openHomepage(page, bp.width, theme);
-        const results = await new AxeBuilder({ page }).withTags([...AXE_WCAG_TAGS]).analyze();
+        const results = await analyzeAxe(page, AXE_WCAG_TAGS);
         const violations = results.violations.map(
           (violation) =>
             `${violation.id}: ${violation.nodes.map((node) => node.target.join(' ')).join(', ')}`,
