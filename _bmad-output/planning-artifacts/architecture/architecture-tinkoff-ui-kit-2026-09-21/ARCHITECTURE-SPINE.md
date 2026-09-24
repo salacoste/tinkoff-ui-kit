@@ -229,10 +229,22 @@ lockfiles own the truth.
 ## Deferred
 
 - **SSR pipeline** — client-only in v1; revisit at first SSR consumer (AD-10).
-- **Publish names + element prefix final call (OQ-3)** — maintainer picks trademark-safe names
-  pre-publish; internal `tk-` prefix and package dir names carry v1.
-- **CI provider & pipeline shape** — hooks run locally now; CI wiring (GitHub Actions vs else)
-  decided at scaffold, mechanics only, no invariant impact.
+- ~~Publish names + element prefix final call (OQ-3)~~ — RESOLVED (2026-09-22): `pillkit-*` +
+  `tk-`/`--tk-*` permanent; distribution amended 2026-09-23 to GitHub git-tags only (no npm).
+- ~~CI provider & pipeline shape~~ — RESOLVED: GitHub Actions, live since Story 1.8.
 - **Dark tint refinement** — `dark-tint-*` first-pass values refined at build with fidelity
-  checks (per DESIGN.md).
+  checks (per DESIGN.md). *(v1 tints verified at 5.4; v2 warm-cream dark first-pass carries
+  the same revisit.)*
 - **i18n story** — copy is localization-ready (string slots); v1 ships one language (OQ-4).
+
+## v2 Delta (2026-09-24 — multi-domain expansion; no architectural change)
+
+The v2 scope (PRD §4.8, FR-12..16 — business + two invest domains) rides the frozen substrate.
+Every AD re-checked and holding: new components are Lit shadow elements consuming `--tk-*`
+(AD-1/2/3); the combobox search reuses the dropdown overlay layer — nothing adds z-layers
+(AD-12); DataTable's roving-tabindex keyboard is an interaction pattern within AD-5's frozen
+conventions (v2 rows are links — NO selection channel; a future selection column reopens §4);
+typography registers are mappings onto existing tokens, not branches (AD-3); v2 fidelity
+baselines = the v2 capture pack through the existing harness (AD-8, provisional rule
+unchanged); FR-16's gate is the component-story gate verbatim (AD-7). No spine invariants
+move; this section is the delta record (full reasoning in the run memlog, 2026-09-24).
