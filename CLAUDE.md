@@ -9,7 +9,7 @@ Study project: the reference site (tinkoff.ru) is the design source of truth; we
 (`@lit/react`); pnpm workspace `pillkit-{tokens,components,react,docs}`; TS 7 strict, Vite 8, Vitest,
 Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) live in `_bmad-output/planning-artifacts/`.
 
-## Project state (updated 2026-09-24 — v1.0.0 RELEASED, GitHub-distribution)
+## Project state (updated 2026-09-24 — v1.0.0 RELEASED; v2 build IN PROGRESS)
 
 - **v1.0.0 SHIPPED as git tag `v1.0.0`** (maintainer gate session 2026-09-23/24). All maintainer
   gates closed: 274/274 baselines CONFIRMED (F1 re-taken), VoiceOver SR walk 19/19 (tabs
@@ -20,11 +20,21 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   mojibake bug the release gate caught and fixed). `private: true` in all packages is PERMANENT.
   Releases = commit + `git tag vX.Y.Z` + push; the release gate = fresh consumer clones the tag
   and runs the README recipe end-to-end (RELEASE.md §4–§5)
+- **v2 IN PROGRESS (designated 2026-09-24):** three new domains — tbank.ru/business,
+  /invest/mobile-application, /invest/stocks. BMAD chain COMPLETE (brief/PRD §4.8 FR-12..16,
+  UX spines, architecture delta = zero, **epics-v2.md: 3 epics / 13 stories**). Recon + UX-phase
+  captures in `.playwright-cli/captures-v2/`. Next: story 6.1 (v2 token layer) — sequencing in
+  epics-v2.md; the v1 component-story gate applies VERBATIM (FR-16). Key v2 decisions: delta
+  semantics via AA-override (green-300/red-300); warm-cream family DISTINCT from beige (dark
+  first-pass [ASSUMPTION] → 8.2); typography registers = mappings (h1 44→heading-2, 36→heading-3),
+  zero new type tokens; keyboard defects of the reference (inert arrows, chip focus-drop) are
+  IMPROVED per APG — the sanctioned a11y axis
 - **Kit totals: 645 unit + 921 visual/axe tests, 19 components, 19 React wrappers, zero design
-  assumptions open, CI green** (commits 19b12a6 → f02f4a0)
+  assumptions open, CI green**
 - Fonts: DaytonaSans/DaytonaPragma in `packages/tokens/fonts/` under LICENSE-FONTS.md (separately
   licensed, NOT MIT; consumer rights ONLY per that file)
 - **Lit on this stack requires `experimentalDecorators: true`** — do not "fix" this
+- **HANDOFF.md (root) is the full handoff document** — plan, debts, nuances, governance
 - deferred-work.md: revisit-condition entries (axe re-entrancy serialization, mono slot, iOS
   scroll-lock, AD-4 single-source, AA-derivation, fold literals, preview.ts canvas bg)
 
