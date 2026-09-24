@@ -47,12 +47,34 @@ const DEFAULT_NAV_LABEL = 'Навигация';
  * hairline after the 10px threshold, 150ms token fade), and below 768px a
  * burger opening a FOCUS-TRAPPED drawer.
  *
+ * MEGA-NAV (Story 7.1): an optional SECOND navigation row — the invest/
+ * business cross-domain headers are two-deep (bank-wide row + domain
+ * sub-nav). The row renders ONLY while `subLinks` is non-empty (the epics'
+ * «not a new element where avoidable» pick — same tk-navbar, composition
+ * API, no tk-mega-nav element): row 1 stays v1 VERBATIM, row 2 adds 64px of
+ * plain desktop links inside the SAME sticky bar (sticky/shadow/burger
+ * inherit — the shadow sits under the LAST row). Sub-nav anatomy is
+ * pixel-probed from pattern-header-meganav.png (1280×129) in
+ * .playwright-cli/verify/mega-nav/NOTES.md: inactive text-secondary, ACTIVE
+ * = 700 text-primary + a 2px gray underline at the row's bottom edge and a
+ * 1px hairline divider ON the seam between the rows (BOTH trued to the
+ * capture in the story 7.1 triage — the frozen «no underline, no divider»
+ * rested on the initial probes and was refuted by extended scanlines:
+ * underline 2px #666666 y127–128, divider 1px #DDDFE0 y64 spanning the
+ * container register; token-semantics deltas recorded in the NOTES).
+ * Without `subLinks` the DOM/CSS/render are
+ * byte-identical to v1 (unit-pinned; the v1 baselines must not move).
+ * Sub-nav is DESKTOP-ONLY chrome: hidden <768px, never in the burger drawer
+ * (v1's drawer model stays row-1 links only).
+ *
  * NAVIGATION, NOT A FORM CONTROL (the spec's ruling): `activeValue` is a
  * prop ONLY — clicking a link is native anchor navigation and the kit does
  * not intercept routing, so there is NO §4 value/defaultValue pair and NO
  * change event ("no channel events" is unit-pinned). An `activeValue`
  * matching nothing marks NO link (the spec's matrix pick — unlike tabs,
- * there is no "always one active" clamp).
+ * there is no "always one active" clamp). `subActiveValue` carries the same
+ * ruling verbatim into row 2 (the SAME data shape as `links` — navigation,
+ * not a form channel; unmatched marks none).
  *
  * THE DRAWER (the overlay controller's second real consumer, after
  * tk-select): the panel is a shadow-tree child (the 2.3 ratified pattern —
@@ -76,7 +98,8 @@ const DEFAULT_NAV_LABEL = 'Навигация';
  *
  * BREAKPOINT: `@media (max-width: 767px)` — a media query, per the spec's
  * noted pick (container queries deferred); the drawer's lock/trap mechanics
- * live only while open, at any width.
+ * live only while open, at any width. The sub-nav row hides inside the SAME
+ * breakpoint (desktop-only chrome — the mobile capture shows no sub-nav).
  *
  * SSR-compat (AD-10): rendered via Lit templates only; no imperative DOM at
  * construction; the scroll listener attaches on connect and is passive.
@@ -85,7 +108,10 @@ const DEFAULT_NAV_LABEL = 'Навигация';
  * @attr {boolean} sticky - Bar sticks to the viewport top (default true; the shadow + hairline still track scroll).
  * @attr {string} burger-label - Accessible name of the burger button (also names the drawer dialog). Default «Меню».
  * @attr {string} active-value - The active section's `value` — renders the matching link with the yellow underline + 700 weight; unmatched marks nothing.
+ * @attr {string} sub-active-value - The active sub-nav section's `value` (row 2) — renders the matching sub-link at 700 text-primary + a 2px underline; unmatched marks nothing.
+ * @attr {string} sub-label - Accessible name of the second nav landmark (row 2). Default «Разделы».
  * @prop {TkNavbarLink[]} [links] - Nav links; duplicate/value-less entries clamp out with a dev warn.
+ * @prop {TkNavbarLink[]} [subLinks] - Optional sub-nav row (SAME shape as `links`); an empty list renders NO second row and NO second nav landmark; entries clamp out with a dev warn like `links`.
  * @slot logo - Brand mark, left of the links.
  * @slot utilities - Utility cluster, right-aligned (search, account).
  * @slot burger - Drawer content override; default = the links list, vertical.
@@ -105,6 +131,33 @@ export class TkNavbar extends LitElement {
    */
   @property({ type: String, attribute: 'active-value' })
   activeValue?: string;
+
+  /**
+   * Sub-nav links (Story 7.1) — the SAME data shape and the SAME rulings as
+   * `links` (navigation, not a form channel); property-only (object data
+   * never reflects). An empty/absent list renders NO second row — the v1
+   * render path stays byte-identical.
+   */
+  @property({ type: Array, attribute: false })
+  subLinks: TkNavbarLink[] = [];
+
+  /**
+   * The active sub-nav section's value — `activeValue`'s ruling verbatim
+   * (prop-only input, no §4 channel, no event); a value matching nothing
+   * marks NO sub-link (the v1 matrix pick). Accepted from the
+   * `sub-active-value` attribute, never reflected (value data, §2).
+   */
+  @property({ type: String, attribute: 'sub-active-value' })
+  subActiveValue?: string;
+
+  /**
+   * Accessible name of the second nav landmark — two navs on one page need
+   * distinguishing names (the DEFAULT_NAV_LABEL precedent). Default
+   * «Разделы» (the spec's pick); accepted from `sub-label`, never
+   * reflected.
+   */
+  @property({ type: String, attribute: 'sub-label' })
+  subLabel = 'Разделы';
 
   /** Bar sticks to the viewport top (the reference behavior); reflects (boolean, CONVENTIONS §2). */
   @property({ type: Boolean, reflect: true })
@@ -157,6 +210,11 @@ export class TkNavbar extends LitElement {
     return this.links ?? [];
   }
 
+  /** Sub-links with the same null-tolerance (the same prop discipline). */
+  get #effectiveSubLinks(): TkNavbarLink[] {
+    return this.subLinks ?? [];
+  }
+
   /**
    * The scroll listener — the ONE scroll code in the file (sanctioned by the
    * spec's "scroll listener threshold" row; scroll-LOCK is the controller's).
@@ -178,23 +236,29 @@ export class TkNavbar extends LitElement {
    * `activeValue` could address twice is ambiguous, and value-less entries
    * could never be addressed — both drop with a dev warn. CONVENTIONS §2
    * degrade-to-default spirit; length-guarded so the follow-up update
-   * converges.
+   * converges. `subLinks` runs the SAME clamp (a `subActiveValue` must
+   * address exactly one row-2 entry).
    */
   protected override willUpdate(changed: PropertyValues<this>): void {
-    if (changed.has('links')) {
-      const seen = new Set<string>();
-      const deduped = (this.links ?? []).filter((link) => {
-        const value = link?.value;
-        if (value == null || value === '' || seen.has(value)) return false;
-        seen.add(value);
-        return true;
-      });
-      if (this.links != null && deduped.length !== this.links.length) {
-        console.warn(
-          'tk-navbar: duplicate or value-less link entries dropped — link values must be unique non-empty strings (first occurrence wins)',
-        );
-        this.links = deduped;
-      }
+    if (changed.has('links')) this.#clampLinkValues('links');
+    if (changed.has('subLinks')) this.#clampLinkValues('subLinks');
+  }
+
+  #clampLinkValues(prop: 'links' | 'subLinks'): void {
+    const raw = this[prop] ?? [];
+    const seen = new Set<string>();
+    const deduped = raw.filter((link) => {
+      const value = link?.value;
+      if (value == null || value === '' || seen.has(value)) return false;
+      seen.add(value);
+      return true;
+    });
+    if (this[prop] != null && deduped.length !== raw.length) {
+      const noun = prop === 'links' ? 'link values' : 'sub-link values';
+      console.warn(
+        `tk-navbar: duplicate or value-less ${prop === 'links' ? 'link' : 'sub-link'} entries dropped — ${noun} must be unique non-empty strings (first occurrence wins)`,
+      );
+      this[prop] = deduped;
     }
   }
 
@@ -348,9 +412,16 @@ export class TkNavbar extends LitElement {
   override render() {
     const links = this.#effectiveLinks;
     const activeValue = this.activeValue;
+    const subLinks = this.#effectiveSubLinks;
+    const subActiveValue = this.subActiveValue;
+    // Row 2 exists ONLY with subLinks — the class hook (and the row itself)
+    // never render without them, keeping the no-subLinks DOM byte-identical
+    // to v1 (the CRITICAL invariant: class="bar" verbatim, one .bar__inner
+    // child, no .subnav node).
+    const hasSub = subLinks.length > 0;
 
     return html`
-      <header class="bar">
+      <header class="bar${hasSub ? ' bar--subnav' : ''}">
         <div class="bar__inner">
           <div class="bar__logo">
             <slot name="logo"></slot>
@@ -395,6 +466,25 @@ export class TkNavbar extends LitElement {
             </svg>
           </button>
         </div>
+        ${hasSub
+          ? html`
+              <nav class="subnav" aria-label=${this.subLabel}>
+                <div class="subnav__inner">
+                  ${subLinks.map((link) => {
+                    const isActive = link.value === subActiveValue;
+                    return html`
+                      <a
+                        class="sublink"
+                        href=${link.href}
+                        aria-current=${isActive ? 'page' : nothing}
+                      ><span class="sublink__label">${link.label}</span></a
+                      >
+                    `;
+                  })}
+                </div>
+              </nav>
+            `
+          : nothing}
       </header>
       <div
         class="drawer"

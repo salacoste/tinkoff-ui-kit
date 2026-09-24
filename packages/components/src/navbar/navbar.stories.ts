@@ -31,10 +31,36 @@ const LINKS: TkNavbarLink[] = [
   { value: 'more', label: 'Еще', href: '#more' },
 ];
 
+/**
+ * The mega-nav row 1 (invest domain — pattern-header-meganav.png): the
+ * bank-wide sections; «Инвестиции» active in the capture (underline band
+ * x353–428 sits under its glyph cores x354–427).
+ */
+const MEGA_LINKS: TkNavbarLink[] = [
+  { value: 'bank', label: 'Банк', href: '#bank' },
+  { value: 'business', label: 'Бизнесу', href: '#business' },
+  { value: 'invest', label: 'Инвестиции', href: '#invest' },
+  { value: 'mobile', label: 'Мобильная связь', href: '#mobile' },
+  { value: 'insurance', label: 'Страхование', href: '#insurance' },
+  { value: 'travel', label: 'Путешествия', href: '#travel' },
+];
+
+/** The mega-nav row 2 (the domain sub-nav; «Каталог» active per capture). */
+const SUB_LINKS: TkNavbarLink[] = [
+  { value: 'overview', label: 'Обзор', href: '#overview' },
+  { value: 'catalog', label: 'Каталог', href: '#catalog' },
+  { value: 'pulse', label: 'Пульс', href: '#pulse' },
+  { value: 'analytics', label: 'Аналитика', href: '#analytics' },
+  { value: 'academy', label: 'Академия', href: '#academy' },
+  { value: 'terminal', label: 'Терминал', href: '#terminal' },
+];
+
 type NavbarArgs = {
   activeValue: string;
   sticky: boolean;
   burgerLabel: string;
+  subActiveValue: string;
+  subLabel: string;
 };
 
 /** The brand mark for the logo slot — story-level composition (tokens only). */
@@ -84,6 +110,48 @@ const navbarCanvas = (args: Partial<NavbarArgs> = {}) => html`
     burger-label=${args.burgerLabel ?? 'Меню'}
   >
     ${logoSlot} ${utilitiesSlot}
+  </tk-navbar>
+`;
+
+/**
+ * The invest-domain utility cluster (capture: search chip + «Войти» — the
+ * §D keyboard order's «Войти» stop between the two rows).
+ */
+const megaUtilitiesSlot = html`
+  <a slot="utilities" class="tkn-utility" href="#search" aria-label="Поиск">
+    <svg
+      aria-hidden="true"
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+    >
+      <circle cx="10.5" cy="10.5" r="6.5"></circle>
+      <path d="M15.5 15.5L21 21"></path>
+    </svg>
+  </a>
+  <a slot="utilities" class="tkn-utility tkn-utility--login" href="#login">Войти</a>
+`;
+
+/**
+ * The two-deep bar (story 7.1): row 1 VERBATIM + the optional sub-nav row.
+ * `subLinks: []` would render exactly v1 — the variants story demonstrates
+ * that path.
+ */
+const megaNavCanvas = (args: Partial<NavbarArgs> & { subLinks?: TkNavbarLink[] } = {}) => html`
+  <tk-navbar
+    .links=${MEGA_LINKS}
+    .activeValue=${args.activeValue ?? 'invest'}
+    ?sticky=${args.sticky ?? true}
+    burger-label=${args.burgerLabel ?? 'Меню'}
+    .subLinks=${args.subLinks ?? SUB_LINKS}
+    .subActiveValue=${args.subActiveValue ?? 'catalog'}
+    sub-label=${args.subLabel ?? 'Разделы'}
+  >
+    ${logoSlot} ${megaUtilitiesSlot}
   </tk-navbar>
 `;
 
@@ -200,7 +268,8 @@ const canvasStyles = html`
       /* The reference's mobile cluster order: login pill → search chip →
          burger; the pill is text-only (the desktop-only person icon drops
          so the row fits 360px with the burger intact). */
-      .tkn-utility--account {
+      .tkn-utility--account,
+      .tkn-utility--login {
         order: -1;
         width: auto;
         padding-inline: var(--tk-space-16);
@@ -564,6 +633,243 @@ export const Accessibility: Story = {
         </tbody>
       </table>
     </main>
+    </div>
+  `,
+};
+
+export const MegaNav: Story = {
+  name: 'Мега-навигация',
+  // Story-level override: the file-level args default (retail) matches no
+  // MEGA_LINKS value — without this the row-1 active state silently
+  // disappears (found via verify probes, story 7.1).
+  args: { activeValue: 'invest' },
+  render: (args) => html`
+    ${canvasStyles}
+    <div class="tkn-canvas">
+      ${megaNavCanvas(args)}
+      <main>
+        <div class="tkn-demo">
+          <h1>Мега-навигация (story 7.1)</h1>
+          <p class="tkn-note">
+            Двухуровневая шапка доменов «Инвестиции»/«Бизнес»: строка 1 —
+            обычный tk-navbar (72px по DESIGN, жёлтый штрих + вес 700),
+            строка 2 — необязательный ряд <code>subLinks</code> высотой
+            64px (замер эталона, токена нет) в ТОЙ же липкой панели:
+            тень и волосяная линия по порогу прокрутки 10px рисуются под
+            ПОСЛЕДНЕЙ строкой. Активная ссылка строки 2 — вес 700,
+            чернильный цвет И серый штрих 2px по нижней кромке ряда
+            (доведено до эталона в триаже 7.1: у эталона полоса ЕСТЬ —
+            замер y127–128; механизм тот же, что у строки 1, штрих вдвое
+            тоньше и серый — семантика текст-вторичного токена, дельта с
+            эталоном записана в verify/mega-nav/NOTES.md). Между строками
+            волосяная линия 1px по контейнерному регистру (тоже доведено
+            до эталона: у эталона линия на y64 в пределах контейнера).
+            Ряд 2
+            выравнивается по контейнерному регистру строки 1 (боксы
+            ссылок от края контента, НЕ от текста после логотипа). Ниже
+            768px ряд 2 скрыт — суб-навигация только для десктопа,
+            бургер остаётся моделью v1 (ссылки строки 1).
+          </p>
+          <h2>Секция каталога</h2>
+          <p>
+            Контент под шапкой: панель едина — липкость, тень и z-order
+            общие, <code>aria-current="page"</code> отмечает активную
+            ссылку КАЖДОЙ строки (здесь: «Инвестиции» и «Каталог»).
+            Навигация, а не форма: <code>subActiveValue</code> — просто
+            вход, событий нет; значение вне списка не помечает ничего.
+          </p>
+        </div>
+      </main>
+    </div>
+  `,
+};
+
+export const MegaNavVariants: Story = {
+  name: 'Варианты мега-навигации',
+  render: () => {
+    const longSubLinks: TkNavbarLink[] = [
+      { value: 'overview', label: 'Обзор рынка', href: '#overview' },
+      { value: 'catalog', label: 'Каталог акций и облигаций', href: '#catalog' },
+      { value: 'pulse', label: 'Пульс инвесторов', href: '#pulse' },
+      { value: 'analytics', label: 'Аналитика и прогнозы', href: '#analytics' },
+      { value: 'academy', label: 'Академия инвестирования', href: '#academy' },
+      { value: 'terminal', label: 'Терминал и котировки онлайн', href: '#terminal' },
+      { value: 'ideas', label: 'Инвестиционные идеи', href: '#ideas' },
+      { value: 'portfolio', label: 'Портфель и отчёты', href: '#portfolio' },
+      { value: 'calendar', label: 'Календарь событий', href: '#calendar' },
+      { value: 'screen', label: 'Скринер рынка', href: '#screen' },
+    ];
+    return html`
+      ${canvasStyles}
+      <div class="tkn-canvas">
+        <main>
+          <div class="tkn-demo">
+            <h1>Варианты</h1>
+            <p class="tkn-note">
+              Три граничных случая: без <code>subLinks</code> — байт-в-байт
+              v1 (DOM и ксс-путь неизменны, регрессионные базлайны v1 не
+              двигаются); <code>subActiveValue</code> вне списка — НИЧЕГО
+              не помечено (выбор матрицы v1); длинный ряд — не переносится,
+              ярлыки усекаются многоточием (span-наследник
+              <code>.sublink__label</code>, паттерн ярлыка вкладок).
+            </p>
+          </div>
+        </main>
+        <h2>Без subLinks (v1)</h2>
+        ${megaNavCanvas({ subLinks: [] })}
+        <h2>subActiveValue вне списка</h2>
+        ${megaNavCanvas({ subActiveValue: 'nope' })}
+        <h2>Длинный ряд (10 пунктов)</h2>
+        ${megaNavCanvas({ subLinks: longSubLinks })}
+      </div>
+    `;
+  },
+};
+
+export const MegaNavTheming: Story = {
+  name: 'Темизация (мега)',
+  render: () => html`
+    ${canvasStyles}
+    <div class="tkn-canvas">
+      <main>
+        <div class="tkn-demo">
+          <h1>Темизация мега-навигации</h1>
+          <p class="tkn-note">
+            Тёмная тема — контрол Theme в тулбаре: ветвей темы в коде нет,
+            токены перекрашивают ОБЕ строки сразу. На тонированной
+            поверхности перекрывайте ВСЕ текстовые хуки ДВУХ строк
+            вместе — <code>--tk-navbar-link</code>,
+            <code>--tk-navbar-link-hover</code>,
+            <code>--tk-navbar-link-active</code> и пара строки 2
+            <code>--tk-navbar-sublink</code>,
+            <code>--tk-navbar-sublink-hover</code>,
+            <code>--tk-navbar-sublink-active</code> (прецедент tk-tabs:
+            ховер без пары упадёт в text-primary и исчезнет на чернильном
+            фоне). Высота строки 2 — <code>--tk-navbar-subnav-height</code>
+            (по умолчанию 64px — замер эталона).
+          </p>
+        </div>
+      </main>
+      <style>
+        /* On-tint recipe: BOTH rows' text hooks go white on charcoal. */
+        .tkn-mega-hero tk-navbar {
+          --tk-navbar-fill: var(--tk-color-tint-charcoal);
+          --tk-navbar-link: var(--tk-color-white);
+          --tk-navbar-link-hover: var(--tk-color-white);
+          --tk-navbar-link-active: var(--tk-color-white);
+          --tk-navbar-sublink: var(--tk-color-white);
+          --tk-navbar-sublink-hover: var(--tk-color-white);
+          --tk-navbar-sublink-active: var(--tk-color-white);
+        }
+        .tkn-mega-hero__body {
+          background: var(--tk-color-tint-charcoal);
+          color: var(--tk-color-white);
+          padding: var(--tk-space-24) var(--tk-space-24) var(--tk-space-32);
+        }
+        .tkn-mega-hero__body p {
+          margin: 0;
+          max-width: 560px;
+          font-size: var(--tk-text-body-m-size);
+          line-height: var(--tk-text-body-m-leading);
+        }
+      </style>
+      <div class="tkn-mega-hero">
+        ${megaNavCanvas({ subActiveValue: 'pulse' })}
+        <div class="tkn-mega-hero__body">
+          <p>
+            Двухуровневая шапка на чернильном герое: заливка перекрыта на
+            tint-charcoal, текстовые хуки ОБЕИХ строк — на белый; жёлтый
+            штрих строки 1 остаётся брендовым, активная строка 2 — вес 700
+            со своим серым штрихом 2px. Штрих строки 2 задаётся токеном
+            text-secondary напрямую (без собственного хука) — на тинте
+            перекрывайте текстовые хуки, штрих останется серым.
+          </p>
+        </div>
+      </div>
+      ${megaNavCanvas({ subActiveValue: 'terminal' })}
+    </div>
+  `,
+};
+
+export const MegaNavAccessibility: Story = {
+  name: 'Доступность (мега)',
+  render: () => html`
+    ${canvasStyles}
+    <div class="tkn-canvas">
+      ${megaNavCanvas({ subActiveValue: 'analytics' })}
+      <main>
+        <div class="tkn-demo">
+          <h1>Доступность мега-навигации</h1>
+          <p class="tkn-note">
+            Два именованных ориентира <code>&lt;nav aria-label&gt;</code> в
+            одном баннере: «Навигация» (строка 1, константа) и
+            <code>subLabel</code> (строка 2, по умолчанию «Разделы» —
+            <code>sub-label</code> перекрывает). Активная ссылка каждой
+            строки несёт <code>aria-current="page"</code>; все ссылки —
+            настоящие <code>&lt;a&gt;</code> с нативной навигацией. Цели
+            ≥44px: якоря на всю высоту своей строки (72px и 64px). Ниже
+            768px ряд 2 исключается из табуляции и дерева доступности
+            (display:none), порядок v1 сохраняется.
+          </p>
+          <h2>Чек-лист: только с клавиатуры</h2>
+          <table>
+            <thead>
+              <tr><th>Клавиша</th><th>Ожидаемое поведение</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Tab</code></td>
+                <td>
+                  Ссылки строки 1 (6) → утилиты (поиск, «Войти») → ссылки
+                  строки 2 (6); кольцо 2px на каждом шаге (§D эталона:
+                  ряд 1 → Войти → ряд 2).
+                </td>
+              </tr>
+              <tr>
+                <td><code>Enter</code> на любой ссылке</td>
+                <td>Нативная навигация якоря; компонент ничего не перехватывает.</td>
+              </tr>
+              <tr>
+                <td><code>Tab</code> &lt;768px</td>
+                <td>Ряд 2 скрыт (display:none) — стопов строки 2 нет; далее модель v1: бургер.</td>
+              </tr>
+              <tr>
+                <td><code>Esc</code> в drawer (&lt;768px)</td>
+                <td>Модель v1 без изменений: закрытие, фокус на бургер.</td>
+              </tr>
+            </tbody>
+          </table>
+          <h2>Протокол скринридер-проверки (VoiceOver / NVDA)</h2>
+          <p class="tkn-note">
+            Протокол исполняется вручную на стороне мейнтейнера (запись в
+            deferred-work.md). Каждое расхождение с ожидаемым объявлением —
+            дефект, а не особенность.
+          </p>
+          <table>
+            <thead>
+              <tr><th>Шаг</th><th>Ожидаемые объявления</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Чтение сверху</td>
+                <td>«баннер», затем «навигация, 6 элементов», затем «Разделы, навигация, 6 элементов»</td>
+              </tr>
+              <tr>
+                <td>Активная ссылка строки 1</td>
+                <td>«Инвестиции, ссылка, текущая страница» (aria-current)</td>
+              </tr>
+              <tr>
+                <td>Активная ссылка строки 2</td>
+                <td>«Аналитика, ссылка, текущая страница» — вес 700 только визуален, состояние несёт aria-current</td>
+              </tr>
+              <tr>
+                <td>Ротор навигации</td>
+                <td>Два ориентира с РАЗНЫМИ именами: «Навигация» и «Разделы» (перекрытие sub-label)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
     </div>
   `,
 };

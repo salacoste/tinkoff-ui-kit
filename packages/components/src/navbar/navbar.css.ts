@@ -35,6 +35,49 @@ import { css } from 'lit';
  *   layer already collapsed the duration — the belt kills any final-
  *   keyframe flash, the tabs precedent).
  *
+ * MEGA-NAV ROW 2 (Story 7.1) — pixel-probed from
+ * `.playwright-cli/captures-v2/invest-stocks/pattern-header-meganav.png`
+ * (1280×129; full probe tables in .playwright-cli/verify/mega-nav/NOTES.md):
+ * the capture's two rows are y0–63 / y65–128 — BOTH 64px. Row 1 keeps the
+ * 72px DESIGN ruling VERBATIM (the 3.4 precedent above; the capture's row-1
+ * active indicator is a 2px #666666 stroke under «Инвестиции» x353–428,
+ * y62–63 — DESIGN's yellow-100 4px pair wins, the same DESIGN-over-capture
+ * ruling, recorded in the NOTES). Row 2 ships the CAPTURE LITERAL 64px —
+ * FLAGGED per flag-don't-invent: no token exists (DESIGN has no sub-nav
+ * entry; the height rides the `--tk-navbar-subnav-height` hook).
+ *
+ * - ROW 2 LINKS: body-m, inactive text-secondary (probe: #75–#8A glyph
+ *   cores), ACTIVE = 700 text-primary (probe: #333 cores — the same
+ *   heading-weight source as row 1) + a 2px underline at the row's bottom
+ *   edge (TRUED, story 7.1 triage: the capture DOES paint one — 2px #666666
+ *   at y127–128, x150–196 under «Каталог», the row's last 2px; the frozen
+ *   «no underline» rested on the initial y118–120 probes, refuted by
+ *   extended scanlines + vision). Mechanism mirrors row 1's ::after
+ *   (inset-inline space-12, bottom 0) at half the stroke; the stripe is
+ *   gray, not yellow — token semantics text-secondary (#616871) vs the
+ *   capture's #666666, delta recorded in the NOTES.
+ * - DIVIDER between the rows (TRUED with it): the capture paints a 1px
+ *   #DDDFE0 hairline at y64 spanning the content container x88–1191 —
+ *   implemented as a 1px ::before on .subnav__inner (the container
+ *   register), border-default token semantics (#E7E8EA vs #DDDFE0,
+ *   recorded). Only the sub-nav row carries it — without subLinks the
+ *   sheet is byte-identical v1 (no divider node exists).
+ * - REGISTER: .subnav__inner mirrors .bar__inner's container math exactly
+ *   (max-width container, auto margins, space-24 padding) — the sub-nav
+ *   link BOXES start at the same content-box register where row 1's flow
+ *   starts (probe: row-2 links from x88 == the container content edge ==
+ *   the logo's left edge; row-1 link TEXT starts x124 only because the
+ *   logo occupies the first slot — the spec's «row-1 LINK register» is
+ *   this container register, NOT the post-logo text position).
+ * - ONE STICKY UNIT: .bar wraps BOTH rows — the sticky/z, the
+ *   data-scrolled shadow + hairline, and the fill all sit on .bar, so the
+ *   shadow paints under the LAST row (row 2 when present, v1-identical
+ *   row 1 otherwise). With subLinks the fixed 72px .bar height becomes
+ *   auto (.bar--subnav) and each row carries its own explicit height.
+ * - <768px: .subnav display:none — the sub-nav is DESKTOP-ONLY chrome
+ *   (the mobile capture shows no sub-nav; the drawer stays v1's row-1
+ *   model), and .bar--subnav .bar__inner drops to the mobile 56px token.
+ *
  * Per-component custom properties (`--tk-navbar-*`, CONVENTIONS §6), each
  * consumed WITH its token default:
  * - `--tk-navbar-fill`           bar fill          (default surface-base)
@@ -46,11 +89,17 @@ import { css } from 'lit';
  * - `--tk-navbar-underline`      active indicator  (default yellow-100)
  * - `--tk-navbar-burger-fill`    burger chip fill  (default surface-muted)
  * - `--tk-navbar-drawer-fill`    drawer fill       (default surface-base)
+ * - `--tk-navbar-subnav-height`  row-2 height      (default 64px — CAPTURE
+ *   LITERAL, flagged: no token exists)
+ * - `--tk-navbar-sublink`        row-2 inactive    (default text-secondary)
+ * - `--tk-navbar-sublink-hover`  row-2 hovered     (default text-primary)
+ * - `--tk-navbar-sublink-active` row-2 active      (default text-primary)
  *
  * Known structural (non-token) values, flagged per the flag-don't-invent
  * rule: the 4px indicator weight (spec-fixed), the 44px burger box (the
- * ≥44px interactive-target floor), and the underline's inline inset reusing
- * the link's own padding token (the indicator spans the padded hit box).
+ * ≥44px interactive-target floor), the underline's inline inset reusing
+ * the link's own padding token (the indicator spans the padded hit box),
+ * and the row-2 64px height (capture literal — see MEGA-NAV above).
  *
  * Z vocabulary: exactly ONE consumption — the sticky bar's `--tk-z-nav`
  * (a scale token; the drawer's z is the overlay controller's, never ours).
@@ -153,6 +202,7 @@ export const navbarStyles = css`
   }
 
   .link:focus-visible,
+  .sublink:focus-visible,
   .drawer__link:focus-visible {
     outline: 2px solid var(--tk-color-focus-ring);
     outline-offset: 2px;
@@ -173,6 +223,116 @@ export const navbarStyles = css`
     bottom: 0;
     height: 4px;
     background: var(--tk-navbar-underline, var(--tk-color-yellow-100));
+  }
+
+  /* --- Sub-nav row 2 (Story 7.1 — mega-nav) ---------------------------------- */
+  /* The bar grows to its rows' own heights: row 1 keeps its DESIGN 72px via
+     the explicit .bar__inner height (the v1 .bar__inner height:100% only
+     resolves against the fixed 72px .bar; with the wrapper at auto the row
+     must carry the height itself). Sticky/z, the scrolled shadow + hairline,
+     and the fill all stay ON .bar — the shadow paints under the LAST row. */
+  .bar--subnav {
+    height: auto;
+  }
+
+  .bar--subnav .bar__inner {
+    height: var(--tk-navbar-height, 72px);
+  }
+
+  /* 64px = the CAPTURE LITERAL (pattern-header-meganav.png row 2 spans
+     y65–128; see the file header) — FLAGGED: no token exists, so the value
+     rides this hook (override per instance, not per theme). */
+  .subnav {
+    height: var(--tk-navbar-subnav-height, 64px);
+  }
+
+  /* The row-2 REGISTER: the SAME container math as .bar__inner (max-width
+     container, auto margins, space-24 inline padding) — the sub-nav link
+     boxes start at the content-box register where row 1's flow starts
+     (probe: row-2 links x88 == the container edge, NOT the row-1 post-logo
+     text position x124). DIVIDER between the rows (TRUED, story 7.1
+     triage): the reference paints a 1px hairline ON the seam spanning the
+     CONTAINER register only (probe: y64, x88–1191 — nothing outside it),
+     so it is a ::before on this container box, NOT a .subnav border (a
+     border there would span the full bar width) and NOT on .bar (v1's
+     bottom hairline must stay where it is). Token semantics:
+     border-default (#E7E8EA) vs the capture's #DDDFE0 — nearest token,
+     delta recorded in verify/mega-nav/NOTES.md. Without subLinks none of
+     these nodes render — v1 stays byte-identical, no divider. */
+  .subnav__inner {
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    align-items: stretch;
+    max-width: var(--tk-space-container);
+    height: 100%;
+    margin-inline: auto;
+    padding-inline: var(--tk-space-24);
+  }
+
+  .subnav__inner::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 1px;
+    background: var(--tk-color-border-default);
+  }
+
+  /* Plain text links — the .link mold: full-row-height hit target (≥44px),
+     padding-inline for the gap rhythm (probe: ~26px between row-2 label
+     ends ≈ the two space-12 paddings), the label span as the shrinking
+     ellipsis child (the .link__label precedent — an inline-flex anchor's
+     own text-overflow never engages). position:relative anchors the ACTIVE
+     underline's ::after exactly as .link anchors row 1's. */
+  .sublink {
+    position: relative;
+    display: inline-flex;
+    flex: 0 1 auto;
+    min-width: 0;
+    align-items: center;
+    padding-inline: var(--tk-space-12);
+    font-family: var(--tk-font-body);
+    font-size: var(--tk-text-body-m-size);
+    font-weight: var(--tk-text-body-m-weight);
+    line-height: var(--tk-text-body-m-leading);
+    color: var(--tk-navbar-sublink, var(--tk-color-text-secondary));
+    text-decoration: none;
+    transition: color var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-standard);
+  }
+
+  .sublink__label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sublink:hover {
+    color: var(--tk-navbar-sublink-hover, var(--tk-color-text-primary));
+  }
+
+  /* ACTIVE (TRUED, story 7.1 triage): 700 text-primary + a 2px underline at
+     the row's bottom edge — the reference DOES paint one (probe: 2px
+     #666666 at y127–128, x150–196 under «Каталог» — the row's last 2px;
+     the initial y118–120 probes missed it, vision + extended scanlines
+     found it). The mechanism mirrors row 1's ::after verbatim
+     (inset-inline space-12 = the label box, bottom 0) at HALF the stroke
+     and WITHOUT a yellow: the reference stripe is gray — token semantics
+     text-secondary (#616871) vs the capture's #666666, delta recorded in
+     verify/mega-nav/NOTES.md. */
+  .sublink[aria-current='page'] {
+    color: var(--tk-navbar-sublink-active, var(--tk-color-text-primary));
+    font-weight: var(--tk-text-heading-2-weight);
+  }
+
+  .sublink[aria-current='page']::after {
+    content: '';
+    position: absolute;
+    inset-inline: var(--tk-space-12);
+    bottom: 0;
+    height: 2px;
+    background: var(--tk-color-text-secondary);
   }
 
   /* --- Burger (<768px — media query, container queries deferred) ------------- */
@@ -312,6 +472,20 @@ export const navbarStyles = css`
 
     .links {
       display: none;
+    }
+
+    /* The sub-nav row is DESKTOP-ONLY chrome (the mobile capture shows no
+       row 2; the drawer stays v1's row-1 model) — display:none also drops
+       its links from the tab order and the axe/landmark surface. */
+    .subnav {
+      display: none;
+    }
+
+    /* The .bar--subnav .bar__inner explicit height (72px, above) would
+       out-specify the mobile flip — restate it at the same (0,2,0) here so
+       the mobile bar keeps its 56px probe height with the sub-nav gone. */
+    .bar--subnav .bar__inner {
+      height: var(--tk-navbar-height-mobile, 56px);
     }
 
     .burger {
