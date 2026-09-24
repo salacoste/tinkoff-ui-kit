@@ -177,9 +177,16 @@ Quick-review lens (qr-lens-6-5) on `b1a1b9f`: **SHIP — 0 BLOCKERS / 0 WARN / 2
   mold showcase files). DISPOSITION: recorded, no action.
 
 **Provenance note (honest):** the lens's report tail (wiring-map verdict, deviation
-dispositions, hygiene lines) was lost to relay truncation twice; the dispositions below
-were re-verified by the ORCHESTRATOR directly against the commit — they are
-orchestrator-verified facts with cites, not relayed lens words:
+dispositions, hygiene lines) was lost to relay truncation at first delivery; the
+dispositions below were re-verified by the ORCHESTRATOR directly against the commit and
+the spec closed on them. The lens's compact resend then ARRIVED POST-CLOSE and CONFIRMED
+every disposition without discrepancy — its own wording: wiring-map 5/5 TRUE (with cites:
+stories:294-298/:229-236/:301-304/:245-264/:313-315/:239-242, spec legs :129-140/:142-
+154/:175-178), deviations = COMPLIANT / CORRECT / HONEST-verified / WITHIN CHARTER,
+hygiene all CONFIRMED (4 all-new baselines, event surface untouched, group-IV ledger
+cites real — combobox-search.test.ts:312/:340/:371, pagination.test.ts:118,
+data-table.test.ts:203, filter-chips.test.ts:153, filter-chips.ts:583-587), verdict
+unchanged SHIP 0/0/2. The lines below keep the orchestrator's original phrasing:
 
 - **«OR within chips» vs single-select — NOT a deviation:** the frozen block's own
   parenthetical rules («verify against the chips element's actual selection model and
