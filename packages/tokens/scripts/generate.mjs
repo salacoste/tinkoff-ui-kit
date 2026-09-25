@@ -289,10 +289,10 @@ const DARK_OVERRIDES = [
   { name: '--tk-color-tint-bluegray', source: 'dark-tint-bluegray' },
   { name: '--tk-color-tint-mint', source: 'dark-tint-mint' },
   { name: '--tk-color-tint-beige', source: 'dark-tint-beige' },
-  // v2 additions (Story 6.1): the warm-cream tint pair continues the tint
-  // block; the table-semantics quartet (deltas, divider, row hover) maps the
-  // four v2 dark first-pass palette keys. All carry DARK_TOKEN_NOTES
-  // [ASSUMPTION] annotations for the 8.2 dark sweep (the 5.4 rule).
+  // v2 additions (Story 6.1, VERIFIED by the 8.2 dark sweep — the 5.4 rule):
+  // the warm-cream tint pair continues the tint block; the table-semantics
+  // quartet (deltas, divider, row hover) maps the four v2 dark palette keys.
+  // All six HELD with computed evidence (DARK_TOKEN_NOTES carry the numbers).
   { name: '--tk-color-tint-cream', source: 'dark-tint-cream' },
   { name: '--tk-color-tint-cream-raised', source: 'dark-tint-cream-raised' },
   { name: '--tk-color-delta-positive', source: 'dark-delta-positive' },
@@ -366,32 +366,33 @@ const DARK_TOKEN_NOTES = new Map([
     '--tk-color-tint-beige',
     'Verified — Story 5.4 dark sweep: Lab L* 15.4, OKLCH L 27.1%, hue 78.1° vs light 93.8° (Δ15.7° — within the recorded ±20° tolerance at C ≤ 0.04); held — 0.6 pt under the window. DESIGN.md Colors.',
   ],
-  // v2 additions (Story 6.1) — dark FIRST-PASS values: every entry states its
-  // derivation facts and carries the 8.2 verification flag in brackets (the
-  // 5.4 rule) — the TOKENS.md assumption bullet quotes the flag literally.
+  // v2 additions (Story 6.1, verified by the 8.2 dark sweep — the 5.4 rule):
+  // all six first-pass values HELD with computed evidence (Lab/OKLCH tint
+  // derivation, three-surface delta AA scope, white-alpha composites); the
+  // arithmetic lives in .playwright-cli/verify/dark-sweep/ledger.md.
   [
     '--tk-color-tint-cream',
-    '[ASSUMPTION — verify at the v2 dark phase (8.2) per the 5.4 rule]. Warm-cream dark first-pass (v2, business; DESIGN.md Colors): follows the 5.4 tint derivation window at the sweep; AA holds by construction — text-primary 15.895:1 / text-secondary 8.461:1 on it (tests/contrast.test.ts).',
+    'Verified — Story 8.2 dark sweep: Lab L* 13.26, OKLCH 25.2% C 0.004 H 84.6° vs light 84.6° (Δ0.0° — hue exact); held — 2.74 pt under the 16–20 window, but the correction fails the meaningful conjunct twice: the only in-window landing sits ≤0.3 L* from the raised sibling (the page→card step would collapse sub-JND) and the value mirrors the light pair\'s page≈muted-lightness relationship (surface-muted dark `#222222` = Lab 13.2 ≈ 13.26 — warm hue is the differentiator, as in light). AA holds: text-primary 15.895:1 / text-secondary 8.461:1 (tests/contrast.test.ts). DESIGN.md Colors.',
   ],
   [
     '--tk-color-tint-cream-raised',
-    '[ASSUMPTION — verify at the v2 dark phase (8.2) per the 5.4 rule]. Raised step of the warm-cream dark first-pass (DESIGN.md Colors); AA holds by construction — text-primary 14.680:1 / text-secondary 7.989:1 on it (tests/contrast.test.ts).',
+    'Verified — Story 8.2 dark sweep: Lab L* 16.27 — INSIDE the 16–20 window; OKLCH 27.8% C 0.010 H 80.6° vs light 80.7° (Δ0.1°); pair step page→raised = Δ3.0 L* (25.2→27.8% OKLCH), a clean tonal elevation. AA holds: text-primary 14.680:1 / text-secondary 7.989:1 (tests/contrast.test.ts). DESIGN.md Colors.',
   ],
   [
     '--tk-color-delta-positive',
-    '[ASSUMPTION — verify at the v2 dark phase (8.2) per the 5.4 rule]. AA first-pass sourced from green-100 `#39B54A` (6.533:1 on dark-base): the existing lightest green step clears 4.5:1 as-is, so no value was authored — green-300 (the light override) measures 3.794:1 in dark. Holds on the real composites too — row-hover `#313131` 4.883:1, tonal step 1 `#222222` 5.972:1. Site anchors live in DESIGN.md Colors (Table delta semantics).',
+    'Verified — Story 8.2 dark sweep: `#39B54A` clears AA on ALL three real dark surfaces — base 6.533:1, tonal step 1 5.972:1, row-hover composite `#313131` 4.883:1 (confirmed live on the story DOM — the delta verdict legs of tests/visual/dark-sweep.spec.ts; pins tests/contrast.test.ts:284-285). Sourced from green-100: the existing lightest green step clears as-is, no value authored (green-300, the light override, measures 3.794:1 in dark). Site anchors live in DESIGN.md Colors (Table delta semantics).',
   ],
   [
     '--tk-color-delta-negative',
-    '[ASSUMPTION — verify at the v2 dark phase (8.2) per the 5.4 rule]. AA first-pass authored `#F63434` (4.525:1 on dark-base) per the dark-error `#FF7B74` precedent — least-lightened delta red clearing 4.5:1; NO red scale step passes (red-100 = 3.630:1) and the site delta red `#F52222` = 4.255:1 fails. RULING: sanctioned on dark surface-base only — the row-hover composite `#313131` (3.382:1) and tonal step 1 `#222222` (4.136:1) fail AA; 6.2/6.4 hold deltas on unhovered rows or re-derive at 8.2. Site anchors live in DESIGN.md Colors (Table delta semantics).',
+    'Verified — Story 8.2 dark sweep: `#F63434` clears AA on the sanctioned dark base only (4.525:1); the row-hover composite `#313131` 3.382:1 and tonal step 1 `#222222` 4.136:1 FAIL — the closed 6.1 scope ruling (deltas sanctioned on base surfaces; composite failures PINNED, never silent — contrast.test.ts:282-283, confirmed live on the story DOM by the delta verdict legs). A hover-clearing red exists numerically (`#FF7B74` = 5.165:1 on `#313131`) but sits +12.7 L* into the pastel error family — not a delta red; the least-lightened AA value stays (no red scale step passes: red-100 = 3.630:1, site `#F52222` = 4.255:1 on base, worse). Site anchors live in DESIGN.md Colors (Table delta semantics).',
   ],
   [
     '--tk-color-border-table',
-    '[ASSUMPTION — verify at the v2 dark phase (8.2) per the 5.4 rule]. White-alpha hairline grammar (dark-border `#FFFFFF24` / dark-field `#FFFFFF1A` family) at the extracted divider\'s own alpha: 0x1F ≈ 12% white mirrors light rgba(0,16,36,0.12), one step under dark-border — dividers are quieter than control borders. Decorative structure (non-text; 1.4.11 does not apply).',
+    'Verified — Story 8.2 dark sweep: `#FFFFFF1F` composites to `#363636` on dark-base (Lab 22.6, Δ+13.4 — a visible hairline) and `#3D3D3D` on tonal step 1; 1.8 L* under the dark-border composite `#3A3A3A` — the documented one-step-under divider grammar (dividers quieter than control borders). 0x1F ≈ 12% white mirrors light rgba(0,16,36,0.12). Decorative structure (non-text; 1.4.11 does not apply). DESIGN.md Colors.',
   ],
   [
     '--tk-color-surface-row-hover',
-    '[ASSUMPTION — verify at the v2 dark phase (8.2) per the 5.4 rule]. White-alpha fill grammar: reuses the family\'s established fill step `#FFFFFF1A` (10% white, dark-field) rather than authoring a new one; transient hover fill, decorative (non-text).',
+    'Verified — Story 8.2 dark sweep: `#FFFFFF1A` composites to `#313131` on dark-base (pinned tests/contrast.test.ts:281) — Δ+11.1 L* over base, a visible-but-gentle transient step; the row\'s text pairs on the composite pass (text-primary 13.009:1, text-secondary 7.303:1) and the delta pair rides the 6.1 scope ruling (3.382/4.883 — the negative leg\'s documented state, confirmed live). Same 10% white as the dark-field fill family. DESIGN.md Colors.',
   ],
 ]);
 
@@ -1001,7 +1002,7 @@ function renderMd(model, dark) {
     '- The `components:` frontmatter block is consumer spec prose — never rendered.',
     '- The z-scale is scaffold mechanics, not an extraction (own section below).',
     '- The `dark-*` color entries are the palette SOURCE for the dark layer (see "Dark layer") — never emitted as `--tk-color-dark-*` custom properties.',
-    '- All v1 `[ASSUMPTION]` flags are RESOLVED (mint/beige tints — Story 3.6; dark tints — 5.4; xxl/xl radii + the spacing systematization — 5.6): every flagged value was verified against the archived captures and now carries a `Verified —` annotation; none was silently dropped. The v2 dark first-pass keys (Story 6.1) are the standing exception — each states `[ASSUMPTION — verify at the v2 dark phase (8.2) per the 5.4 rule]` in its dark-layer Notes.',
+    '- All v1 `[ASSUMPTION]` flags are RESOLVED (mint/beige tints — Story 3.6; dark tints — 5.4; xxl/xl radii + the spacing systematization — 5.6): every flagged value was verified against the archived captures and now carries a `Verified —` annotation; none was silently dropped. The v2 dark first-pass keys (Story 6.1) were verified by the 8.2 dark sweep (the 5.4 rule: cream pair — Lab/OKLCH derivation window; delta pair — the three-surface AA scope; white-alpha pair — composite/grammar) — all six HELD and now carry `Verified —` annotations with the computed evidence.',
     '',
   );
   lines.push(

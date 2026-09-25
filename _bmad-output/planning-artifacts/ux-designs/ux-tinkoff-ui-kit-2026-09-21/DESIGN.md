@@ -92,10 +92,10 @@ colors:
   # v2 — dark first-pass table semantics: deltas follow the dark-error/dark-link
   # AA precedent (least-lightened value clearing 4.5:1 on dark-base), divider/hover
   # follow the white-alpha grammar (dark-border #FFFFFF24 / dark-field #FFFFFF1A)
-  dark-delta-positive: '#39B54A' # green-100 — 6.53:1 on dark-base; green-300 (the light override) measures 3.79:1 in dark [ASSUMPTION — verify at the v2 dark phase (8.2) per the 5.4 rule]
-  dark-delta-negative: '#F63434' # authored lightened delta red — the site's #F52222 = 4.26:1 on dark-base (fails); least-lightened value clearing 4.5:1 = 4.53:1 [ASSUMPTION — verify at the v2 dark phase (8.2) per the 5.4 rule]
-  dark-border-table: '#FFFFFF1F' # white-alpha hairline at the extracted divider's own alpha (0x1F ≈ 12% white mirrors rgba(0,16,36,0.12)), one step under dark-border — dividers are quieter than control borders [ASSUMPTION — verify at the v2 dark phase (8.2) per the 5.4 rule]
-  dark-surface-row-hover: '#FFFFFF1A' # white-alpha fill grammar — reuses the family's established fill step (dark-field, 10% white) instead of authoring a new one [ASSUMPTION — verify at the v2 dark phase (8.2) per the 5.4 rule]
+  dark-delta-positive: '#39B54A' # green-100 — verified 8.2: clears AA on all three dark surfaces (base 6.533 / step1 5.972 / hover composite #313131 4.883)
+  dark-delta-negative: '#F63434' # authored lightened delta red — verified 8.2: base 4.525 ✓ (sanctioned scope); hover composite #313131 3.382 / step1 4.136 fail per the closed 6.1 scope ruling (pinned, live-confirmed)
+  dark-border-table: '#FFFFFF1F' # white-alpha hairline at the extracted divider's own alpha (0x1F ≈ 12% white mirrors rgba(0,16,36,0.12)), one step under dark-border — verified 8.2: composite #363636 on base (Δ+13.4 L*), 1.8 L* under the dark-border composite
+  dark-surface-row-hover: '#FFFFFF1A' # white-alpha fill grammar — reuses the family's established fill step (dark-field, 10% white); verified 8.2: composite #313131 on base, text pairs on it 13.009/7.303 ✓
 shadows:
   default: '0 4px 24px rgba(0,0,0,.12)'
   default-hover: '0 12px 36px rgba(0,0,0,.2)'
@@ -320,7 +320,7 @@ PRD improvement axis, fidelity checks cover visuals, not ratios):
 | Focus ring | — | **unified** `{colors.focus-ring}` blue-100 / `{colors.dark-focus-ring}` #66A3FF, 2px offset 2px (site's ink-on-ink = invisible; border-default = 1.23:1) |
 | Dark text-secondary #FFFFFFB3 | 6.75–9.07:1 | passes; #FFFFFF80 (muted) restricted to ≥48px or non-essential text |
 | Yellow active indicators (nav underline, tab pill) | 1.34:1 vs white | fails 1.4.11 non-text 3:1 → indicators are always **redundant**: paired with 700-weight ink text (Navbar) or ink text + shadow (Tabs pill); yellow never carries state alone |
-| Table deltas (v2, invest/stocks) | — | **overridden** — `delta-positive` = green-300 `#168821` (4.587:1 on white ✓; site `#00A328` = 3.350:1 fails) / `delta-negative` = red-300 `#C40B08` (6.179:1 ✓; site `#F52222` = 4.090:1 fails). **Scope ruling — deltas are sanctioned on base surfaces only; row-hover/tonal composites fail AA** for at least one leg per theme (green-300: row-hover composite `#F2F4F7` 4.163:1, surface-muted 4.210:1, surface-field 4.039:1; dark `#F63434`: row-hover composite `#313131` 3.382:1, tonal step 1 `#222222` 4.136:1; red-300 clears muted/field/hover at 5.671/5.441/5.608) — 6.2/6.4 hold deltas on unhovered rows or re-derive at 8.2. Dark first-pass **[ASSUMPTION — verify at the v2 dark phase (8.2) per the 5.4 rule]**: `dark-delta-positive` = green-100 `#39B54A` 6.533:1 on dark-base (green-300 fails in dark at 3.794:1; green-100 holds on the composites — hover 4.883:1, step 1 5.972:1); `dark-delta-negative` `#F63434` 4.525:1 — authored lightened delta red per the dark-error precedent (no red scale step passes: red-100 = 3.630:1, site `#F52222` = 4.255:1) |
+| Table deltas (v2, invest/stocks) | — | **overridden** — `delta-positive` = green-300 `#168821` (4.587:1 on white ✓; site `#00A328` = 3.350:1 fails) / `delta-negative` = red-300 `#C40B08` (6.179:1 ✓; site `#F52222` = 4.090:1 fails). **Scope ruling — deltas are sanctioned on base surfaces only; row-hover/tonal composites fail AA** for at least one leg per theme (green-300: row-hover composite `#F2F4F7` 4.163:1, surface-muted 4.210:1, surface-field 4.039:1; dark `#F63434`: row-hover composite `#313131` 3.382:1, tonal step 1 `#222222` 4.136:1; red-300 clears muted/field/hover at 5.671/5.441/5.608) — 6.2/6.4 hold deltas on unhovered rows or re-derive at 8.2. Dark first-pass **verified (8.2 dark sweep — both HELD)**: `dark-delta-positive` = green-100 `#39B54A` clears ALL three dark surfaces — base 6.533:1, step 1 5.972:1, hover composite `#313131` 4.883:1 (green-300 fails in dark at 3.794:1); `dark-delta-negative` `#F63434` 4.525:1 on base (sanctioned scope; hover `#313131` 3.382:1 / step 1 4.136:1 fail per the scope ruling — a hover-clearing red `#FF7B74` = 5.165:1 exists numerically but is +12.7 L* into the pastel error family, not a delta red; no red scale step passes: red-100 = 3.630:1, site `#F52222` = 4.255:1 on base) |
 | Warm-cream pairings (v2, business) | 4.87–15.90:1 | sanctioned: text-primary 10.911:1 / text-secondary 4.866:1 on `tint-cream`; text-primary 9.655:1 on `tint-cream-raised`; dark: 15.895 / 8.461 on `dark-tint-cream`, 14.680 / 7.989 on `dark-tint-cream-raised`. **text-secondary NOT sanctioned on `tint-cream-raised`** — 4.306:1 fails 4.5:1, use text-primary there (the v1 on-tint ruling precedent) |
 
 ## Typography
@@ -431,7 +431,11 @@ steps (`delta-positive` = green-300 `#168821` 4.7:1 ✓, `delta-negative` = red-
 **Warm-cream family (v2, business).** Distinct from tint-beige (computed OKLCH: cream
 `#F1EEE8` 0.950/0.009/84.6° and raised `#E9E0D1` 0.910/0.022/80.7° vs beige 0.939/0.029/93.8°
 — hue −13° toward orange, chroma halved). `tint-cream`/`tint-cream-raised` +
-dark first-pass `[ASSUMPTION — verify at the v2 dark phase per the 5.4 rule]`. Business bento
+dark pair verified at the 8.2 dark sweep (both HELD): page `#232220` Lab 13.26 / OKLCH
+25.2% H 84.6° (hue Δ0.0° — exact; 2.74 pt under the 16–20 window, held — the in-window
+landing collapses the page→card step to ≤0.3 L*, and the value mirrors the light pair's
+page≈muted-lightness relationship, dark `#222222` = 13.2); raised `#2B2823` Lab 16.27 —
+INSIDE the window, pair step Δ3.0 L*. Business bento
 cards: flat (no shadow), `{rounded.xl}`, floating white 111×44 pill CTA over 3D art; yellow
 appears only inside illustrations.
 
