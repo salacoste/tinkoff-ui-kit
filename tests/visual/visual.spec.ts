@@ -92,15 +92,23 @@ async function waitForDecodedCanvas(page: Page): Promise<void> {
  * of the same story passes at the default 1.5%). Keyed `${id} [${theme}]`,
  * applied ONLY when process.env.CI is set — local compare stays strict.
  *
- * RETIRED at story 9.1: the one entry this carried
- * ('components-tooltip--placements [light]': 0.13) is gone — the Placements
- * story now pins its pill GEOMETRY structurally (content long enough to hit
- * the pill max-width cap 288px, probe-verified in
- * .playwright-cli/verify/tokens-9-1/), so the platform text-advance class no
- * longer moves pixels and the default 1.5% covers CI both themes. The map
- * and its application stay wired for the next platform rendering class.
+ * History of the tooltip placements entries (the class's one story so far):
+ * retired at story 9.1 on the width-pinning theory (content long enough to
+ * hit the pill max-width cap 288px), then RESTORED the same day: CI run
+ * 36131832924 — the first proof attempt — came back 1366/1368 with BOTH
+ * placements legs failing (light 0.10, dark 0.04). Forensics on the diff
+ * PNGs: the cap pins the pill WIDTH, but the pill HEIGHT is the line count,
+ * and ubuntu text-advance wraps the same RU copy one line further (68px →
+ * 87px). No story content can pin a wrap line count — text-metric geometry
+ * is structurally un-pinnable, so the CI-scoped tolerance IS the standing
+ * fix. The cap-hitting content STAYS (it killed the auto-width edge-shift
+ * subclass and exercises the wrap path); values sized to the measured
+ * ratios with headroom: light 0.13 ≥ 1.3× of 0.10, dark 0.08 = 2× of 0.04.
  */
-const CI_VISUAL_TOLERANCE: Record<string, number> = {};
+const CI_VISUAL_TOLERANCE: Record<string, number> = {
+  'components-tooltip--placements [light]': 0.13,
+  'components-tooltip--placements [dark]': 0.08,
+};
 
 /** Discovery — a missing/empty index is a loud failure with build guidance. */
 let storyIds: string[];

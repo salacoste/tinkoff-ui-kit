@@ -140,9 +140,13 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   zero new type tokens; keyboard defects of the reference (inert arrows, chip focus-drop) are
   IMPROVED per APG — the sanctioned a11y axis
 - **v1.2.0 cycle (epics-v3, 9 stories) OPEN 2026-09-25: story 9.1 DONE** (c13ba12+4184494 —
-  tint-brown + font-mono tokens, tooltip 288px-cap structural fix retiring the CI tolerance,
-  THE single baseline round: 20 PNGs). Next: 9.2 (generator truth) → [10.1+10.2] → 10.3 → 10.4
-  → 11.1–11.3. Sequencing in epics-v3.md.
+  tint-brown + font-mono tokens, tooltip 288px-cap content fix, THE single baseline round: 20
+  PNGs; radius-3xl refused by probe 23.8px). **CI postscript same day: the tolerance
+  retirement was REFUTED by Actions (run 36131832924, both placements legs red — the cap pins
+  pill width, not wrap line count: ubuntu +1 line, 68→87px); entries restored light 0.13 /
+  dark 0.08 — the CI-scoped tolerance is the STANDING fix for text-metric geometry**
+  (ledger + spec-9-1 change log carry the record). Next: 9.2 (generator truth) → [10.1+10.2]
+  → 10.3 → 10.4 → 11.1–11.3. Sequencing in epics-v3.md.
 - **Kit totals: 889 unit + 1368 visual/axe tests, 27 components, 27 React wrappers, v1 design
   assumptions all closed (6 v2 dark first-pass [ASSUMPTION]s open BY DESIGN until 8.2), CI green —
   CORRECTED 2026-09-25: Actions had been RED since 5.5/6962326 (typecheck step ran before build;

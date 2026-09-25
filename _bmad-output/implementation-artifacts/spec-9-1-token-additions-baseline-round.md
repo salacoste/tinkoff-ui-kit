@@ -204,7 +204,9 @@ Executor judgment calls (triage-endorsed):
 4. dark-sweep BROWN family added as a legitimate single-purpose verdict leg (badge is brown in
    dark too — theme-invariant), not a weakened assertion.
 5. CI tolerance retired by EMPTYING the map (mechanism + comment kept, now recording the
-   retirement).
+   retirement). **5a. REFUTED same day by CI** (run 36131832924): entries restored —
+   light 0.13 / dark 0.08; the cap pins width, not wrap line count (ubuntu +1 line,
+   68→87px). Change Log item 3 carries the full record.
 6. `stepper--api` pair re-created byte-identical (the Api story is apiReferenceDoc — no badge
    rendered) → 20 PNGs modified, not 22; set E verified empty (tooltip.spec.ts captures the
    OPEN story only; invest-landing's per-spec clip is the qr-block region).
@@ -223,6 +225,17 @@ Frozen block untouched. Recorded changes beyond the frozen text:
 2. Merge-round additions: qr-lens finding 3 — stepper.css.ts docblock's badge-radius note
    repointed at verify/stepper/NOTES.md (commit 4184494, incl. the CEM description regen the
    docblock rides); deferred-work closures 7.3/7.4f/1.5/CI-tolerance (this commit).
+3. **Post-merge CI refutation + remediation (same day):** the Boundaries AC «CI's next run
+   passes placements at the default tolerance» was REFUTED by Actions run 36131832924 on
+   e0d4fd2 — 1366/1368, BOTH placements legs red (light 0.10, dark 0.04). Pixel forensics
+   (downloaded artifacts, row-profile): the 288px cap pins pill WIDTH only; pill height =
+   wrap LINE COUNT, and ubuntu lays the same RU copy one line further (macOS 68px → ubuntu
+   87px) — structurally un-pinnable by story content. Remediation: the CI_VISUAL_TOLERANCE
+   entries RESTORED (light 0.13, dark 0.08; visual.spec.ts comment carries the full history);
+   the cap-hitting story content stays (kills the auto-width subclass, exercises wrap). The
+   deferred-work CI-tolerance entry's closure was re-trued to the honest disposition: the
+   CI-scoped tolerance IS the standing fix for text-metric geometry. See Implementation
+   Notes 5a.
 
 ## Review Triage Log
 
@@ -256,5 +269,9 @@ resolved in the merge round.**
   stepper.css.ts/.stories.ts, docs v2/stepper.stories.ts, tooltip.stories.ts,
   custom-elements.json, tests/{contrast,tokens-drift,consumed-tokens}.test.ts,
   tests/visual/{visual,dark-sweep}.spec.ts, 20 baseline PNGs, verify/tokens-9-1/ (8 files).
-  CI verdict on the push head: checked via `gh run` after push (the rule) — recorded in the
-  cycle state at the next story's close.
+  CI verdict on the push head e0d4fd2 (run 36131832924, checked via `gh run`): **RED —
+  1366/1368, both tooltip placements legs** (the retired-tolerance AC refuted; forensics +
+  remediation in Change Log item 3). Remediation commit restores the two tolerance entries
+  and trues ledger/spec/CLAUDE.md; the remediation push's Actions run is the cycle's green
+  CI proof — its verdict recorded below at close.
+  - **CI VERDICT ON THE REMEDIATION HEAD: <filled after `gh run` on the remediation push>**
