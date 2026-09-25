@@ -198,12 +198,12 @@ failing dark leg pinned at `tests/contrast.test.ts:282`):
 - `#313131` (the composite: `#FFFFFF1A` over `#1A1A1A` — 255·0.101961 +
   26·0.898039 = 49.35 → channel 49/255 = 0.192157 → linear **0.030713**)
 - ratio = (0.222967 + 0.05) / (0.030713 + 0.05) = 0.272967 / 0.080713 =
-  **3.382** (positive leg: `#39B54A` L = 0.344155 → 0.394155/0.080713 =
+  **3.382** (positive leg: `#39B54A` L = 0.344120 → 0.394120/0.080713 =
   **4.883**, pin `:284`)
 
 Negative-hold rationale: the 6.1 scope ruling stays CLOSED (deltas are
 sanctioned on base surfaces; the composite failures are PINNED numbers,
-never silent omissions — `:282-283`/`:274`/`:279`). A hover-clearing red
+never silent omissions — `:282-283`/`:274`/`:277`). A hover-clearing red
 exists numerically — computed this sweep: `#FF7B74` = 5.165:1 on
 `#313131` — but sits +12.7 Lab L\* into the pastel ERROR family (a delta
 red is not an error state; the reference itself ships `#F52222` =
@@ -219,7 +219,7 @@ on base (red-100 = 3.630:1). The least-lightened AA-clearing value stays.
 
 ## The delta verdict legs (the ERRATUM's live confirmations)
 
-`tests/visual/dark-sweep.spec.ts:685` — «dark sweep: tk-data-table —
+`tests/visual/dark-sweep.spec.ts:687` — «dark sweep: tk-data-table —
 delta pair verdict legs», BOTH themes, hover-driven on the actual
 playground DOM (hover a delta row, read the computed row fill + delta
 text color, composite over the story canvas at raster precision):

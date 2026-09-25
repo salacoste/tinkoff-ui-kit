@@ -622,7 +622,7 @@ for (const target of SWEEP) {
 // DELTA VERDICT LEGS (spec 8.2) — the 6.1 table-delta AA-override ruling
 // confirmed LIVE on the rendered story DOM. The unit pins compute the same
 // numbers from the token table (tests/contrast.test.ts): the LIGHT row-hover
-// composite #F2F4F7 at :273 (positive 4.163 :274, negative 5.608 :279), the
+// composite #F2F4F7 at :273 (positive 4.163 :274, negative 5.608 :277), the
 // DARK composite #313131 at :281 (negative 3.382 :282 — the FAILING dark
 // leg, the sanctioned-scope state; positive 4.883 :284). These legs re-derive
 // them from what the browser actually paints — hover a delta row, read the
