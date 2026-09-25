@@ -1,6 +1,6 @@
 {
   "name": "pillkit-tokens",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Design tokens for pillkit — the --tk-* custom-property system: light base layer + dark [data-theme=\"dark\"] semantic overrides, AA-verified pairs, optional bundled Daytona fonts (separately licensed).",
   "keywords": [
     "pillkit",

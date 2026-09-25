@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-09-25
+
+### Added — v2 (tbank.ru/invest + /business reference domains)
+
+- v2 token layer: `{colors.*}` reference syntax + rgba literals in DESIGN.md; table/delta/warm-cream
+  semantics; typography registers as mappings — zero new type tokens (6.1)
+- tk-filter-chips + tk-pagination: catalog filter pills (border-only selection, overflow «Ещё» menu)
+  and the pager (nav landmark, windowing, load-more bar) (6.2)
+- tk-combobox-search: borderless 52px typeahead field, activedescendant listbox, IME-safe value sync (6.3)
+- tk-data-table: typographic row-as-link catalog table, direction-carrying delta colors, APG roving
+  keyboard layer (6.4)
+- stocks-catalog showcase composition: five surfaces wired live + recorded 39-step keyboard walkthrough (6.5)
+- tk-navbar mega-nav extension: optional two-deep header (subLinks row), v1 renders byte-stable (7.1)
+- tk-cookie-banner: non-modal consent dialog; `consent-choice` event; storage stays with the consumer (7.2)
+- tk-stepper + tk-store-badges + tk-qr-block: the marketing display trio (7.3)
+- business-landing showcase: bento 2+3 on warm-cream, floating white CTA, form cluster with toast (7.4)
+- invest-landing showcase: marketing register (h1 = heading-2), install cluster qr→steps→badges (7.5)
+- v2 a11y sweep: 54/54 ledger cells, kit-wide `:host([hidden])` guards (33 sheets), empty-name fallbacks (8.1)
+- v2 dark sweep: all six 6.1 dark assumptions held (zero value changes); engine registry 19→28;
+  store-badges anchor color-channel fix (8.2)
+- v2 docs: nine component pages (live CEM tables) + registers surface, single-source TOKENS.md (8.3)
+- v2 verification ledger (16+9 rows) + yellow-discipline audit extension + v1.1.0 release prep (8.4)
+
+### Fixed
+
+- CI workflow: the typecheck step ran before build, so the root typecheck could not resolve workspace
+  `dist/*.d.ts` types on a fresh checkout — Actions had been red since 5.5 (deterministic TS2307),
+  masked locally by stale dist. Steps reordered build → typecheck.
+- Visual suite on CI (first-ever ubuntu run of the v2 content, 1366/1368): the combobox-search
+  open-story driver now settles to a deterministic post-typing state (the focus race painted the
+  focus ring on ubuntu but not on the captured baselines), and the one platform text-advance
+  pill-shift leg (tooltip placements, light) carries a CI-scoped tolerance instead of a local one.
+
 ## [1.0.0] - 2026-09-23
 
 ### Added

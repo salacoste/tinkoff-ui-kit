@@ -1,6 +1,6 @@
 {
   "name": "pillkit-react",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "React 19 adapters for pillkit — wrappers generated from the Custom Elements Manifest of pillkit-components via @lit/react; event handlers receive unwrapped detail payloads.",
   "keywords": [
     "pillkit",
