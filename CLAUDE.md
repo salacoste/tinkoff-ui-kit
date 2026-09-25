@@ -109,7 +109,8 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   8.2-close ×2 1368/1368 stands for the bit-identical served tree).** **v2 COMPLETE —
   14/14 stories (2026-09-25). The repo now waits on the MAINTAINER QUEUE only: (a)
   baseline batch-confirm (ЧАСТЬ v2 of baseline-review-package.md — 140 new + 18
-  adjudicated re-takes), (b) release v1.1.0 per RELEASE.md §8.1–8.5 (THE tag — never
+  adjudicated re-takes) — **CONFIRMED 2026-09-25 (gate closed, see the ✅ block in ЧАСТЬ v2)**,
+  (b) release v1.1.0 per RELEASE.md §8.1–8.5 (THE tag — never
   automated), (c) SR spot-checks v2 + iOS momentum-scroll, (d) the stepper brown-token
   decision. Sequencing in
   epics-v2.md; the v1 component-story gate applies VERBATIM (FR-16). Key v2 decisions: delta
@@ -118,7 +119,12 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   zero new type tokens; keyboard defects of the reference (inert arrows, chip focus-drop) are
   IMPROVED per APG — the sanctioned a11y axis
 - **Kit totals: 881 unit + 1368 visual/axe tests, 27 components, 27 React wrappers, v1 design
-  assumptions all closed (6 v2 dark first-pass [ASSUMPTION]s open BY DESIGN until 8.2), CI green**
+  assumptions all closed (6 v2 dark first-pass [ASSUMPTION]s open BY DESIGN until 8.2), CI green —
+  CORRECTED 2026-09-25: Actions had been RED since 5.5/6962326 (typecheck step ran before build;
+  workspace dist types missing on a fresh checkout; local gates masked it on stale dist — last green
+  run 6b07feb 09-23, the v1.0.0 tag commit has zero Actions runs). Fixed in ba0b622 (build →
+  typecheck; full record in RELEASE.md §1). RULE: "CI green" = the Actions verdict via `gh run`,
+  never inferred from local gates.**
 - Fonts: DaytonaSans/DaytonaPragma in `packages/tokens/fonts/` under LICENSE-FONTS.md (separately
   licensed, NOT MIT; consumer rights ONLY per that file)
 - **Lit on this stack requires `experimentalDecorators: true`** — do not "fix" this
