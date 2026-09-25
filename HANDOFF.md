@@ -93,8 +93,10 @@ v2-базлайнов по ЧАСТИ v2 `baseline-review-package.md` (140 но�
 перезаписей; фиделити-контекст — `.playwright-cli/verify/fidelity-verification-v2/`)
 — **ЗАКРЫТ 2026-09-25: батч подтверждён целиком (salacoste, contact-sheet
 `.playwright-cli/verify/baseline-review-v2.html`; ✅-блок в ЧАСТИ v2)**;
-(b) релиз v1.1.0 по RELEASE.md §8.1–8.5 (bump версий + CHANGELOG + `git tag v1.1.0` —
-тег ТОЛЬКО мейнтейнер); (c) SR-спот-чеки v2 — **ЗАКРЫТЫ 2026-09-25: VoiceOver
+(b) **ИСПОЛНЕНО 2026-09-25 — тег `v1.1.0` стоит на `e09fd3c` и запушен**
+(Actions success run 36110877833; поставлен по явному живому указанию
+мейнтейнера после зелёного вердикта; в тег вошли записи закрытия §8.1.4/§8.1.5);
+оставалось §8.4 — свежий клон по тегу; (c) SR-спот-чеки v2 — **ЗАКРЫТЫ 2026-09-25: VoiceOver
 18/18 ✓, отклонений нет** (run-sheet `.playwright-cli/verify/a11y-sweep/SR-RUNSHEET-v2.md`,
 v2-таблица в PROTOCOL-DIGEST.md); iOS momentum-scroll (п. 3) остаётся
 мейнтейнерским долгом, релиз не гейтит;

@@ -110,8 +110,10 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   14/14 stories (2026-09-25). The repo now waits on the MAINTAINER QUEUE only: (a)
   baseline batch-confirm (ЧАСТЬ v2 of baseline-review-package.md — 140 new + 18
   adjudicated re-takes) — **CONFIRMED 2026-09-25 (gate closed, see the ✅ block in ЧАСТЬ v2)**,
-  (b) release v1.1.0 per RELEASE.md §8.1–8.5 (THE tag — never
-  automated), (c) SR spot-checks v2 — **DONE 2026-09-25: VoiceOver 18/18 ✓, zero
+  (b) release v1.1.0 per RELEASE.md §8.1–8.5 (THE tag — never autonomous; **SHIPPED
+  2026-09-25: annotated tag v1.1.0 on e09fd3c, pushed, Actions success run
+  36110877833 — placed under the maintainer's explicit live instruction once
+  green; §8.4 fresh-clone gate followed**), (c) SR spot-checks v2 — **DONE 2026-09-25: VoiceOver 18/18 ✓, zero
   deviations (run-sheet SR-RUNSHEET-v2.md + digest)**; iOS momentum-scroll stays
   maintainer-side debt (NOT release-gating), (d) the stepper brown-token
   decision — **REFUSED 2026-09-25 (recorded in deferred-work 7.3, revisit v1.2.0)**.
