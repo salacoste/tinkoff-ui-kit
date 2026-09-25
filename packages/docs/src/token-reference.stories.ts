@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html, type TemplateResult } from 'lit';
 
@@ -11,6 +12,12 @@ import {
   typographyTokens,
   zTokens,
 } from 'pillkit-tokens';
+// The generated canonical listing, verbatim — the Registers story (8.3)
+// renders its register mappings and AA rulings from THIS file, never from
+// a docs-side copy (drift-guarded by tests/docs-registers-source.test.ts).
+import tokensMarkdown from 'pillkit-tokens/TOKENS.md?raw';
+
+import { registersData, SURFACE_SEMANTICS_GROUPS } from './v2/registers.js';
 
 /**
  * Token reference (spec 5.5) — the canonical listing with light/dark values
@@ -24,6 +31,14 @@ import {
  * the next build, and the visual harness re-baselines it. No values are
  * hand-typed anywhere below; the only literals are STRUCTURE (family
  * grouping rules, table chrome), never values.
+ *
+ * REGISTERS story (spec 8.3) — same principle, second artifact: the
+ * «Регистры v2» story renders the register-mapping table, the radius-
+ * registers note and the v2 surface semantics (search/table/cream, the
+ * delta AA-override ruling) from the COMMITTED GENERATED TOKENS.md via the
+ * `pillkit-tokens/TOKENS.md` export (parsed by src/v2/registers.ts; a
+ * missing section throws). The §9-hover exception pointer links the
+ * CONVENTIONS.md exception log — the ruling's system of record.
  *
  * Dark columns: the dark layer re-declares SEMANTIC color tokens only
  * (darkColorTokens). A token absent there is theme-invariant — shown as
@@ -87,6 +102,12 @@ const pageStyles = html`
     }
     .tktr .tktr-note {
       color: var(--tk-color-text-secondary);
+    }
+    /* The §9 pointer (Registers story) is the page's only anchor; without
+       this the browser default ink fails color-contrast in dark. The kit
+       link token re-declares in the dark layer (getting-started pattern). */
+    .tktr a {
+      color: var(--tk-color-link);
     }
     .tktr table {
       box-sizing: border-box;
@@ -636,6 +657,132 @@ export const Motion: Story = {
             })}
           </tbody>
         </table>
+      </main>
+    `;
+  },
+};
+
+/* --- Registers (spec 8.3) — rendered from the committed TOKENS.md ------ */
+
+/** Render a markdown cell's `code` spans as <code> (inline-code only). */
+function mdInline(cell: string): TemplateResult {
+  const parts = cell.split('`');
+  return html`${parts.map((part, index) => (index % 2 === 1 ? html`<code>${part}</code>` : part))}`;
+}
+
+export const Registers: Story = {
+  name: 'Регистры v2',
+  render: () => {
+    // Throws loudly when the generator's shape drifts (fail, never blank).
+    const { typography, radiusNote, notes } = registersData(tokensMarkdown);
+    const repoUrl = 'https://github.com/salacoste/tinkoff-ui-kit';
+    return html`
+      ${pageStyles}
+      <main class="tktr">
+        <h1>Токены — регистры v2</h1>
+        <p class="tktr-note">
+          Три домена v2 (каталог инструментов, бизнес-лендинг, мобильные
+          установки) несут ОДНУ и ту же базу токенов в трёх регистрах —
+          отображениях на слоты, а не отдельных наборах. Компонент заявляет
+          свой регистр; на токеновом слое ничего не ветвится. Таблица ниже
+          сгенерирована в TOKENS.md (<code>pnpm gen:tokens</code>) и
+          процитирована дословно — как и формулировки правил AA в разделе
+          поверхностей (единый источник, манифест на английском).
+        </p>
+
+        <h2>Типографические регистры</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Регистр</th>
+              <th>Домены</th>
+              <th>Отображение h1</th>
+              <th>Данные в теле</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${typography.rows.map(
+              (row) => html`
+                <tr>
+                  <td><code>${row[0]}</code></td>
+                  <td>${mdInline(row[1] ?? '')}</td>
+                  <td>${mdInline(row[2] ?? '')}</td>
+                  <td>${mdInline(row[3] ?? '')}</td>
+                </tr>
+              `,
+            )}
+          </tbody>
+        </table>
+        <p class="tktr-note">
+          Практика: маркетинговые страницы кита рендерят заголовки в
+          <code>heading-2</code>, продуктовые каталоги — в
+          <code>heading-3</code>, потребительские v1 — в извлечённом
+          <code>heading-1</code> как есть.
+        </p>
+
+        <h2>Регистры скруглений</h2>
+        <p class="tktr-note"> ${mdInline(radiusNote)} </p>
+
+        <h2>Поверхности v2: поиск, таблица, cream</h2>
+        <p class="tktr-note">
+          Домены v2 переиспользуют семантику поверхностей; ниже — токены,
+          несущие новые смыслы. Значения — из тех же генерированных карт,
+          что выше на этой странице; колонка «Правило» процитирована из
+          TOKENS.md дословно.
+        </p>
+        ${SURFACE_SEMANTICS_GROUPS.map(
+          (group) => html`
+            <h3>${group.title}</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Токен</th>
+                  <th>Светлая тема</th>
+                  <th>Тёмная тема</th>
+                  <th>Правило (TOKENS.md)</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${group.tokens.map((token) => {
+                  const light = (colorTokens as TokenMap)[token];
+                  const dark = darkValueOf(token);
+                  const note = notes[token];
+                  return html`
+                    <tr>
+                      <td><code>${token}</code></td>
+                      <td>
+                        <span class="tktr-swatch" style="${swatchFill(light)}"></span
+                        ><code>${light}</code>
+                      </td>
+                      <td>
+                        ${dark
+                          ? html`<span class="tktr-swatch" style="${swatchFill(dark)}"></span
+                              ><code>${dark}</code>`
+                          : html`<span class="tktr-invariant">инвариантно</span>`}
+                      </td>
+                      <td>${note ? mdInline(note) : '—'}</td>
+                    </tr>
+                  `;
+                })}
+              </tbody>
+            </table>
+          `,
+        )}
+        <p class="tktr-note">
+          Правило AA для дельт санкционирует пару
+          <code>delta-positive</code>/<code>delta-negative</code> только на
+          <code>surface-base</code> покоящихся строк. Единственное
+          зафиксированное исключение — дельты на ховере строки таблицы
+          (переходящая подложка, одна нога темы ниже 4,5:1): оно записано в
+          журнале исключений §9 CONVENTIONS.md с опорными контрастами,
+          закреплёнными в <code>tests/contrast.test.ts</code> —
+          <a
+            href="${repoUrl}/blob/main/packages/components/CONVENTIONS.md#9-freeze-protocol"
+            target="_blank"
+            rel="noreferrer noopener"
+            >журнал конвенций, §9</a
+          >.
+        </p>
       </main>
     `;
   },

@@ -49,6 +49,24 @@ import 'pillkit-tokens/daytona.css';
  * Theme persistence: Storybook 10 does NOT persist toolbar globals across
  * manager reloads (verified live) — the state lives in the URL as
  * `globals=theme:dark`, which is the shareable/persistable form.
+ *
+ * CANVAS BACKGROUND — DECISION (spec 8.3, closing the deferred-work entry
+ * «single canvas-background rule in preview.ts vs the N per-story paints»;
+ * revisit condition was "the next docs-story work that touches canvas
+ * painting" — 8.3's nine v2 pages + registers surface execute it):
+ * KEEP THE PER-STORY COPIES. No preview-level rule lands. Rationale:
+ * (1) each story's own root paint (background: var(--tk-color-surface-base))
+ * is EXPLICIT INTENT at the point of use, carries its dark-sweep rationale
+ * comment, and doubles as the story-level FR-1 token-only proof; a central
+ * rule would sever the paint from that documentation. (2) A preview rule is
+ * LAYOUT-COUPLED: fullscreen stories paint #storybook-root's subtree while
+ * padded stories wrap it in sb-main-padded chrome — one selector cannot
+ * cover both without pinning Storybook internals that may rename across
+ * upgrades. (3) With N explicit copies already baselined, a central rule
+ * would ADD a second painter of the same surface (same token, harmless
+ * pixels — but two sources of one intent is the AD-4 anti-shape). (4) Zero
+ * baseline churn: the copies stay exactly what the visual suite pins. The
+ * copies are mechanical and grep-able (canvas/surface-base per story file).
  */
 
 /** Applies the toolbar theme to the preview document root — flips the token layer. */
