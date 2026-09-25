@@ -473,7 +473,8 @@ export const BusinessLanding: Story = {
             <div class="tkb-container">
               <tk-stepper heading="Откройте счет для бизнеса в Т-Банке" .steps=${STEPS}>
                 <p slot="subtitle">
-                  Откройте расчетный счет онлайн за 10 минут и получите бесплатно
+                  Если у вас не зарегистрирован бизнес, сначала оставьте заявку
+                  на регистрацию — поможем бесплатно
                 </p>
               </tk-stepper>
             </div>

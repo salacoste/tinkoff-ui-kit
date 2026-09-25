@@ -5,9 +5,28 @@ Baseline: main = f3e90a5. All probes from archived captures only (no live site).
 
 ## Probe (a) — business-landing subheading (steps section)
 
-Capture: `.playwright-cli/captures-v2/business-landing/full.png`
+Capture: `.playwright-cli/captures-v2/business/full.png`
 
-- Copy (glyph-decoded + render-confirmed): «Откройте расчетный счет онлайн за 10 минут и получите бесплатно»
+- Copy (glyph-classified; corrected in the review round — see the correction
+  note below): «Если у вас не зарегистрирован бизнес, сначала оставьте заявку
+  на регистрацию — поможем бесплатно»
+- CORRECTION (lens MAJOR-1): the originally shipped string «Откройте расчетный
+  счет онлайн за 10 минут и получите бесплатно» was INVENTED — it exists
+  nowhere in the captures, and this probe's original «glyph-decoded +
+  render-confirmed» claim was false (probe (b) had the render table; probe (a)
+  never did — exactly where the slip hid). The review lens decoded the true
+  line identically on three artifacts (captures-v2/business/full.png
+  y2598–2611, pattern-steps-open-account.png y118–131,
+  verify/business-landing/ref-steps-form.png y250–263; 74 clusters vs ~50;
+  capture line has an em-dash and no digits). Post-review render verification
+  (render-subtitle-verify.mjs — DaytonaSans 400 @15px, #333 on white, pinned
+  chromium flags, DSF 1):
+
+  | line | render ink | advance | capture ink | Δ |
+  |------|-----------|---------|-------------|---|
+  | true (shipped) | 731 px | 731.7 | 729 px | 2 px (0.27%) |
+  | invented (retired) | 478 px | 478.1 | 729 px | 251 px (34%) |
+
 - Font size: measured glyph height ≈ 15.3 px → token `body-m` (15px, Δ≈0.3)
 - Weight: 400 (stem widths match Daytona 400 templates)
 - Color: #30302E sampled → `text-primary` #333333 (Δ3/255 ≈ 1.2%, same ink as section
@@ -86,8 +105,10 @@ text-secondary), surface (pure #FFF ≠ cream). Implemented as measured.
 
 ## Showcase adoption copy (reference-verbatim, both probes)
 
-- business-landing stepper subtitle slot:
-  «Откройте расчетный счет онлайн за 10 минут и получите бесплатно»
+- business-landing stepper subtitle slot (reference-verbatim, corrected per
+  lens MAJOR-1 — see the probe (a) correction note):
+  «Если у вас не зарегистрирован бизнес, сначала оставьте заявку на
+  регистрацию — поможем бесплатно»
 - invest-landing qr-block page-copy slot:
   «Переходите по ссылкам только с этой страницы и не сканивайте файлы с
   непроверенных сайтов. Версию Android можно посмотреть в настройках смартфона —
@@ -173,3 +194,19 @@ tests/visual/invest-landing.spec.ts-snapshots/ (2 — touched QR region):
 
 Verification: `pnpm test:visual` ×2 — 1368 passed / 1368 both runs
 (8.4 m each).
+
+### Review re-take (lens MAJOR-1 — invented business subtitle)
+
+The business subheading shipped in 325631c was invented (see the probe (a)
+correction note). Swapped to the reference-verbatim line at all four sites
+(showcase business-landing, stepper Variants, v2 stepper demo + codeBlock);
+render-verified this time: ink 731px vs capture 729px (Δ2px, 0.27%). Six
+tainted baselines deleted explicitly and re-taken in a compare pass (6
+«writing actual» writes; git status listed exactly those six PNGs):
+
+- visual-showcase-business-landing--business-landing-{light,dark}-1-chromium.png
+- visual-components-stepper--variants-{light,dark}-1-chromium.png
+- visual-components-v2-stepper--page-{light,dark}-1-chromium.png
+
+Post-fix verification: `pnpm test:visual` ×2 — 1368 passed / 1368 both runs
+(8.2 m each).

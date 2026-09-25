@@ -169,7 +169,8 @@ export const Variants: Story = {
       <figure>
         <tk-stepper heading="Откройте счет для бизнеса" .steps=${REFERENCE_STEPS}>
           <p slot="subtitle">
-            Откройте расчетный счет онлайн за 10 минут и получите бесплатно
+            Если у вас не зарегистрирован бизнес, сначала оставьте заявку на
+            регистрацию — поможем бесплатно
           </p>
         </tk-stepper>
         <figcaption>
