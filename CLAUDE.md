@@ -121,14 +121,29 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   added), (c) SR spot-checks v2 — **DONE 2026-09-25: VoiceOver 18/18 ✓, zero
   deviations (run-sheet SR-RUNSHEET-v2.md + digest)**; iOS momentum-scroll stays
   maintainer-side debt (NOT release-gating), (d) the stepper brown-token
-  decision — **REFUSED 2026-09-25 (recorded in deferred-work 7.3, revisit v1.2.0)**.
+  decision — REFUSED 2026-09-25, then **ADOPTED at v1.2.0: story 9.1 (2026-09-25)
+  landed `tint-brown` #8D6040 (theme-invariant, charcoal mold) and flipped the
+  stepper default — brown fill + white numeral (AA 5.413:1); the radius ≈32
+  sibling decision was REFUSED BY PROBE the same day (form card measures 23.8px —
+  the ≈32 was a vision artifact of the stacked dark card); closed in
+  deferred-work 7.3/7.4f**.
   Sequencing in
   epics-v2.md; the v1 component-story gate applies VERBATIM (FR-16). Key v2 decisions: delta
   semantics via AA-override (green-300/red-300); warm-cream family DISTINCT from beige (dark
   first-pass [ASSUMPTION] → 8.2); typography registers = mappings (h1 44→heading-2, 36→heading-3),
   zero new type tokens; keyboard defects of the reference (inert arrows, chip focus-drop) are
   IMPROVED per APG — the sanctioned a11y axis
-- **Kit totals: 881 unit + 1368 visual/axe tests, 27 components, 27 React wrappers, v1 design
+  Sequencing in
+  epics-v2.md; the v1 component-story gate applies VERBATIM (FR-16). Key v2 decisions: delta
+  semantics via AA-override (green-300/red-300); warm-cream family DISTINCT from beige (dark
+  first-pass [ASSUMPTION] → 8.2); typography registers = mappings (h1 44→heading-2, 36→heading-3),
+  zero new type tokens; keyboard defects of the reference (inert arrows, chip focus-drop) are
+  IMPROVED per APG — the sanctioned a11y axis
+- **v1.2.0 cycle (epics-v3, 9 stories) OPEN 2026-09-25: story 9.1 DONE** (c13ba12+4184494 —
+  tint-brown + font-mono tokens, tooltip 288px-cap structural fix retiring the CI tolerance,
+  THE single baseline round: 20 PNGs). Next: 9.2 (generator truth) → [10.1+10.2] → 10.3 → 10.4
+  → 11.1–11.3. Sequencing in epics-v3.md.
+- **Kit totals: 889 unit + 1368 visual/axe tests, 27 components, 27 React wrappers, v1 design
   assumptions all closed (6 v2 dark first-pass [ASSUMPTION]s open BY DESIGN until 8.2), CI green —
   CORRECTED 2026-09-25: Actions had been RED since 5.5/6962326 (typecheck step ran before build;
   workspace dist types missing on a fresh checkout; local gates masked it on stale dist — last green
