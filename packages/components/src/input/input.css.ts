@@ -45,6 +45,11 @@ export const inputStyles = css`
     display: block;
   }
 
+  /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */
+  :host([hidden]) {
+    display: none;
+  }
+
   /* Disabled (EXPERIENCE State Patterns): 40% opacity on the whole control,
      no pointer events at the host boundary. The inner input is aria-disabled
      + readonly (kept focusable — the aria-disabled pattern, same as the

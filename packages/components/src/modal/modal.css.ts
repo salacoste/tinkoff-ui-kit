@@ -48,6 +48,13 @@ export const modalStyles = css`
   :host {
     display: contents;
   }
+
+  /* :host display above out-ranks the UA [hidden] rule — enforce hidden
+     (the HOST sheet's own guard; the surface sheet carries its own for the
+     panel — the 8.1 kit-wide sweep). */
+  :host([hidden]) {
+    display: none;
+  }
 `;
 
 /** The SURFACE sheet (scrim + panel), adopted into the surface's shadow root. */

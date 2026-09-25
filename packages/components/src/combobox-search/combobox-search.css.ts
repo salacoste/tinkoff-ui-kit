@@ -53,6 +53,13 @@ export const comboboxSearchStyles = css`
     max-width: 100%;
   }
 
+  /* :host display above out-ranks the UA [hidden] rule — enforce hidden
+     (the HOST sheet's own guard; the menu sheet carries its own for the
+     panel — the 8.1 kit-wide sweep). */
+  :host([hidden]) {
+    display: none;
+  }
+
   :host([disabled]) {
     opacity: 0.4;
     pointer-events: none;

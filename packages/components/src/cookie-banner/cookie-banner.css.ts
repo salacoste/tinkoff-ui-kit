@@ -73,6 +73,13 @@ export const cookieBannerStyles = css`
   :host {
     display: contents;
   }
+
+  /* :host display above out-ranks the UA [hidden] rule — enforce hidden
+     (the HOST sheet's own guard; the card sheet carries its own for the
+     open/close mechanics — the 8.1 kit-wide sweep). */
+  :host([hidden]) {
+    display: none;
+  }
 `;
 
 /** The CARD sheet, adopted into the card's own shadow root. */

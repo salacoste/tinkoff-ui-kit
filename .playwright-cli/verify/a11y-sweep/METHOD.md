@@ -115,6 +115,14 @@ PROVES the construction (e.g. badge's plain-span test). Vacuous «ok» cells
 are forbidden; every cited test was opened and its assertion body confirmed
 during the sweep (the vacuous-citation class shipped three times before).
 
+**Extensions after 5.1–5.3 (same method, later stories):**
+`group-IV.md` (6.5 — the v2 catalog cluster + composed page; unit/live
+matrices, engine deferred to 8.1) and `group-V.md` (8.1 — the nine v2
+surfaces ON the sweep engine: the Group V registry, the registry-declared
+`ringAncestor` carrier topology, and the cookie-banner targeted leg; the
+kit-wide `:host([hidden])` pattern test `tests/hidden-guard.test.ts` rides
+the same lane).
+
 ## Findings disposition (this sweep)
 
 | # | Finding | Disposition |

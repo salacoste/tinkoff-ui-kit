@@ -33,6 +33,11 @@ export const buttonStyles = css`
     display: inline-flex;
   }
 
+  /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */
+  :host([hidden]) {
+    display: none;
+  }
+
   /* Interactive-target floor (EXPERIENCE a11y): the host never intercepts
      pointer events while disabled — clicks die at the element boundary. */
   :host([disabled]) {

@@ -37,6 +37,12 @@ export const TK_NAVBAR_SCROLL_THRESHOLD_PX = 10;
  */
 const DEFAULT_NAV_LABEL = 'Навигация';
 
+/** Default sub-nav landmark name (overridable via `sub-label`; empty falls back — story 8.1). */
+const DEFAULT_SUB_LABEL = 'Разделы';
+
+/** Default burger/drawer name (overridable via `burger-label`; empty falls back — story 8.1). */
+const DEFAULT_BURGER_LABEL = 'Меню';
+
 /**
  * tk-navbar — the reference's sticky site header (Story 3.4): 72px white bar
  * (DESIGN `components.navbar.height`; the 64px capture probe is recorded in
@@ -154,18 +160,24 @@ export class TkNavbar extends LitElement {
    * Accessible name of the second nav landmark — two navs on one page need
    * distinguishing names (the DEFAULT_NAV_LABEL precedent). Default
    * «Разделы» (the spec's pick); accepted from `sub-label`, never
-   * reflected.
+   * reflected. An EMPTY/whitespace value falls back to the default — an
+   * empty string would strip the landmark's accessible name entirely (the
+   * 7.1 N1 triage, fixed in the 8.1 a11y sweep).
    */
   @property({ type: String, attribute: 'sub-label' })
-  subLabel = 'Разделы';
+  subLabel = DEFAULT_SUB_LABEL;
 
   /** Bar sticks to the viewport top (the reference behavior); reflects (boolean, CONVENTIONS §2). */
   @property({ type: Boolean, reflect: true })
   sticky = true;
 
-  /** Accessible name of the burger button (also the drawer dialog's label). */
+  /**
+   * Accessible name of the burger button (also the drawer dialog's label).
+   * An EMPTY/whitespace value falls back to the default — string-prop parity
+   * with `subLabel` (the 7.1 N1 triage, fixed in the 8.1 a11y sweep).
+   */
   @property({ type: String, attribute: 'burger-label' })
-  burgerLabel = 'Меню';
+  burgerLabel = DEFAULT_BURGER_LABEL;
 
   /** The drawer's open state — PRIVATE internal UI state (the spec's ruling: not a consumer channel). */
   #drawerOpen = false;
@@ -419,6 +431,11 @@ export class TkNavbar extends LitElement {
     // to v1 (the CRITICAL invariant: class="bar" verbatim, one .bar__inner
     // child, no .subnav node).
     const hasSub = subLinks.length > 0;
+    // Empty-string string-props must not strip accessible names (7.1 N1,
+    // fixed in 8.1): `sub-label=""` / `burger-label=""` fall back to the
+    // defaults instead of rendering nameless landmarks/controls.
+    const subNavLabel = this.subLabel.trim() || DEFAULT_SUB_LABEL;
+    const burgerLabel = this.burgerLabel.trim() || DEFAULT_BURGER_LABEL;
 
     return html`
       <header class="bar${hasSub ? ' bar--subnav' : ''}">
@@ -445,7 +462,7 @@ export class TkNavbar extends LitElement {
           <button
             type="button"
             class="burger"
-            aria-label=${this.burgerLabel}
+            aria-label=${burgerLabel}
             aria-expanded=${this.#drawerOpen ? 'true' : 'false'}
             aria-controls="${this.#id}-drawer"
             @click=${this.#toggleDrawer}
@@ -468,7 +485,7 @@ export class TkNavbar extends LitElement {
         </div>
         ${hasSub
           ? html`
-              <nav class="subnav" aria-label=${this.subLabel}>
+              <nav class="subnav" aria-label=${subNavLabel}>
                 <div class="subnav__inner">
                   ${subLinks.map((link) => {
                     const isActive = link.value === subActiveValue;
@@ -491,7 +508,7 @@ export class TkNavbar extends LitElement {
         id="${this.#id}-drawer"
         role="dialog"
         aria-modal="true"
-        aria-label=${this.burgerLabel}
+        aria-label=${burgerLabel}
         ?hidden=${!this.#drawerOpen}
         @keydown=${this.#handleDrawerKeydown}
         @click=${this.#handleDrawerClick}

@@ -48,6 +48,11 @@ export const articleCardStyles = css`
     display: block;
   }
 
+  /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */
+  :host([hidden]) {
+    display: none;
+  }
+
   /* position:relative — the stitching context the link's ::after resolves against. */
   .card {
     position: relative;

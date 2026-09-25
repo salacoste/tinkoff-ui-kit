@@ -36,6 +36,11 @@ export const badgeStyles = css`
     display: inline-flex;
   }
 
+  /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */
+  :host([hidden]) {
+    display: none;
+  }
+
   .badge {
     box-sizing: border-box;
     display: inline-flex;

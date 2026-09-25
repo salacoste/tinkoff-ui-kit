@@ -57,6 +57,11 @@ export const serviceCardStyles = css`
     display: block;
   }
 
+  /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */
+  :host([hidden]) {
+    display: none;
+  }
+
   .card {
     display: flex;
     flex-direction: column;

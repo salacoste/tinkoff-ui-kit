@@ -82,6 +82,11 @@ export const tabsStyles = css`
     max-width: 100%;
   }
 
+  /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */
+  :host([hidden]) {
+    display: none;
+  }
+
   /* --- The invisible track: no background ever paints here (DESIGN). The row
      is also the animation-free zone — the structural pin's subject. --- */
   .track {
