@@ -25,7 +25,7 @@ import { describe, expect, it } from 'vitest';
  * other's guard.
  *
  * Tripwires keep the scan non-vacuous:
- * - the pinned sheet count (28) fails loudly when a sheet joins or leaves
+ * - the pinned sheet count (33) fails loudly when a sheet joins or leaves
  *   the host-display family — joining forces the guard decision deliberately;
  * - a component directory whose `<name>.css.ts` exists but contributes zero
  *   css`` templates is a parse surprise, not a pass.
