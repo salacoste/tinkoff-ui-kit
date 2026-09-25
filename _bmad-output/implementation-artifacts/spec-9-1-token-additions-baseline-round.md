@@ -274,4 +274,6 @@ resolved in the merge round.**
   remediation in Change Log item 3). Remediation commit restores the two tolerance entries
   and trues ledger/spec/CLAUDE.md; the remediation push's Actions run is the cycle's green
   CI proof — its verdict recorded below at close.
-  - **CI VERDICT ON THE REMEDIATION HEAD: <filled after `gh run` on the remediation push>**
+  - **CI VERDICT ON THE REMEDIATION HEAD: GREEN** — run 36133765397 on 3962696, completed
+    success; visual **1368/1368 (18.8m)** at the restored tolerances (both placements legs
+    pass at 0.13/0.08). Story 9.1's green head = 3962696.
