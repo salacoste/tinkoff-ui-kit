@@ -265,4 +265,7 @@ fixed in 1c9a450 before merge.**
   each)** after the storm passed — the ×2-stable zero-PNG proof stands. Port 6007 checked
   before every pass; worktree porcelain clean after every run.
 - Merge: dd100ed..1c9a450 ff-only (13 files, +836/−164); pushed.
-- **CI VERDICT on 1c9a450: <filled after `gh run` on the push>**
+- **CI VERDICT: GREEN** — run 36153143321 on 820a9b8 (the cycle's final docs push; the
+  code-head 1c9a450's own run 36152927899 was cancelled by that push per cancel-in-progress,
+  820a9b8 = identical tree + docs-only), completed success: gates job green, visual
+  **1368/1368 (19.2m)**, root tests 147 passed. Story 9.2's green head = 820a9b8.
