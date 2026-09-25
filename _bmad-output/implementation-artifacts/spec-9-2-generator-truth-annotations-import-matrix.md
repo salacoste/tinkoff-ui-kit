@@ -141,17 +141,17 @@ module's canonical directions string. Zero visual churn expected: notes reach on
 
 ## Tasks & Acceptance
 
-- [ ] `aa-annotations:` block in DESIGN.md (the 10 entries, text moved verbatim; body table
+- [x] `aa-annotations:` block in DESIGN.md (the 10 entries, text moved verbatim; body table
       untouched) + generator wiring (unknown keys/fields abort, name validation)
-- [ ] Derivation: AA-class TOKEN_NOTES built from the block; both-direction migration
+- [x] Derivation: AA-class TOKEN_NOTES built from the block; both-direction migration
       aborts; [ASSUMPTION] machinery + derived status line
-- [ ] Body-anchor assert + the 10 anchors proven (transcript in verify/tokens-9-2/)
-- [ ] `ad4-matrix.mjs` + twin; eslint + boundary test + README pin derive from it;
+- [x] Body-anchor assert + the 10 anchors proven (transcript in verify/tokens-9-2/)
+- [x] `ad4-matrix.mjs` + twin; eslint + boundary test + README pin derive from it;
       six hand-written direction strings die
-- [ ] Tests: negative self-checks (abort classes), twin shape-assert, README pin, ad4
+- [x] Tests: negative self-checks (abort classes), twin shape-assert, README pin, ad4
       structure equality; existing synthetic negatives keep passing
-- [ ] Regen: css/ts byte-identical, TOKENS.md confined, double-regen stable
-- [ ] Full gates (gen:tokens→gen→build→test→lint→typecheck→gen-drift post-commit) + visual
+- [x] Regen: css/ts byte-identical, TOKENS.md confined, double-regen stable
+- [x] Full gates (gen:tokens→gen→build→test→lint→typecheck→gen-drift post-commit) + visual
       ×2 zero movement (port 6007 clean first); spec closed; conventional commit EN + push;
       CI green by `gh run`
 
@@ -169,16 +169,100 @@ module's canonical directions string. Zero visual churn expected: notes reach on
 
 ## Implementation Notes
 
-*(filled at execution/triage)*
+Executor judgment calls (lens-audited):
+1. **SEVEN direction-string copies died, not six** — the seventh lived in the boundary
+   scanner's error message (import-boundaries.test.ts:186 of the day); now
+   `${CANONICAL_DIRECTIONS}`. Same debt class, one more instance than the spec counted.
+2. **eslint tokens-group wildcard `pillkit-*` → derived explicit list** (forbiddenGroups =
+   all pillkit-\* minus self minus allowed). Byte-equivalent today (lens deep-compare:
+   components/react blocks byte-identical, tokens differs only by the group; message/regex/
+   files identical); the wildcard's extra corners (self-name, hypothetical external
+   pillkit-\*) stay covered by the precise test net.
+3. **kind=pairing emits an EMPTY prefix** (not `AA pairing — `): forced by tokens.css
+   byte-stability — notes render as css comments and the warm-cream narrative opens itself.
+   Full map: override/addition → `AA <kind> — `; restricted → `Restricted: `; measured →
+   `Measured (Story N.N) — `.
+4. **error-on-field anchors on a single-line colors-frontmatter comment** (DESIGN.md:41) —
+   the spec's own sanctioned path (no body-table row exists for it). The first multi-line
+   attempt ABORTED on the line-level co-location mechanics — the anchor machinery caught
+   its own transcript bug before review did.
+5. **[ASSUMPTION] machinery proven by a probe-test**, not a live flag: zero open today by
+   design; the test flips text-muted→assumed and asserts flag + counter + name in the
+   derived TOKENS.md status line.
+6. The anchor-lost negative targets a BODY-unique phrase (focus-ring's
+   "site's ink-on-ink = invisible; border-default = 1.23:1") — `String.replace` hits the
+   first occurrence and the frontmatter block precedes the body.
+7. **`generate.d.mts` gained `TOKEN_NOTE_LITERALS`** — TS7 resolves the .mjs through the
+   .d.mts twin; without the declaration tokens-drift.test.ts hit TS2305.
+8. Story pointers in the block proven by git archaeology: 5401028 (1.2), 7661a1c (1.3),
+   c999e12 (6.1), c13ba12 (9.1).
+9. **Double anchors**: text-secondary and tint-brown anchor BOTH on their frontmatter
+   declaration (hex) and their AA-table row (ratios) — each survives a single-side edit;
+   the lens verified the single-anchor legs hold via the body-unique negative.
+10. Unit totals after 9.2: **901** (root 147 + tokens 17 + components 667 + react 70) =
+    889 + 12 (executor +11: tokens-drift ×7, import-boundaries ×3, tokens index ×1;
+    review round +1: the firing canary). Zero deleted/skipped (lens-verified by rerun).
 
 ## Spec Change Log
 
-*(filled at triage)*
+Frozen block untouched. Recorded changes beyond the frozen text:
+1. **Factual amendment of review finding 2** (same fix, corrected facts): the lens reported
+   the `aa-annotations:` block's own lines enter the anchor space today; the executor's
+   live probe showed they do NOT (the column-0 `aa-annotations:` key already stopped the
+   capture alternation incidentally — consistent with the lens's own zero-hits probe). The
+   REAL hole was yaml-nested leakage (an indented `aa-annotations:` key would leak `text:`
+   lines). The fix (1c9a450) makes the stop EXPLICIT — next column-0 frontmatter key /
+   indented `aa-annotations:` / the closing `---` fence — so the guarantee no longer rides
+   on incidental regex behavior.
+2. Review round (1c9a450): the firing migration-abort canary (both abort classes, separate
+   poisoning — the first mergeAaNotes loop fires before the second, so a combined probe
+   would mask the second class) + the explicit anchor-space stop. Reviewed 3354a2f kept
+   unrewritten (second commit, not amend).
+3. Merge round: this docs commit (ledger closures + CLAUDE.md cycle state).
 
 ## Review Triage Log
 
-*(filled after the quick-review lens)*
+Quick review (qr-lens-9-2, 2026-09-25): **SHIP — 0 MAJOR / 2 MINOR / 4 NOTE; both MINORs
+fixed in 1c9a450 before merge.**
+1. **[MINOR] no firing negative test for the two migration-abort classes** — the mechanics
+   were real (lens live-probe: mutating TOKEN_NOTE_LITERALS aborts renderArtifacts for both
+   double-source and AA-bearing-without-entry), but tests/tokens-drift.test.ts:242-262 only
+   proved the day-one tree clean; a refactor dropping a mergeAaNotes loop would kill the
+   protection silently green. FIXED: the canary test (poison → toThrow ×2 → restore in
+   finally).
+2. **[MINOR] anchor-space capture ran past the colors block** — as amended in the Change
+   Log (today-safe, nesting-fragile). FIXED: explicit stop.
+3. [NOTE] error-on-field's frontmatter-comment anchor is the spec's own sanctioned path;
+   [NOTE] double-anchored entries are exactly the frozen "at least one factual substring"
+   (not a deviation); [NOTE] the derived TOKENS.md status line narrows to the 10 block
+   entries — the wider resolved history (3.6/5.4/5.6/8.2) lives on in the Notes column
+   literals and DARK_TOKEN_NOTES; [NOTE] eslint equivalence deep-compare (see
+   Implementation Notes 2).
+4. Checklist 1-11 all PASS with evidence: the 10 texts verbatim byte-for-byte vs dd100ed
+   literals; abort classes real; anchor mechanics real (bare `4.5:1` excluded; unique-phrase
+   negative); byte-stability INDEPENDENTLY re-proven (regen → clean diff; TOKENS.md = 1
+   line); units 900 independently rerun, zero deletions; ad4 single-source verified (no
+   local AD4_MATRIX copy; README pin verbatim; 7th copy dead); twin = exactly 7 exports +
+   green shape-assert; iron rules clean (no PNG, one conventional commit, \_bmad-output/
+   touched only in DESIGN.md); [ASSUMPTION] machinery real; judgment calls 3/4/7 hold; the
+   remaining literal set = exactly the spec's list (8 literals + BLOCK_NOTE_SPACING +
+   DARK side).
 
 ## Verification
 
-*(filled from the merge-round gate transcript)*
+- Executor round (worktree, 3354a2f): gen:tokens → gen → build → test (900) → lint →
+  typecheck — all exit 0; visual compare ×2 = 1368/1368 (8.3m / 8.8m), zero PNG touched;
+  post-commit gen + gen:tokens + `git diff --exit-code -- packages/ tests/` clean;
+  `lsof -ti:6007` free before each pass.
+- Review-fix round (1c9a450): gen:tokens + `git diff --exit-code -- packages/tokens/src/`
+  clean (the anchor-space narrowing changed zero emitted bytes); test **901**; lint 0;
+  typecheck 0.
+- Merge round (orchestrator, 1c9a450): fast gates green (build → test 901 → lint →
+  typecheck → gen → gen:tokens); GEN_DRIFT_CLEAN. Visual chronology: run 1 = **starvation
+  flake 1362/6** (machine load ~5.8 under an external CPU storm; all six legs timeout-class
+  — browser-closed / 30s test timeouts / one stability-wait timeout; ZERO pixel diffs in
+  the log; legs scattered across unrelated components) → runs 2+3 = **1368/1368 ×2 (8.0m
+  each)** after the storm passed — the ×2-stable zero-PNG proof stands. Port 6007 checked
+  before every pass; worktree porcelain clean after every run.
+- Merge: dd100ed..1c9a450 ff-only (13 files, +836/−164); pushed.
+- **CI VERDICT on 1c9a450: <filled after `gh run` on the push>**

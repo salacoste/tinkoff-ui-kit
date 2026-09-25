@@ -145,9 +145,13 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   retirement was REFUTED by Actions (run 36131832924, both placements legs red — the cap pins
   pill width, not wrap line count: ubuntu +1 line, 68→87px); entries restored light 0.13 /
   dark 0.08 — the CI-scoped tolerance is the STANDING fix for text-metric geometry**
-  (ledger + spec-9-1 change log carry the record). Next: 9.2 (generator truth) → [10.1+10.2]
-  → 10.3 → 10.4 → 11.1–11.3. Sequencing in epics-v3.md.
-- **Kit totals: 889 unit + 1368 visual/axe tests, 27 components, 27 React wrappers, v1 design
+  (ledger + spec-9-1 change log carry the record). **Story 9.2 DONE** (3354a2f+1c9a450 —
+  generator truth: `aa-annotations:` frontmatter block = the 10 AA-bearing TOKEN_NOTES
+  derive from DESIGN.md with both-direction aborts + body-anchor assert + firing canary;
+  AD-4 matrix single-sourced in root `ad4-matrix.mjs` — eslint/boundary-test/README all
+  derive, 7 direction-string copies died; debts 1.1+1.2 closed in the ledger). Next:
+  [10.1+10.2] → 10.3 → 10.4 → 11.1–11.3. Sequencing in epics-v3.md.
+- **Kit totals: 901 unit + 1368 visual/axe tests, 27 components, 27 React wrappers, v1 design
   assumptions all closed (6 v2 dark first-pass [ASSUMPTION]s open BY DESIGN until 8.2), CI green —
   CORRECTED 2026-09-25: Actions had been RED since 5.5/6962326 (typecheck step ran before build;
   workspace dist types missing on a fresh checkout; local gates masked it on stale dist — last green
