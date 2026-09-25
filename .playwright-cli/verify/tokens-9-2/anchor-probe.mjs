@@ -19,7 +19,11 @@ const artifacts = renderArtifacts(designText); // must not throw — all 10 anch
 
 const fence = /^---\r?\n([\s\S]*?)\r?\n---/.exec(designText);
 const doc = parse(fence[1]);
-const fm = /^colors:\r?\n((?:[ \t][^\n]*\r?\n|\#[^\n]*\r?\n)*)/m.exec(designText)[1];
+// Mirrors the generator's colorsFrontmatterOf — the capture stops explicitly
+// at the next column-0 key / an indented `aa-annotations:` / the fence end.
+const fm = /^colors:\r?\n((?:(?![ \t]*aa-annotations:|[A-Za-z][\w-]*:|---)[^\n]*\r?\n)*)/m.exec(
+  designText,
+)[1];
 const body = /\n## Colors\r?\n([\s\S]*?)(?=\r?\n## )/.exec(designText)[1];
 const fmLines = fm.split(/\r?\n/);
 const lines = [...fmLines, ...body.split(/\r?\n/)];
@@ -44,7 +48,7 @@ out.push('');
 out.push('## 1. The 10 aa-annotations anchors (mechanics transcript)');
 out.push('');
 out.push(
-  'Pinned mechanics: every entry must have at least one line in the **Colors body ∪ colors frontmatter** that contains the entry token ref (`{colors.<name>}` or the bare name as a word) **and** at least one factual substring of `text` (an `N.NNN:1` ratio or a hex; the bare AA threshold `4.5:1` is excluded — measurements only). Co-location is per LINE (an AA-table row is one line). Anchor lost → generation aborts naming the entry.',
+  'Pinned mechanics: every entry must have at least one line in the **Colors body ∪ colors frontmatter** that contains the entry token ref (`{colors.<name>}` or the bare name as a word) **and** at least one factual substring of `text` (an `N.NNN:1` ratio or a hex; the bare AA threshold `4.5:1` is excluded — measurements only). Co-location is per LINE (an AA-table row is one line). The frontmatter side of the space stops EXPLICITLY at the next column-0 frontmatter key, at an indented `aa-annotations:` key, or at the fence end (review hardening) — the aa-annotations block\'s own `text:` lines can never enter the space and vacuously self-anchor an entry. Anchor lost → generation aborts naming the entry.',
 );
 out.push('');
 out.push('| # | Entry | kind / status / story | Facts in text | Anchor region | Fact(s) found on the anchoring line |');

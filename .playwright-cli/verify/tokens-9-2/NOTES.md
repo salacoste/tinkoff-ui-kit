@@ -4,7 +4,7 @@ Story 9.2 executor evidence (2026-09-25, worktree branch off dd100ed). Probe: `a
 
 ## 1. The 10 aa-annotations anchors (mechanics transcript)
 
-Pinned mechanics: every entry must have at least one line in the **Colors body ∪ colors frontmatter** that contains the entry token ref (`{colors.<name>}` or the bare name as a word) **and** at least one factual substring of `text` (an `N.NNN:1` ratio or a hex; the bare AA threshold `4.5:1` is excluded — measurements only). Co-location is per LINE (an AA-table row is one line). Anchor lost → generation aborts naming the entry.
+Pinned mechanics: every entry must have at least one line in the **Colors body ∪ colors frontmatter** that contains the entry token ref (`{colors.<name>}` or the bare name as a word) **and** at least one factual substring of `text` (an `N.NNN:1` ratio or a hex; the bare AA threshold `4.5:1` is excluded — measurements only). Co-location is per LINE (an AA-table row is one line). The frontmatter side of the space stops EXPLICITLY at the next column-0 frontmatter key, at an indented `aa-annotations:` key, or at the fence end (review hardening) — the aa-annotations block's own `text:` lines can never enter the space and vacuously self-anchor an entry. Anchor lost → generation aborts naming the entry.
 
 | # | Entry | kind / status / story | Facts in text | Anchor region | Fact(s) found on the anchoring line |
 |---|---|---|---|---|---|

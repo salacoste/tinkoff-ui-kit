@@ -777,9 +777,17 @@ const aaFactsOf = (text) => {
   return [...facts];
 };
 
-/** The colors frontmatter block body (indented lines + comments only). */
+/**
+ * The colors frontmatter block body — indented lines, blank lines and comment
+ * lines only. The capture ends EXPLICITLY at the next column-0 frontmatter
+ * key, at an indented `aa-annotations:` key (yaml-nesting the block under
+ * colors must not leak its `text:` lines in), or at the `---` fence end: the
+ * aa-annotations block's own lines can NEVER enter the anchor space, or a
+ * future entry would vacuously self-anchor on the very line it wrote.
+ */
 const colorsFrontmatterOf = (designText) => {
-  const match = /^colors:\r?\n((?:[ \t][^\n]*\r?\n|\#[^\n]*\r?\n)*)/m.exec(designText);
+  const match =
+    /^colors:\r?\n((?:(?![ \t]*aa-annotations:|[A-Za-z][\w-]*:|---)[^\n]*\r?\n)*)/m.exec(designText);
   return match === null ? '' : match[1];
 };
 

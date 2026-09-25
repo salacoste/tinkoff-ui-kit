@@ -260,4 +260,31 @@ describe('token-pipeline drift (spec 1.2 review)', () => {
       expect(blockNames.has(name), `${name} exists as BOTH a literal and a block entry — double source`).toBe(false);
     }
   });
+
+  it('the migration aborts FIRE: a double-source literal and an AA-bearing literal both abort render (spec 9.2, firing self-check)', () => {
+    // The check above proves the CURRENT tree is clean (static day-one truth);
+    // this probe proves the mergeAaNotes abort loops themselves fire — a
+    // future refactor that drops one of the loops keeps every static
+    // assertion green while the protection silently dies. This test is the
+    // canary. The exported map is Readonly by TYPE only: poison it in place,
+    // restore the original entries in finally.
+    const literals = TOKEN_NOTE_LITERALS as Map<string, string>;
+    const savedBorderTable = literals.get('--tk-color-border-table');
+    expect(savedBorderTable, 'the border-table literal anchor moved — update the fixture').toBeDefined();
+    const designText = readFileSync(DESIGN_MD, 'utf8');
+    try {
+      literals.set('--tk-color-tint-cream', 'x'); // name ALSO defined by the aa-annotations block
+      expect(() => renderArtifacts(designText)).toThrow(
+        /'--tk-color-tint-cream'.*aa-annotations block also defines — double source; the literal must die/,
+      );
+      literals.delete('--tk-color-tint-cream');
+      literals.set('--tk-color-border-table', 'hairline — 1.23:1 on white'); // AA-bearing, NOT in the block
+      expect(() => renderArtifacts(designText)).toThrow(
+        /'--tk-color-border-table' is AA-bearing.*but has no aa-annotations entry — AA-bearing notes must derive from the DESIGN\.md block/,
+      );
+    } finally {
+      literals.delete('--tk-color-tint-cream');
+      if (savedBorderTable !== undefined) literals.set('--tk-color-border-table', savedBorderTable);
+    }
+  });
 });
