@@ -1,6 +1,6 @@
-# Пакет пакетного подтверждения provisional-базлайнов (Story 5.6, 2026-09-23)
+# Пакет пакетного подтверждения provisional-базлайнов (Story 5.6, 2026-09-23; РАСШИРЕН Story 8.4 для v1.1.0 — v2-часть ниже)
 
-> ## ✅ РЕЗУЛЬТАТ ГЕЙТА (закрыт мейнтейнером, 2026-09-23, тот же присест)
+> ## ✅ РЕЗУЛЬТАТ ГЕЙТА v1 (закрыт мейнтейнером, 2026-09-23, тот же присест)
 >
 > - **F1 (dark progress-bar): ПЕРЕЗАПИСЬ.** Устаревшая рельса была видна во ВСЕХ 8 тёмных
 >   ногах сюиты (не только в двух названных ниже — формулировка «playground, variants» была
@@ -203,3 +203,105 @@ side-by-side-просмотре; флаги F1/5.6 — первые 15 мину�
 **Напоминания из deferred-work.md (исполнение только мейнтейнером):**
 VoiceOver/NVDA спот-чеки по протоколам в «Доступность»-историях (19);
 iOS momentum-scroll модалки на реальном устройстве.
+
+---
+---
+
+# ЧАСТЬ v2 — пакет для гейта v1.1.0 (Story 8.4, 2026-09-25)
+
+**Для мейнтейнера.** v2 добавил **140 новых provisional PNG** (9 компонентов
++ 3 композиции + 9 док-страниц + registers) и **16 adjudicated-перезаписей**
+поверх подтверждённых v1-базлайнов; инвентарь сюиты теперь **414 PNG /
+1368 тестов** (скриншот + axe × обе темы). v1-часть выше — закрытая история
+(весь 274-PNG пакет подтверждён 2026-09-23); этот присест подтверждает
+ТОЛЬКО v2-ножи. Правила те же (§3 v1): подтверждение/перезапись — только
+человеком, по side-by-side за один присест; **гейт этой историей НЕ
+исполнялся.**
+
+Фиделити-контекст присеста: `.playwright-cli/verify/fidelity-verification-v2/`
+(ledger 25 строк — у каждого v2-компонента капча-путь, реестр отклонений,
+открытые флаги; жёлтый аудит; impeccable-прогон).
+
+## v2-§1. Сначала — перезаписи поверх ПОДТВЕРЖДЁННЫХ v1-базлайнов (16 + 2)
+
+### R-14 (256e5cf, story 8.1) — 14 PNG: select-семейство ×10 + application-form ×2 + navbar--api ×2
+
+- **Что:** kit-wide `:host([hidden])`-гард (8.1 F2) убрал ВЫПЕЧЕННЫЙ дефект
+  закрытого меню tk-select — author-origin `display:block` бил UA `[hidden]`,
+  и в закрытом состоянии меню рисовало паразитную полосу. 10 PNG (5 историй
+  select ×2 темы: playground, variants, value-modes, theming, accessibility)
+  легитимно изменили пиксели; application-form ×2 (композиция с селектом) и
+  navbar--api ×2 (CEM-таблица выросла — F1 fallback-доки) — тот же коммит.
+- **Forensic one-liner:** «guard removed a baked-in select stray-band defect
+  (author-origin display beat UA [hidden]); navbar--api CEM table grew from
+  the F1 fallback docs».
+- **Действие:** подтвердить по side-by-side из `verify/select/` (старые PNG
+  показывали полосу — новые чистые) либо перезаписать отдельные.
+
+### R-2 (d7c36d6, story 8.2) — 2 PNG: `visual-components-v2-mega-nav--page {light,dark}`
+
+- **Что:** та же легитимность-класс, что 256e5cf: CEM 8.1 вырос — описания
+  атрибутов navbar (burger-label 70→209, sub-label 207→379 символов); док-
+  страница v2 рендерит `apiReferenceDoc('tk-navbar')` дословно → +41px
+  (1280×3372→3413, IHDR-проверено). 256e5cf перезаписал navbar--api, но
+  ПРОПУСТИЛ эту док-страницу (8.2-исполнитель корректно STOPнул на
+  предсуществующем падении; оркестратор адаптировал легитимность).
+- **Forensic one-liner:** «8.1's merged CEM grew the navbar attribute
+  descriptions; the v2 docs page renders apiReferenceDoc('tk-navbar')
+  verbatim → +41px».
+- **Действие:** подтвердить (страница стала длиннее ровно на выросшую
+  таблицу) либо перезаписать.
+
+### R-2' (c999e12, story 6.1) — 2 PNG: `visual-token-reference--colors {light,dark}`
+
+- **Что:** 6.1 добавил v2-семантики (warm-cream, delta, table) — страница
+  цветов выросла на новые строки токенов. До-теговое подтверждение v1 этих
+  строк не покрывало.
+- **Действие:** подтвердить (та же страница, больше строк) либо перезаписать.
+
+## v2-§2. Полный инвентарь v2 по историям
+
+Формат v1-части: группа — набор исторей ×2 темы; side-by-side путь; действие
+по умолчанию: **подтвердить**. Провижн-коммиты — появление в main.
+
+### Epic 6 — каталог (эталон: tbank.ru/invest/stocks)
+
+| Группа | Базлайны | Side-by-side / доказательство | С committing |
+|---|---|---|---|
+| tk-filter-chips (6.2) | `components-filterchips--` 6 историй = 12 + top-layer спек-пара «Ещё»-меню (2) | `verify/filter-chips/filterchips-side-by-side-{light,dark}.png` + probe-таблицы | `932c9b3` |
+| tk-pagination (6.2) | `components-pagination--` 6 историй = 12 | `verify/pagination/pagination-side-by-side-{light,dark}.png` | `932c9b3` |
+| tk-combobox-search (6.3) | `components-comboboxsearch--` 7 историй = 14 (вкл. --open) + top-layer спек-пара (2) | `verify/combobox-search/combobox-search-side-by-side-{light,dark}.png` (поле; меню = kit surface, см. ledger) | `409417a` |
+| tk-data-table (6.4) | `components-datatable--` 7 историй = 14 + keyboard-contract спек-пара (2) | `verify/data-table/data-table-side-by-side-{light,dark}.png` | `e06e844` (линз-фикс `eb9fdd7` — клавиатурная история md5-идентична) |
+| stocks-catalog (6.5) | `showcase-stocks-catalog--` 1 история = 2 + спек-пара открытой панели (2) | `verify/stocks-catalog/stockscatalog-side-by-side-{light,dark}.png` + `walkthrough.md` (39 шагов) | `b1a1b9f` |
+
+### Epic 7 — хром + маркетинг (эталоны: /invest/stocks хедер; /business; /invest/mobile-application)
+
+| Группа | Базлайны | Side-by-side | С committing |
+|---|---|---|---|
+| tk-navbar mega-nav (7.1) | `components-navbar--mega-nav{,-variants,-theming,-accessibility}` 4 истории = 8 (navbar--api ×2 — см. R-14) | `verify/mega-nav/mega-nav-side-by-side-{light,dark}.png` + DOM-геометрия | `0ec0790` (ворктри `736191e` + truing `b068bb8`) |
+| tk-cookie-banner (7.2) | `components-cookie-banner--` 5 исторей = 10 + top-layer спек-пара (2) | `verify/cookie-banner/cookie-banner-side-by-side-{light,dark}.png` | `0f1592d` (ворктри `773f53d`; gate-fix `9086551`) |
+| tk-stepper (7.3) | `components-stepper--` 5 исторей = 10 | `verify/stepper/stepper-side-by-side-light.png` (dark-референса нет — токен-ремап, 8.2-движок) | `d6a9f2c` (ворктри `d199a79`; линза `6cb2234`) |
+| tk-store-badges (7.3) | `components-storebadges--` 5 исторей = 10 | `verify/store-badges/store-badges-side-by-side-light.png` | `d6a9f2c` (линза `6cb2234`: zero-state-пара перезаписана в-round) |
+| tk-qr-block (7.3) | `components-qrblock--` 5 исторей = 10 | `verify/qr-block/qr-block-side-by-side-light.png` (позиция заметки тройно доказана) | `d6a9f2c` |
+| business-landing (7.4) | `showcase-business-landing--` 1 история = 2 + toast спек-пара (2) | `verify/business-landing/side-{hero,bento,steps-form,footer}.png` ×4 | `5a6f5e5` (ворктри `bbbceef`) |
+| invest-landing (7.5) | `showcase-invest-landing--` 1 история = 2 + cluster спек-пара (2) | `verify/invest-landing/side-by-side-{hero,cluster}.png` | `508bd7b` (ворктри `7df3097`; CEM `0df4593`) |
+
+### Epic 8 — верификация + доки
+
+| Группа | Базлайны | Доказательство | С committing |
+|---|---|---|---|
+| доки v2 (8.3) | `components-v2-<comp>--page` ×9 = 18 + `token-reference--registers` 2 | живые CEM-таблицы; registers-источник single-source (TOKENS.md ?raw) — drift-тест `tests/docs-registers-source.test.ts`; страницы доков, не компоненты (прецедент 5.5) | `e63639c` |
+| 8.1 (a11y-свип) | **14 перезаписей — см. R-14** | `verify/a11y-sweep/group-V.md` (54/54 ячеек) + 28 engine-ног | `256e5cf` |
+| 8.2 (dark-свип) | **2 перезаписи — см. R-2**; F5 store-badges фикс без пиксельного изменения | `verify/dark-sweep/ledger.md` (28/28; шесть dark-[ASSUMPTION] удержаны, ноль изменений значений) | `9231315` + `d7c36d6` |
+| 8.4 (эта) | перезаписей НЕТ — линейные прогоны 1368/1368 ×2 (порт 6061) | `verify/fidelity-verification-v2/{ledger,yellow-audit,impeccable-run}.md` | рабочее дерево (коммит после гейта) |
+
+## v2-§3. Порядок присеста v2 (совет)
+
+R-14 → R-2 → R-2' (перезаписи, ~10 минут) → 7.3-трио (самые визуально
+плотные side-by-side) → Epic 6 каталог (chips/pagination/combobox/table) →
+композиции ×3 (assembly-стандарт: порядок/кластер/связь, не попиксельно) →
+доки ×20 (CEM-таблицы, быстрый eyeball) → mega-nav/cookie-banner. Эталоны —
+`.playwright-cli/captures-v2/` (INDEX.md там же). Присест v2 ≈ 1 час.
+
+После подтверждения: гейт релиза v1.1.0 — RELEASE.md, раздел «Релиз v1.1.0»
+(тег ставит ТОЛЬКО мейнтейнер; эта история ничего не исполняла).
