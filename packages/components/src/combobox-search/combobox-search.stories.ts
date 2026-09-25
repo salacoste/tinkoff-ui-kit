@@ -53,13 +53,24 @@ class TypeOnMount extends Directive {
     const element = part.element as TkComboboxSearch;
     if (element && !this.#driven.has(element)) {
       this.#driven.add(element);
-      void element.updateComplete.then(() => {
-        const control = element.shadowRoot?.querySelector<HTMLInputElement>('.field__control');
-        if (!control) return;
-        control.focus();
-        control.value = 'н'; // Сбербанк, Норникель, Яндекс, Т-Технологии, Роснефть
-        control.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
-      });
+      void element.updateComplete
+        .then(() => {
+          const control = element.shadowRoot?.querySelector<HTMLInputElement>('.field__control');
+          if (!control) return;
+          control.focus();
+          control.value = 'н'; // Сбербанк, Норникель, Яндекс, Т-Технологии, Роснефть
+          control.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+        })
+        // Deterministic capture state (CI triage 2026-09-25): a focused field
+        // paints its focus-within ring and then races whatever steals focus
+        // before the screenshot — the first ubuntu run captured the focused
+        // state while the confirmed baselines hold the settled one. Settle
+        // explicitly: let the menu open once (its real pixels are the
+        // page-clipped combobox-search.spec.ts pair), then blur — focusout
+        // closes the menu WITHOUT restoreQuery, so the typed filter text
+        // stays in the field. Same pixels on every platform, race or not.
+        .then(() => element.updateComplete)
+        .then(() => element.shadowRoot?.querySelector<HTMLInputElement>('.field__control')?.blur());
     }
     return this.render();
   }
