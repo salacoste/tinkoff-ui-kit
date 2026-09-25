@@ -679,7 +679,9 @@ test.describe('tk-navbar [360] — the burger drawer', () => {
     // A real Tab inside the trap lands keyboard focus on a drawer link — the
     // unified ring must paint there (deep probe, same as the walk).
     await page.keyboard.press('Tab');
-    const stop = await page.evaluate(() => probeStop());
+    // probeStop passes as the FUNCTION (an arrow wrapper would serialize only
+    // the arrow — ReferenceError browser-side; the walk legs' own pattern).
+    const stop = await page.evaluate(probeStop, undefined);
     expect(stop, 'Tab inside the drawer keeps focus on a drawer link').not.toBeNull();
     expect(stop?.host).toBe('tk-navbar');
     expect(
@@ -718,7 +720,7 @@ test('tk-cookie-banner: the open card is a REAL keyboard stop with the unified r
   let stop: StopProbe | null = null;
   for (let press = 0; press < 5; press += 1) {
     await page.keyboard.press('Shift+Tab');
-    stop = await page.evaluate(() => probeStop());
+    stop = await page.evaluate(probeStop, undefined);
     if (stop?.classes.includes('banner__accept')) break;
   }
   expect(stop, 'a bounded Shift+Tab walk reaches the open card’s accept pill').not.toBeNull();
