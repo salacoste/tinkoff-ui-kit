@@ -34,7 +34,9 @@ axe в обеих темах, контраст, клавиатура, reduced-mo
 ## Быстрый старт
 
 > Рецепт проверен дословно на свежем проекте вне репозитория (SM-6, Story 5.7 —
-> транскрипт и скриншот в `.playwright-cli/verify/sm6-self-test/`).
+> транскрипт и скриншот в `.playwright-cli/verify/sm6-self-test/`; повторён
+> релизным гейтом v1.1.0 с уточнением dedupe —
+> `.playwright-cli/verify/v110-fresh-clone/`).
 
 Требования: Node >= 20, pnpm (приходит через `packageManager` + corepack).
 
@@ -43,8 +45,8 @@ axe в обеих темах, контраст, клавиатура, reduced-mo
 дистрибуцию через реестр npm неудобной — публикации не будет, `private: true`
 во всех пакетах остаётся постоянно (модель релиза — в `RELEASE.md`).
 Каноническая установка — pnpm-линк воркспейса из checkout'а репозитория;
-для воспроизводимости пинуйте релизный тег: `git clone --branch v1.0.0 …` или
-`git checkout v1.0.0` в существующем checkout'е (тег = версия пакета, см.
+для воспроизводимости пинуйте релизный тег: `git clone --branch v1.1.0 …` или
+`git checkout v1.1.0` в существующем checkout'е (тег = версия пакета, см.
 «Семверинг и changelog»):
 
 ```bash
@@ -60,6 +62,18 @@ cd ../tinkoff-ui-kit && pnpm install && pnpm build && cd ../my-app
 pnpm add -w pillkit-components pillkit-react pillkit-tokens --workspace
 pnpm add -w react@19.3.0 react-dom@19.3.0
 pnpm add -w -D vite
+```
+
+Для vite — три строки dedupe (обязательно): воркспейс-линк даёт бандлеру
+два физических экземпляра `react` (ваш и локальную копию из чекаута кита),
+и без дедупликации React-обёртки падают с «Invalid hook call» (найдено
+релизным гейтом v1.1.0 на актуальном патче vite 8.3; трасса и разбор —
+`.playwright-cli/verify/v110-fresh-clone/NOTES.md`):
+
+```ts
+// vite.config.ts
+import { defineConfig } from 'vite';
+export default defineConfig({ resolve: { dedupe: ['react', 'react-dom'] } });
 ```
 
 `index.html` — кнопка и как custom element, и через React-обёртку:
@@ -105,7 +119,7 @@ pnpm install && pnpm --filter pillkit-docs dev   # Storybook (RU) на :6006
 ```
 
 Внутри: «Начало работы» (установка, темизация, шрифты), Token Reference
-(светлая/тёмная тема бок о бок), Theming Guide, API-таблицы всех 19 компонентов
+(светлая/тёмная тема бок о бок), Theming Guide, API-таблицы всех 27 компонентов
 и заметки по доступности. Контракт API компонентов — пропсы, события,
 controlled/uncontrolled-режимы, слоты и грамматика темизации — описан в
 [`packages/components/CONVENTIONS.md`](packages/components/CONVENTIONS.md).

@@ -113,7 +113,12 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   (b) release v1.1.0 per RELEASE.md §8.1–8.5 (THE tag — never autonomous; **SHIPPED
   2026-09-25: annotated tag v1.1.0 on e09fd3c, pushed, Actions success run
   36110877833 — placed under the maintainer's explicit live instruction once
-  green; §8.4 fresh-clone gate followed**), (c) SR spot-checks v2 — **DONE 2026-09-25: VoiceOver 18/18 ✓, zero
+  green; §8.4 fresh-clone gate PASSED same day** — consumer renders DataTable
+  via the React wrapper, full checklist green; TWO recipe amendments found:
+  vite needs `resolve.dedupe:['react','react-dom']` (vite ^8.3 patch drift —
+  SM-6 passed without it) and the dark-theme attribute goes on `<html>`;
+  evidence `.playwright-cli/verify/v110-fresh-clone/`, deferred-work entry
+  added), (c) SR spot-checks v2 — **DONE 2026-09-25: VoiceOver 18/18 ✓, zero
   deviations (run-sheet SR-RUNSHEET-v2.md + digest)**; iOS momentum-scroll stays
   maintainer-side debt (NOT release-gating), (d) the stepper brown-token
   decision — **REFUSED 2026-09-25 (recorded in deferred-work 7.3, revisit v1.2.0)**.
