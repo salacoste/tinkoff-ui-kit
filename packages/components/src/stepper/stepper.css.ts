@@ -8,8 +8,9 @@ import { css } from 'lit';
  * (2026-09-24, runs.awk method, recorded in .playwright-cli/verify/stepper/):
  * 3 WHITE cards (surface-base, probe-measured 336px wide × ~136px, radius 24 —
  * EXACTLY --tk-radius-xl, gap 48 — EXACTLY --tk-space-48) on the page cream;
- * the number = a 56×56 rounded-square badge (probe-fit radius 18 — see the
- * flag below) centered on each card's centerline with its center ON the card's
+ * the number = a 56×56 rounded-square badge (probe-fit radius 18; the
+ * nearest-step radius-lg mapping, Δ2, is 7.3 deviation 3 in
+ * verify/stepper/NOTES.md) centered on each card's centerline with its center ON the card's
  * top edge (EXACT half-overlap), white bold numeral; title + text centered
  * under it, both lines the SAME text-primary ink at body-l (the probe refutes
  * a secondary-colored text line — title/text differ by WEIGHT only).
