@@ -33,13 +33,14 @@ type SegmentedRadioArgs = {
   value?: string;
   defaultValue: string;
   disabled: boolean;
+  srOnly: boolean;
 };
 
 const segmentedRadio = (
   args: Partial<SegmentedRadioArgs> = {},
   options: TkSegmentedRadioOption[] = CITIZENSHIP,
 ) => {
-  const { label, value, defaultValue, disabled } = args;
+  const { label, value, defaultValue, disabled, srOnly } = args;
   // `value === undefined ? undefined : value` keeps the demo UNCONTROLLED by
   // default: a bound value would strict-control the element and leave demo
   // arrows visually stuck until a re-render (the frozen §4 contract).
@@ -51,6 +52,7 @@ const segmentedRadio = (
       .value=${value}
       .defaultValue=${defaultValue ?? ''}
       ?disabled=${disabled ?? false}
+      ?sr-only=${srOnly ?? false}
     ></tk-segmented-radio>
   `;
 };
@@ -163,11 +165,17 @@ const meta: Meta<SegmentedRadioArgs> = {
     label: 'Гражданство РФ?',
     defaultValue: 'yes',
     disabled: false,
+    srOnly: false,
   },
   argTypes: {
     label: {
       control: 'text',
       description: 'Видимая подпись группы над дорожкой — доступное имя radiogroup.',
+    },
+    srOnly: {
+      control: 'boolean',
+      description:
+        'Скрыть подпись утилитой sr-only (10.1): имя группы остаётся за span; без подписи — no-op (фолбэк «Выбор» не тронут).',
     },
     value: {
       control: 'text',
@@ -382,6 +390,10 @@ export const Accessibility: Story = {
         name=value выбранного сегмента, ничего — без выбора; form.reset()
         восстанавливает defaultValue. Disabled: aria-disabled с сохранением
         фокуса (паттерн кнопочного пилота), выбор заблокирован любым способом.
+        Режим <code>sr-only</code> (10.1): подпись-скрыта утилитой 1px-клипа,
+        span сохраняет id и wiring aria-labelledby — группа по-прежнему
+        названа текстом подписи; фолбэк «Выбор» (совсем без подписи) не
+        затронут.
       </p>
       <h2>Чек-лист: только с клавиатуры</h2>
       <table>
@@ -426,10 +438,19 @@ export const Accessibility: Story = {
               недоступным.
             </td>
           </tr>
+          <tr>
+            <td>Скринридер на <code>sr-only</code>-группе</td>
+            <td>
+              AT читает имя скрытой метки: объявление группы то же («Тип
+              операции, группа радио»), геометрия дорожки совпадает с
+              безподписным вариантом.
+            </td>
+          </tr>
         </tbody>
       </table>
       <div class="tkr-row">
         ${segmentedRadio({ defaultValue: 'yes' })}
+        ${segmentedRadio({ label: 'Тип операции', defaultValue: 'yes', srOnly: true })}
       </div>
     
       <h2>Протокол скринридер-проверки (VoiceOver / NVDA)</h2>

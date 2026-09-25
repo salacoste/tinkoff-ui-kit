@@ -70,6 +70,7 @@ export type TkCheckboxChangeEvent = CustomEvent<TkCheckboxChangeDetail>;
  * @attr {string} label - Visible label text (used only when the default slot is empty).
  * @attr {boolean} default-checked - Initial checked state for the uncontrolled mode; ignored after the first update.
  * @attr {boolean} indeterminate - Visual mixed state (yellow fill + ink dash) + aria-checked="mixed"; never enters the value channel.
+ * @attr {string} error - Consumer error message: renders the error line immediately (aria-invalid + aria-describedby wired to it), cleared with the prop; ''/null/undefined = no error (story 10.2, the tk-input mold).
  * @attr {boolean} disabled - 40% opacity, no pointer events, aria-disabled (kept focusable — the button-pilot pattern).
  * @attr {string} name - The control's form name (reflects; also lands on the native input).
  * @attr {string} value - Pass-through to the native input's value (submitted when checked; native default "on" when unset).
@@ -125,6 +126,20 @@ export class TkCheckbox extends LitElement {
   @property({ type: Boolean, reflect: true })
   indeterminate = false;
 
+  /**
+   * Consumer-driven error message (story 10.2, the tk-input `error` mold
+   * verbatim — NO internal validation exists here and none is added: the
+   * documented division keeps internal checks tk-input's required-only):
+   * renders the error line immediately, cleared when the prop clears. Empty
+   * string and null/undefined (React conditional props) all mean "no error".
+   * The message renders as a SIBLING after the wrapping label — error text
+   * inside the label would join the accessible name — with the native input
+   * carrying aria-invalid + aria-describedby ONLY while a message shows, so
+   * the no-error DOM stays byte-identical to the pre-10.2 shape.
+   */
+  @property({ type: String })
+  error?: string;
+
   /** Disabled: 40% opacity, no pointer events, aria-disabled (kept focusable). */
   @property({ type: Boolean, reflect: true })
   disabled = false;
@@ -171,6 +186,31 @@ export class TkCheckbox extends LitElement {
 
   /** ElementInternals form mirror — null where unsupported (happy-dom). */
   readonly #internals: ElementInternals | null = null;
+
+  /**
+   * Per-instance id root for the error channel's aria id-ref (the tk-input
+   * mold). Lazily minted on FIRST USE — accessing it only inside the
+   * error branch keeps the no-error DOM (and CEM-driven wrappers) free of
+   * any minted id.
+   */
+  #uniqueId?: string;
+
+  static #nextId = 0;
+
+  get #id(): string {
+    this.#uniqueId ??= `tk-checkbox-${++TkCheckbox.#nextId}`;
+    return this.#uniqueId;
+  }
+
+  /**
+   * The message in force (the tk-input `#message` null-tolerance): the
+   * consumer `error` prop, non-empty only. Checkbox has NO internal
+   * validation channel, so there is nothing to override — absent error prop
+   * simply means no error, never a crash.
+   */
+  get #message(): string | null {
+    return this.error != null && this.error.length > 0 ? this.error : null;
+  }
 
   constructor() {
     super();
@@ -345,6 +385,7 @@ export class TkCheckbox extends LitElement {
     // "mixed" is precisely the APG fix for unannounced native indeterminate.
     const ariaChecked =
       this.indeterminate && !this.#effectiveChecked ? ('mixed' as const) : nothing;
+    const message = this.#message;
 
     return html`
       <label class="root">
@@ -356,6 +397,8 @@ export class TkCheckbox extends LitElement {
             value=${this.value ?? nothing}
             aria-label=${this.ariaLabel ?? nothing}
             aria-checked=${ariaChecked}
+            aria-invalid=${message ? 'true' : nothing}
+            aria-describedby=${message ? `${this.#id}-error` : nothing}
             aria-disabled=${this.disabled ? 'true' : nothing}
             @change=${this.#handleChange}
           />
@@ -389,6 +432,24 @@ export class TkCheckbox extends LitElement {
             : this.label ?? nothing}<slot @slotchange=${this.#handleLabelSlotChange}></slot
         ></span>
       </label>
+      ${message
+        ? html`<p class="error" id="${this.#id}-error">
+            <svg
+              class="error__icon"
+              aria-hidden="true"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            >
+              <circle cx="8" cy="8" r="6.25"></circle>
+              <path d="M8 4.75v4"></path>
+              <circle class="error__icon-dot" cx="8" cy="11" r="0.25" fill="currentColor"></circle>
+            </svg>
+            <span class="error__text">${message}</span>
+          </p>`
+        : nothing}
     `;
   }
 }

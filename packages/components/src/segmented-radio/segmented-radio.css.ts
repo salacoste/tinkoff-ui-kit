@@ -85,6 +85,24 @@ export const segmentedRadioStyles = css`
     color: var(--tk-color-text-primary);
   }
 
+  /* Visually-hidden label mode (sr-only prop, story 10.1) — the standard
+     1px-clip utility (the progress-bar .announcement shape, verbatim). The
+     span keeps its id and the aria-labelledby wiring above; display is never
+     none, so the name computation is untouched. Sourced AFTER .label so the
+     utility's margin: -1px overrides the visible label's bottom rhythm. */
+  .label--sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
   /* --- The pill track: one continuous radius-full bar (DESIGN.md's frozen
      shape), tinted with the field language so the WHITE selected segment
      reads as the solid fill DESIGN demands. 4px inset gives the segment

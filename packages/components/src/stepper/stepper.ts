@@ -54,6 +54,7 @@ export const TK_STEPPER_DEFAULT_EMPTY_COPY = 'Нет доступных шаго
  * @attr {string} heading - Optional block heading (heading-2, centered; nothing rendered when unset).
  * @prop {TkStepperStep[]} steps - The steps; numbering is rendered 1..n automatically.
  * @slot - Optional CTA row under the cards (renders only when slotted).
+ * @slot subtitle - Optional page subheading between the heading and the cards (body-m, centered; wrapper renders only when slotted — story 10.2).
  * @slot empty - Zero-state copy for steps=[] (default «Нет доступных шагов»).
  */
 export class TkStepper extends LitElement {
@@ -66,6 +67,9 @@ export class TkStepper extends LitElement {
   /** The step data — array of { title, text }; property-only (object data never reflects). */
   @property({ type: Array, attribute: false })
   steps: TkStepperStep[] = [];
+
+  /** Whether the subtitle slot carries projectable content (drives the wrapper + data-has-subtitle). */
+  #subtitleSlotted = false;
 
   /** Steps with null/undefined clamped to the empty list (null-tolerant props). */
   get #effectiveSteps(): TkStepperStep[] {
@@ -84,6 +88,49 @@ export class TkStepper extends LitElement {
     this.toggleAttribute('data-has-cta', this.#slotHasContent(event.target as HTMLSlotElement));
   }
 
+  /**
+   * Subtitle presence (story 10.2 — the CTA row's #slotHasContent +
+   * data-has-cta mirror, extended with the promo-card conditional-wrapper
+   * technique the CTA never needed: its container always renders, while the
+   * subtitle wrapper must be ABSENT when the slot is empty). The slot itself
+   * stays in the DOM (hidden, unwrapped) so slotchange still fires when
+   * content arrives later — rendered at the END of the container, OUTSIDE
+   * every adjacent-sibling rhythm pair: a listening slot parked between the
+   * heading and the cards would break `.stepper__heading + .stepper__steps`
+   * and silently drop its 64+32 rhythm (pixel-caught in the 10.2 visual
+   * round — the empty-slot composition must stay visually identical to
+   * pre-10.2). Seeded at firstUpdated for first-paint truth — statically
+   * slotted subtitles never flash through the hidden state.
+   *
+   * CONVERGENCE RULE: the sync ALWAYS re-queries the LIVE tree instead of
+   * trusting the event's target slot. The two render parts (wrapped slot in
+   * the middle, bare listening slot at the end) mean one flip commit retires
+   * one slot and mounts the other; a slotchange dispatched from the RETIRED
+   * slot reads an empty assignment list, and honoring it would flip the flag
+   * back — an endless render oscillation that starves the event loop (the
+   * 10.2 visual round caught every slotted story freezing at a blank canvas
+   * in Chromium; happy-dom never fired the competing event, so unit tests
+   * stayed green). The live query reads the committed tree, whose one
+   * remaining slot always tells the truth, so every path converges.
+   */
+  #syncSubtitleSlotted(): void {
+    const subtitleSlot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="subtitle"]');
+    const has = subtitleSlot != null && this.#slotHasContent(subtitleSlot);
+    this.toggleAttribute('data-has-subtitle', has);
+    if (has !== this.#subtitleSlotted) {
+      this.#subtitleSlotted = has;
+      this.requestUpdate();
+    }
+  }
+
+  override firstUpdated(): void {
+    this.#syncSubtitleSlotted();
+  }
+
+  #handleSubtitleSlotChange(): void {
+    this.#syncSubtitleSlotted();
+  }
+
   override render() {
     const steps = this.#effectiveSteps;
     const heading = (this.heading ?? '').length > 0 ? this.heading : undefined;
@@ -91,6 +138,11 @@ export class TkStepper extends LitElement {
     return html`
       <div class="stepper">
         ${heading != null ? html`<h2 class="stepper__heading">${heading}</h2>` : nothing}
+        ${this.#subtitleSlotted
+          ? html`<p class="stepper__subtitle">
+              <slot name="subtitle" @slotchange=${this.#handleSubtitleSlotChange}></slot>
+            </p>`
+          : nothing}
         ${steps.length > 0
           ? html`
               <ol class="stepper__steps">
@@ -107,6 +159,9 @@ export class TkStepper extends LitElement {
               <div class="stepper__cta"><slot @slotchange=${this.#handleCtaSlotChange}></slot></div>
             `
           : html`<div class="stepper__empty"><slot name="empty">${TK_STEPPER_DEFAULT_EMPTY_COPY}</slot></div>`}
+        ${this.#subtitleSlotted
+          ? nothing
+          : html`<slot name="subtitle" @slotchange=${this.#handleSubtitleSlotChange} hidden></slot>`}
       </div>
     `;
   }

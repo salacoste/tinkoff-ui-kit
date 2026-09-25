@@ -174,4 +174,28 @@ export const checkboxStyles = css`
     line-height: var(--tk-text-body-s-leading);
     color: var(--tk-checkbox-text, var(--tk-color-text-secondary));
   }
+
+  /* --- Error message (story 10.2): the tk-input error line VERBATIM —
+     consumer copy only (no internal validation exists here), rendered as a
+     SIBLING after the wrapping .root label (error text inside the label
+     would join the accessible name). error-on-field carries the pair in
+     BOTH themes; described-by wiring lives in the template. Icon metrics
+     are structural (16px box, 1.5px stroke) — same flags as tk-input. --- */
+  .error {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--tk-space-4);
+    margin: var(--tk-space-8) 0 0;
+    font-family: var(--tk-font-body);
+    font-size: var(--tk-text-body-s-size);
+    line-height: var(--tk-text-body-s-leading);
+    color: var(--tk-color-error-on-field);
+  }
+
+  .error__icon {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    margin-block-start: 0.5px;
+  }
 `;

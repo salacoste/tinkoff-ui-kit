@@ -35,11 +35,13 @@ const TABS_2 = [
 type MountOptions = {
   props?: Partial<InstanceType<typeof TkQrBlock>>;
   attributes?: Record<string, string>;
+  slotChildren?: Node[];
 };
 
-const mount = async ({ props, attributes }: MountOptions = {}): Promise<TkQrBlock> => {
+const mount = async ({ props, attributes, slotChildren }: MountOptions = {}): Promise<TkQrBlock> => {
   const el = new TkQrBlock();
   for (const [name, value] of Object.entries(attributes ?? {})) el.setAttribute(name, value);
+  for (const child of slotChildren ?? []) el.appendChild(child);
   document.body.appendChild(el);
   if (props) Object.assign(el, props);
   await elementUpdated(el);
@@ -188,5 +190,106 @@ describe('tk-qr-block', () => {
     const cssText = sheet();
     expect(cssText).toMatch(/:host\s*\{[^}]*display:\s*block/);
     expect(cssText).toMatch(/:host\(\[hidden\]\)\s*\{[^}]*display:\s*none/);
+  });
+
+  // --- page-copy slot (story 10.2 — the stepper subtitle presence mold) ---
+
+  const copyP = (): HTMLParagraphElement => {
+    const p = document.createElement('p');
+    p.setAttribute('slot', 'page-copy');
+    p.textContent = 'Переходите по ссылкам только с этой страницы';
+    return p;
+  };
+
+  it('page-copy empty: wrapper ABSENT, data-has-page-copy off, the bare hidden slot keeps listening', async () => {
+    const el = await mount({ props: { tabs: TABS_2, title: 'Отсканируйте QR-код' } });
+    expect(el.shadowRoot?.querySelector('.qr-block__copy')).toBeNull();
+    expect(el.hasAttribute('data-has-page-copy')).toBe(false);
+    const slot = el.shadowRoot?.querySelector('slot[name="page-copy"]');
+    expect(slot).not.toBeNull();
+    expect(slot?.hasAttribute('hidden')).toBe(true);
+    // ADJACENCY REGRESSION (pixel-caught in the 10.2 visual round): the
+    // listening slot must sit OUTSIDE the rhythm pairs — the title's next
+    // sibling is the tablist, so `.qr-block__title + tk-tabs` keeps firing
+    // exactly as pre-10.2.
+    const title = el.shadowRoot?.querySelector('.qr-block__title');
+    expect(title?.nextElementSibling?.tagName.toLowerCase()).toBe('tk-tabs');
+  });
+
+  it('page-copy slotted statically: the wrapper renders between title and tablist with the node assigned', async () => {
+    const p = copyP();
+    const el = await mount({
+      props: { tabs: TABS_2, title: 'Вариант 2. Отсканируйте QR-код' },
+      slotChildren: [p],
+    });
+    const wrapper = el.shadowRoot?.querySelector('.qr-block__copy');
+    expect(wrapper, 'the wrapper renders around the slot').not.toBeNull();
+    expect(wrapper?.querySelector('slot[name="page-copy"]')?.hasAttribute('hidden')).toBe(false);
+    expect(wrapper?.querySelector('slot[name="page-copy"]')?.assignedNodes({ flatten: true })).toContain(p);
+    expect(el.hasAttribute('data-has-page-copy')).toBe(true);
+    // Document order: title → copy → tablist (probe (b)'s composition).
+    const title = el.shadowRoot?.querySelector('.qr-block__title');
+    const tabs = el.shadowRoot?.querySelector('tk-tabs');
+    expect(
+      title && wrapper ? wrapper.compareDocumentPosition(title) : 0,
+    ).toBe(Node.DOCUMENT_POSITION_PRECEDING);
+    expect(
+      tabs && wrapper ? tabs.compareDocumentPosition(wrapper) : 0,
+    ).toBe(Node.DOCUMENT_POSITION_PRECEDING);
+
+    p.remove();
+    await elementUpdated(el);
+    await new Promise((resolve) => setTimeout(resolve, 0)); // happy-dom delivers slotchange async
+    expect(el.shadowRoot?.querySelector('.qr-block__copy')).toBeNull();
+    expect(el.hasAttribute('data-has-page-copy')).toBe(false);
+  });
+
+  it('page-copy arriving late: slotchange flips the wrapper in', async () => {
+    const el = await mount({ props: { tabs: TABS_2 } });
+    expect(el.shadowRoot?.querySelector('.qr-block__copy')).toBeNull();
+    const p = copyP();
+    el.appendChild(p);
+    await elementUpdated(el);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(el.shadowRoot?.querySelector('.qr-block__copy')).not.toBeNull();
+    expect(el.hasAttribute('data-has-page-copy')).toBe(true);
+  });
+
+  it('page-copy with title unset: renders alone — the copy is independent of the title', async () => {
+    const el = await mount({ props: { tabs: TABS_2 }, slotChildren: [copyP()] });
+    expect(el.shadowRoot?.querySelector('.qr-block__title')).toBeNull();
+    expect(el.shadowRoot?.querySelector('.qr-block__copy')).not.toBeNull();
+  });
+
+  it('page-copy + tabs=[]: renders alongside the zero-tab degrade (independent surfaces)', async () => {
+    const el = await mount({ props: { title: 'Отсканируйте QR-код' }, slotChildren: [copyP()] });
+    expect(el.shadowRoot?.querySelector('tk-tabs')).toBeNull();
+    expect(el.shadowRoot?.querySelector('.qr-block__copy')).not.toBeNull();
+    expect(el.shadowRoot?.querySelector('.qr-block__title')).not.toBeNull();
+  });
+
+  it('page-copy rhythm pins: body-m centered on WHITE with the §6 hook; space-16 after title; space-48 before the tablist', () => {
+    const copy = ruleBody('\\.qr-block__copy');
+    expect(copy, 'the .qr-block__copy rule exists').not.toBe('');
+    expect(copy).toMatch(/margin:\s*0/);
+    expect(copy).toMatch(/text-align:\s*center/);
+    expect(copy).toMatch(/font-size:\s*var\(--tk-text-body-m-size\)/);
+    expect(copy).toMatch(/font-weight:\s*var\(--tk-text-body-m-weight\)/);
+    expect(copy).toMatch(/color:\s*var\(--tk-qr-block-copy, var\(--tk-color-text-primary\)\)/);
+    // Probe (b): title→copy ≈16.5px box-corrected → space-16 (Δ0.5).
+    expect(sheet()).toMatch(
+      /\.qr-block__title \+ \.qr-block__copy\s*\{[^}]*margin-block-start:\s*var\(--tk-space-16\)/,
+    );
+    // Probe (b): copy→tabs ≈48px → space-48 (Δ0) — the adjacent-sibling rule
+    // supersedes the title-only composition's space-40 once copy intervenes.
+    expect(sheet()).toMatch(
+      /\.qr-block__copy \+ tk-tabs\s*\{[^}]*margin-block-start:\s*var\(--tk-space-48\)/,
+    );
+  });
+
+  it('DOM identity: without page-copy the render carries no wrapper and no data-has-page-copy (default-off)', async () => {
+    const el = await mount({ props: { tabs: TABS_2, title: 'Отсканируйте QR-код' } });
+    expect(el.hasAttribute('data-has-page-copy')).toBe(false);
+    expect(el.shadowRoot?.querySelector('.qr-block__copy')).toBeNull();
   });
 });

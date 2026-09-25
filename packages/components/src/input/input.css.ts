@@ -80,6 +80,27 @@ export const inputStyles = css`
     margin-inline-start: var(--tk-space-4);
   }
 
+  /* Visually-hidden label mode (sr-only prop, story 10.1) — the standard
+     1px-clip utility (the progress-bar .announcement shape, verbatim). The
+     label STAYS a <label for> (click target + fallback association) and keeps
+     its id/aria-labelledby place; display is never none, so the accessible
+     name computation is untouched. Sourced AFTER .label so the utility's
+     margin: -1px overrides the visible label's bottom rhythm — the field
+     renders exactly as the label-less variant. Structural values (1px box,
+     clip shape) — no token counterparts, same flags as progress-bar. */
+  .label--sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
   /* --- Field box: the fill/radius/hairline live on the wrapper (not the
      native input) so the badge rides inside the same surface and the unified
      focus ring (below) draws around the WHOLE field. --- */

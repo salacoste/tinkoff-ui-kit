@@ -56,6 +56,7 @@ export interface TkQrTab {
  * @tag tk-qr-block
  * @attr {string} title - Optional block heading (heading-4, centered; nothing rendered when unset).
  * @prop {TkQrTab[]} tabs - The platform tabs; each panel = note? + the QR tile.
+ * @slot page-copy - Optional explanatory copy between the title and the tablist (body-m, centered; wrapper renders only when slotted — story 10.2). Independent of `title` and `tabs`: renders when the title is unset and alongside the tabs=[] degrade.
  */
 export class TkQrBlock extends LitElement {
   static override readonly styles = [qrBlockStyles];
@@ -77,9 +78,56 @@ export class TkQrBlock extends LitElement {
   @property({ type: Array, attribute: false })
   tabs: TkQrTab[] = [];
 
+  /** Whether the page-copy slot carries projectable content (drives the wrapper + data-has-page-copy). */
+  #copySlotted = false;
+
   /** Tabs with null/undefined clamped to the empty list (null-tolerant props). */
   get #effectiveTabs(): TkQrTab[] {
     return this.tabs ?? [];
+  }
+
+  /** A slot carries projectable content when an element or non-empty text is assigned (tk-stepper mold). */
+  #slotHasContent(slot: HTMLSlotElement): boolean {
+    return slot.assignedNodes({ flatten: true }).some(
+      (node: Node) => node.nodeType === Node.ELEMENT_NODE || (node.textContent ?? '').trim().length > 0,
+    );
+  }
+
+  /**
+   * Page-copy presence (story 10.2 — the stepper subtitle presence mold
+   * verbatim): the wrapper renders ONLY when the slot carries content, the
+   * slot itself stays in the DOM (hidden, unwrapped) so slotchange still
+   * fires when content arrives later — rendered at the END of the container,
+   * OUTSIDE every adjacent-sibling rhythm pair: a listening slot parked
+   * between the title and the tablist would break `.qr-block__title +
+   * tk-tabs` and silently drop its space-40 rhythm (pixel-caught in the
+   * 10.2 visual round — the empty-slot composition must stay visually
+   * identical to pre-10.2). Seeded at firstUpdated for first-paint truth.
+   * The copy is INDEPENDENT of `title`/`tabs` — it renders above an unset
+   * title's absence and alongside the tabs=[] degrade alike.
+   *
+   * CONVERGENCE RULE (see tk-stepper's #syncSubtitleSlotted): the sync
+   * ALWAYS re-queries the LIVE tree instead of trusting the event's target
+   * slot — a slotchange from the slot a flip just retired reads empty and
+   * would oscillate the render endlessly (every slotted story froze at a
+   * blank canvas in Chromium until this rule landed).
+   */
+  #syncCopySlotted(): void {
+    const copySlot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="page-copy"]');
+    const has = copySlot != null && this.#slotHasContent(copySlot);
+    this.toggleAttribute('data-has-page-copy', has);
+    if (has !== this.#copySlotted) {
+      this.#copySlotted = has;
+      this.requestUpdate();
+    }
+  }
+
+  override firstUpdated(): void {
+    this.#syncCopySlotted();
+  }
+
+  #handlePageCopySlotChange(): void {
+    this.#syncCopySlotted();
   }
 
   /** The v1 tab shape for the composed element — index-keyed values (see the class header). */
@@ -94,6 +142,11 @@ export class TkQrBlock extends LitElement {
     return html`
       <div class="qr-block">
         ${title != null ? html`<h2 class="qr-block__title">${title}</h2>` : nothing}
+        ${this.#copySlotted
+          ? html`<div class="qr-block__copy">
+              <slot name="page-copy" @slotchange=${this.#handlePageCopySlotChange}></slot>
+            </div>`
+          : nothing}
         ${tabs.length > 0
           ? html`
               <tk-tabs .tabs=${this.#toTabs(tabs)}>
@@ -118,6 +171,9 @@ export class TkQrBlock extends LitElement {
               </tk-tabs>
             `
           : nothing}
+        ${this.#copySlotted
+          ? nothing
+          : html`<slot name="page-copy" @slotchange=${this.#handlePageCopySlotChange} hidden></slot>`}
       </div>
     `;
   }

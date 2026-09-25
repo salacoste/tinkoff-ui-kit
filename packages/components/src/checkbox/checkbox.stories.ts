@@ -27,11 +27,12 @@ type CheckboxArgs = {
   defaultChecked: boolean;
   indeterminate: boolean;
   disabled: boolean;
+  error: string;
   ariaLabel: string;
 };
 
 const checkbox = (args: Partial<CheckboxArgs> = {}, slot?: string) => {
-  const { label, checked, defaultChecked, indeterminate, disabled, ariaLabel } = args;
+  const { label, checked, defaultChecked, indeterminate, disabled, error, ariaLabel } = args;
   // `checked === true ? true : undefined` keeps the demo UNCONTROLLED by
   // default: a bound `false` would strict-control the element and leave demo
   // toggles visually stuck until a re-render (the frozen §4 contract).
@@ -41,6 +42,7 @@ const checkbox = (args: Partial<CheckboxArgs> = {}, slot?: string) => {
       .checked=${checked === true ? true : undefined}
       .defaultChecked=${defaultChecked ?? false}
       .ariaLabel=${ariaLabel}
+      .error=${error && error.length > 0 ? error : undefined}
       ?indeterminate=${indeterminate ?? false}
       ?disabled=${disabled ?? false}
     >
@@ -175,6 +177,7 @@ const meta: Meta<CheckboxArgs> = {
     defaultChecked: false,
     indeterminate: false,
     disabled: false,
+    error: '',
     ariaLabel: '',
   },
   argTypes: {
@@ -199,6 +202,11 @@ const meta: Meta<CheckboxArgs> = {
     disabled: {
       control: 'boolean',
       description: 'Прозрачность 40%, без pointer-событий, aria-disabled (остаётся в фокусе).',
+    },
+    error: {
+      control: 'text',
+      description:
+        'Ошибка потребителя (10.2, молд input): строка под подписью, aria-invalid + aria-describedby; пустая строка/null — нет ошибки.',
     },
     ariaLabel: {
       control: 'text',
@@ -268,6 +276,17 @@ export const Variants: Story = {
           ${checkbox({ label: '', ariaLabel: 'Согласен' })}
           <figcaption>
             без подписи — голая коробка; имя даёт потребитель через aria-label (переносится на input)
+          </figcaption>
+        </figure>
+        <figure>
+          ${checkbox({
+            label: 'Соглашаюсь с условиями обслуживания',
+            error: 'Подтвердите согласие, чтобы продолжить',
+          })}
+          <figcaption>
+            ошибка потребителя через error (10.2): строка input-молда — иконка
+            + текст error-on-field, aria-invalid + aria-describedby; внутрь
+            имени подписи не попадает (строка — сиблинг label)
           </figcaption>
         </figure>
       </div>
@@ -435,7 +454,11 @@ export const Accessibility: Story = {
         checked, ничего — когда unchecked; form.reset() восстанавливает
         defaultChecked. Disabled: aria-disabled с
         сохранением фокуса (паттерн кнопочного пилота), переключение
-        заблокировано любым способом.
+        заблокировано любым способом. Канал <code>error</code> (10.2, молд
+        input): сообщение — СИБЛИНГ после label (текст ошибки не входит в
+        доступное имя подписи), нативный input несёт
+        <code>aria-invalid</code> + <code>aria-describedby</code> только пока
+        сообщение показано; внутренней валидации нет и не добавлено.
       </p>
       <h2>Чек-лист: только с клавиатуры</h2>
       <table>
@@ -475,10 +498,22 @@ export const Accessibility: Story = {
               Disabled объявляется как недоступный.
             </td>
           </tr>
+          <tr>
+            <td>Скринридер + <code>error</code></td>
+            <td>
+              «Согласен с условиями, пункт выбора, не отмечен, недействителен»
+              — затем по повторному визиту зачитывается сообщение
+              (aria-describedby); строка ошибки НЕ входит в имя подписи.
+            </td>
+          </tr>
         </tbody>
       </table>
       <div class="tkc-row">
         ${checkbox({ indeterminate: true })}
+        ${checkbox({
+          label: 'Согласен с условиями',
+          error: 'Подтвердите согласие, чтобы продолжить',
+        })}
       </div>
     
       <h2>Протокол скринридер-проверки (VoiceOver / NVDA)</h2>

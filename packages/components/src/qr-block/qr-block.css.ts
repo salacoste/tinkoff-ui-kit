@@ -46,6 +46,7 @@ import { css } from 'lit';
  * Per-component custom properties (`--tk-qr-block-*`, CONVENTIONS §6), each
  * consumed WITH its token default:
  * - `--tk-qr-block-title`      title color     (default text-primary)
+ * - `--tk-qr-block-copy`       page-copy color (default text-primary — the 10.2 probe's ink)
  * - `--tk-qr-block-note`       note color      (default text-secondary)
  * - `--tk-qr-block-tile-fill`  tile fill       (default surface-base)
  * - `--tk-qr-block-tile-radius` tile radius    (default radius-lg = 16)
@@ -89,6 +90,40 @@ export const qrBlockStyles = css`
   /* Title→tablist rhythm (the reference's own section gap). */
   .qr-block__title + tk-tabs {
     margin-block-start: var(--tk-space-40);
+  }
+
+  /* --- The optional page copy (slot page-copy, story 10.2) — PIXEL-PROBED
+     from the invest capture's two-line security paragraph (y 1780–1862,
+     glyph-decoded + render-verified in
+     .playwright-cli/verify/batch-10-1-10-2/NOTES.md): body-m 15/400,
+     text-primary ink (#333 exact on the WHITE canvas — the probe refutes
+     the expected secondary tier AND the cream surface), centered, both
+     lines (L1/L2 centers 639.5/640.0 vs page center 640). The wrapper
+     renders ONLY when the slot carries content (data-has-page-copy presence
+     mold); these rules never fire slot-less. Measured line rhythm 24px vs
+     the body-m leading 22.5 (Δ1.5/line) — nearest ramp step, recorded. --- */
+  .qr-block__copy {
+    margin: 0;
+    text-align: center;
+    font-family: var(--tk-font-body);
+    font-size: var(--tk-text-body-m-size);
+    font-weight: var(--tk-text-body-m-weight);
+    line-height: var(--tk-text-body-m-leading);
+    color: var(--tk-qr-block-copy, var(--tk-color-text-primary));
+  }
+
+  /* Title→copy rhythm (probe ink 1784→1810 = 26px, box-corrected ≈16.5 →
+     space-16, Δ0.5). */
+  .qr-block__title + .qr-block__copy {
+    margin-block-start: var(--tk-space-16);
+  }
+
+  /* Copy→tablist rhythm (probe paragraph-box bottom ≈1852 → pill top ≈1900
+     → space-48, Δ0). The title→tabs space-40 gap above is the TITLE-ONLY
+     composition's own; with copy between them the adjacent-sibling rule
+     stops firing and this pair governs. */
+  .qr-block__copy + tk-tabs {
+    margin-block-start: var(--tk-space-48);
   }
 
   /* The composed tablist — GEOMETRY ONLY (see the header): fit-content +

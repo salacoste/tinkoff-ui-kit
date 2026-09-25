@@ -70,6 +70,7 @@ const REQUIRED_MESSAGE = 'Обязательное поле';
  * @attr {string} placeholder - In-field hint; never replaces the label.
  * @attr {string} default-value - Initial value for the uncontrolled mode; ignored after the first update.
  * @attr {boolean} required - Asterisk on the label + aria-required + on-blur required check.
+ * @attr {boolean} sr-only - Visually hides the label (sr-only utility) while it stays the field's accessible name; documented no-op without `label` (story 10.1).
  * @attr {string} error - Consumer error message; renders the error state immediately and overrides the internal one.
  * @attr {boolean} disabled - 40% opacity, no pointer events, aria-disabled.
  * @attr {string} name - Pass-through to the native input's name (form data, once form association ships).
@@ -113,6 +114,19 @@ export class TkInput extends LitElement {
   /** Required: label asterisk + aria-required + the internal on-blur check. */
   @property({ type: Boolean, reflect: true })
   required = false;
+
+  /**
+   * Visually-hidden label mode (story 10.1, default-off): the SAME `<label
+   * for>` element keeps its id, its `for` association, its click-target role
+   * and its first place in the aria-labelledby chain — only its paint is
+   * clipped to the sr-only 1px box, and the field renders exactly as the
+   * label-less variant (the utility neutralizes the label's bottom margin).
+   * Without a `label` set this is a documented no-op: the placeholder still
+   * names the field (the existing fallback). The badge slot is an independent
+   * surface and stays visible.
+   */
+  @property({ type: Boolean, reflect: true, attribute: 'sr-only' })
+  srOnly = false;
 
   /**
    * Consumer-driven error message: renders the error state immediately
@@ -325,7 +339,11 @@ export class TkInput extends LitElement {
 
     return html`
       ${hasLabel
-        ? html`<label class="label" id="${this.#id}-label" for="${this.#id}">
+        ? html`<label
+              class="label${this.srOnly ? ' label--sr-only' : ''}"
+              id="${this.#id}-label"
+              for="${this.#id}"
+            >
             ${this.label}
             ${this.required
               ? html`<span class="label__star" aria-hidden="true">*</span>`

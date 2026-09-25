@@ -471,7 +471,11 @@ export const BusinessLanding: Story = {
 
           <section class="tkb-steps">
             <div class="tkb-container">
-              <tk-stepper heading="Откройте счет для бизнеса в Т-Банке" .steps=${STEPS}></tk-stepper>
+              <tk-stepper heading="Откройте счет для бизнеса в Т-Банке" .steps=${STEPS}>
+                <p slot="subtitle">
+                  Откройте расчетный счет онлайн за 10 минут и получите бесплатно
+                </p>
+              </tk-stepper>
             </div>
           </section>
 
@@ -495,6 +499,7 @@ export const BusinessLanding: Story = {
                   type="tel"
                   autocomplete="tel"
                   placeholder="+7 900 000-00-00"
+                  sr-only
                   .error=${state.phoneError}
                   @value-change=${handlePhoneChange}
                 ></tk-input>
@@ -550,7 +555,8 @@ export const BusinessLanding: Story = {
               tk-promo-card на хуках §6 (заливка tint-cream-raised), арт снизу через
               слот actions: сцена = токен-арт + плавающая белая пилюля
               (secondary, size card), техника re-scope из charcoal-варианта держит
-              пилюлю белой в обеих темах; шаги — tk-stepper 7.3 на кремовой странице;
+              пилюлю белой в обеих темах; шаги — tk-stepper 7.3 с подзаголовком
+              слота subtitle (10.2) на кремовой странице;
               форма — tk-segmented-radio + tk-input + tk-checkbox + tk-button с
               валидацией и тостом (молд 2.8 дословно); футер — tk-footer v1.
               Радиус карточек 24 = radius-xxl карты — точное совпадение, без
@@ -604,8 +610,10 @@ export const BusinessLanding: Story = {
               <code>.playwright-cli/verify/business-landing/NOTES.md</code>: имена
               кремовых токенов в спеке vs фактические (<code>tint-cream*</code>);
               инверсия структуры карточки (арт снизу — через слот actions, не art);
-              видимая подпись «Телефон» (у эталона placeholder-only; у tk-input нет
-              sr-only-режима); чекбокс согласия (в эталоне — текст без чекбокса;
+              дельта подписи «Телефон» (эталон placeholder-only) закрыта в 10.1 —
+              поле переведено в sr-only, имя читается из скрытой метки; подзаголовок
+              блока шагов добавлен слотом subtitle (10.2, копия эталона дословно —
+              зонд batch-10-1-10-2); чекбокс согласия (в эталоне — текст без чекбокса;
               оставлен по замороженному составу кластера); радиус формы (оценка
               эталона ~32 против китовых 24); маппинг шагов title/text. Желтый в
               арт-иллюстрациях и первичных CTA — санкционировано; остальной хром —

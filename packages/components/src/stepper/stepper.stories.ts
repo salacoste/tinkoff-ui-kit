@@ -157,11 +157,41 @@ export const Variants: Story = {
       <p class="tks-note">
         Ряд — auto-fit сетка с порогом 240px: при узком контейнере карточки
         складываются в один столбец, геометрия бейджа не меняется (позиция
-        считается от карточки, не от вьюпорта).
+        считается от карточки, не от вьюпорта). Слот subtitle (10.2) —
+        необязательный подзаголовок между заголовком и карточками: обёртка
+        рендерится ТОЛЬКО когда слот непуст (пустой слот не добавляет ритма,
+        data-has-subtitle выключен).
       </p>
       <figure>
         ${stepper({ heading: 'Откройте счет для бизнеса' })}
         <figcaption>эталон: 3 шага, заголовок heading-2, без CTA — как в образце</figcaption>
+      </figure>
+      <figure>
+        <tk-stepper heading="Откройте счет для бизнеса" .steps=${REFERENCE_STEPS}>
+          <p slot="subtitle">
+            Откройте расчетный счет онлайн за 10 минут и получите бесплатно
+          </p>
+        </tk-stepper>
+        <figcaption>
+          слот subtitle (10.2): подзаголовок между заголовком и карточками —
+          body-m/400/text-primary по центру; копия и метрики измерены с захвата
+          бизнес-домена (verify/batch-10-1-10-2/NOTES.md)
+        </figcaption>
+      </figure>
+      <figure>
+        <tk-stepper .steps=${REFERENCE_STEPS}>
+          <p slot="subtitle">Три шага — и счет готов к работе</p>
+        </tk-stepper>
+        <figcaption>subtitle без heading: рендерится без скрытой связи с заголовком</figcaption>
+      </figure>
+      <figure>
+        <tk-stepper heading="Как открыть счет">
+          <p slot="subtitle">Пока шагов нет — раздел готовится</p>
+        </tk-stepper>
+        <figcaption>
+          subtitle + steps=[]: подзаголовок и копия нулевого состояния
+          рендерятся вместе (слот — авторитет потребителя)
+        </figcaption>
       </figure>
       <figure>
         <tk-stepper
@@ -211,6 +241,7 @@ export const Theming: Story = {
         <code>--tk-stepper-badge-fill</code>,
         <code>--tk-stepper-badge-number</code>,
         <code>--tk-stepper-badge-radius</code>,
+        <code>--tk-stepper-subtitle</code>,
         <code>--tk-stepper-title</code>,
         <code>--tk-stepper-text</code>.
         Бейдж — коричневый <code>tint-brown</code> с белой цифрой: измеренное

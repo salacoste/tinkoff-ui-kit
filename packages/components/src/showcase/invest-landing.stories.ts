@@ -252,7 +252,13 @@ export const InvestLanding: Story = {
         <!-- INSTALL CLUSTER (measured reading order — see the file header):
              qr → steps → stores, each block per its OWN 7.3 anatomy. -->
         <section class="tki-cluster" aria-label="Установка приложения">
-          <tk-qr-block title="Вариант 2. Отсканируйте QR-код" .tabs=${QR_TABS}></tk-qr-block>
+          <tk-qr-block title="Вариант 2. Отсканируйте QR-код" .tabs=${QR_TABS}>
+            <p slot="page-copy">
+              Переходите по ссылкам только с этой страницы и не сканируйте файлы
+              с непроверенных сайтов. Версию Android можно посмотреть в
+              настройках смартфона — достаточно узнать первую цифру
+            </p>
+          </tk-qr-block>
 
           <tk-stepper heading="Как установить приложение" .steps=${INSTALL_STEPS}></tk-stepper>
 
@@ -282,9 +288,11 @@ export const InvestLanding: Story = {
               нового компонента, элемента или токена; веток темы нет — тёмная
               тема перевыпускается наследованием токенов. Расхождения сборки
               (порядок кластера против замороженной посылки спецификации,
-              двухстрочный абзац эталона между заголовком и табами QR-блока,
               названия шагов как производные) — с измерениями в
-              <code>.playwright-cli/verify/invest-landing/NOTES.md</code>.
+              <code>.playwright-cli/verify/invest-landing/NOTES.md</code>;
+              дельта двухстрочного абзаца QR-блока закрыта в 10.2 — слот
+              page-copy несёт копию эталона дословно (зонд
+              batch-10-1-10-2).
             </p>
           </div>
         </section>

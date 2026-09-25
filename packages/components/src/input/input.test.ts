@@ -2,6 +2,7 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { TkInput } from './input.js';
+import { inputStyles } from './input.css.js';
 
 /**
  * tk-input unit tests (spec 2.1): the eight I/O matrix rows — uncontrolled
@@ -521,5 +522,80 @@ describe('tk-input', () => {
     await elementUpdated(el);
     expect(el.value).toBeNull();
     expect(control(el).value).toBe('[object Object]');
+  });
+
+  // --- sr-only label mode (story 10.1) ---------------------------------------
+
+  it('sr-only + label: the SAME label element keeps id/for and its chain position — only the class flips', async () => {
+    const el = await mount({ attributes: { label: 'Телефон', placeholder: '+7 900' }, props: { srOnly: true } });
+    const input = control(el);
+    const label = el.shadowRoot?.querySelector('label');
+    expect(label, 'the label element still renders (clipped paint, real node)').not.toBeNull();
+    expect(label?.classList.contains('label--sr-only')).toBe(true);
+    // The wiring is IDENTICAL to the visible mode: id, for, chain position.
+    expect(label?.getAttribute('id')).toBe(`${input.id}-label`);
+    expect(label?.getAttribute('for')).toBe(input.id);
+    expect(label?.textContent).toContain('Телефон');
+    const order = (input.getAttribute('aria-labelledby') ?? '').split(/\s+/);
+    expect(order[0]).toBe(label?.getAttribute('id'));
+    // The prop reflects as the sr-only attribute (CONVENTIONS §2).
+    expect(el.hasAttribute('sr-only')).toBe(true);
+
+    // Toggling off restores the plain class — no remnant.
+    el.srOnly = false;
+    await elementUpdated(el);
+    expect(el.shadowRoot?.querySelector('label')?.classList.contains('label--sr-only')).toBe(false);
+    expect(el.hasAttribute('sr-only')).toBe(false);
+  });
+
+  it('sr-only pin: the 1px-clip utility neutralizes the label rhythm — margin -1px sourced AFTER .label', () => {
+    const cssText = inputStyles.cssText.replace(/\/\*[\s\S]*?\*\//g, '');
+    const utility = cssText.match(/^ {2}\.label--sr-only\s*\{([^}]*)\}/m)?.[1] ?? '';
+    expect(utility, 'the .label--sr-only rule exists').not.toBe('');
+    expect(utility).toMatch(/position:\s*absolute/);
+    expect(utility).toMatch(/width:\s*1px/);
+    expect(utility).toMatch(/height:\s*1px/);
+    expect(utility).toMatch(/margin:\s*-1px/);
+    expect(utility).toMatch(/overflow:\s*hidden/);
+    expect(utility).toMatch(/clip:\s*rect\(0 0 0 0\)/);
+    expect(utility).toMatch(/clip-path:\s*inset\(50%\)/);
+    // ORDER: the utility must come after .label so margin -1px wins over the
+    // visible label's `margin: 0 0 var(--tk-space-8)` (no rhythm remnant)…
+    expect(cssText.indexOf('.label {')).toBeLessThan(cssText.indexOf('.label--sr-only'));
+    // …and display is never none, so the name computation is untouched.
+    expect(utility).not.toMatch(/display:\s*none/);
+  });
+
+  it('sr-only without label: documented no-op — no label node, the placeholder names the field', async () => {
+    const el = await mount({ attributes: { placeholder: 'Электронная почта' }, props: { srOnly: true } });
+    expect(el.shadowRoot?.querySelector('label')).toBeNull();
+    expect(el.shadowRoot?.querySelector('.label--sr-only')).toBeNull();
+    expect(control(el).getAttribute('aria-labelledby')).toBeNull();
+    expect(control(el).getAttribute('placeholder')).toBe('Электронная почта');
+  });
+
+  it('sr-only + badge: the badge is an independent surface — visible and SECOND in the name chain', async () => {
+    const el = await mount({
+      attributes: { label: 'Телефон' },
+      props: { srOnly: true },
+      badge: '+30%',
+    });
+    await elementUpdated(el);
+    const clipped = el.shadowRoot?.querySelectorAll('.label--sr-only') ?? [];
+    expect(clipped.length, 'exactly ONE node carries the utility — the label').toBe(1);
+    const badge = el.shadowRoot?.querySelector('.field__badge');
+    expect(badge, 'the badge wrapper stays a rendered surface').not.toBeNull();
+    expect(badge?.classList.contains('label--sr-only')).toBe(false);
+    const order = (control(el).getAttribute('aria-labelledby') ?? '').split(/\s+/);
+    expect(order).toHaveLength(2);
+    expect(order[0]).toBe(el.shadowRoot?.querySelector('label')?.getAttribute('id'));
+    expect(order[1].endsWith('-badge')).toBe(true);
+  });
+
+  it('DOM identity: without sr-only the host carries no attribute and the label class list is exactly the pre-10.1 shape', async () => {
+    const el = await mount({ attributes: { label: 'ФИО', required: '' } });
+    expect(el.hasAttribute('sr-only')).toBe(false);
+    const label = el.shadowRoot?.querySelector('label');
+    expect(label?.getAttribute('class')).toBe('label');
   });
 });

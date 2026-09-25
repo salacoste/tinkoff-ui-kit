@@ -95,6 +95,7 @@ const DEFAULT_ACCESSIBLE_NAME = 'Выбор';
  *
  * @tag tk-segmented-radio
  * @attr {string} label - Visible group label above the track (the group's accessible name).
+ * @attr {boolean} sr-only - Visually hides the group label (sr-only utility); the span keeps its id and the aria-labelledby wiring. No-op without `label` — the «Выбор» fallback path is untouched (story 10.1).
  * @attr {string} default-value - Initial value for the uncontrolled mode; ignored after the first update.
  * @attr {boolean} disabled - Whole group: 40% opacity, no pointer events, aria-disabled (kept focusable).
  * @attr {string} name - The control's form name (reflects; keys the ElementInternals submission entry).
@@ -118,6 +119,19 @@ export class TkSegmentedRadio extends LitElement {
   /** Visible group label above the track — the group's accessible name. */
   @property({ type: String })
   label?: string;
+
+  /**
+   * Visually-hidden label mode (story 10.1, default-off): the SAME `<span
+   * class="label" id="…-label">` keeps its id and the track's
+   * aria-labelledby wiring — only its paint is clipped to the sr-only 1px box
+   * and its bottom rhythm neutralized, so the track renders exactly as the
+   * label-less variant. Without a `label` set this is a no-op: the
+   * «Выбор» aria-label fallback path (the axe name gate) stays untouched.
+   * The disabled-group 40%-opacity ruling rides along unchanged (a hidden
+   * label is WCAG-exempt a fortiori).
+   */
+  @property({ type: Boolean, reflect: true, attribute: 'sr-only' })
+  srOnly = false;
 
   /**
    * Controlled value channel — STRICT semantics (frozen at 2.1, string
@@ -413,7 +427,10 @@ export class TkSegmentedRadio extends LitElement {
 
     return html`
       ${hasLabel
-        ? html`<span class="label" id="${this.#id}-label">${this.label}</span>`
+        ? html`<span
+            class="label${this.srOnly ? ' label--sr-only' : ''}"
+            id="${this.#id}-label"
+          >${this.label}</span>`
         : nothing}
       <div
         class="track"

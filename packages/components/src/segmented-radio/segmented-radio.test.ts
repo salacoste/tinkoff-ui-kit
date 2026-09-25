@@ -2,6 +2,7 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { TkSegmentedRadio } from './segmented-radio.js';
+import { segmentedRadioStyles } from './segmented-radio.css.js';
 
 /**
  * tk-segmented-radio unit tests (spec 2.5): the seven I/O matrix rows —
@@ -547,5 +548,56 @@ describe('tk-segmented-radio', () => {
     expect(
       el.shadowRoot?.querySelector('[role="radiogroup"]')?.getAttribute('aria-disabled'),
     ).toBeNull();
+  });
+
+  // --- sr-only label mode (story 10.1) ---------------------------------------
+
+  it('sr-only + label: the SAME span keeps its id and the aria-labelledby naming — only the class flips', async () => {
+    const el = await mount({ props: { label: 'Тип операции', options: YES_NO, srOnly: true } });
+    const label = el.shadowRoot?.querySelector('.label');
+    expect(label, 'the span still renders (clipped paint, real node)').not.toBeNull();
+    expect(label?.tagName).toBe('SPAN');
+    expect(label?.classList.contains('label--sr-only')).toBe(true);
+    // The naming wiring is IDENTICAL: the radiogroup is still named by the
+    // span's id — the hidden label keeps announcing the group.
+    const track = el.shadowRoot?.querySelector('[role="radiogroup"]');
+    expect(label?.getAttribute('id')).toBeTruthy();
+    expect(track?.getAttribute('aria-labelledby')).toBe(label?.getAttribute('id'));
+    expect(track?.getAttribute('aria-label')).toBeNull();
+    expect(label?.textContent).toContain('Тип операции');
+    expect(el.hasAttribute('sr-only')).toBe(true);
+
+    el.srOnly = false;
+    await elementUpdated(el);
+    expect(el.shadowRoot?.querySelector('.label')?.classList.contains('label--sr-only')).toBe(false);
+    expect(el.hasAttribute('sr-only')).toBe(false);
+  });
+
+  it('sr-only pin: the 1px-clip utility is the input mold verbatim, sourced AFTER .label', () => {
+    const cssText = segmentedRadioStyles.cssText.replace(/\/\*[\s\S]*?\*\//g, '');
+    const utility = cssText.match(/^ {2}\.label--sr-only\s*\{([^}]*)\}/m)?.[1] ?? '';
+    expect(utility, 'the .label--sr-only rule exists').not.toBe('');
+    expect(utility).toMatch(/position:\s*absolute/);
+    expect(utility).toMatch(/width:\s*1px/);
+    expect(utility).toMatch(/height:\s*1px/);
+    expect(utility).toMatch(/margin:\s*-1px/);
+    expect(utility).toMatch(/clip:\s*rect\(0 0 0 0\)/);
+    expect(utility).toMatch(/clip-path:\s*inset\(50%\)/);
+    expect(cssText.indexOf('.label {')).toBeLessThan(cssText.indexOf('.label--sr-only'));
+    expect(utility).not.toMatch(/display:\s*none/);
+  });
+
+  it('sr-only without label: no-op — the «Выбор» aria-label fallback is untouched', async () => {
+    const el = await mount({ props: { options: YES_NO, srOnly: true } });
+    expect(el.shadowRoot?.querySelector('.label')).toBeNull();
+    const track = el.shadowRoot?.querySelector('[role="radiogroup"]');
+    expect(track?.getAttribute('aria-label')).toBe('Выбор');
+    expect(track?.getAttribute('aria-labelledby')).toBeNull();
+  });
+
+  it('DOM identity: without sr-only the host carries no attribute and the label class is exactly the pre-10.1 shape', async () => {
+    const el = await mount({ props: { label: 'Гражданство РФ?', options: YES_NO } });
+    expect(el.hasAttribute('sr-only')).toBe(false);
+    expect(el.shadowRoot?.querySelector('.label')?.getAttribute('class')).toBe('label');
   });
 });

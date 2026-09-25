@@ -36,6 +36,7 @@ import { css } from 'lit';
  * Per-component custom properties (`--tk-stepper-*`, CONVENTIONS §6), each
  * consumed WITH its token default:
  * - `--tk-stepper-heading`   block heading color (default text-primary)
+ * - `--tk-stepper-subtitle`  subheading color   (default text-primary — the 10.2 probe's ink)
  * - `--tk-stepper-card-fill` card fill          (default surface-base)
  * - `--tk-stepper-card-radius` card radius      (default radius-xl = 24)
  * - `--tk-stepper-badge-fill` number badge fill (default tint-brown — the
@@ -89,6 +90,43 @@ export const stepperStyles = css`
     font-weight: var(--tk-text-heading-2-weight);
     line-height: var(--tk-text-heading-2-leading);
     color: var(--tk-stepper-heading, var(--tk-color-text-primary));
+  }
+
+  /* The optional page subheading (slot subtitle, story 10.2) — PIXEL-PROBED
+     from the business capture's steps block (2026-09-24, recorded in
+     .playwright-cli/verify/batch-10-1-10-2/NOTES.md): body-m 15/400,
+     text-primary ink (#30302E sampled → #333333, Δ3/255 — the SAME ink as
+     the heading, refuting the expected secondary tier), centered. A plain
+     <p>: the heading ramp stays at 2 (no h3 — slot content is copy, not a
+     section title). The wrapper renders ONLY when the slot carries content
+     (data-has-subtitle presence mold); these rules never fire slot-less. */
+  .stepper__subtitle {
+    margin: 0;
+    text-align: center;
+    font-family: var(--tk-font-body);
+    font-size: var(--tk-text-body-m-size);
+    font-weight: var(--tk-text-body-m-weight);
+    line-height: var(--tk-text-body-m-leading);
+    color: var(--tk-stepper-subtitle, var(--tk-color-text-primary));
+  }
+
+  /* Heading→subtitle rhythm (probe 34px → space-32, Δ2). */
+  .stepper__heading + .stepper__subtitle {
+    margin-block-start: var(--tk-space-32);
+  }
+
+  /* Subtitle→cards (probe 81px card-top = margin 48 + the badge-clearance
+     padding 32, Δ1 — the padding mirrors the heading→cards rule: the badge's
+     above-card half stays clear whichever line sits above the row). */
+  .stepper__subtitle + .stepper__steps {
+    margin-block-start: var(--tk-space-48);
+    padding-block-start: var(--tk-space-32);
+  }
+
+  /* Subtitle over the ZERO-state card (a kit-defined composite — the
+     reference shows none): the subheading's own rhythm step. */
+  .stepper__subtitle + .stepper__empty {
+    margin-block-start: var(--tk-space-32);
   }
 
   /* The equal-height card row — the v1 card-grid mold: grid stretch keeps

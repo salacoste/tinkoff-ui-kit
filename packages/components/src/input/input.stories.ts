@@ -25,13 +25,14 @@ type InputArgs = {
   placeholder: string;
   required: boolean;
   disabled: boolean;
+  srOnly: boolean;
   error: string;
   badge: boolean;
   type: TkInputType;
 };
 
 const input = (args: Partial<InputArgs> = {}) => {
-  const { label, placeholder, required, disabled, error, badge, type } = args;
+  const { label, placeholder, required, disabled, srOnly, error, badge, type } = args;
   return html`
     <tk-input
       class="tkin-field"
@@ -39,6 +40,7 @@ const input = (args: Partial<InputArgs> = {}) => {
       .placeholder=${placeholder ?? 'Иван'}
       ?required=${required ?? false}
       ?disabled=${disabled ?? false}
+      ?sr-only=${srOnly ?? false}
       .error=${error && error.length > 0 ? error : undefined}
       .type=${type ?? 'text'}
     >
@@ -168,6 +170,7 @@ const meta: Meta<InputArgs> = {
     placeholder: 'Иван',
     required: false,
     disabled: false,
+    srOnly: false,
     error: '',
     badge: false,
     type: 'text',
@@ -185,6 +188,11 @@ const meta: Meta<InputArgs> = {
     disabled: {
       control: 'boolean',
       description: 'Прозрачность 40%, без pointer-событий, aria-disabled.',
+    },
+    srOnly: {
+      control: 'boolean',
+      description:
+        'Скрыть подпись утилитой sr-only (10.1): имя поля остаётся за label; без подписи — no-op.',
     },
     error: {
       control: 'text',
@@ -445,8 +453,13 @@ export const Accessibility: Story = {
         текст сообщения. Ошибка никогда не крадёт фокус: она слышна при
         следующем визите к полю. Валидация — по blur; внутренняя проверка
         только required («Обязательное поле», спокойный тон), остальные ошибки
-        приносит потребитель через <code>error</code>. Motion: у Input нет
-        анимаций по умолчанию — фокус-кольцо появляется мгновенно, и слой
+        приносит потребитель через <code>error</code>. Режим
+        <code>sr-only</code> (10.1): видимая подпись скрывается утилитой
+        1px-клипа, но <code>&lt;label for&gt;</code> остаётся — клик по
+        текстовой метке невозможен (её нет), а имя поля читается из скрытой
+        подписи той же цепочкой labelledby; без <code>label</code> режим —
+        задокументированный no-op (поле называет плейсхолдер). Motion: у Input
+        нет анимаций по умолчанию — фокус-кольцо появляется мгновенно, и слой
         токенов схлопывает длительности до 0ms при prefers-reduced-motion.
       </p>
       <h2>Чек-лист: только с клавиатуры</h2>
@@ -487,10 +500,21 @@ export const Accessibility: Story = {
               labelledby), затем required/invalid по aria-состояниям.
             </td>
           </tr>
+          <tr>
+            <td>Скринридер на <code>sr-only</code>-поле</td>
+            <td>
+              AT читает имя скрытой метки: объявление то же, что у видимой
+              подписи («Телефон, поле редактирования текста»); геометрия поля
+              совпадает с безподписным вариантом, бейдж (независимый слот)
+              остаётся видимым и вторым в цепочке имени.
+            </td>
+          </tr>
         </tbody>
       </table>
       <div class="tkin-row">
         ${input({ required: true, badge: true })}
+        ${input({ label: 'Телефон', placeholder: '+7 900 000-00-00', srOnly: true })}
+        ${input({ label: 'Телефон', placeholder: '+7 900 000-00-00', srOnly: true, badge: true })}
       </div>
     
       <h2>Протокол скринридер-проверки (VoiceOver / NVDA)</h2>

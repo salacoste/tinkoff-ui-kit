@@ -2,6 +2,7 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { TkCheckbox } from './checkbox.js';
+import { checkboxStyles } from './checkbox.css.js';
 
 /**
  * tk-checkbox unit tests (spec 2.4): the seven I/O matrix rows — Space
@@ -548,5 +549,94 @@ describe('tk-checkbox', () => {
     expect(inputB.closest('label')?.textContent).toContain('B');
     expect(inputA.getAttribute('aria-labelledby')).toBeNull();
     expect(inputB.getAttribute('aria-labelledby')).toBeNull();
+  });
+
+  // --- error channel (story 10.2 — the tk-input mold, NO internal validation) ---
+
+  it('error set: the message renders as a SIBLING AFTER the label with the full aria wiring', async () => {
+    const el = await mount({ props: { label: 'Согласен с условиями', error: 'Подтвердите согласие' } });
+    const input = control(el);
+    const label = el.shadowRoot?.querySelector('label');
+    const error = el.shadowRoot?.querySelector('.error');
+    expect(error, 'the error line renders').not.toBeNull();
+    expect(error?.textContent).toContain('Подтвердите согласие');
+    expect(error?.tagName).toBe('P');
+    // SIBLING, never inside: error text joining the label would join the
+    // accessible name (the input mold's placement rule).
+    expect(label?.contains(error as Node)).toBe(false);
+    expect(
+      error && label ? error.compareDocumentPosition(label) : 0,
+      'the error FOLLOWS the label in document order',
+    ).toBe(Node.DOCUMENT_POSITION_PRECEDING);
+    // Wiring rides the native input ONLY while a message shows.
+    expect(input.getAttribute('aria-invalid')).toBe('true');
+    const describedBy = input.getAttribute('aria-describedby');
+    expect(describedBy).toBeTruthy();
+    expect(describedBy).toBe(error?.getAttribute('id'));
+    expect(el.shadowRoot?.getElementById(describedBy ?? '')).toBe(error);
+    // The icon is decorative — the text carries the content (the input pin).
+    expect(el.shadowRoot?.querySelector('.error__icon')?.getAttribute('aria-hidden')).toBe('true');
+
+    // Clearing the prop removes the node AND both aria hooks.
+    el.error = undefined;
+    await elementUpdated(el);
+    expect(el.shadowRoot?.querySelector('.error')).toBeNull();
+    expect(input.getAttribute('aria-invalid')).toBeNull();
+    expect(input.getAttribute('aria-describedby')).toBeNull();
+  });
+
+  it('error pins: the line is the tk-input mold verbatim (error-on-field, 16px icon, space-8 top rhythm)', () => {
+    const cssText = checkboxStyles.cssText.replace(/\/\*[\s\S]*?\*\//g, '');
+    const error = cssText.match(/^ {2}\.error\s*\{([^}]*)\}/m)?.[1] ?? '';
+    expect(error, 'the .error rule exists').not.toBe('');
+    expect(error).toMatch(/color:\s*var\(--tk-color-error-on-field\)/);
+    expect(error).toMatch(/margin:\s*var\(--tk-space-8\) 0 0/);
+    const icon = cssText.match(/^ {2}\.error__icon\s*\{([^}]*)\}/m)?.[1] ?? '';
+    expect(icon).toMatch(/width:\s*16px/);
+    expect(icon).toMatch(/height:\s*16px/);
+  });
+
+  it('error ids are per-instance: two erroring checkboxes never cross their described-by chains', async () => {
+    const a = await mount({ props: { error: 'Ошибка A' } });
+    const b = await mount({ props: { error: 'Ошибка B' } });
+    const describedA = control(a).getAttribute('aria-describedby');
+    const describedB = control(b).getAttribute('aria-describedby');
+    expect(describedA).not.toBe(describedB);
+    expect(a.shadowRoot?.getElementById(describedB ?? '')).toBeNull();
+    expect(b.shadowRoot?.getElementById(describedA ?? '')).toBeNull();
+  });
+
+  it("error='' / null / undefined all mean no error — no node, no aria hooks, NO id minted anywhere (DOM identity)", async () => {
+    for (const error of ['', null, undefined]) {
+      const el = await mount({ props: { label: 'Согласен', error: error as string | undefined } });
+      await elementUpdated(el);
+      expect(el.shadowRoot?.querySelector('.error')).toBeNull();
+      expect(control(el).getAttribute('aria-invalid')).toBeNull();
+      expect(control(el).getAttribute('aria-describedby')).toBeNull();
+      // The uid is lazily minted on FIRST USE: with no message ever shown the
+      // shadow tree carries NO id at all — the pre-10.2 shape.
+      expect(el.shadowRoot?.querySelectorAll('[id]')).toHaveLength(0);
+    }
+  });
+
+  it('error + slotted label: the error text never joins the label content (name stays the consumer copy)', async () => {
+    const el = await mount({
+      props: { error: 'Подтвердите согласие, чтобы продолжить' },
+      labelContent: 'Согласен с условиями',
+    });
+    const label = el.shadowRoot?.querySelector('label');
+    expect(label?.textContent).not.toContain('Подтвердите согласие');
+    expect(el.shadowRoot?.querySelector('.error')?.textContent).toContain('Подтвердите согласие');
+    expect(label?.contains(el.shadowRoot?.querySelector('.error') as Node)).toBe(false);
+    // The toggle pipeline is untouched by the error state (no validation
+    // exists — checking still works while the message shows).
+    const values = collectValues(el);
+    toggle(el, true);
+    expect(values).toEqual([true]);
+  });
+
+  it('the error prop never reflects as a host attribute (CONVENTIONS §2 property-only surface)', async () => {
+    const el = await mount({ props: { error: 'Проверьте' } });
+    expect(el.hasAttribute('error')).toBe(false);
   });
 });

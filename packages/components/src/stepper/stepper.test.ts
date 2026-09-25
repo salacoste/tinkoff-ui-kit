@@ -185,4 +185,110 @@ describe('tk-stepper', () => {
     expect(sheet()).not.toMatch(/\btransition\b/);
     expect(sheet()).not.toMatch(/\banimation\b/);
   });
+
+  // --- subtitle slot (story 10.2 — the presence-mold conditional wrapper) ---
+
+  const subtitleP = (): HTMLParagraphElement => {
+    const p = document.createElement('p');
+    p.setAttribute('slot', 'subtitle');
+    p.textContent = 'Откройте расчетный счет онлайн за 10 минут';
+    return p;
+  };
+
+  it('subtitle slot empty: wrapper ABSENT, data-has-subtitle off, the bare hidden slot keeps listening', async () => {
+    const el = await mount({ props: { steps: STEPS_3, heading: 'Откройте счет' } });
+    expect(el.shadowRoot?.querySelector('.stepper__subtitle')).toBeNull();
+    expect(el.hasAttribute('data-has-subtitle')).toBe(false);
+    // The promo-card mold: the hidden unwrapped slot stays in the DOM so
+    // slotchange still fires when content arrives later.
+    const slot = el.shadowRoot?.querySelector('slot[name="subtitle"]');
+    expect(slot).not.toBeNull();
+    expect(slot?.hasAttribute('hidden')).toBe(true);
+    // ADJACENCY REGRESSION (pixel-caught in the 10.2 visual round): the
+    // listening slot must sit OUTSIDE the rhythm pairs — the heading's next
+    // sibling is the steps row, so `.stepper__heading + .stepper__steps`
+    // keeps firing exactly as pre-10.2.
+    const heading = el.shadowRoot?.querySelector('.stepper__heading');
+    expect(heading?.nextElementSibling?.classList.contains('stepper__steps')).toBe(true);
+  });
+
+  it('subtitle slotted statically: the wrapper renders between heading and cards with the node assigned', async () => {
+    const p = subtitleP();
+    const el = await mount({ props: { steps: STEPS_3, heading: 'Откройте счет' }, slotChildren: [p] });
+    const wrapper = el.shadowRoot?.querySelector('p.stepper__subtitle');
+    expect(wrapper, 'the wrapper renders around the slot').not.toBeNull();
+    expect(wrapper?.querySelector('slot[name="subtitle"]')?.hasAttribute('hidden')).toBe(false);
+    expect(wrapper?.querySelector('slot[name="subtitle"]')?.assignedNodes({ flatten: true })).toContain(p);
+    expect(el.hasAttribute('data-has-subtitle')).toBe(true);
+    // Document order: heading → subtitle → steps (the probed composition).
+    const heading = el.shadowRoot?.querySelector('.stepper__heading');
+    const steps = el.shadowRoot?.querySelector('.stepper__steps');
+    expect(
+      heading && wrapper ? wrapper.compareDocumentPosition(heading) : 0,
+    ).toBe(Node.DOCUMENT_POSITION_PRECEDING);
+    expect(
+      steps && wrapper ? steps.compareDocumentPosition(wrapper) : 0,
+    ).toBe(Node.DOCUMENT_POSITION_PRECEDING);
+
+    // Removing the content closes the wrapper again (slotchange both ways).
+    p.remove();
+    await elementUpdated(el);
+    await new Promise((resolve) => setTimeout(resolve, 0)); // happy-dom delivers slotchange async
+    expect(el.shadowRoot?.querySelector('.stepper__subtitle')).toBeNull();
+    expect(el.hasAttribute('data-has-subtitle')).toBe(false);
+  });
+
+  it('subtitle arriving late: slotchange flips the wrapper in (first-paint seeding is not the only path)', async () => {
+    const el = await mount({ props: { steps: STEPS_3 } });
+    expect(el.shadowRoot?.querySelector('.stepper__subtitle')).toBeNull();
+    const p = subtitleP();
+    el.appendChild(p); // assign AFTER mount: slotchange is a CHANGE event
+    await elementUpdated(el);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(el.shadowRoot?.querySelector('.stepper__subtitle')).not.toBeNull();
+    expect(el.hasAttribute('data-has-subtitle')).toBe(true);
+  });
+
+  it('subtitle without heading: renders alone — no hidden coupling to the heading', async () => {
+    const el = await mount({ props: { steps: STEPS_3 }, slotChildren: [subtitleP()] });
+    expect(el.shadowRoot?.querySelector('.stepper__heading')).toBeNull();
+    expect(el.shadowRoot?.querySelector('.stepper__subtitle')).not.toBeNull();
+  });
+
+  it('subtitle + steps=[]: the subheading renders alongside the zero state (the slot is consumer-authoritative)', async () => {
+    const el = await mount({ slotChildren: [subtitleP()] }); // no steps prop → []
+    expect(el.shadowRoot?.querySelector('.stepper__empty')).not.toBeNull();
+    expect(el.shadowRoot?.querySelector('.stepper__subtitle')).not.toBeNull();
+  });
+
+  it('subtitle rhythm pins: body-m centered copy; space-32 after heading; space-48 + space-32 before cards; space-32 before the empty state', () => {
+    const subtitle = ruleBody('.stepper__subtitle');
+    expect(subtitle, 'the .stepper__subtitle rule exists').not.toBe('');
+    expect(subtitle).toMatch(/margin:\s*0/);
+    expect(subtitle).toMatch(/text-align:\s*center/);
+    expect(subtitle).toMatch(/font-size:\s*var\(--tk-text-body-m-size\)/);
+    expect(subtitle).toMatch(/font-weight:\s*var\(--tk-text-body-m-weight\)/);
+    expect(subtitle).toMatch(/color:\s*var\(--tk-stepper-subtitle, var\(--tk-color-text-primary\)\)/);
+    // Probe (a): heading→subtitle ≈34px ink → space-32.
+    expect(sheet()).toMatch(
+      /\.stepper__heading \+ \.stepper__subtitle\s*\{[^}]*margin-block-start:\s*var\(--tk-space-32\)/,
+    );
+    // Probe (a): subtitle→card-top ≈81px → margin 48 + padding 32 = 80.
+    expect(sheet()).toMatch(
+      /\.stepper__subtitle \+ \.stepper__steps\s*\{[^}]*margin-block-start:\s*var\(--tk-space-48\)/,
+    );
+    expect(sheet()).toMatch(
+      /\.stepper__subtitle \+ \.stepper__steps\s*\{[^}]*padding-block-start:\s*var\(--tk-space-32\)/,
+    );
+    // Kit-defined composite (unprobed — the empty state has no reference pair).
+    expect(sheet()).toMatch(
+      /\.stepper__subtitle \+ \.stepper__empty\s*\{[^}]*margin-block-start:\s*var\(--tk-space-32\)/,
+    );
+  });
+
+  it('DOM identity: without a slotted subtitle the render carries no wrapper and no data-has-subtitle (default-off)', async () => {
+    const el = await mount({ props: { steps: STEPS_3, heading: 'Откройте счет' } });
+    expect(el.hasAttribute('data-has-subtitle')).toBe(false);
+    expect(el.shadowRoot?.querySelector('.stepper__subtitle')).toBeNull();
+  });
 });

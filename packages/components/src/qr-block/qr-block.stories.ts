@@ -196,11 +196,40 @@ export const Variants: Story = {
       <p class="tkq-note">
         Переключение вкладок — неконтролируемый tk-tabs по умолчанию (как в
         образце); значение вкладки — индекс. note опционален: панель без
-        подсказки — только плитка.
+        подсказки — только плитка. Слот page-copy (10.2) — необязательный
+        абзац между заголовком и переключником: обёртка рендерится ТОЛЬКО
+        когда слот непуст (data-has-page-copy выключен у пустого слота).
       </p>
       <figure>
         <tk-qr-block .title=${'Вариант 2. Отсканируйте QR-код'} .tabs=${REFERENCE_TABS}></tk-qr-block>
         <figcaption>эталон: две вкладки, у первой подсказка, у второй — нет</figcaption>
+      </figure>
+      <figure>
+        <tk-qr-block .title=${'Вариант 2. Отсканируйте QR-код'} .tabs=${REFERENCE_TABS}>
+          <p slot="page-copy">
+            Переходите по ссылкам только с этой страницы и не сканируйте файлы
+            с непроверенных сайтов. Версию Android можно посмотреть в
+            настройках смартфона — достаточно узнать первую цифру
+          </p>
+        </tk-qr-block>
+        <figcaption>
+          слот page-copy (10.2): абзац безопасности между заголовком и табами —
+          body-m/400/text-primary на белом, по центру; копия посимвольно
+          декодирована и render-сверена с захвата invest (зонд в
+          verify/batch-10-1-10-2/NOTES.md)
+        </figcaption>
+      </figure>
+      <figure>
+        <tk-qr-block>
+          <p slot="page-copy">
+            Переключатель вкладок появится, когда будут доступны обе версии
+            приложения
+          </p>
+        </tk-qr-block>
+        <figcaption>
+          page-copy без title и с tabs=[]: копия рендерится в обеих
+          деградациях (независимые поверхности)
+        </figcaption>
       </figure>
       <figure>
         <tk-qr-block .tabs=${REFERENCE_TABS}></tk-qr-block>
@@ -229,6 +258,7 @@ export const Theming: Story = {
         таблице. Слоты блока:
         <code>--tk-qr-block-title</code>,
         <code>--tk-qr-block-note</code>,
+        <code>--tk-qr-block-copy</code>,
         <code>--tk-qr-block-tile-fill</code>,
         <code>--tk-qr-block-tile-radius</code>,
         <code>--tk-qr-block-tile-shadow</code>.

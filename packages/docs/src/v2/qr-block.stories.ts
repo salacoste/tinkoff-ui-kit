@@ -56,7 +56,8 @@ export const Page: Story = {
       <h1>QR block — блок установки по QR-коду</h1>
       <p class="tkv2-note">
         <code>tk-qr-block</code> — секция установки приложения:
-        необязательный центрированный заголовок, переключатель двух
+        необязательный центрированный заголовок, необязательный абзац
+        <code>slot="page-copy"</code> под ним, переключатель двух
         платформ и панели с QR-изображением в белой скруглённой плитке;
         строка безопасности — ПОД плиткой. Переключатель — это сам
         <code>tk-tabs</code>, скомпонованный внутри.
@@ -85,21 +86,31 @@ export const Page: Story = {
           Три и больше платформ: референс несёт ровно ДВЕ; для длинных
           рядов соберите композицию сами из <code>tk-tabs</code>.
         </li>
-        <li>
-          Требование описания под заголовком (копия между title и табами) —
-          такого слота в API нет (отмечено как пробел кита при композции
-          7.5; отчёт — в deferred-work).
-        </li>
       </ul>
+      <div class="tkv2-gotcha">
+        <strong>Слот page-copy (10.2) закрыл прежний пробел.</strong>
+        Абзац между заголовком и переключателем —
+        <code>&lt;p slot="page-copy"&gt;</code>: обёртка рендерится ТОЛЬКО
+        когда слот непуст. Пробел «описания под заголовком нет», отмеченный
+        при композции 7.5, снят этим слотом.
+      </div>
 
       <h2>Использование</h2>
       <div class="tkv2-demo">
         <tk-qr-block
           title="Вариант 2. Отсканируйте QR-код"
           .tabs=${QR_TABS}
-        ></tk-qr-block>
+        >
+          <p slot="page-copy">
+            Переходите по ссылкам только с этой страницы и не сканируйте файлы
+            с непроверенных сайтов. Версию Android можно посмотреть в
+            настройках смартфона — достаточно узнать первую цифру
+          </p>
+        </tk-qr-block>
       </div>
-      ${codeBlock(`<tk-qr-block title="Отсканируйте QR-код"></tk-qr-block>
+      ${codeBlock(`<tk-qr-block title="Отсканируйте QR-код">
+  <p slot="page-copy">Абзац безопасности между заголовком и табами</p>
+</tk-qr-block>
 
 <script type="module">
   import 'pillkit-components';
@@ -133,7 +144,8 @@ export const Page: Story = {
         <code>--tk-qr-block-tile-radius</code>,
         <code>--tk-qr-block-tile-shadow</code>,
         <code>--tk-qr-block-title</code>,
-        <code>--tk-qr-block-note</code>. Табы темизуются своими слотами
+        <code>--tk-qr-block-note</code>,
+        <code>--tk-qr-block-copy</code>. Табы темизуются своими слотами
         (<code>--tk-tabs-*</code>).
       </p>
 
