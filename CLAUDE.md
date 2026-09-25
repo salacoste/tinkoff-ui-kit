@@ -84,15 +84,26 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   worktree → FAST-FORWARD merge, spec-8-3 closed): 9 v2 docs pages (live CEM tables) +
   registers story on token-reference (single-source: TOKENS.md ?raw + throwing parser +
   drift test in pnpm test); canvas-bg debt CLOSED (keep per-story copies, preview.ts:52-70);
-  docs-chrome axe fixes only (zero component changes). Lens SHIP 0/0/5.** **IN FLIGHT:
-  8.2 (dark sweep — closes the 6 cream [ASSUMPTION]s + dark delta 3.382 verdict legs)
-  next → 8.4 (release PREP). Sequencing in
+  docs-chrome axe fixes only (zero component changes). Lens SHIP 0/0/5.** **8.2 DONE
+  (70d02a8 worktree = 8c0fdde tokens + 9231315 engine/F5 + 70d02a8 ledger; base 7e525c2 →
+  FAST-FORWARD merge; spec-8-2 closed): ALL SIX 6.1 dark [ASSUMPTION]s HELD with computed
+  evidence (zero value changes — DESIGN.md/tokens diffs comments-only, lens-verified
+  byte-identical hex); TOKENS.md flag-free. Engine registry 19→28 + delta verdict legs
+  (3.382/4.883 confirmed LIVE on rendered DOM, raster-precision composite); F5 real
+  defect fixed (store-badges anchor had NO color channel — UA link-blue survived theme
+  flips; token hookup, zero pixel change). Ledger 28/28. The worktree ×2 surfaced 2
+  PRE-EXISTING baseline fails (mega-nav--page light+dark: 8.1's CEM growth +41px, same
+  class 256e5cf adjudicated — the docs PAGE was missed); STOP obeyed by the executor,
+  orchestrator adjudicated LEGITIMATE → re-taken exactly-2 (1280×3372→3413, prediction
+  exact). Lens SHIP 0/0/5 (3 pointer/arithmetic notes fixed in-window); true unit count
+  trued 876→881 (8.3's +5 had been missed).** **IN FLIGHT: 8.4 (v2 verification ledger +
+  v1.1.0 release PREP — NEVER tag; maintainer gate). Sequencing in
   epics-v2.md; the v1 component-story gate applies VERBATIM (FR-16). Key v2 decisions: delta
   semantics via AA-override (green-300/red-300); warm-cream family DISTINCT from beige (dark
   first-pass [ASSUMPTION] → 8.2); typography registers = mappings (h1 44→heading-2, 36→heading-3),
   zero new type tokens; keyboard defects of the reference (inert arrows, chip focus-drop) are
   IMPROVED per APG — the sanctioned a11y axis
-- **Kit totals: 876 unit + 1355 visual/axe tests, 27 components, 27 React wrappers, v1 design
+- **Kit totals: 881 unit + 1368 visual/axe tests, 27 components, 27 React wrappers, v1 design
   assumptions all closed (6 v2 dark first-pass [ASSUMPTION]s open BY DESIGN until 8.2), CI green**
 - Fonts: DaytonaSans/DaytonaPragma in `packages/tokens/fonts/` under LICENSE-FONTS.md (separately
   licensed, NOT MIT; consumer rights ONLY per that file)
