@@ -773,8 +773,8 @@ const canvasStyles = html`
        the promo-card charcoal technique verbatim (promo-card.css.ts) applied
        at the stage scope: the slotted secondary button paints its pill from
        surface-base — pinned to white here so the FLOATING WHITE PILL stays
-       white in both themes (dark surface-base #1A1A1A would fail 1.4.11 on
-       the cream-raised card). */
+       white in both themes (the dark theme's near-black surface-base would
+       fail 1.4.11 on the cream-raised card). */
     .tkb-stage {
       position: relative;
       display: flex;

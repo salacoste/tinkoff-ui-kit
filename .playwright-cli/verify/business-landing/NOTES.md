@@ -88,7 +88,7 @@ dispositioned:
 
 | # | Deviation | Where / why |
 | --- | --- | --- |
-| 1 | Token names: spec says `--tk-color-surface-cream/-card-cream`; actual tokens are `--tk-color-tint-cream/-raised` (`packages/components/src/tokens/tokens.ts:59-60`). Shipped uses the actual names. | story canvas CSS; naming divergence recorded, not patched. |
+| 1 | Token names: spec says `--tk-color-surface-cream/-card-cream`; actual tokens are `--tk-color-tint-cream/-raised` (`packages/tokens/src/tokens.ts:59-60`). Shipped uses the actual names. | story canvas CSS; naming divergence recorded, not patched. |
 | 2 | Reference bento cards run the illustration as a full-bleed card zone under the text; `tk-promo-card`'s art zone only renders via `data-has-art` above content. Composed instead as an actions-slot stage (`.tkb-stage`: SVG art + floating CTA), CTA overlapping the art edge per §2. | `business-landing.stories.ts` `bentoCard`/`.tkb-stage`. |
 | 3 | `--tk-promo-card-text-muted: var(--tk-color-text-primary)` on bento cards — reference's secondary-on-cream fails AA; the kit's own pairing rule. | `.tkb-bento__card`. |
 | 4 | White CTA pills: re-scope `--tk-color-surface-base: var(--tk-color-white)` + `--tk-color-text-primary: var(--tk-color-ink-300)` at the stage (the documented charcoal-CTA technique, `promo-card.css.ts:116-119`) — theme-invariant white pills on cream. | `.tkb-stage`. |

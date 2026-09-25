@@ -19,9 +19,10 @@ import { buildStoryUrl, THEMES } from './stories';
  *   the floating CTA OVERLAPPING the art's bottom edge, and the ≥44px hit
  *   floor (the `card` size's 48px box).
  * - TOP-LAYER TOAST — the confirmation toast is body-promoted (outside the
- *   story host), so the story baselines cannot record it; this capture is
- *   PAGE-LEVEL with a clip over the toast — the same top-layer ruling as
- *   stocks-catalog's open-panel clip.
+ *   story host), so the story baselines cannot record it; this capture uses
+ *   the TOAST'S OWN ELEMENT screenshot (a page-level clip breaks at this
+ *   scroll depth — the numbers in the rationale below) — the same top-layer
+ *   ruling as stocks-catalog's open-panel capture.
  *
  * Same pinned webServer/capture config as the visual suite; same stale-dist
  * rule (build docs first — pnpm test:visual does).

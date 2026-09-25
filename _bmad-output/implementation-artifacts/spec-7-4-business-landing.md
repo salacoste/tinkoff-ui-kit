@@ -2,14 +2,14 @@
 title: 'Story 7.4 — Business landing composition (bento + warm-cream)'
 type: 'feature'
 created: '2026-09-24'
-status: 'approved'
+status: 'done'
 route: 'full'
 route_source: 'auto'
 review: 'quick'
 review_source: 'auto'
-lenses_ran: []
-review_loop_iteration: 0
-baseline_commit: '(set at close — after 7.3: composes tk-stepper)'
+lenses_ran: ['quick']
+review_loop_iteration: 1
+baseline_commit: 'bbbceef (worktree, base d6a9f2c) → merge 5a6f5e5 (combined with 7.5 + CEM 0df4593)'
 context:
   - '{project-root}/_bmad-output/planning-artifacts/epics-v2.md (Story 7.4 — FR-14 bento recipes + warm-cream proof)'
   - '{project-root}/packages/components/src/showcase/{homepage,application-form}.stories.ts (THE composition mold)'
@@ -112,16 +112,105 @@ v1-composed application form cluster → v1 footer — on the warm-cream page to
 
 ## Implementation Notes
 
-(to be filled by the executor / triage)
+**Executor round (worktree → bbbceef, 25 files +1679; merge 5a6f5e5):**
+
+- `packages/components/src/showcase/business-landing.stories.ts` — the application-form
+  wiring mold: tk-navbar (business row ACTIVE, capture shows NO subLinks — probe followed)
+  → hero + a selector of 5 tk-service-card → bento 2+3 (trio ratio 4:5:4; floating white
+  CTA overlapping the art) → tk-stepper → application cluster (segmented mode «Открыть
+  счет»/«Открыть бизнес»; consumer-error on the phone input; consent; IMPERATIVE toast
+  with mode-derived copy per the toast §4 contract) → tk-footer. Warm-cream canvas; every
+  color a `var(--tk-*)` (FR-1 grep clean).
+- `tests/visual/business-landing.spec.ts` — own spec: wiring checks, BENTO GEOMETRY
+  assertions, toast **element-screenshot** (not page-clip) in both themes — page-level
+  clip breaks at scrollY≈2268 (the numbers recorded in the spec's rationale).
+- `.playwright-cli/verify/business-landing/` — captures, probe ground truth
+  (`probe-output.txt`), side-by-side (reference on top), `NOTES.md` (method + measurement
+  tables + vision check + deviation registry with file:line).
+- Worktree gates: build/unit 872 (15+665/29+70+122)/lint/typecheck green; gen/gen:tokens
+  no-op; gen-drift clean. Visual **1254/1254 ×2** on private port 6051 (temp config
+  deleted pre-commit). Axe both themes green after a STORY-side fix: the doc-block link
+  `.tkb-all` color → `--tk-color-link-on-tint` (the SHIPPED pair ≈5.2:1 at 15px/500 —
+  the rejected pre-fix blue was the 4.18:1 axe flag) — zero component edits in the
+  commit.
+- Baselines: exactly 4 all-new (story light+dark + toast clip light+dark).
+- **Token-name premise trued:** the spec's `surface-cream`/`surface-card-cream` names are
+  the 6.1 layer's ACTUAL `tint-cream` family (tokens.ts:59-60) — consumed as shipped, no
+  renames.
+- Bento heights 328/359 = the assembly standard (not capture-verbatim); card structure
+  inversion via the actions-stage; steps title/text mapped from the link's own captions
+  (no invented copy); the phone number is fictionalized; the grid-footer pill copy follows
+  the capture (see Spec Change Log).
 
 ## Spec Change Log
 
-(none — frozen block as approved)
+- **2026-09-25 (executor round, premise corrections — pixels over prose):**
+  (1) The frozen bento footer copy «Все сервисы» — the capture's actual pill reads
+  «Все продукты»; composed per the capture (the 7.1 precedent: measured pixels outrank
+  frozen prose, deviation logged). (2) The frozen token names `surface-cream` /
+  `surface-card-cream` do not exist in the 6.1 layer — the shipped family is `tint-cream`
+  (tokens.ts:59-60); the composition consumes the shipped names. No other frozen term
+  changed.
 
 ## Review Triage Log
 
-(to be filled at quick-review)
+**Lens qr-lens-7-4 (2026-09-25, read-only pass on worktree @ bbbceef): VERDICT SHIP — 0 BLOCKERS / 0 WARNS / 5 notes (dispositions below).**
+
+All nine claim-groups CONFIRMED (worktree-relative cites): clean history (base d6a9f2c +
+one commit, reflog-checked, no tags/push); lane-only diffstat — ZERO component/react
+changes; clean tree (blobs match commit, temp config deleted, scratch diagnostics gone);
+composition lines (navbar :400-426, hero + 5 service-cards :429-452, bento 2+3 :459-465,
+trio tracks 4fr/5fr/4fr :759, floating CTA :800-805, stepper :472-476, form cluster
+:484-521, imperative mode-derived toast :381-384, footer :527-539); cream tokens exact
+(tokens.ts:59-60 = #F1EEE8/#E9E0D1, the spec's measured pair); §6 hooks real
+(promo-card.css.ts:36-38,81-108,161; service-card.css.ts:29,68); h1 44→heading-2 exact;
+radius 24 = radius-xxl EXACT (tokens.ts:146, mapping recorded NOTES:57-60); visual spec
+legs (wiring :46-81, bento geometry :83-118, toast both themes :120-146, element-screenshot
+rationale with numbers :137-143); probe ground truth ↔ NOTES tables match; baselines 4
+all-new; lens RE-RAN tsc/lint/units (872 exact = 15+665/29+70+122) — all green; gen no-op
+consistent; matrix coverage declared honestly (below); all 7 kit gaps present in
+NOTES:107-117, nothing patched; hygiene clean (RU content/EN meta, no _bmad-output).
+
+Matrix honest coverage: Form wiring + Bento tracks/CTA + Theme + a11y = spec legs;
+Compose order + grid-footer pill + flat-no-shadow = baselines/probes (declared, no spec
+asserts — acceptable for a composition story); **Narrow-viewport row = the weakest —
+story CSS only (:939-985), no probe, no leg** (note-level; the reflow itself is
+baseline-covered via the 375px pair? NO — baselines are 1280+360 only; recorded here as
+an honest coverage gap for 8.1's real-browser legs to absorb).
+
+Lens notes + orchestrator dispositions:
+- **N1 (story:776 hex `#1A1A1A` inside a CSS re-scope comment; FR-1 grep technically
+  unclean)** → FIXED in-window: comment reworded to name the situation
+  («the dark theme's near-black surface-base would fail 1.4.11…») — zero hex literals
+  now, future greps safe.
+- **N2 (spec jsdoc header still said PAGE-LEVEL clip while the implementation + NOTES
+  correctly record element-screenshot)** → FIXED in-window: header trued to the
+  toast's own element screenshot with the scroll-depth pointer.
+- **N3 (NOTES:91 cited `packages/components/src/tokens/tokens.ts` — wrong path)** →
+  FIXED in-window: `packages/tokens/src/tokens.ts:59-60`.
+- **N4 («4.18:1» in the executor's report was the REJECTED pre-fix ratio; the shipped
+  `--tk-color-link-on-tint` pair is ≈5.2:1 at 15px/500)** → no source defect (the
+  artifact was accurate); spec Implementation Notes trued to the shipped number.
+- **N5 (yellow shield logo :663 = the navbar story mold's own art, not new yellow UI
+  chrome)** → accepted, no action.
+
+Accepted deviations: all 15 of NOTES:87-104, incl. the pixel-confirmed «Все продукты»
+(spec froze «Все сервисы» — Spec Change Log above), steps mapping without invented copy,
+fictionalized phone, assembly-standard bento heights, squashed fan selector, visible
+phone label (kit gap), radius 24 vs the ~32 note.
+
+**Orchestrator disposition: NO WARN/BLOCKER fix round — note-level hygiene fixes applied
+in-window by the orchestrator (stories comment, spec jsdoc, NOTES path); merged as-is
+(5a6f5e5).**
 
 ## Verification
 
-(to be filled at gate run)
+| Check | Result |
+|---|---|
+| Worktree gates (executor) | build/unit 872/lint/typecheck/gen/gen:tokens green; gen-drift clean |
+| Worktree visual (executor) | 1254/1254 ×2 (=1244 base + 10 own legs), private port 6051, temp config deleted pre-commit |
+| Merge | 5a6f5e5 clean (lane-only files, no overlap with 7.5/CEM) |
+| Main gates (combined 7.4+7.5) | build/test/lint/typecheck/gen/gen:tokens GREEN; post-commit gen-drift CLEAN |
+| Main visual (combined) | ×2 on private port 6041: pass A 1269/1269 (7.7m) + pass B 1269/1269 (7.7m) — every 7.4 leg has worktree ×2 + combined ×2 |
+| Note-fix round | comments/prose only (stories css-comment, spec jsdoc, verify NOTES path) — post-fix gates GREEN (873 unit) + scoped re-run of all 10 business-landing legs on the rebuilt dist: 10/10, ZERO pixel diffs (inertness empirical) |
+| Spec closed | 2026-09-25 — see commits: 5a6f5e5 (merge), close commit |
