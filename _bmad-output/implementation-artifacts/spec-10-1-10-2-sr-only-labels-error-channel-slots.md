@@ -189,21 +189,25 @@ to today — only opting-in stories (and the CEM-driven Api docs) may move basel
 
 ## Tasks & Acceptance
 
-- [ ] Probes FIRST: business subheading + invest paragraph (copy + metrics) from the archived
-      captures → verify NOTES; typography mappings recorded
-- [ ] 10.1: `srOnly` on input + segmented-radio (prop, utility class, jsdoc, stories,
+- [x] Probes FIRST: business subheading + invest paragraph (copy + metrics) from the archived
+      captures → verify NOTES; typography mappings recorded *(probe (a) copy CORRECTED in the
+      review round — see Change Log 1; metrics were sound throughout)*
+- [x] 10.1: `srOnly` on input + segmented-radio (prop, utility class, jsdoc, stories,
       checklist rows, tests)
-- [ ] 10.2: `error` on checkbox (input mold, uid, aria wiring, styles, stories, tests)
-- [ ] 10.2: `subtitle` slot on stepper + `page-copy` slot on qr-block (presence molds,
+- [x] 10.2: `error` on checkbox (input mold, uid, aria wiring, styles, stories, tests)
+- [x] 10.2: `subtitle` slot on stepper + `page-copy` slot on qr-block (presence molds,
       probe-mapped styles, stories incl. v2 docs pages, tests)
-- [ ] Showcase adoptions: business (sr-only label + subheading) + invest (page-copy),
-      reference-verbatim copy only
-- [ ] `pnpm gen` (CEM + wrappers regen) + `pnpm gen:tokens` byte-stable; DOM-identity proof
+- [x] Showcase adoptions: business (sr-only label + subheading) + invest (page-copy),
+      reference-verbatim copy only *(after the MAJOR-1 correction — the shipped subtitle is
+      the true reference string, render-verified 731px vs capture 729px)*
+- [x] `pnpm gen` (CEM + wrappers regen) + `pnpm gen:tokens` byte-stable; DOM-identity proof
       (no-new-props render vs baseline)
-- [ ] THE baseline round: sanctioned set explicit-delete + update, both themes, ×2 stable,
-      zero movement outside the set; `lsof -ti:6007` clean before each pass
-- [ ] Full gates (build → test → lint → typecheck → gen-drift post-commit → visual ×2);
-      spec closed; conventional commit EN + push; CI green by `gh run`
+- [x] THE baseline round: sanctioned set explicit-delete + update, both themes, ×2 stable,
+      zero movement outside the set; `lsof -ti:6007` clean before each pass *(32 legs = exactly
+      the sanctioned set, lens-reconciled; 6 legs re-taken AGAIN in the review round)*
+- [x] Full gates (build → test → lint → typecheck → gen-drift post-commit → visual ×2);
+      spec closed; conventional commit EN + push; CI green by `gh run` *(two commits:
+      325631c executor + afb6089 review fix; merge round re-ran all gates independently)*
 
 **Acceptance Criteria:**
 - Given `<tk-input label="Телефон" sr-only>` and `<tk-segmented-radio label="…" sr-only>`,
@@ -220,16 +224,128 @@ to today — only opting-in stories (and the CEM-driven Api docs) may move basel
 
 ## Implementation Notes
 
-(executor judgment calls — filled post-execution)
+Executor judgment calls (lens-audited; #2 audited FAIL→corrected, see Change Log 1):
+1. **Slot-oscillation convergence rule (the round's engine find):** a conditional wrapper in
+   two parts (wrapped slot mid-template + bare listening slot at container end) produced a
+   COMPETING slotchange from the retired slot whose empty assignedNodes flipped the presence
+   flag back — an infinite render loop hanging the canvas in all six slot-bearing stories in
+   Chromium; happy-dom never fired the competing event (unit tests stayed green the whole
+   time). Fix: presence sync always RE-QUERIES the live tree instead of trusting
+   `event.target`. Documented in both components' jsdoc + as STOP 2 in NOTES; regression
+   tests pin the flip paths. Lens traced all flip paths adversarially and confirmed the
+   committed tree holds exactly one `slot[name]` — always truthful.
+2. **Probe (a) copy was INVENTED — caught by the lens, corrected in afb6089.** The shipped
+   «Откройте расчетный счет онлайн за 10 минут и получите бесплатно» existed nowhere in the
+   captures (the lens refuted it on five deterministic axes; the true line
+   «Если у вас не зарегистрирован бизнес, сначала оставьте заявку на регистрацию — поможем
+   бесплатно» even reads off the executor's OWN x6 upscale). Root cause was a discipline
+   asymmetry: probe (b) carried the render-width verification table, probe (a) did not —
+   and the NOTES claim «glyph-decoded + render-confirmed» was false for (a). Post-fix
+   render verification: true string 731px vs capture ink 729px (**Δ0.27%**), invented
+   string 478px (Δ34%). LESSON (standing for every future copy probe): a copy extraction
+   without a render-width check against the capture ink is an UNVERIFIED claim.
+3. **Bare listening slot sits at the container END** (not mid-template): a mid-template slot
+   broke the `A + B` sibling rhythm of adjacent blocks (stop-probe 1; regression-pinned).
+4. **Two spec-expectation refutations, both by pixels** (the spec's own probe-gate
+   mechanism): both slots are body-m/400/text-primary on white — NOT the expected
+   body-l/text-secondary on cream. Recorded with Δ in NOTES.
+5. **New hooks `--tk-stepper-subtitle` / `--tk-qr-block-copy`** — CONVENTIONS §6 grammar
+   with token defaults (the input four-hook precedent); lens-ruled within the house
+   pattern. Token layer untouched (tokens.css/ts byte-identical).
+6. **Composite spacing judgments:** `.stepper__subtitle + .stepper__empty` = space-32
+   (composite, no reference pair for the zero state); qr copy→tabs = space-48 while the
+   title-only distance measures space-40 (recorded in NOTES).
+7. **qr-block Variants third figure** merges the title-unset + tabs=[] degradations into
+   one figure.
+8. **A neutral unit-test fixture** (stepper.test.ts `subtitleP()`) retains a substring of
+   the retired invented phrase — not reference copy, never renders; left as-is per the
+   content-only fix mandate.
+9. Unit totals after the batch: **930** (root 147 + tokens 17 + components 696 + react 70)
+   = 901 + 29 (input +5, segmented-radio +4, checkbox +6, stepper +7, qr-block +7); zero
+   deleted/skipped (lens re-ran the unit suite: 696/696 components).
+10. React surface byte-identical (thin `createKitComponent` wrappers carry no prop
+    enumeration — new props flow through element typing; CEM +200 lines).
 
 ## Spec Change Log
 
-Frozen block untouched. Recorded changes beyond the frozen text: (none yet)
+Frozen block untouched. Recorded changes beyond the frozen text:
+1. **MAJOR-1 correction (review round, afb6089):** the business showcase subheading shipped
+   invented copy (see Implementation Notes 2) — the frozen matrix row «invented showcase
+   copy → never (skip + record)» was violated unknowingly, not deliberately. Fix: true
+   reference string at all four sites, NOTES probe (a) rewritten honestly (incl. MINOR-1:
+   the capture path corrected to `captures-v2/business/full.png`), 6 tainted baselines
+   (business-landing ×2, stepper--variants ×2, v2-stepper--page ×2) explicitly deleted and
+   re-taken, full gates re-run. The spec's probe-gated showcase-flip path executed as
+   frozen — the copy leg of probe (a) was simply wrong until the lens caught it.
+2. Review round (afb6089, second commit — 325631c not amended, the 9.2 precedent):
+   render-subtitle-verify.mjs committed as the discipline artifact.
+3. Merge round: this docs commit (ledger closures + CLAUDE.md cycle state).
+4. **CI-remediation round (orchestrator, after the afb6089 RED):** test-driver fix only —
+   no component/story/token bytes touched. The invest qr-tab leg raced the lazy QR decode
+   at rect-measurement time (see Verification); fix = decode-wait + CI-only per-leg
+   tolerance 0.03 + light baseline re-take (dark was already at the loaded height). New
+   standing rule for every interactive-baseline leg: await lazy-media decode BEFORE
+   measuring any rect (the «revalidate after await» iron rule's media case) — recorded in
+   deferred-work.md next to the port-6007 rule.
 
 ## Review Triage Log
 
-(filled after the quick-review lens)
+Quick review (qr-lens-10-x, 2026-09-25): **FIX-THEN-SHIP — 1 MAJOR / 1 MINOR / 1 NOTE;
+MAJOR+MINOR fixed in afb6089 before merge.**
+1. **[MAJOR] invented showcase copy** (Implementation Notes 2) — refuted by the lens on five
+   independent deterministic axes: glyph-classifier decode on three artifacts (identical),
+   the executor's own x6 upscale reading the TRUE line, cluster arithmetic (74 vs ~50),
+   advance-width model (true 763px-predicted vs shipped 507px against 729px capture ink),
+   structure (em-dash/no-digits vs «10»/no-dash). Contaminated 4 source sites + NOTES +
+   6 baselines. FIXED: afb6089.
+2. **[MINOR] NOTES cited a nonexistent capture dir** (`captures-v2/business-landing/` →
+   `captures-v2/business/`). FIXED: folded into the NOTES rewrite.
+3. [NOTE] strict DOM-identity reading: the bare listening slot is one extra shadow node vs
+   baseline — accepted per the AC's operative definition (every in-repo presence mold keeps
+   a persistent slot node); recorded, no action.
+4. Checklist: tasks 1/5 and AC-3's showcase-flip leg FAIL on the executor commit — all
+   PASS on afb6089 (the lens independently re-ran gen+gen:tokens (zero drift) and the
+   unit suite (696/696) on 325631c; convergence rule judged SOUND with all flip paths
+   traced; hooks §6 PASS; baseline containment 32=32 reconciled exactly; iron rules held).
+   Probe (b) (invest page-copy) verified GENUINE by the lens's own decode + width model.
 
 ## Verification
 
-(executor / review / merge rounds + CI verdict — filled as they complete)
+- Executor round (worktree, 325631c): probes → gen/gen:tokens (byte-stable) → build → test
+  (930) → lint → typecheck — all exit 0. Visual chronology with two honest STOPs: run 1 =
+  39 fails (4 non-sanctioned rhythm diffs → listening-slot position fix, Notes 3), run 2 =
+  67 fails (canvas hang → slot-oscillation convergence fix, Notes 1), run 3 = 31 fails =
+  exactly the sanctioned set → delete+update (32 PNGs incl. 2 invest per-spec clips) →
+  **1368/1368 ×2** (8.4m each). Post-commit gen-drift clean.
+- Review-fix round (afb6089): true string at 4 sites, old string gone from shipped
+  surfaces; NOTES probe (a) honest + render table (731/729 Δ0.27%, 478/729 Δ34%); 6 PNGs
+  deleted + re-taken (exactly 6 "writing actual"); **1368/1368 ×2** (8.2m each); full
+  gates re-run green (test 930); gen-drift clean; 325631c untouched.
+- Merge round (orchestrator, afb6089): fast gates green (build → test 930 → lint →
+  typecheck → gen → gen:tokens); GEN_DRIFT_CLEAN; worktree porcelain clean; visual
+  **1368/1368 ×2** (8.2m / 8.3m) under load ~9 with zero starvation; `lsof -ti:6007`
+  clean before every pass. Orchestrator independently verified the fix (grep of both
+  strings, NOTES content, afb6089 stat = 11 files exactly).
+- Merge: f3e90a5..afb6089 ff-only (85 files, +1533/−38); pushed.
+- **CI VERDICT on afb6089: RED — run 36189883158 (1 failed / 1367 passed, 19.1m)** — the
+  invest-landing qr-tab interactive leg (`invest landing [1280] cluster › interactive
+  baseline: the qr-block region with the second platform tab active [both themes]`):
+  expected 1200×274, received 1200×442. Pixel forensics on the run's artifacts (bands
+  identical to y257; the tail 16px byte-profile-equal — the QR's top rows): the leg measured
+  the block's rect IMMEDIATELY after the tab click, racing the revealed panel's
+  `loading="lazy"` QR decode — macOS baselined the PRE-decode height in the light iteration
+  (274: tile = padding only) while its own dark baseline had caught the LOADED height (the
+  committed dark PNG was already 1200×442 — byte-identical to the post-fix re-take; the race
+  was live on macOS all along, resolving per-iteration); ubuntu measured loaded-in-both.
+  Second layer: the clip's small area (1200×442) amplifies cross-platform text-advance
+  deltas of the title/copy/tablist lines to ~1.45% vs the 1.5% default (the QR image itself
+  diffs ZERO cross-platform; the full-story legs carry the same deltas at ~0.2% inside a
+  full 1280 frame). **Remediation (orchestrator round, the two CI precedents):** decode-wait
+  (`img.decode()` on the visible panel QR) before the rect measurement — the 9.1 combobox
+  driver-fix mold, and the CLAUDE.md «revalidate after await» rule verbatim; plus a CI-only
+  per-leg `maxDiffPixelRatio: 0.03` (the CI_VISUAL_TOLERANCE tooltip mold — local compare
+  stays strict at the config default); light baseline re-taken at the loaded height (the
+  only moved PNG; dark byte-identical, no diff). Commit: 15a5ac6.
+- **CI VERDICT on 15a5ac6: GREEN** — run 36195175278, completed success: gates job green,
+  visual **1368/1368 (15.4m)** — the remediated leg passes on ubuntu at the loaded-height
+  baseline with the 0.03 clip tolerance. Story 10.1+10.2's green head = 15a5ac6.

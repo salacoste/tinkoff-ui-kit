@@ -149,9 +149,22 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   generator truth: `aa-annotations:` frontmatter block = the 10 AA-bearing TOKEN_NOTES
   derive from DESIGN.md with both-direction aborts + body-anchor assert + firing canary;
   AD-4 matrix single-sourced in root `ad4-matrix.mjs` — eslint/boundary-test/README all
-  derive, 7 direction-string copies died; debts 1.1+1.2 closed in the ledger). Next:
-  [10.1+10.2] → 10.3 → 10.4 → 11.1–11.3. Sequencing in epics-v3.md.
-- **Kit totals: 901 unit + 1368 visual/axe tests, 27 components, 27 React wrappers, v1 design
+  derive, 7 direction-string copies died; debts 1.1+1.2 closed in the ledger).
+  **Stories 10.1+10.2 DONE** (325631c+afb6089 — one batch round: `sr-only` label modes on
+  input+segmented-radio, checkbox `error` channel (input mold), `subtitle` slot on stepper
+  + `page-copy` slot on qr-block (presence molds; slot-oscillation convergence rule found:
+  presence sync re-queries the live tree, never trusts event.target); both showcases
+  adopted reference-verbatim copy — the business subheading needed a lens MAJOR correction
+  (executor's first copy was INVENTED; render-verify 731px vs 729px capture ink — standing
+  lesson: copy extraction without render-width verification is an unverified claim);
+  ledger 7.4a–d + 7.5a closed. CI round: first push RED — the invest qr-tab interactive
+  leg raced the lazy-QR decode at rect-measure time (macOS-light baselined pre-decode,
+  dark already loaded, ubuntu loaded-in-both); orchestrator remediation = decode-wait
+  before the rect + CI-only 0.03 tolerance for the clip leg + light baseline re-take —
+  standing rule: interactive-baseline legs AWAIT LAZY-MEDIA DECODE before any rect (the
+  «revalidate after await» iron rule's media case, in the ledger next to port-6007)).
+  Next: 10.3 → 10.4 → 11.1–11.3. Sequencing in epics-v3.md.
+- **Kit totals: 930 unit + 1368 visual/axe tests, 27 components, 27 React wrappers, v1 design
   assumptions all closed (6 v2 dark first-pass [ASSUMPTION]s open BY DESIGN until 8.2), CI green —
   CORRECTED 2026-09-25: Actions had been RED since 5.5/6962326 (typecheck step ran before build;
   workspace dist types missing on a fresh checkout; local gates masked it on stale dist — last green
