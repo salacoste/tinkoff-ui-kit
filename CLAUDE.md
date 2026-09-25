@@ -73,14 +73,26 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   (qr-block page-copy slot, button href mode) reported to deferred-work. PROVISIONING
   LESSON: both showcase worktrees were born at d27773b (pre-trio HEAD) — executors
   self-recovered via reset to d6a9f2c; launch dependent executors strictly AFTER the base
-  commit exists.** **IN FLIGHT: 8.1 (a11y sweep) ∥ 8.3 (docs) next, then 8.2 (dark sweep)
-  after 8.1 merges — sequencing in
+  commit exists.** **8.1 DONE (8a2e5a9 + cd00449 worktree → merge 037699d + baseline
+  re-take 256e5cf, spec-8-1 closed): the 5.1 method on the nine — 54/54 cells PASS, ledger
+  group-V.md, 28 engine legs (ringAncestor topology; cookie walk rides variants — top-layer
+  forward-walk limitation recorded in deferred-work); F1 sub-label/burger-label empty-name
+  fallback at all 3 name sites; F2 kit-wide :host([hidden]) 33/33 sheets + tripwire pattern
+  test that FOUND 5 real multi-sheet gaps (tk-modal rendered while hidden!); the guard
+  removed a baked-in select stray-band defect → 14 baselines legitimately re-taken
+  (exactly-14 verified). Lens SHIP 0/0/4, all notes fixed in-window. 8.3 DONE (e63639c
+  worktree → FAST-FORWARD merge, spec-8-3 closed): 9 v2 docs pages (live CEM tables) +
+  registers story on token-reference (single-source: TOKENS.md ?raw + throwing parser +
+  drift test in pnpm test); canvas-bg debt CLOSED (keep per-story copies, preview.ts:52-70);
+  docs-chrome axe fixes only (zero component changes). Lens SHIP 0/0/5.** **IN FLIGHT:
+  8.2 (dark sweep — closes the 6 cream [ASSUMPTION]s + dark delta 3.382 verdict legs)
+  next → 8.4 (release PREP). Sequencing in
   epics-v2.md; the v1 component-story gate applies VERBATIM (FR-16). Key v2 decisions: delta
   semantics via AA-override (green-300/red-300); warm-cream family DISTINCT from beige (dark
   first-pass [ASSUMPTION] → 8.2); typography registers = mappings (h1 44→heading-2, 36→heading-3),
   zero new type tokens; keyboard defects of the reference (inert arrows, chip focus-drop) are
   IMPROVED per APG — the sanctioned a11y axis
-- **Kit totals: 873 unit + 1269 visual/axe tests, 27 components, 27 React wrappers, v1 design
+- **Kit totals: 876 unit + 1355 visual/axe tests, 27 components, 27 React wrappers, v1 design
   assumptions all closed (6 v2 dark first-pass [ASSUMPTION]s open BY DESIGN until 8.2), CI green**
 - Fonts: DaytonaSans/DaytonaPragma in `packages/tokens/fonts/` under LICENSE-FONTS.md (separately
   licensed, NOT MIT; consumer rights ONLY per that file)
