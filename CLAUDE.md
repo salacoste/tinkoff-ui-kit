@@ -60,15 +60,27 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   keyboard walkthrough, a11y-ledger group-IV, lens SHIP 0/0/2.** 7.3 DONE (d199a79 worktree → merge d6a9f2c → lens fix 6cb2234, spec-7-3 closed):
   tk-stepper + tk-store-badges + tk-qr-block — the marketing display trio (brown badge
   = deferred-work maintainer flag; qr tablist = v1 tk-tabs composed verbatim; note
-  under the tile). Lens SHIP 0/2/7, both WARNs fixed in-window.** **IN FLIGHT: 7.4
-  (business-landing showcase, worktree, port 6051) ∥ 7.5 (invest-landing showcase,
-  worktree, port 6061) — both compose the landed trio** — sequencing in
+  under the tile). Lens SHIP 0/2/7, both WARNs fixed in-window.** **7.4 DONE (bbbceef
+  worktree → merge 5a6f5e5, spec-7-4 closed): business-landing showcase — bento 2+3 on the
+  warm-cream family (radius 24 = radius-xxl EXACT), floating white CTA, form cluster with
+  mode-derived imperative toast (element-screenshot evidence: page-clip breaks at
+  scrollY≈2268); two premise corrections pixel-confirmed (capture pill reads «Все продукты»,
+  token names = tint-cream family); lens SHIP 0/0/5, all three hygiene notes fixed in-window
+  (hex-in-comment, stale jsdoc, NOTES path). 7.5 DONE (7df3097 worktree → merge 508bd7b +
+  CEM regen 0df4593, spec-7-5 closed): invest-landing showcase — marketing register h1 =
+  heading-2 mapping EXACT, install cluster qr→steps→badges (capture-refuted order,
+  premise corrected), «Вариант 2» both headings verbatim; lens SHIP 0/0/0; kit gaps
+  (qr-block page-copy slot, button href mode) reported to deferred-work. PROVISIONING
+  LESSON: both showcase worktrees were born at d27773b (pre-trio HEAD) — executors
+  self-recovered via reset to d6a9f2c; launch dependent executors strictly AFTER the base
+  commit exists.** **IN FLIGHT: 8.1 (a11y sweep) ∥ 8.3 (docs) next, then 8.2 (dark sweep)
+  after 8.1 merges — sequencing in
   epics-v2.md; the v1 component-story gate applies VERBATIM (FR-16). Key v2 decisions: delta
   semantics via AA-override (green-300/red-300); warm-cream family DISTINCT from beige (dark
   first-pass [ASSUMPTION] → 8.2); typography registers = mappings (h1 44→heading-2, 36→heading-3),
   zero new type tokens; keyboard defects of the reference (inert arrows, chip focus-drop) are
   IMPROVED per APG — the sanctioned a11y axis
-- **Kit totals: 873 unit + 1244 visual/axe tests, 27 components, 27 React wrappers, v1 design
+- **Kit totals: 873 unit + 1269 visual/axe tests, 27 components, 27 React wrappers, v1 design
   assumptions all closed (6 v2 dark first-pass [ASSUMPTION]s open BY DESIGN until 8.2), CI green**
 - Fonts: DaytonaSans/DaytonaPragma in `packages/tokens/fonts/` under LICENSE-FONTS.md (separately
   licensed, NOT MIT; consumer rights ONLY per that file)
