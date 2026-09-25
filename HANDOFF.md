@@ -1,4 +1,4 @@
-# HANDOFF — tinkoff-ui-kit (2026-09-24)
+# HANDOFF — tinkoff-ui-kit (2026-09-25; v2 финал)
 
 Полная передача проекта новой команде: состояние, план, долги, нюансы, governance. Прочитайте
 этот файл целиком перед первым коммитом. Документы-первоисточники помечены путями.
@@ -27,7 +27,7 @@
 | | |
 |---|---|
 | **v1** | ✅ RELEASED `v1.0.0` (2026-09-24). 38 стори / 5 эпиков BMAD-плана исполнены. 19 компонентов, 645 юнит + 921 visual/axe тестов, CI зелёный, ноль открытых дизайнерских допущений |
-| **v2** | 🚧 13/14 stories (знаменатель поправлен: в epics-v2.md 14 историй, «13» была ошибкой planning-коммита): 6.1–6.5, 7.1–7.5, 8.1, 8.2, 8.3 ИСПОЛНЕНЫ (7.4: business-landing — бенто 2+3 на warm-cream, плавающая белая CTA, форм-кластер с mode-derived toast; worktree bbbceef → merge 5a6f5e5; lens SHIP 0/0/5, hygiene-ноты закрыты в окне; premise-поправки пиксельно подтверждены: «Все продукты» на капче, фактические имена tint-cream. 7.5: invest-landing — маркетинговый регистр h1=heading-2, кластер установки qr→steps→badges (порядок капчи опроверг спек — поправлен); worktree 7df3097 → merge 508bd7b + CEM-реген 0df4593; lens SHIP 0/0/0. Кит-гэпы обеих витрин — в deferred-work: qr-block без page-copy слота, tk-button без href-режима, tk-input без sr-only лейбла, tk-checkbox без error-канала, promo-card без full-bleed арта, нет ~32 radius). Итоги: **881 unit + visual 1368/1368 ×2** (объединённый main, порт 6041), 27 компонентов/врапперов; пруфы — `.playwright-cli/verify/{filter-chips,pagination,combobox-search,mega-nav,data-table,cookie-banner,stocks-catalog,stepper,store-badges,qr-block,business-landing,invest-landing,a11y-sweep,dark-sweep}/` + v2 docs-страницы в `packages/docs/src/v2/`. **8.1 (a11y sweep) + 8.3 (docs) ИСПОЛНЕНЫ**: 8.1 — 54/54 ячеек ledger group-V.md, 28 engine-ног, F1 empty-name fallback на всех 3 name-сайтах, F2 kit-wide `:host([hidden])` 33/33 + tripwire-тест НАШЁЛ 5 реальных multi-sheet гэпов (tk-modal рендерился скрытым!); guard убрал defect из select-пикселей → 14 бейзлайнов легитимно пере-сняты (256e5cf, входят в 8.4 batch-confirm); lens SHIP 0/0/4. 8.3 — 9 v2 docs-страниц (живые CEM-таблицы) + registers-сторя на token-reference (single-source TOKENS.md ?raw + кидающий parser + drift-тест); canvas-bg долг ЗАКРЫТ (keep per-story copies); lens SHIP 0/0/5. **8.2 (dark sweep) ИСПОЛНЕНА**: ВСЕ ШЕСТЬ 6.1 dark [ASSUMPTION] УДЕРЖАНЫ с арифметикой (ноль изменений значений — диффы токенов только комментарии); TOKENS.md без флагов; engine-реестр 19→28 + delta verdict-ноги (3.382/4.883 подтверждены LIVE на реальном DOM); F5 реальный дефект исправлен (якорь store-badges без цветового канала — UA-синий переживал тему); ledger 28/28; 2 предсуществующих падения mega-nav--page (CEM-рост 8.1, тот же класс что 256e5cf — docs-страницу тогда пропустили) → легитимная пере-съёмка exactly-2 (3372→3413, прогноз точен); нюанс list-vs-run ИСЧЕЗ в дереве 8.2 (1368=1368); lens SHIP 0/0/5; истинный счёт юнитов 876→881 (пропущенные +5 от 8.3). ДАЛЕЕ: 8.4 (verification ledger + v1.1.0 release PREP, БЕЗ тега — гейт мейнтейнера). ПРАВИЛА ПОРТА: 6007 машинно-глобален; ownership необходим, свежесть контента — настоящая гарантия; критичные круги — приватный VISUAL_PORT-конфиг (6041 main; 6051/6061 свободны для 8.x executors) |
+| **v2** | ✅ ИСПОЛНЕНА 14/14 (2026-09-25, финал — 8.4). Три домена: /invest/stocks (filter-chips, pagination, combobox-search, data-table, stocks-catalog, mega-nav), /business (stepper, business-landing; cookie-banner — эталон invest/stocks), /invest/mobile (store-badges, qr-block, invest-landing) + v2-токены 6.1 (дельта/warm-cream/регистры — ноль новых типо-токенов; шесть dark-допущений УДЕРЖАНЫ 8.2 с нулём изменений значений) + свипы 8.1/8.2 (54/54 a11y-ячеек; `:host([hidden])` 33/33; engine 19→28; F5 store-badges фикс) + доки 8.3 (9 страниц + registers single-source). **8.4 закрыла v2**: fidelity-ledger 25 строк + жёлтый аудит v2 (0 нарушений) + impeccable kit-wide 207 файлов exit 0 + baseline-пакет расширен (140 новых, 16 adjudicated перезаписей: 256e5cf ×14 + d7c36d6 ×2) + RELEASE.md «Релиз v1.1.0» (тег/рецепт/changelog-драфт — НИЧЕГО не исполнено, тега нет). Итоги: **881 unit + 1368 visual/axe ×2**, 27 компонентов/врапперов, 414 базлайн-PNG, CI зелёный. Пруфы: `.playwright-cli/verify/{filter-chips,pagination,combobox-search,mega-nav,data-table,cookie-banner,stocks-catalog,stepper,store-badges,qr-block,business-landing,invest-landing,a11y-sweep,dark-sweep,fidelity-verification-v2}/` + `packages/docs/src/v2/`. Кит-гэпы v2 — в deferred-work (qr-block page-copy слот, button href, input sr-only label, checkbox error, stepper subtitle, promo-card full-bleed, ~32 radius, коричневый токен). ПРАВИЛА ПОРТА: 6007 машинно-глобален; критичные круги — приватный VISUAL_PORT-конфиг (6041 main; 6061 использован 8.4, конфиг удалён) |
 | Репо | `github.com/salacoste/tinkoff-ui-kit`, ветка `main`. HEAD документирован в CLAUDE.md |
 
 Стек (ЗАМОРОЖЕН, пере-планирование не требуется): Lit 3.3.3 core (shadow DOM) в
@@ -85,7 +85,13 @@ reduced-motion на всю моторику.
    (VoiceOver 19/19 пройден 2026-09-23; NVDA отложен — нет Windows).
 5. Cross-surface top-layer stacking точен только на fallback-пути (контроллер).
 6. AA-derivation таблица, fold-литералы в gen, preview.ts single-canvas — мелочь с условиями.
-Мейнтейнерская очередь: batch-confirm новых v2-базлайнов (8.4); ratify-поверхность RELEASE.md §0.
+Мейнтейнерская очередь (все — ручные гейты, nothing executed): (a) batch-confirm
+v2-базлайнов по ЧАСТИ v2 `baseline-review-package.md` (140 новых + 16 adjudicated
+перезаписей; фиделити-контекст — `.playwright-cli/verify/fidelity-verification-v2/`);
+(b) релиз v1.1.0 по RELEASE.md §8.1–8.5 (bump версий + CHANGELOG + `git tag v1.1.0` —
+тег ТОЛЬКО мейнтейнер); (c) SR-спот-чеки v2 (п. 4) + iOS momentum-scroll (п. 3);
+(d) решение по коричневому токену бейджа stepper (deferred-work 7.3 — добавить токен
+или зафиксировать отказ; не блокирует релиз).
 
 ## 5. Нюансы и специфика (уроки, оплаченные багами — НЕ переоткрывайте)
 
@@ -136,7 +142,7 @@ reduced-motion на всю моторику.
 ```
 pnpm build && pnpm test && pnpm lint && pnpm typecheck && pnpm gen && pnpm gen:tokens
 git add -A && pnpm gen && git diff --exit-code   # gen-drift
-pnpm test:visual                                  # 921 тест, compare-режим
+pnpm test:visual                                  # 1368 тест, compare-режим
 ```
 CI (GitHub Actions) гоняет всё это + impeccable headless детектор на каждый push.
 
@@ -155,27 +161,22 @@ CI (GitHub Actions) гоняет всё это + impeccable headless детек�
 | Per-story доказательства | `.playwright-cli/verify/<компонент>/` |
 | Контракт API | `packages/components/CONVENTIONS.md` (§4/§9 FROZEN) |
 | Оверлей-механика | `packages/components/src/overlays/` (AD-12) |
-| Пакет базлайнов (закрыт v1) | `_bmad-output/implementation-artifacts/baseline-review-package.md` |
+| Пакет базлайнов (v1 закрыт; ЧАСТЬ v2 — гейт v1.1.0) | `_bmad-output/implementation-artifacts/baseline-review-package.md` |
+| Фиделити-ledger v2 (25 строк) + жёлтый аудит + impeccable | `.playwright-cli/verify/fidelity-verification-v2/` |
+| Релиз v1.1.0 (тег/рецепт/changelog-драфт) | `RELEASE.md`, раздел «Релиз v1.1.0» (§8.1–8.7) |
 
 ## 7. С чего начать
 
 1. Прочитать этот файл + CLAUDE.md + epics-v2.md.
 2. Прогнать гейты на HEAD (все зелёные — точка входа чистая).
-3. Стори 6.1 по циклу §5 — ✅ исполнена 2026-09-24 (spec-6-1 закрыт, c999e12;
-   нюанс входа: гейты на 1dcf272 были красные ровно в одном шве — gen:tokens/токен-дрифт
-   на v2-строках DESIGN.md; 6.1 этот шов закрыла). Стори 6.2 — ✅ исполнена 2026-09-24
-   (spec-6-2 закрыт: filter-chips + pagination; нюанс входа: реализация найдена в
-   ворктри после зависшей сессии исполнителя — аудиторский след восстановлен из
-   транскрипта, триаж/фиксы/верификация довершены оркестратором). Стори 6.3 — ✅
-   исполнена 2026-09-24 (spec-6-3 закрыт: combobox-search; полный цикл с параллельным
-   треком 7.1 в worktree — родилось правило сериализации test:visual). Стори 7.1 — ✅
-   исполнена 2026-09-24 (spec-7-1 закрыт: 736191e + truing b068bb8 в worktree, merge 0ec0790,
-   гейты на main 784 unit / visual 1065×2; прецедент Spec Change Log: пиксели опровергли два
-   замороженных утверждения анатомии — активный саблинк ИМЕЕТ подчёркивание 2px + межрядный
-   разделитель 1px существуют). В работе: 6.4 + 7.2 параллельно (executor на main +
-   executor в worktree; спеки 1bc8ee5 / 2b77d31).
-4. Вопросы мейнтейнеру — только на гейтах: базлайны-партия (8.4), релизный тег, всё
-   остальное автономно по плану.
+3. v2 ИСПОЛНЕНА целиком (6.1 → 8.4; все 14 спеков закрыты, история — в §2 и
+   spec-триажах). Следующая работа — только мейнтейнерская очередь §4
+   (v2-батч → тег v1.1.0 → SR-чеки → коричневый токен); после тега —
+   свежий потребитель по RELEASE.md §8.4 (tk-data-table). Новые стори
+   (если появятся) — по циклу §5, гейт компонента = FR-16 дословно.
+4. Вопросы мейнтейнеру — только на гейтах: v2-батч базлайнов, релизный тег,
+   SR-чеки, коричневый токен — всё остальное автономно по плану.
 
-*Составлено оркестратором autonomous-прогона (2026-09-24). Всё, что здесь не сказено,
-ищите в memlog-ах спинов и spec-триажах — проект ведёт полную аудиторскую историю.*
+*Составлено оркестратором autonomous-прогона (2026-09-24; v2-финал — 8.4,
+2026-09-25). Всё, что здесь не сказено, ищите в memlog-ах спинов и
+spec-триажах — проект ведёт полную аудиторскую историю.*

@@ -207,3 +207,177 @@ pnpm exec vite
 - Товарный знак: нулевые попадания в published-строках (§1.6).
 - Визуальная сюита после N8-правки: пара getting-started перебазлайнена,
   остальное 919/921 неизменно.
+
+---
+---
+
+# Релиз v1.1.0 (v2) — подготовлено Story 8.4 (2026-09-25)
+
+**Всё до тега подготовлено и проверено автономным прогоном 8.4; шаги ниже
+исполняет ТОЛЬКО мейнтейнер.** v2 = 14 историй (6.1–8.4): девять новых
+компонентов, три композиции, v2-токены, свипы, доки. Итог: 27 компонентов,
+**881 юнит + 1368 visual/axe тестов**, 414 базлайн-PNG (v1-часть 274 уже
+ПОДТВЕРЖДЕНА 2026-09-23 — новый присест подтверждает только v2-ножи).
+Модель та же: **только GitHub, тег `v1.1.0` на `main`; npm — никогда**;
+`private: true` навсегда; npm-команды не запускались, тег НЕ ставился
+(8.4 завершилась с `git tag -l` без v1.1.0 — проверяемо).
+
+## 8.1. Гейты до релиза (pre-flight v1.1.0)
+
+1. **CI зелёный на HEAD `main`** (полная цепочка workflow).
+2. Локально на HEAD: `pnpm install && pnpm build && pnpm test && pnpm lint &&
+   pnpm typecheck && pnpm gen && pnpm gen:tokens` — всё зелёное, `git status`
+   чистый (включая check:gen / check:tokens-drift).
+3. **БАТЧ-ПОДТВЕРЖДЕНИЕ v2-базлайнов** — ЧАСТЬ v2 пакета
+   `_bmad-output/implementation-artifacts/baseline-review-package.md`
+   (140 новых + 16 adjudicated-перезаписей + 2 токен-страницы; в первую
+   очередь R-14/R-2/R-2' — перезаписи поверх подтверждённых v1). Фиделити-
+   контекст: `.playwright-cli/verify/fidelity-verification-v2/` (ledger 25
+   строк, жёлтый аудит, impeccable). Неподтверждённые — перезаписать по
+   правилу delete+update (§3 v1-части).
+4. **SR-спот-чеки v2** по протоколам в «Доступность»-историях девяти v2-
+   компонентов (метод — `verify/a11y-sweep/METHOD.md` §SR; VoiceOver; NVDA
+   по-прежнему осознанно отложен — нет Windows-машины, решение 2026-09-23
+   в §0 выше).
+5. **Решение по коричневому токену бейджа stepper** (deferred-work, 7.3):
+   либо добавить токен (DESIGN.md + `pnpm gen:tokens`), либо зафиксировать
+   отказ — не блокирует релиз, но решение должно быть записано.
+6. §0-ратификации v1 наследуются (ничего нового на ратификацию в v2 нет;
+   жёлтый аудит v2 — ноль нарушений, impeccable — ноль блокеров).
+
+## 8.2. Версия и CHANGELOG (прецедент §2)
+
+1. Во всех трёх `packages/{tokens,components,react}/package.json` выставить
+   `"version": "1.1.0"` (манифесты остаются `private: true`).
+2. В `CHANGELOG.md`: заменить `[Unreleased]` на `[1.1.0] - <дата релиза>`,
+   добавить пустой `[Unreleased]` сверху. Текст — из драфта §8.5 ниже
+   (при необходимости правьте; 14 строк = 14 историй v2).
+3. Закоммитить («chore(release): v1.1.0 — version + changelog»); дождаться
+   зелёного CI на ЭТОМ коммите.
+
+## 8.3. Тег (мейнтейнер — единственный исполнитель)
+
+```sh
+# на чистом main, после §8.1–8.2 (тег указывает на релизный коммит с зелёным CI):
+git tag v1.1.0
+git push origin main --tags
+```
+
+Откат — тот же механизм, что §7.
+
+## 8.4. Верификация релиза — свежий потребитель рендерит tk-data-table
+
+По молди §5/SM-6, но проверяем v2-компонент (клон — релизный тег):
+
+```sh
+d=$(mktemp -d) && cd "$d"
+git clone --depth 1 --branch v1.1.0 https://github.com/salacoste/tinkoff-ui-kit
+mkdir my-app && cd my-app
+pnpm init
+cat > pnpm-workspace.yaml <<'EOF'
+packages:
+  - .
+  - ../tinkoff-ui-kit/packages/*
+EOF
+cd ../tinkoff-ui-kit && pnpm install && pnpm build && cd ../my-app
+pnpm add -w pillkit-components pillkit-react pillkit-tokens --workspace
+pnpm add -w react@19.3.0 react-dom@19.3.0
+pnpm add -w -D vite
+cat > index.html <<'EOF'
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <title>v1.1.0 check</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/main.tsx"></script>
+  </body>
+</html>
+EOF
+cat > main.tsx <<'EOF'
+import 'pillkit-tokens/tokens.css';
+import 'pillkit-components';
+import { createRoot } from 'react-dom/client';
+import { DataTable } from 'pillkit-react';
+
+const el = document.createElement('div');
+el.setAttribute('data-theme', 'light');
+document.getElementById('root')!.append(el);
+createRoot(el).render(
+  <DataTable
+    caption="Каталог акций"
+    columns={[
+      { key: 'name', header: 'Название' },
+      { key: 'price', header: 'Цена', align: 'end' },
+    ]}
+    rows={[
+      { href: '#sber', cells: {
+        name:  { primary: 'Сбербанк', secondary: 'SBER' },
+        price: { primary: '303,55 ₽', secondary: '+1,2%', delta: 'positive' },
+      }},
+      { href: '#lkoh', cells: {
+        name:  { primary: 'ЛУКОЙЛ', secondary: 'LKOH' },
+        price: { primary: '7 148,5 ₽', secondary: '−0,8%', delta: 'negative' },
+      }},
+    ]}
+  />,
+);
+EOF
+pnpm exec vite
+```
+
+Проверить: таблица рендерится с двухстрочными ячейками (имя/тикер), дельты
+позитивная зелёная / негативная красная, вся строка — ссылка; клавиатура —
+стрелки/Home/End/Enter работают (APG-слой 6.4); тёмная тема — сменить
+`data-theme` на `"dark"` и перезагрузить. Этот прогон — релизный гейт v1.1.0.
+
+## 8.5. Драфт changelog v1.1.0 (EN — перенести в CHANGELOG.md на §8.2)
+
+```
+### Added — v2 (tbank.ru/invest + /business reference domains)
+- v2 token layer: `{colors.*}` reference syntax + rgba literals in DESIGN.md; table/delta/warm-cream
+  semantics; typography registers as mappings — zero new type tokens (6.1)
+- tk-filter-chips + tk-pagination: catalog filter pills (border-only selection, overflow «Ещё» menu)
+  and the pager (nav landmark, windowing, load-more bar) (6.2)
+- tk-combobox-search: borderless 52px typeahead field, activedescendant listbox, IME-safe value sync (6.3)
+- tk-data-table: typographic row-as-link catalog table, direction-carrying delta colors, APG roving
+  keyboard layer (6.4)
+- stocks-catalog showcase composition: five surfaces wired live + recorded 39-step keyboard walkthrough (6.5)
+- tk-navbar mega-nav extension: optional two-deep header (subLinks row), v1 renders byte-stable (7.1)
+- tk-cookie-banner: non-modal consent dialog; `consent-choice` event; storage stays with the consumer (7.2)
+- tk-stepper + tk-store-badges + tk-qr-block: the marketing display trio (7.3)
+- business-landing showcase: bento 2+3 on warm-cream, floating white CTA, form cluster with toast (7.4)
+- invest-landing showcase: marketing register (h1 = heading-2), install cluster qr→steps→badges (7.5)
+- v2 a11y sweep: 54/54 ledger cells, kit-wide `:host([hidden])` guards (33 sheets), empty-name fallbacks (8.1)
+- v2 dark sweep: all six 6.1 dark assumptions held (zero value changes); engine registry 19→28;
+  store-badges anchor color-channel fix (8.2)
+- v2 docs: nine component pages (live CEM tables) + registers surface, single-source TOKENS.md (8.3)
+- v2 verification ledger (16+9 rows) + yellow-discipline audit extension + v1.1.0 release prep (8.4)
+```
+
+## 8.6. Шрифты и право (НЕИЗМЕННО — напоминание)
+
+- **DaytonaSans/DaytonaPragma — отдельно лицензированные бинарники**
+  (© Monotype Imaging / © ParaType), НЕ MIT: права потребителя определяет
+  ТОЛЬКО `packages/tokens/fonts/LICENSE-FONTS.md`. Договоры лицензируют
+  МЕЙНТЕЙНЕРА и НЕ передаются с пакетом. Публичный репозиторий несёт шрифты
+  в составе checkout'а — модель распределения не изменилась с v1.0.0
+  (решение 2026-09-23, §0 выше).
+- Вендорные transitions.dev-рецепты — провенанс-заголовки на каждом файле,
+  статус §0.3 ратифицирован «как есть». v2 компонентов на них не добавилось.
+- Товарный знак: свип 5.7 остаётся в силе; v2-строки (имена компонентов
+  `tk-*`, описания, доки) прошли тот же grep в 8.4 — ноль попаданий
+  Т-Банк/Tinkoff/tbank вне фактологических URL и дисклеймера.
+
+## 8.7. Что 8.4 уже проверила (не нужно повторять)
+
+- Гейты на aa9780f: build/test/lint/typecheck/gen/gen:tokens зелёные;
+  визуальная сюита 1368/1368 ×2 (приватный порт 6061; темп-конфиг удалён).
+- Жёлтый аудит v2-ножей (9+3+доки): ноль нарушений; impeccable детектор
+  kit-wide (207 файлов): exit 0, ноль блокеров.
+- Фиделити-ledger 25 строк с валидными указателями (ledger.md выше по пути).
+- РОВНО НИЧЕГО из §8.2–8.3 НЕ исполнено: `git tag -l` не содержит v1.1.0,
+  версии пакетов на 1.0.0, CHANGELOG без [1.1.0] — это гейт мейнтейнера.
+
