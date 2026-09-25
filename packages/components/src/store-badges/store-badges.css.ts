@@ -85,6 +85,12 @@ export const storeBadgesStyles = css`
     padding: var(--tk-space-16) var(--tk-space-16) var(--tk-space-16) var(--tk-space-12);
     border-radius: var(--tk-store-badges-radius, var(--tk-radius-xl));
     background: var(--tk-store-badges-fill, var(--tk-color-surface-muted));
+    /* The anchor's own color channel — the label re-declares below, but
+       without this the UA -webkit-link default (rgb(0,0,238)) rides the
+       anchor and its img child UNCHANGED across the theme flip (the 8.2
+       dark-sweep finding): unpainted, yet unreadable to the paint audit
+       and unthemed for any future slotted text. Zero pixel change. */
+    color: var(--tk-store-badges-label, var(--tk-color-text-primary));
     text-decoration: none;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;

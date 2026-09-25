@@ -3,8 +3,9 @@ import { expect, test, type Page } from 'playwright/test';
 import { buildStoryUrl } from './stories';
 
 /**
- * DARK SWEEP ENGINE (spec 5.4 — SM-5's verified half). For every one of the
- * 19 components' canonical stories, the story is loaded in BOTH themes and
+ * DARK SWEEP ENGINE (spec 5.4 — SM-5's verified half; extended to the v2
+ * cluster by spec 8.2). For every one of the 28 components' canonical
+ * stories, the story is loaded in BOTH themes and
  * the COMPUTED paint of every element (document + shadow trees + pseudos,
  * canvas + the toast stack + the overlay root) is compared theme-to-theme:
  *
@@ -46,9 +47,12 @@ import { buildStoryUrl } from './stories';
 interface SweepTarget {
   component: string;
   story: string;
+  /** Title discriminator when one component contributes MULTIPLE registry
+   *  rows (navbar: the v1 playground walk + the v2 mega extension story). */
+  variant?: string;
 }
 
-/** The 19 canonical stories — same registry as the a11y sweep (5.1–5.3). */
+/** The 28 canonical stories — same registry as the a11y sweep (5.1–5.3 + the 8.1 Group V). */
 const SWEEP: readonly SweepTarget[] = [
   { component: 'tk-button', story: 'components-button--playground' },
   { component: 'tk-link', story: 'components-link--variants' },
@@ -69,6 +73,19 @@ const SWEEP: readonly SweepTarget[] = [
   { component: 'tk-feature-card', story: 'components-featurecard--playground' },
   { component: 'tk-service-card', story: 'components-servicecard--playground' },
   { component: 'tk-article-card', story: 'components-articlecard--playground' },
+  // --- v2 cluster (Story 8.2 — the nine surfaces of the 8.1 Group V
+  //     registry, same story picks: open-state stories where the deeper
+  //     paint layer only exists opened (combobox dropdown, cookie card),
+  //     playgrounds elsewhere; navbar's v2 row is the mega extension story.
+  { component: 'tk-filter-chips', story: 'components-filterchips--playground' },
+  { component: 'tk-pagination', story: 'components-pagination--playground' },
+  { component: 'tk-combobox-search', story: 'components-comboboxsearch--open' },
+  { component: 'tk-navbar', story: 'components-navbar--mega-nav', variant: 'mega-nav' },
+  { component: 'tk-data-table', story: 'components-datatable--playground' },
+  { component: 'tk-cookie-banner', story: 'components-cookie-banner--playground' },
+  { component: 'tk-stepper', story: 'components-stepper--playground' },
+  { component: 'tk-store-badges', story: 'components-storebadges--playground' },
+  { component: 'tk-qr-block', story: 'components-qrblock--playground' },
 ];
 
 /** Settle wait — same contract as visual.spec.ts (children or error display). */
@@ -589,7 +606,7 @@ async function collect(page: Page, story: string, theme: 'light' | 'dark'): Prom
 }
 
 for (const target of SWEEP) {
-  test(`dark sweep: ${target.component} — theme-flip paint audit (structure parity / AA pairs / invariants / shadow collapse)`, async ({
+  test(`dark sweep: ${target.component}${target.variant ? ` [${target.variant}]` : ''} — theme-flip paint audit (structure parity / AA pairs / invariants / shadow collapse)`, async ({
     page,
   }) => {
     const light = await collect(page, target.story, 'light');
@@ -598,5 +615,137 @@ for (const target of SWEEP) {
     expect(light.length, `${target.component}: the light walk found no elements`).toBeGreaterThan(0);
     const failures = compareStory(target.component, light, dark);
     expect(failures, failures.join('\n')).toEqual([]);
+  });
+}
+
+// ---------------------------------------------------------------------------
+// DELTA VERDICT LEGS (spec 8.2) — the 6.1 table-delta AA-override ruling
+// confirmed LIVE on the rendered story DOM. The unit pins compute the same
+// numbers from the token table (tests/contrast.test.ts): the LIGHT row-hover
+// composite #F2F4F7 at :273 (positive 4.163 :274, negative 5.608 :279), the
+// DARK composite #313131 at :281 (negative 3.382 :282 — the FAILING dark
+// leg, the sanctioned-scope state; positive 4.883 :284). These legs re-derive
+// them from what the browser actually paints — hover a delta row, read the
+// computed row fill + delta text color, composite over the story canvas — so
+// the pins are provably the shipped paint, not a token-table abstraction.
+// The 3.382 leg asserts EQUALITY with the pinned failing value (the 6.1
+// scope ruling: deltas are sanctioned on base surfaces only; the composite
+// failures are pinned, never silently omitted), not a 4.5 threshold.
+// ---------------------------------------------------------------------------
+
+interface DeltaProbe {
+  /** Computed color of the delta cell's primary line (the ₽-line). */
+  color: string;
+  /** Computed row fill under the pointer — alpha-bearing in both themes. */
+  rowBg: string;
+  /** The story canvas paint — the opaque compositing base (.tkd-canvas). */
+  canvasBg: string;
+}
+
+async function probeDeltaRow(
+  page: Page,
+  theme: 'light' | 'dark',
+  delta: 'positive' | 'negative',
+): Promise<DeltaProbe> {
+  await page.goto(buildStoryUrl('components-datatable--playground', theme));
+  await waitForStorySettled(page);
+  // Hover the FIRST row carrying this delta class — the fill only paints
+  // under the pointer (the .row--link:hover rule). Playwright CSS pierces
+  // the open shadow root.
+  await page.locator(`.row--link:has(.cell--delta-${delta})`).first().hover();
+  // The fill rides the motion token's transition; wait for the PAINTED state
+  // of the HOVERED row (the first .row--link is a DIFFERENT, unhovered row —
+  // keying the wait on it was the first-attempt bug), never a magic timeout.
+  await page.waitForFunction(
+    (deltaClass) => {
+      const host = document.querySelector('tk-data-table');
+      const row = host?.shadowRoot?.querySelector(`.row--link:has(.cell--delta-${deltaClass})`);
+      // instanceof narrows BOTH null and undefined (the optional chain yields
+      // Element | null | undefined — `!== null` alone leaves undefined in).
+      return row instanceof Element && getComputedStyle(row).backgroundColor !== 'rgba(0, 0, 0, 0)';
+    },
+    delta,
+    { timeout: 5_000 },
+  );
+  return page.evaluate(
+    (deltaClass) => {
+      const root = document.querySelector('tk-data-table')?.shadowRoot;
+      const cell = root?.querySelector(`.cell--delta-${deltaClass} .cell__primary`);
+      const row = root?.querySelector(`.row--link:has(.cell--delta-${deltaClass})`);
+      const canvas = document.querySelector('.tkd-canvas');
+      return {
+        color: cell ? getComputedStyle(cell).color : '',
+        rowBg: row ? getComputedStyle(row).backgroundColor : '',
+        canvasBg: canvas ? getComputedStyle(canvas).backgroundColor : '',
+      };
+    },
+    delta,
+  );
+}
+
+for (const theme of ['light', 'dark'] as const) {
+  test(`dark sweep: tk-data-table — delta pair verdict legs (${theme}: base-surface AA + the hover composites, live)`, async ({
+    page,
+  }) => {
+    const negative = await probeDeltaRow(page, theme, 'negative');
+    const positive = await probeDeltaRow(page, theme, 'positive');
+
+    // The compositing base is the story canvas (surface-base, opaque both
+    // themes — the F4 lesson keeps every canvas painted).
+    const canvas = parseColor(negative.canvasBg);
+    expect(canvas[3]).toBe(1);
+    // Composite at RASTER precision (channels rounded to the painted 8-bit
+    // integers — the browser never paints the CSSOM's unrounded floats, and
+    // the unit pins composites at hex precision): Chromium serializes the
+    // computed fill alpha rounded (0.1 for the token's #FFFFFF1A = 0.101961),
+    // so unrounded channels would drift ~0.005–0.007 off the pins while the
+    // ROUNDED composite lands on the pinned hex exactly.
+    const rounded = (c: Rgba): Rgba => [
+      Math.round(c[0]),
+      Math.round(c[1]),
+      Math.round(c[2]),
+      Math.round(c[3]),
+    ];
+    const hoverComposite = rounded(composite(parseColor(negative.rowBg), canvas));
+    // The pinned composites themselves (contrast.test.ts:273 / :281).
+    expect(
+      [hoverComposite[0], hoverComposite[1], hoverComposite[2]]
+        .map((v) => v.toString(16).padStart(2, '0'))
+        .join(''),
+    ).toBe(theme === 'light' ? 'f2f4f7' : '313131');
+    // The positive row composites identically (same fill token, same canvas).
+    expect(parseColor(positive.rowBg)).toEqual(parseColor(negative.rowBg));
+
+    // BASE-surface legs (unhovered rows are the sanctioned delta surface):
+    // the delta color against the canvas directly.
+    const negBase = contrastRatio(parseColor(negative.color), canvas);
+    const posBase = contrastRatio(parseColor(positive.color), canvas);
+    // HOVER-composite legs — the 6.1 scope ruling's recorded numbers.
+    const negHover = contrastRatio(parseColor(negative.color), hoverComposite);
+    const posHover = contrastRatio(parseColor(positive.color), hoverComposite);
+
+    if (theme === 'light') {
+      expect(negBase).toBeCloseTo(6.179, 3);
+      expect(posBase).toBeCloseTo(4.587, 3);
+      expect(negHover).toBeCloseTo(5.608, 3);
+      expect(posHover).toBeCloseTo(4.163, 3);
+      // The light composite's own scope split (the 6.1 ruling's light half):
+      // negative clears AA, positive is the documented FAILING light leg
+      // (4.163 < 4.5 — contrast.test.ts:274, same equality-pin treatment).
+      expect(negHover).toBeGreaterThanOrEqual(4.5);
+      expect(posHover).toBeLessThan(4.5);
+    } else {
+      expect(negBase).toBeCloseTo(4.525, 3);
+      expect(posBase).toBeCloseTo(6.533, 3);
+      // The DARK legs the ERRATUM names: negative 3.382 (the FAILING leg —
+      // the sanctioned-scope state, equality pin) and positive 4.883
+      // (passes). Both land exactly at the unit pins' precision once the
+      // composite is taken at raster precision (see `rounded` above).
+      expect(negHover).toBeCloseTo(3.382, 3);
+      expect(posHover).toBeCloseTo(4.883, 3);
+      expect(negBase).toBeGreaterThanOrEqual(4.5);
+      expect(posHover).toBeGreaterThanOrEqual(4.5);
+      expect(negHover).toBeLessThan(4.5);
+    }
   });
 }
