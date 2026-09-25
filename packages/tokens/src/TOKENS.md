@@ -2,13 +2,13 @@
 
 GENERATED FILE — DO NOT EDIT. Regenerate with `pnpm gen:tokens`.
 
-- Source of truth: `_bmad-output/planning-artifacts/ux-designs/ux-tinkoff-ui-kit-2026-09-21/DESIGN.md` frontmatter — blocks `colors`, `typography`, `rounded`, `spacing`, `shadows`, `motion`.
+- Source of truth: `_bmad-output/planning-artifacts/ux-designs/ux-tinkoff-ui-kit-2026-09-21/DESIGN.md` frontmatter — blocks `colors`, `typography`, `fonts`, `rounded`, `spacing`, `shadows`, `motion`.
 - The `components:` frontmatter block is consumer spec prose — never rendered.
 - The z-scale is scaffold mechanics, not an extraction (own section below).
 - The `dark-*` color entries are the palette SOURCE for the dark layer (see "Dark layer") — never emitted as `--tk-color-dark-*` custom properties.
 - All v1 `[ASSUMPTION]` flags are RESOLVED (mint/beige tints — Story 3.6; dark tints — 5.4; xxl/xl radii + the spacing systematization — 5.6): every flagged value was verified against the archived captures and now carries a `Verified —` annotation; none was silently dropped. The v2 dark first-pass keys (Story 6.1) were verified by the 8.2 dark sweep (the 5.4 rule: cream pair — Lab/OKLCH derivation window; delta pair — the three-surface AA scope; white-alpha pair — composite/grammar) — all six HELD and now carry `Verified —` annotations with the computed evidence.
 
-Light layer: **137 tokens** on `:host, :root` (colors 51, typography 42, radius 7, spacing 14, shadows 6, motion 11, z-scale 6) plus the dark layer: **23 semantic overrides + 6 shadow-none re-declarations** on `[data-theme="dark"]`.
+Light layer: **139 tokens** on `:host, :root` (colors 52, typography 42, fonts 1, radius 7, spacing 14, shadows 6, motion 11, z-scale 6) plus the dark layer: **23 semantic overrides + 6 shadow-none re-declarations** on `[data-theme="dark"]`.
 
 ## Colors
 
@@ -64,6 +64,7 @@ Light entries from the `colors` block: brand/ink/gray/lightblue/functional scale
 | `--tk-color-surface-row-hover` | `rgba(36,74,127,0.06)` | Extracted verbatim (v2, invest/stocks row hover fill) — `rgba(36,74,127,0.06)`; decorative fill (non-text), dark first-pass in the dark layer. DESIGN.md Colors (Table delta semantics). |
 | `--tk-color-tint-cream` | `#F1EEE8` | Warm-cream family (v2, business) — DISTINCT from tint-beige per step (computed OKLCH vs beige 93.8°/C0.029: base 84.6°/C0.009, raised 80.7°/C0.022 — 9–13° toward orange, chroma 0.31×–0.76×; DESIGN.md Colors). AA sanctioned: text-primary 10.911:1 / text-secondary 4.866:1 on the tint (tests/contrast.test.ts). |
 | `--tk-color-tint-cream-raised` | `#E9E0D1` | Warm-cream raised step (v2, business). AA sanctioned: text-primary 9.655:1; text-secondary = 4.306:1 FAILS 4.5:1 — NOT sanctioned on raised cream, use text-primary there (the v1 on-tint ruling precedent; tests/contrast.test.ts). |
+| `--tk-color-tint-brown` | `#8D6040` | Measured (Story 9.1) — stepper badge fill `#8D6040` from the archived reference block (.playwright-cli/verify/stepper/reference-block.png; the 7.3 placeholder mapped it to tint-cream-raised). Theme-invariant (charcoal mold). AA REQUIRED: white numeral 5.413:1 ✓, on tint-cream 4.674:1 ✓; RECORDED-FAILING: on tint-cream-raised 4.136:1 (the badge never sits there — its card overlap is white). DESIGN.md Colors. |
 | `--tk-color-link` | `#1771E6` | Semantic alias — `blue-100`, added in Story 1.3: components consume semantics, not scales (AD-2/AD-3), and the dark layer needs a semantic name to override (`dark-link`). DESIGN.md Colors (TextLink). |
 | `--tk-color-error` | `#E01F19` | Semantic alias — `red-100`, added in Story 1.3 alongside `link` so both themes expose error semantics (the dark layer overrides it with `dark-error`). DESIGN.md Colors. |
 | `--tk-color-error-on-field` | `#D3120E` | AA addition — `red-200` for errors on field/muted surfaces (red-100 = 4.22:1 on surface-field and 4.40:1 on surface-muted — both fail 4.5:1; red-200 passes). Mirrors the link-on-tint precedent. DESIGN.md Colors. |
@@ -121,6 +122,9 @@ Per-slot tokens from the `typography` block: `--tk-text-<slot>-size` / `-weight`
 | --- | --- | --- |
 | `--tk-font-heading` | `DaytonaSans, DaytonaPragma, Inter, -apple-system, system-ui, "Segoe UI", "Helvetica Neue", sans-serif` |  |
 | `--tk-font-body` | `DaytonaSans, DaytonaPragma, Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif` |  |
+| `--tk-font-mono` | `ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace` |  |
+
+The mono slot comes from the `fonts` block (story 9.1): a system-first monospace chain for tabular/code faces, no licensed asset. It has no consumer in 9.1 by design — the first is the invest tables story (11.2).
 
 Daytona-first stacks (maintainer license decision, 2026-09-22): the bundled licensed renames are the default. **DaytonaSans** = `Neue Haas Unica W1G` (renamed build, usage + renaming license from Monotype held by the maintainer) ships in `packages/tokens/fonts/` — import `pillkit-tokens/daytona.css` and the slots render it; **DaytonaPragma** = Pragmatica (ParaType, same arrangement) ships at true weights 400/500/700 (Book/Medium/Bold cuts; no SemiBold — 600/700 requests match the 700 face). Both are separately-licensed assets, NOT covered by the package MIT license (`fonts/LICENSE-FONTS.md`). `TinkoffSans` (the site's heading font, `dsHeading`) remains proprietary/unavailable, so DaytonaSans takes the heading role as the closest licensed grotesk. Consumers self-hosting the originals override the slots with the family names first (recipe below, unchanged); the open fallback is **Inter**, then the site-mirroring system chain.
 
@@ -272,6 +276,7 @@ These semantics keep their light values in dark — no override is emitted:
 
 - `--tk-color-text-on-primary` — yellow keeps ink text in dark (DESIGN.md Colors)
 - `--tk-color-tint-charcoal` — charcoal tint is theme-invariant (DESIGN.md Colors)
+- `--tk-color-tint-brown` — brown tint is theme-invariant — the stepper badge keeps its fill + white numeral in dark (DESIGN.md Colors, story 9.1)
 
 ### Tonal elevation
 
@@ -285,3 +290,4 @@ Accounted-for `dark-*` keys with no token-layer emission yet (adding a `dark-*` 
 - `colors.dark-surface-3` — tonal elevation step 3 — DESIGN.md reserves it for Modal-in-dark ("dark theme tonal step 3"); emitted when Modal lands, never as --tk-color-dark-*
 - `colors.dark-elevated` — highest tonal step — reserved for elevated dark chrome; emitted when its consuming component lands, never as --tk-color-dark-*
 - `colors.dark-tint-charcoal` — theme-invariant — charcoal equals the light value (equality asserted at generation); no dark override is emitted
+- `colors.dark-tint-brown` — theme-invariant (charcoal mold, story 9.1) — brown equals the light value (equality asserted at generation); the stepper badge keeps its brown fill + white numeral in dark, no dark override is emitted

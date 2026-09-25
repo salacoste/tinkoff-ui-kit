@@ -69,7 +69,7 @@ const assertNonEmptyMapping = (value, at) => {
 // Frontmatter parsing (pure — design text in, validated document out)
 // ---------------------------------------------------------------------------
 
-const TOKEN_BLOCKS = ['colors', 'shadows', 'motion', 'typography', 'rounded', 'spacing'];
+const TOKEN_BLOCKS = ['colors', 'shadows', 'motion', 'typography', 'fonts', 'rounded', 'spacing'];
 const NON_TOKEN_KEYS = new Set([
   'name',
   'description',
@@ -324,12 +324,17 @@ const DARK_DEFERRED = new Map([
     'dark-tint-charcoal',
     'theme-invariant — charcoal equals the light value (equality asserted at generation); no dark override is emitted',
   ],
+  [
+    'dark-tint-brown',
+    'theme-invariant (charcoal mold, story 9.1) — brown equals the light value (equality asserted at generation); the stepper badge keeps its brown fill + white numeral in dark, no dark override is emitted',
+  ],
 ]);
 
 /** Semantic names deliberately NOT re-declared in dark — they keep their light values. */
 const DARK_INVARIANTS = [
   { name: '--tk-color-text-on-primary', why: 'yellow keeps ink text in dark (DESIGN.md Colors)' },
   { name: '--tk-color-tint-charcoal', why: 'charcoal tint is theme-invariant (DESIGN.md Colors)' },
+  { name: '--tk-color-tint-brown', why: 'brown tint is theme-invariant — the stepper badge keeps its fill + white numeral in dark (DESIGN.md Colors, story 9.1)' },
 ];
 
 /**
@@ -472,6 +477,12 @@ function darkLayerModel(colors, lightNames) {
     colors['dark-tint-charcoal'] === colors['tint-charcoal'],
     `dark-tint-charcoal (${colors['dark-tint-charcoal']}) no longer equals tint-charcoal (${colors['tint-charcoal']}) — the DESIGN.md charcoal invariant changed; revisit DARK_DEFERRED/DARK_INVARIANTS`,
   );
+  // Brown invariant cross-check (story 9.1, charcoal mold): dark-tint-brown
+  // documents that the stepper badge brown equals the light value.
+  assert(
+    colors['dark-tint-brown'] === colors['tint-brown'],
+    `dark-tint-brown (${colors['dark-tint-brown']}) no longer equals tint-brown (${colors['tint-brown']}) — the DESIGN.md brown invariant changed; revisit DARK_DEFERRED/DARK_INVARIANTS`,
+  );
   for (const name of DARK_TOKEN_NOTES.keys()) {
     assert(
       targeted.has(name),
@@ -555,6 +566,33 @@ function typographyModel(typography) {
       { name: '--tk-font-body', value: [...bodyFamilies][0] },
     ],
   };
+}
+
+/**
+ * Fonts — the mono family slot (story 9.1): DESIGN.md declares standalone font
+ * FAMILY stacks here, outside the per-slot `typography` block (whose slots each
+ * carry their own inline stack). Keys emit as `--tk-font-<key>` alongside the
+ * heading/body slots. The allowed-key set is explicit — a new family slot wires
+ * into this model deliberately, never by guessing.
+ */
+function fontsModel(fonts) {
+  assertNonEmptyMapping(fonts, 'fonts');
+  const allowed = new Set(['mono']);
+  const entries = [];
+  for (const [slot, value] of Object.entries(fonts)) {
+    assertKey(slot, `fonts.${slot}`);
+    assert(
+      allowed.has(slot),
+      `unexpected fonts key '${slot}' — wire new family slots into fontsModel deliberately (allowed today: ${[...allowed].join(', ')})`,
+    );
+    assert(
+      typeof value === 'string' && value.trim().length > 0,
+      `fonts.${slot}: expected a font stack string, got ${JSON.stringify(value)}`,
+    );
+    assertValue(value, `fonts.${slot}`);
+    entries.push({ name: `--tk-font-${slot}`, value });
+  }
+  return entries;
 }
 
 /** Rounded / spacing share one shape: flat <n>px mapping under a token prefix. */
@@ -709,6 +747,13 @@ const TOKEN_NOTES = new Map([
     '--tk-color-tint-cream-raised',
     'Warm-cream raised step (v2, business). AA sanctioned: text-primary 9.655:1; text-secondary = 4.306:1 FAILS 4.5:1 — NOT sanctioned on raised cream, use text-primary there (the v1 on-tint ruling precedent; tests/contrast.test.ts).',
   ],
+  // v2 addition (Story 9.1) — the stepper badge brown, measured from the
+  // archived reference block and gated on AA before landing (the 7.3
+  // cream-raised mapping is corrected to the reference's own brown).
+  [
+    '--tk-color-tint-brown',
+    'Measured (Story 9.1) — stepper badge fill `#8D6040` from the archived reference block (.playwright-cli/verify/stepper/reference-block.png; the 7.3 placeholder mapped it to tint-cream-raised). Theme-invariant (charcoal mold). AA REQUIRED: white numeral 5.413:1 ✓, on tint-cream 4.674:1 ✓; RECORDED-FAILING: on tint-cream-raised 4.136:1 (the badge never sits there — its card overlap is white). DESIGN.md Colors.',
+  ],
 ]);
 
 const BLOCK_NOTE_SPACING =
@@ -802,6 +847,13 @@ const FONT_SLOT_COMMENT = [
   '     override replaces the whole value: re-include the fallback stack. */',
 ].join('\n');
 
+/** Mono slot comment (story 9.1) — rides right after the Daytona slots. */
+const FONT_MONO_COMMENT = [
+  '  /* Mono slot — DESIGN.md `fonts` block (story 9.1): system-first chain,',
+  '     no licensed asset. No consumer in 9.1 by design — the first is the',
+  '     invest tables story (11.2). */',
+].join('\n');
+
 function renderCss(model, dark) {
   const parts = [];
   parts.push(
@@ -812,7 +864,7 @@ function renderCss(model, dark) {
       ' *',
       ' * DO NOT EDIT BY HAND — regenerate with `pnpm gen:tokens`.',
       ' * Source of truth: _bmad-output/planning-artifacts/ux-designs/ux-tinkoff-ui-kit-2026-09-21/DESIGN.md',
-      ' * (frontmatter blocks: colors / typography / rounded / spacing / shadows / motion).',
+      ' * (frontmatter blocks: colors / typography / fonts / rounded / spacing / shadows / motion).',
       ' *',
       ' * The `:host` selector keeps every custom property usable inside shadow',
       ' * roots; kit components consume tokens exclusively via var(--tk-*) (FR-1 —',
@@ -828,12 +880,14 @@ function renderCss(model, dark) {
   );
   parts.push(
     cssRule(
-      'Typography — DESIGN.md `typography`. No text-transform lives in tokens: caps render uppercase at usage per DESIGN.md.',
+      'Typography — DESIGN.md `typography` (+ the `fonts` block\'s mono family slot). No text-transform lives in tokens: caps render uppercase at usage per DESIGN.md.',
       [
         ...declarationLines(model.typography.entries),
         '',
         FONT_SLOT_COMMENT,
         ...model.typography.fontSlots.map(({ name, value }) => `  ${name}: ${value};`),
+        FONT_MONO_COMMENT,
+        ...model.fonts.map(({ name, value }) => `  ${name}: ${value};`),
       ],
     ),
   );
@@ -882,8 +936,9 @@ function renderCss(model, dark) {
     [
       '/*',
       ' * Theme invariants — intentionally absent from the dark rule above:',
-      ' * --tk-color-text-on-primary and --tk-color-tint-charcoal keep their light',
-      ' * values (yellow keeps ink text in dark; charcoal stays — DESIGN.md Colors,',
+      ' * --tk-color-text-on-primary, --tk-color-tint-charcoal and',
+      ' * --tk-color-tint-brown keep their light values (yellow keeps ink text in',
+      ' * dark; charcoal and the stepper badge brown stay — DESIGN.md Colors,',
       ' * equality asserted at generation). Typography / radius / spacing / motion /',
       ' * z are theme-invariant too — single source in the :host, :root rules.',
       ' */',
@@ -921,8 +976,8 @@ function renderTs(model, dark) {
     ),
     tsMap(
       'typographyTokens',
-      'Typography tokens — per-slot size/weight/leading/tracking plus the family slots (values: DESIGN.md `typography`).',
-      [...model.typography.entries, ...model.typography.fontSlots],
+      'Typography tokens — per-slot size/weight/leading/tracking plus the family slots (values: DESIGN.md `typography`; mono from the `fonts` block, story 9.1).',
+      [...model.typography.entries, ...model.typography.fontSlots, ...model.fonts],
     ),
     tsMap('radiusTokens', 'Radius tokens (values: DESIGN.md `rounded`).', model.radius),
     tsMap('spaceTokens', 'Spacing tokens — 4-based scale, container width, grid gap (values: DESIGN.md `spacing`).', model.space),
@@ -983,10 +1038,11 @@ function noteOf(entry) {
 }
 
 function renderMd(model, dark) {
-  const { colors, typography, radius, space, shadows, motion, z } = model;
+  const { colors, typography, fonts, radius, space, shadows, motion, z } = model;
   const counts = [
     ['colors', colors.entries.length],
     ['typography', typography.entries.length + typography.fontSlots.length],
+    ['fonts', fonts.length],
     ['radius', radius.length],
     ['spacing', space.length],
     ['shadows', shadows.length],
@@ -998,7 +1054,7 @@ function renderMd(model, dark) {
   lines.push('# pillkit-tokens — canonical token listing', '');
   lines.push('GENERATED FILE — DO NOT EDIT. Regenerate with `pnpm gen:tokens`.', '');
   lines.push(
-    `- Source of truth: \`${DESIGN_MD_PATH}\` frontmatter — blocks \`colors\`, \`typography\`, \`rounded\`, \`spacing\`, \`shadows\`, \`motion\`.`,
+    `- Source of truth: \`${DESIGN_MD_PATH}\` frontmatter — blocks \`colors\`, \`typography\`, \`fonts\`, \`rounded\`, \`spacing\`, \`shadows\`, \`motion\`.`,
     '- The `components:` frontmatter block is consumer spec prose — never rendered.',
     '- The z-scale is scaffold mechanics, not an extraction (own section below).',
     '- The `dark-*` color entries are the palette SOURCE for the dark layer (see "Dark layer") — never emitted as `--tk-color-dark-*` custom properties.',
@@ -1021,7 +1077,16 @@ function renderMd(model, dark) {
   );
   lines.push(mdTable(typography.entries.map((entry) => [mdCode(entry.name), mdCode(entry.value), noteOf(entry)])), '');
   lines.push('### Font family slots', '');
-  lines.push(mdTable(typography.fontSlots.map(({ name, value }) => [mdCode(name), mdCode(value), ''])), '');
+  lines.push(
+    mdTable(
+      [...typography.fontSlots, ...fonts].map(({ name, value }) => [mdCode(name), mdCode(value), '']),
+    ),
+    '',
+  );
+  lines.push(
+    'The mono slot comes from the `fonts` block (story 9.1): a system-first monospace chain for tabular/code faces, no licensed asset. It has no consumer in 9.1 by design — the first is the invest tables story (11.2).',
+    '',
+  );
   lines.push(
     'Daytona-first stacks (maintainer license decision, 2026-09-22): the bundled licensed renames are the default. **DaytonaSans** = `Neue Haas Unica W1G` (renamed build, usage + renaming license from Monotype held by the maintainer) ships in `packages/tokens/fonts/` — import `pillkit-tokens/daytona.css` and the slots render it; **DaytonaPragma** = Pragmatica (ParaType, same arrangement) ships at true weights 400/500/700 (Book/Medium/Bold cuts; no SemiBold — 600/700 requests match the 700 face). Both are separately-licensed assets, NOT covered by the package MIT license (`fonts/LICENSE-FONTS.md`). `TinkoffSans` (the site\'s heading font, `dsHeading`) remains proprietary/unavailable, so DaytonaSans takes the heading role as the closest licensed grotesk. Consumers self-hosting the originals override the slots with the family names first (recipe below, unchanged); the open fallback is **Inter**, then the site-mirroring system chain.',
     '',
@@ -1137,6 +1202,7 @@ export function renderArtifacts(designText) {
   const model = {
     colors: colorsModel(doc.colors),
     typography: typographyModel(doc.typography),
+    fonts: fontsModel(doc.fonts),
     radius: pxMappingModel(doc.rounded, 'rounded', '--tk-radius-'),
     space: pxMappingModel(doc.spacing, 'spacing', '--tk-space-'),
     shadows: shadowsModel(doc.shadows),
@@ -1150,6 +1216,7 @@ export function renderArtifacts(designText) {
     ...model.colors.entries,
     ...model.typography.entries,
     ...model.typography.fontSlots,
+    ...model.fonts,
     ...model.radius,
     ...model.space,
     ...model.shadows,

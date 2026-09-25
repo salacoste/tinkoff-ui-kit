@@ -1,0 +1,10 @@
+tooltip Placements pill-cap probe — built docs bundle (DSF 1, pinned chromium flags)
+==============================================================================
+story: http://127.0.0.1:6191/iframe.html?id=components-tooltip--placements&viewMode=story
+cap token: max-width: calc(var(--tk-space-48) * 6) = 288px
+  placement=top    visible=true  pill 288 x 68.17
+  placement=bottom visible=true  pill 288 x 68.17
+  placement=left   visible=true  pill 288 x 68.17
+  placement=right  visible=true  pill 288 x 68.17
+------------------------------------------------------------------------------
+VERDICT: all 4 pills measure exactly 288px — the max-width cap pins geometry (CI tolerance retirement is structural).

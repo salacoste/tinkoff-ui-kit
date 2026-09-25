@@ -142,6 +142,18 @@ describe('consumed --tk-* tokens exist in the token sheet (spec 1.7 review)', ()
     }
   });
 
+  it('the two 9.1 declarations exist in the sheet (spec 9.1 fixture pin)', () => {
+    // tint-brown is consumed at story 9.1 (stepper.css.ts badge fallback);
+    // --tk-font-mono has NO consumer by design — the first is the invest
+    // tables story (11.2), the deliberate exemption recorded in DESIGN.md's
+    // fonts comment and TOKENS.md. Both pinned so a generator regression that
+    // drops either fails with the NAME, never as later-story noise.
+    const names = ['--tk-color-tint-brown', '--tk-font-mono'] as const;
+    for (const name of names) {
+      expect(declaredTokens, `spec 9.1 declaration '${name}' must exist in tokens.css`).toContain(name);
+    }
+  });
+
   it('derives a real component set (vacuous-exemption guard)', () => {
     expect(componentDirs.size).toBeGreaterThan(0);
     expect(componentDirs, 'the exemption must key off real components').toContain('input');

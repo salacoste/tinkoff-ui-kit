@@ -120,9 +120,12 @@ export const Page: Story = {
       <p>
         Карточки — <code>surface-base</code> на кремовой странице
         (<code>tint-cream</code>; в тёмной теме — собственный тёмный
-        первый проход 6.1), бейдж — <code>tint-cream-raised</code> с
-        текстом <code>text-primary</code> (AA 9,655:1; белый на raised-креме
-        дал бы 1,4:1 — потому чернильный). Моушена нет совсем — ни
+        первый проход 6.1), бейдж — коричневый <code>tint-brown</code> с
+        белой цифрой: измеренное значение эталона (зонд 2026-09-24),
+        токен посадил стори 9.1; инвариант темы (модель charcoal), AA
+        5,413:1. До 9.1 бейдж шёл на <code>tint-cream-raised</code> с
+        чернильной цифрой (ближайшего коричневого токена в слое не было —
+        запись 7.3 в verify/stepper/NOTES.md). Моушена нет совсем — ни
         переходов, ни ховер-подъёма карточек (never-list спеки). Слоты §6:
         <code>--tk-stepper-card-fill</code>,
         <code>--tk-stepper-card-radius</code>,

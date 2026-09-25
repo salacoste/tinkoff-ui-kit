@@ -14,16 +14,14 @@ import { css } from 'lit';
  * under it, both lines the SAME text-primary ink at body-l (the probe refutes
  * a secondary-colored text line — title/text differ by WEIGHT only).
  *
- * THE BROWN MAPPING — FLAGGED (flag-don't-invent): the reference badge is
- * #8D6040 (probe-measured), a mid warm-brown with NO honest-near token in the
- * layer (the warm family tops out at tint-cream-raised #E9E0D1, ~3× lighter;
- * nothing brown exists anywhere in the palette). Per the no-invention rule the
- * badge ships on the nearest WARM-FAMILY surface token — tint-cream-raised —
- * with the layer's own AA-sanctioned pairing text-primary on cream-raised
- * (TOKENS.md: 9.655:1; white numerals on #E9E0D1 would measure ~1.4:1). The
- * reference's white-on-brown numeral becomes ink-on-cream. The chromatic gap
- * is RECORDED in .playwright-cli/verify/stepper/NOTES.md for the maintainer —
- * a brown token decision belongs to the token layer, never here.
+ * THE BROWN BADGE — RESOLVED (story 9.1): the reference badge is #8D6040
+ * (probe-measured). At stepper ship time (7.3) no honest-near token existed,
+ * so the badge shipped on tint-cream-raised with an ink numeral (the
+ * flag-don't-invent disposition, recorded in verify/stepper/NOTES.md). Story
+ * 9.1 lands the measured value AS the `tint-brown` token — theme-invariant
+ * (the charcoal mold) with white numeral (AA 5.413:1; on tint-cream 4.674:1)
+ * — and the badge consumes it directly: the reference's white-on-brown
+ * numeral is restored.
  *
  * THE HEADING REGISTER: the reference block heading («Откройте счет для
  * бизнеса», probe-measured ~44px/700 — a 30px dense cap core, refuting the
@@ -39,10 +37,10 @@ import { css } from 'lit';
  * - `--tk-stepper-heading`   block heading color (default text-primary)
  * - `--tk-stepper-card-fill` card fill          (default surface-base)
  * - `--tk-stepper-card-radius` card radius      (default radius-xl = 24)
- * - `--tk-stepper-badge-fill` number badge fill (default tint-cream-raised —
- *   the FLAGGED brown mapping, see above)
- * - `--tk-stepper-badge-number` numeral color   (default text-primary — the
- *   cream-raised AA pairing; white belongs to the unmapped brown)
+ * - `--tk-stepper-badge-fill` number badge fill (default tint-brown — the
+ *   measured reference value, story 9.1; theme-invariant)
+ * - `--tk-stepper-badge-number` numeral color   (default white — the AA
+ *   pairing on brown, 5.413:1)
  * - `--tk-stepper-badge-radius` badge radius    (default radius-lg)
  * - `--tk-stepper-title` step title color       (default text-primary)
  * - `--tk-stepper-text` step text color         (default text-primary — the
@@ -144,7 +142,7 @@ export const stepperStyles = css`
     height: 56px;
     transform: translate(-50%, -50%);
     border-radius: var(--tk-stepper-badge-radius, var(--tk-radius-lg));
-    background: var(--tk-stepper-badge-fill, var(--tk-color-tint-cream-raised));
+    background: var(--tk-stepper-badge-fill, var(--tk-color-tint-brown));
   }
 
   .step__number {
@@ -152,7 +150,7 @@ export const stepperStyles = css`
     font-size: var(--tk-text-heading-6-size);
     font-weight: var(--tk-text-heading-6-weight);
     line-height: 1;
-    color: var(--tk-stepper-badge-number, var(--tk-color-text-primary));
+    color: var(--tk-stepper-badge-number, var(--tk-color-white));
   }
 
   /* Title/text: body-l both, SAME ink (probe), weight-only distinction — the

@@ -23,6 +23,16 @@ describe('pillkit-tokens generated maps', () => {
     expect(typographyTokens['--tk-font-body']).toBe(body);
   });
 
+  it('emits the 9.1 additions: measured tint-brown + the mono family slot (story 9.1)', () => {
+    expect(colorTokens['--tk-color-tint-brown']).toBe('#8D6040');
+    expect(typographyTokens['--tk-font-mono']).toBe(
+      'ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace',
+    );
+    // Mono has NO 9.1 consumer by design — the first is the invest tables
+    // story (11.2); the deliberate exemption is recorded in DESIGN.md's
+    // fonts comment and TOKENS.md.
+  });
+
   it('keeps caps-s tracking separate (no text-transform in tokens)', () => {
     expect(typographyTokens['--tk-text-caps-s-tracking']).toBe('1px');
     expect(Object.keys(tokens).some((name) => name.includes('transform'))).toBe(false);
@@ -154,6 +164,9 @@ describe('pillkit-tokens dark layer (Story 1.3)', () => {
   it('keeps the invariants at their light values — no dark re-declaration', () => {
     expect(darkNames.has('--tk-color-text-on-primary')).toBe(false);
     expect(darkNames.has('--tk-color-tint-charcoal')).toBe(false);
+    // Story 9.1: the stepper badge brown is theme-invariant (the charcoal
+    // mold) — the badge keeps its fill + white numeral in dark.
+    expect(darkNames.has('--tk-color-tint-brown')).toBe(false);
   });
 
   it('re-declares only semantic colors and shadows — typography/radius/spacing/motion/font stay single-source', () => {

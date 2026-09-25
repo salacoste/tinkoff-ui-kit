@@ -1,0 +1,157 @@
+== identify ==
+.playwright-cli/captures-v2/business/pattern-application-form.png PNG 580x430 580x430+0+0 8-bit sRGB 17748B 0.000u 0:00.000
+.playwright-cli/captures-v2/business/pattern-application-form-detail.png PNG 1280x485 1280x485+0+0 8-bit sRGB 36935B 0.000u 0:00.000
+
+== pattern-application-form-detail.png (1280x485) — layout scanlines ==
+-- row y=240 (crosses the grey #F2F4F7 segmented track inside the card) --
+
+$ magick .playwright-cli/captures-v2/business/pattern-application-form-detail.png -crop 1280x1+0+240 txt:- | awk -F: 'NR>1 {gsub(/^  */, "", $2); print $2}' | uniq -c
+  74 (241,238,232)  #F1EEE8  srgb(241,238,232)
+   3 (240,237,231)  #F0EDE7  srgb(240,237,231)
+   1 (239,236,230)  #EFECE6  srgb(239,236,230)
+   1 (238,235,229)  #EEEBE5  srgb(238,235,229)
+   1 (237,234,228)  #EDEAE4  srgb(237,234,228)
+   1 (236,233,227)  #ECE9E3  srgb(236,233,227)
+   1 (234,231,225)  #EAE7E1  srgb(234,231,225)
+   1 (232,229,223)  #E8E5DF  srgb(232,229,223)
+   1 (230,227,221)  #E6E3DD  srgb(230,227,221)
+   1 (227,224,219)  #E3E0DB  srgb(227,224,219)
+   1 (224,221,216)  #E0DDD8  srgb(224,221,216)
+   1 (221,218,213)  #DDDAD5  srgb(221,218,213)
+   1 (218,215,209)  #DAD7D1  srgb(218,215,209)
+ 284 (255,255,255)  #FFFFFF  white
+ 536 (242,244,247)  #F2F4F7  srgb(242,244,247)
+ 284 (255,255,255)  #FFFFFF  white
+   1 (218,215,209)  #DAD7D1  srgb(218,215,209)
+   1 (221,218,213)  #DDDAD5  srgb(221,218,213)
+   1 (224,221,216)  #E0DDD8  srgb(224,221,216)
+   1 (227,224,219)  #E3E0DB  srgb(227,224,219)
+   1 (230,227,221)  #E6E3DD  srgb(230,227,221)
+   1 (232,229,223)  #E8E5DF  srgb(232,229,223)
+   1 (234,231,225)  #EAE7E1  srgb(234,231,225)
+   1 (236,233,227)  #ECE9E3  srgb(236,233,227)
+   1 (237,234,228)  #EDEAE4  srgb(237,234,228)
+   1 (238,235,229)  #EEEBE5  srgb(238,235,229)
+   1 (239,236,230)  #EFECE6  srgb(239,236,230)
+   3 (240,237,231)  #F0EDE7  srgb(240,237,231)
+  74 (241,238,232)  #F1EEE8  srgb(241,238,232)
+-- column x=200 (left third; card top edge + heading text) --
+
+$ magick .playwright-cli/captures-v2/business/pattern-application-form-detail.png -crop 1x485+200+0 txt:- | awk -F: 'NR>1 {gsub(/^  */, "", $2); print $2}' | uniq -c
+ 106 (241,238,232)  #F1EEE8  srgb(241,238,232)
+   2 (240,237,231)  #F0EDE7  srgb(240,237,231)
+   5 (51,51,51)  #333333  grey20
+ 318 (255,255,255)  #FFFFFF  white
+   5 (254,254,254)  #FEFEFE  srgb(254,254,254)
+   3 (253,253,253)  #FDFDFD  srgb(253,253,253)
+   2 (252,252,252)  #FCFCFC  grey99
+   2 (251,251,251)  #FBFBFB  srgb(251,251,251)
+   1 (250,250,250)  #FAFAFA  grey98
+   2 (249,249,249)  #F9F9F9  srgb(249,249,249)
+   1 (248,248,248)  #F8F8F8  srgb(248,248,248)
+  38 (255,255,255)  #FFFFFF  white
+-- column x=640 (center; tan art zone above, track, fields) --
+
+$ magick .playwright-cli/captures-v2/business/pattern-application-form-detail.png -crop 1x485+640+0 txt:- | awk -F: 'NR>1 {gsub(/^  */, "", $2); print $2}' | uniq -c | head -12
+  16 (241,238,232)  #F1EEE8  srgb(241,238,232)
+  12 (232,223,208)  #E8DFD0  srgb(232,223,208)
+   1 (231,222,208)  #E7DED0  srgb(231,222,208)
+  28 (231,222,207)  #E7DECF  srgb(231,222,207)
+   1 (231,222,208)  #E7DED0  srgb(231,222,208)
+   2 (232,223,208)  #E8DFD0  srgb(232,223,208)
+  46 (241,238,232)  #F1EEE8  srgb(241,238,232)
+   2 (240,237,231)  #F0EDE7  srgb(240,237,231)
+   5 (51,51,51)  #333333  grey20
+  67 (255,255,255)  #FFFFFF  white
+   1 (238,238,238)  #EEEEEE  srgb(238,238,238)
+   2 (151,151,151)  #979797  srgb(151,151,151)
+
+== pattern-application-form.png (580x430) — layout scanlines ==
+-- row y=1 (pure white: card top edge is clipped ABOVE this capture) --
+
+$ magick .playwright-cli/captures-v2/business/pattern-application-form.png -crop 580x1+0+1 txt:- | awk -F: 'NR>1 {gsub(/^  */, "", $2); print $2}' | uniq -c
+ 580 (255,255,255)  #FFFFFF  white
+-- row y=100 (card body: white | grey 534 track | white) --
+
+$ magick .playwright-cli/captures-v2/business/pattern-application-form.png -crop 580x1+0+100 txt:- | awk -F: 'NR>1 {gsub(/^  */, "", $2); print $2}' | uniq -c
+  22 (255,255,255)  #FFFFFF  white
+   1 (249,250,251)  #F9FAFB  srgb(249,250,251)
+ 534 (242,244,247)  #F2F4F7  srgb(242,244,247)
+   1 (249,250,251)  #F9FAFB  srgb(249,250,251)
+  22 (255,255,255)  #FFFFFF  white
+-- row y=331 (last white row: white EDGE-TO-EDGE — the card's left/right edges clip past the frame, so its bottom corners are out of frame) --
+
+$ magick .playwright-cli/captures-v2/business/pattern-application-form.png -crop 580x1+0+331 txt:- | awk -F: 'NR>1 {gsub(/^  */, "", $2); print $2}' | uniq -c
+ 580 (255,255,255)  #FFFFFF  white
+-- row y=333 (full-width shadow line = card bottom edge, no corner arcs visible in frame) --
+
+$ magick .playwright-cli/captures-v2/business/pattern-application-form.png -crop 580x1+0+333 txt:- | awk -F: 'NR>1 {gsub(/^  */, "", $2); print $2}' | uniq -c
+ 580 (192,189,184)  #C0BDB8  srgb(192,189,184)
+-- row y=429 (pure cream below the shadow) --
+
+$ magick .playwright-cli/captures-v2/business/pattern-application-form.png -crop 580x1+0+429 txt:- | awk -F: 'NR>1 {gsub(/^  */, "", $2); print $2}' | uniq -c
+ 580 (241,238,232)  #F1EEE8  srgb(241,238,232)
+-- column x=290 (center: track + card bottom fade to cream) --
+
+$ magick .playwright-cli/captures-v2/business/pattern-application-form.png -crop 1x430+290+0 txt:- | awk -F: 'NR>1 {gsub(/^  */, "", $2); print $2}' | uniq -c | head -12
+  52 (255,255,255)  #FFFFFF  white
+   1 (238,238,238)  #EEEEEE  srgb(238,238,238)
+   2 (151,151,151)  #979797  srgb(151,151,151)
+   1 (244,244,244)  #F4F4F4  srgb(244,244,244)
+  36 (255,255,255)  #FFFFFF  white
+  56 (242,244,247)  #F2F4F7  srgb(242,244,247)
+  32 (255,255,255)  #FFFFFF  white
+   1 (235,239,243)  #EBEFF3  srgb(235,239,243)
+ 152 (255,255,255)  #FFFFFF  white
+   1 (192,189,184)  #C0BDB8  srgb(192,189,184)
+   1 (192,190,185)  #C0BEB9  srgb(192,190,185)
+   1 (193,191,186)  #C1BFBA  srgb(193,191,186)
+
+== arc-staircase corner probe (closed-form radii; median + IQR) ==
+
+$ node .playwright-cli/verify/tokens-9-1/probe-radius.mjs
+rounded.3xl decision-gate probe — archived business form-card captures
+==============================================================================
+.playwright-cli/captures-v2/business/pattern-application-form-detail.png (1280x485)
+  card edges (near-white, corner-local): left x=88  right x=1191  top y=113
+  (rowStarts over rows 300..400: min 88 / P1 88 / median 88 / max 88; colStarts P1 113, median 113)
+  top-left corner -> r = 23.8px  (IQR 23.5–24.7)
+    row Y= 2 inset= 14 -> r=23.5
+    row Y= 3 inset= 12 -> r=23.5
+    row Y= 4 inset= 11 -> r=24.4
+    row Y= 5 inset=  9 -> r=23.5
+    row Y= 6 inset=  8 -> r=23.8
+    row Y= 7 inset=  7 -> r=23.9
+    row Y= 8 inset=  6 -> r=23.8
+    row Y= 9 inset=  5 -> r=23.5
+    row Y=10 inset=  5 -> r=25.0
+    row Y=11 inset=  4 -> r=24.4
+    row Y=12 inset=  3 -> r=23.5
+    row Y=13 inset=  3 -> r=24.8
+    row Y=14 inset=  2 -> r=23.5
+    row Y=15 inset=  2 -> r=24.7
+    row Y=16 inset=  2 -> r=26.0
+  top-right corner -> r = 23.8px  (IQR 23.5–24.7)
+    row Y= 2 inset= 14 -> r=23.5
+    row Y= 3 inset= 12 -> r=23.5
+    row Y= 4 inset= 11 -> r=24.4
+    row Y= 5 inset=  9 -> r=23.5
+    row Y= 6 inset=  8 -> r=23.8
+    row Y= 7 inset=  7 -> r=23.9
+    row Y= 8 inset=  6 -> r=23.8
+    row Y= 9 inset=  5 -> r=23.5
+    row Y=10 inset=  5 -> r=25.0
+    row Y=11 inset=  4 -> r=24.4
+    row Y=12 inset=  3 -> r=23.5
+    row Y=13 inset=  3 -> r=24.8
+    row Y=14 inset=  2 -> r=23.5
+    row Y=15 inset=  2 -> r=24.7
+    row Y=16 inset=  2 -> r=26.0
+------------------------------------------------------------------------------
+.playwright-cli/captures-v2/business/pattern-application-form.png (580x430)
+  corners OUT OF FRAME: rows through y=332 are white edge-to-edge (card edges
+  clip past the frame); y=333 is a full-width shadow line. No radius read;
+  this capture corroborates layout only (see scanline tables).
+------------------------------------------------------------------------------
+VERDICT input: median across 2 measured corner(s) = 23.8px
+Gate: >= 28px -> rounded.3xl lands (32 or probed integer 30-34); < 28px -> no token, scope reduces to tokens 1+3.

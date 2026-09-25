@@ -20,7 +20,8 @@ import { buildStoryUrl } from './stories';
  *   ruling (non-essential; DESIGN.md Colors) and are held to ≥3:1.
  * - LIGHT-ONLY LEFTOVERS — the lightblue-200 bug class: a background /
  *   border / text color that does NOT change in dark is only legal for the
- *   theme-invariant families (yellow, green, ink, white-text) and the
+ *   theme-invariant families (yellow, green, ink, brown — the 9.1 stepper
+ *   badge tint, the charcoal mold — and white-text) and the
  *   documented Tier-B pattern (a white pill that sits on an invariant
  *   charcoal card, re-scoped by the 3.7 review fix). Anything else keeping
  *   its light value in dark is a finding.
@@ -336,6 +337,8 @@ const INK: readonly Rgba[] = [
   [51, 51, 51, 1],
   [0, 0, 0, 1],
 ];
+/** Story 9.1: tint-brown #8D6040 — the stepper badge fill, theme-invariant per the charcoal mold (DESIGN.md Colors). */
+const BROWN: readonly Rgba[] = [[141, 96, 64, 1]];
 const WHITE: Rgba = [255, 255, 255, 1];
 /** Functional-scale INDICATOR fills (progress fill, status chips): text-less elements may keep them across the flip (the R2 redundancy ruling — aria carries the state). */
 const INDICATOR_FILLS: readonly Rgba[] = [
@@ -344,7 +347,7 @@ const INDICATOR_FILLS: readonly Rgba[] = [
   [224, 31, 25, 1],
   [211, 18, 14, 1],
 ];
-const FORCE_INVARIANT: readonly Rgba[] = [...YELLOW, ...GREEN, ...INK];
+const FORCE_INVARIANT: readonly Rgba[] = [...YELLOW, ...GREEN, ...INK, ...BROWN];
 const inFamily = (c: Rgba, family: readonly Rgba[]): boolean =>
   family.some((member) => sameColor(c, member));
 

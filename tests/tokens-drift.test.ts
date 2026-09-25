@@ -126,4 +126,47 @@ describe('token-pipeline drift (spec 1.2 review)', () => {
     expect(mutated, 'mutation did not apply — the border-table anchor moved').not.toBe(original);
     expect(() => renderArtifacts(mutated)).toThrow(/border-table/);
   });
+
+  it('renderer fails loudly on an unwired fonts key (spec 9.1, negative self-check)', () => {
+    // The fonts block's allowed-key set is explicit — a new family slot must
+    // wire into fontsModel deliberately, never render by guess.
+    const original = readFileSync(DESIGN_MD, 'utf8');
+    const mono = `  mono: 'ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace'`;
+    const mutated = original.replace(mono, `${mono}\n  serif: 'Georgia, serif'`);
+    expect(mutated, 'mutation did not apply — the fonts mono anchor moved').not.toBe(original);
+    expect(() => renderArtifacts(mutated)).toThrow(
+      /unexpected fonts key 'serif' — wire new family slots into fontsModel deliberately/,
+    );
+  });
+
+  it('renderer fails loudly when the fonts block is removed (spec 9.1, negative self-check)', () => {
+    // TOKEN_BLOCKS membership is mandatory — like every token block, fonts
+    // cannot silently disappear from the frontmatter.
+    const original = readFileSync(DESIGN_MD, 'utf8');
+    const mutated = original.replace(
+      `fonts:\n  mono: 'ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace'\n`,
+      '',
+    );
+    expect(mutated, 'mutation did not apply — the fonts block anchor moved').not.toBe(original);
+    expect(() => renderArtifacts(mutated)).toThrow(/missing the 'fonts' token block/);
+  });
+
+  it('renderer fails loudly on a fonts value breaking the emission grammar (spec 9.1, negative self-check)', () => {
+    const original = readFileSync(DESIGN_MD, 'utf8');
+    const mutated = original.replace(
+      `  mono: 'ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace'`,
+      `  mono: 'Menlo; monospace'`,
+    );
+    expect(mutated, 'mutation did not apply — the fonts mono anchor moved').not.toBe(original);
+    expect(() => renderArtifacts(mutated)).toThrow(/fonts\.mono/);
+  });
+
+  it('renderer fails loudly when the brown theme-invariant breaks (spec 9.1, negative self-check)', () => {
+    // dark-tint-brown = tint-brown is asserted at generation (the charcoal
+    // mold) — a drifted dark value must abort, not silently re-map the badge.
+    const original = readFileSync(DESIGN_MD, 'utf8');
+    const mutated = original.replace("  dark-tint-brown: '#8D6040'", "  dark-tint-brown: '#7A5236'");
+    expect(mutated, 'mutation did not apply — the dark-tint-brown anchor moved').not.toBe(original);
+    expect(() => renderArtifacts(mutated)).toThrow(/dark-tint-brown.*no longer equals tint-brown/);
+  });
 });

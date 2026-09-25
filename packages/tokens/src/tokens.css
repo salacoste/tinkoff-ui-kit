@@ -4,7 +4,7 @@
  *
  * DO NOT EDIT BY HAND — regenerate with `pnpm gen:tokens`.
  * Source of truth: _bmad-output/planning-artifacts/ux-designs/ux-tinkoff-ui-kit-2026-09-21/DESIGN.md
- * (frontmatter blocks: colors / typography / rounded / spacing / shadows / motion).
+ * (frontmatter blocks: colors / typography / fonts / rounded / spacing / shadows / motion).
  *
  * The `:host` selector keeps every custom property usable inside shadow
  * roots; kit components consume tokens exclusively via var(--tk-*) (FR-1 —
@@ -74,6 +74,8 @@
   --tk-color-tint-cream: #F1EEE8;
   /* Warm-cream raised step (v2, business). AA sanctioned: text-primary 9.655:1; text-secondary = 4.306:1 FAILS 4.5:1 — NOT sanctioned on raised cream, use text-primary there (the v1 on-tint ruling precedent; tests/contrast.test.ts). */
   --tk-color-tint-cream-raised: #E9E0D1;
+  /* Measured (Story 9.1) — stepper badge fill `#8D6040` from the archived reference block (.playwright-cli/verify/stepper/reference-block.png; the 7.3 placeholder mapped it to tint-cream-raised). Theme-invariant (charcoal mold). AA REQUIRED: white numeral 5.413:1 ✓, on tint-cream 4.674:1 ✓; RECORDED-FAILING: on tint-cream-raised 4.136:1 (the badge never sits there — its card overlap is white). DESIGN.md Colors. */
+  --tk-color-tint-brown: #8D6040;
   /* Semantic alias — `blue-100`, added in Story 1.3: components consume semantics, not scales (AD-2/AD-3), and the dark layer needs a semantic name to override (`dark-link`). DESIGN.md Colors (TextLink). */
   --tk-color-link: #1771E6;
   /* Semantic alias — `red-100`, added in Story 1.3 alongside `link` so both themes expose error semantics (the dark layer overrides it with `dark-error`). DESIGN.md Colors. */
@@ -82,7 +84,7 @@
   --tk-color-error-on-field: #D3120E;
 }
 
-/* Typography — DESIGN.md `typography`. No text-transform lives in tokens: caps render uppercase at usage per DESIGN.md. */
+/* Typography — DESIGN.md `typography` (+ the `fonts` block's mono family slot). No text-transform lives in tokens: caps render uppercase at usage per DESIGN.md. */
 :host,
 :root {
   --tk-text-heading-1-size: 50px;
@@ -138,6 +140,10 @@
      override replaces the whole value: re-include the fallback stack. */
   --tk-font-heading: DaytonaSans, DaytonaPragma, Inter, -apple-system, system-ui, "Segoe UI", "Helvetica Neue", sans-serif;
   --tk-font-body: DaytonaSans, DaytonaPragma, Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* Mono slot — DESIGN.md `fonts` block (story 9.1): system-first chain,
+     no licensed asset. No consumer in 9.1 by design — the first is the
+     invest tables story (11.2). */
+  --tk-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
 }
 
 /* Radius — DESIGN.md `rounded` (pill register for controls, marketing registers for cards). */
@@ -269,8 +275,9 @@
 
 /*
  * Theme invariants — intentionally absent from the dark rule above:
- * --tk-color-text-on-primary and --tk-color-tint-charcoal keep their light
- * values (yellow keeps ink text in dark; charcoal stays — DESIGN.md Colors,
+ * --tk-color-text-on-primary, --tk-color-tint-charcoal and
+ * --tk-color-tint-brown keep their light values (yellow keeps ink text in
+ * dark; charcoal and the stepper badge brown stay — DESIGN.md Colors,
  * equality asserted at generation). Typography / radius / spacing / motion /
  * z are theme-invariant too — single source in the :host, :root rules.
  */

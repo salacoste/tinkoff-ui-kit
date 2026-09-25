@@ -91,13 +91,16 @@ async function waitForDecodedCanvas(page: Page): Promise<void> {
  * comparator's intensity threshold against a light background (the dark leg
  * of the same story passes at the default 1.5%). Keyed `${id} [${theme}]`,
  * applied ONLY when process.env.CI is set — local compare stays strict.
- * A structural alternative (story content wide enough to hit the pill
- * max-width cap, pinning geometry) would re-open confirmed baselines —
- * recorded as the revisit condition in deferred-work.md.
+ *
+ * RETIRED at story 9.1: the one entry this carried
+ * ('components-tooltip--placements [light]': 0.13) is gone — the Placements
+ * story now pins its pill GEOMETRY structurally (content long enough to hit
+ * the pill max-width cap 288px, probe-verified in
+ * .playwright-cli/verify/tokens-9-1/), so the platform text-advance class no
+ * longer moves pixels and the default 1.5% covers CI both themes. The map
+ * and its application stay wired for the next platform rendering class.
  */
-const CI_VISUAL_TOLERANCE: Record<string, number> = {
-  'components-tooltip--placements [light]': 0.13,
-};
+const CI_VISUAL_TOLERANCE: Record<string, number> = {};
 
 /** Discovery — a missing/empty index is a loud failure with build guidance. */
 let storyIds: string[];

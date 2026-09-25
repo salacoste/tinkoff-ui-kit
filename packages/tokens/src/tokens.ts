@@ -58,6 +58,7 @@ export const colorTokens = {
   '--tk-color-surface-row-hover': 'rgba(36,74,127,0.06)',
   '--tk-color-tint-cream': '#F1EEE8',
   '--tk-color-tint-cream-raised': '#E9E0D1',
+  '--tk-color-tint-brown': '#8D6040',
   '--tk-color-link': '#1771E6',
   '--tk-color-error': '#E01F19',
   '--tk-color-error-on-field': '#D3120E',
@@ -90,7 +91,7 @@ export const darkColorTokens = {
   '--tk-color-surface-row-hover': '#FFFFFF1A',
 } as const;
 
-/** Typography tokens — per-slot size/weight/leading/tracking plus the family slots (values: DESIGN.md `typography`). */
+/** Typography tokens — per-slot size/weight/leading/tracking plus the family slots (values: DESIGN.md `typography`; mono from the `fonts` block, story 9.1). */
 export const typographyTokens = {
   '--tk-text-heading-1-size': '50px',
   '--tk-text-heading-1-weight': '700',
@@ -134,6 +135,7 @@ export const typographyTokens = {
   '--tk-text-caps-s-tracking': '1px',
   '--tk-font-heading': 'DaytonaSans, DaytonaPragma, Inter, -apple-system, system-ui, "Segoe UI", "Helvetica Neue", sans-serif',
   '--tk-font-body': 'DaytonaSans, DaytonaPragma, Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif',
+  '--tk-font-mono': 'ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace',
 } as const;
 
 /** Radius tokens (values: DESIGN.md `rounded`). */

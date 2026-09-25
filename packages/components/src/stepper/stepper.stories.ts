@@ -109,7 +109,8 @@ const canvasStyles = html`
     /* On-tint recipe (the tabs 3.3 precedent): the heading sits DIRECTLY on
        the panel surface — charcoal flips it to white. The cards are opaque
        surfaces (surface-base) and keep their own text-primary pairing on
-       every panel; the cream badge keeps the AA cream-raised pairing. */
+       every panel; the brown badge is theme-invariant (tint-brown fill +
+       white numeral in both themes — the charcoal mold, story 9.1). */
     .tks-panel--charcoal tk-stepper {
       --tk-stepper-heading: var(--tk-color-white);
     }
@@ -212,10 +213,11 @@ export const Theming: Story = {
         <code>--tk-stepper-badge-radius</code>,
         <code>--tk-stepper-title</code>,
         <code>--tk-stepper-text</code>.
-        Бейдж эталона — тёплый коричневый, ближайшего честного токена в слое
-        нет: бейдж поставляется на кремовом tint-cream-raised с текстовым
-        text-primary (AA-пара слоя); хроматический зазор зафиксирован для
-        мейнтейнера в verify/stepper/NOTES.md.
+        Бейдж — коричневый <code>tint-brown</code> с белой цифрой: измеренное
+        значение эталона (зонд 2026-09-24), токен посадил стори 9.1;
+        инвариант темы (модель charcoal), AA 5,413:1. До 9.1 бейдж шел на
+        кремовом tint-cream-raised с чернильной цифрой — запись 7.3 в
+        verify/stepper/NOTES.md.
       </p>
       <section class="tks-panel">
         ${stepper({})}

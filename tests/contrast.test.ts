@@ -216,6 +216,14 @@ const AA_PAIRS: readonly AaPair[] = [
   { theme: 'dark', name: 'text-secondary (cream card description) on dark tint-cream', fg: dark('--tk-color-text-secondary'), bg: dark('--tk-color-tint-cream'), min: AA_TEXT, recorded: 8.461 },
   { theme: 'dark', name: 'text-primary on dark tint-cream-raised', fg: dark('--tk-color-text-primary'), bg: dark('--tk-color-tint-cream-raised'), min: AA_TEXT, recorded: 14.68 },
   { theme: 'dark', name: 'text-secondary (cream card description) on dark tint-cream-raised', fg: dark('--tk-color-text-secondary'), bg: dark('--tk-color-tint-cream-raised'), min: AA_TEXT, recorded: 7.989 },
+  // --- 9.1 stepper badge brown: the measured reference value (#8D6040) lands
+  // as its own token — theme-invariant (the charcoal mold, no dark override;
+  // the dark rows would be the same numbers by construction). REQUIRED: the
+  // white numeral on brown, and the badge fill against the page cream.
+  // RECORDED-FAILING: brown on raised cream — the badge never sits there
+  // (its card-top overlap is white); pinned in the rationale-anchors test.
+  { theme: 'light', name: 'stepper badge numeral (white on tint-brown)', fg: colorTokens['--tk-color-white'], bg: colorTokens['--tk-color-tint-brown'], min: AA_TEXT, recorded: 5.413 },
+  { theme: 'light', name: 'stepper badge fill (tint-brown) on page tint-cream', fg: colorTokens['--tk-color-tint-brown'], bg: colorTokens['--tk-color-tint-cream'], min: AA_TEXT, recorded: 4.674 },
 ];
 
 describe('WCAG AA contrast — mechanized DESIGN.md table (spec 1.3)', () => {
@@ -287,6 +295,10 @@ describe('WCAG AA contrast — mechanized DESIGN.md table (spec 1.3)', () => {
     // the pair is not sanctioned (use text-primary there); pinned here so the
     // ruling has a number, per the no-silent-omission rule.
     expect(contrastRatio(colorTokens['--tk-color-text-secondary'], colorTokens['--tk-color-tint-cream-raised'])).toBeCloseTo(4.306, 3);
+    // Brown ruling (9.1): tint-brown on tint-cream-raised FAILS 4.5:1 — the
+    // stepper badge never sits on raised cream (its card-top overlap is
+    // white); pinned so the ruling has a number, never a silent omission.
+    expect(contrastRatio(colorTokens['--tk-color-tint-brown'], colorTokens['--tk-color-tint-cream-raised'])).toBeCloseTo(4.136, 3);
   });
 
   it('computes WCAG ratios per the spec definition (self-check)', () => {

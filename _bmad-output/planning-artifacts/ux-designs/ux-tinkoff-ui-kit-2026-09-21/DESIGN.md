@@ -3,7 +3,7 @@ name: tinkoff-ui-kit
 description: Open-source recreation of the T-Bank (ex-Tinkoff) consumer web design language — yellow-black, pill-shaped, pastel-carded — as a token-first component kit with an authored dark theme.
 status: final
 created: 2026-09-21
-updated: 2026-09-24
+updated: 2026-09-25
 sources:
   - ../../prds/prd-tinkoff-ui-kit-2026-09-21/prd.md
   - ../../briefs/brief-tinkoff-ui-kit-2026-09-21/brief.md
@@ -89,6 +89,13 @@ colors:
   tint-cream-raised: '#E9E0D1'
   dark-tint-cream: '#232220'
   dark-tint-cream-raised: '#2B2823'
+  # v2 — stepper badge brown (business; measured 2026-09-25 from the archived
+  # stepper reference block — .playwright-cli/verify/stepper/reference-block.png:
+  # badge fill #8D6040 with white numeral, AA 5.413:1). Theme-invariant per the
+  # charcoal mold: dark-tint-brown = light value (the badge keeps its brown fill
+  # and white numeral in dark; see the Colors AA table row).
+  tint-brown: '#8D6040'
+  dark-tint-brown: '#8D6040'
   # v2 — dark first-pass table semantics: deltas follow the dark-error/dark-link
   # AA precedent (least-lightened value clearing 4.5:1 on dark-base), divider/hover
   # follow the white-alpha grammar (dark-border #FFFFFF24 / dark-field #FFFFFF1A)
@@ -130,6 +137,11 @@ typography:
   body-m-bold: { fontSize: 15px, fontWeight: '500', fontFamily: 'DaytonaSans, DaytonaPragma, Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif' }
   body-s-bold: { fontSize: 13px, fontWeight: '500', fontFamily: 'DaytonaSans, DaytonaPragma, Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif' }
   caps-s: { fontSize: 12px, fontWeight: '500', letterSpacing: 1px, fontFamily: 'DaytonaSans, DaytonaPragma, Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif', note: 'rendered uppercase — see Typography body' }
+# v2 — mono family slot (story 9.1): system-first monospace chain for
+# tabular/code faces; no licensed asset. No 9.1 consumer by design — the first
+# is the invest tables story (11.2). One key today; new keys wire deliberately.
+fonts:
+  mono: 'ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace'
 rounded:
   xs: 4px
   sm: 8px
@@ -231,8 +243,10 @@ components:
     radius: '{rounded.lg}'
     shadow: default
   stepper:
-    badge-radius: '{rounded.sm}'
-    card-radius: '{rounded.lg}'
+    badge-radius: '{rounded.lg}'
+    card-radius: '{rounded.xl}'
+    badge-fill: '{colors.tint-brown}'
+    badge-number: '{colors.white}'
   store-badges:
     radius: '{rounded.full}'
     fill: '{colors.surface-muted}'
@@ -322,6 +336,7 @@ PRD improvement axis, fidelity checks cover visuals, not ratios):
 | Yellow active indicators (nav underline, tab pill) | 1.34:1 vs white | fails 1.4.11 non-text 3:1 → indicators are always **redundant**: paired with 700-weight ink text (Navbar) or ink text + shadow (Tabs pill); yellow never carries state alone |
 | Table deltas (v2, invest/stocks) | — | **overridden** — `delta-positive` = green-300 `#168821` (4.587:1 on white ✓; site `#00A328` = 3.350:1 fails) / `delta-negative` = red-300 `#C40B08` (6.179:1 ✓; site `#F52222` = 4.090:1 fails). **Scope ruling — deltas are sanctioned on base surfaces only; row-hover/tonal composites fail AA** for at least one leg per theme (green-300: row-hover composite `#F2F4F7` 4.163:1, surface-muted 4.210:1, surface-field 4.039:1; dark `#F63434`: row-hover composite `#313131` 3.382:1, tonal step 1 `#222222` 4.136:1; red-300 clears muted/field/hover at 5.671/5.441/5.608) — 6.2/6.4 hold deltas on unhovered rows or re-derive at 8.2. Dark first-pass **verified (8.2 dark sweep — both HELD)**: `dark-delta-positive` = green-100 `#39B54A` clears ALL three dark surfaces — base 6.533:1, step 1 5.972:1, hover composite `#313131` 4.883:1 (green-300 fails in dark at 3.794:1); `dark-delta-negative` `#F63434` 4.525:1 on base (sanctioned scope; hover `#313131` 3.382:1 / step 1 4.136:1 fail per the scope ruling — a hover-clearing red `#FF7B74` = 5.165:1 exists numerically but is +12.7 L* into the pastel error family, not a delta red; no red scale step passes: red-100 = 3.630:1, site `#F52222` = 4.255:1 on base) |
 | Warm-cream pairings (v2, business) | 4.87–15.90:1 | sanctioned: text-primary 10.911:1 / text-secondary 4.866:1 on `tint-cream`; text-primary 9.655:1 on `tint-cream-raised`; dark: 15.895 / 8.461 on `dark-tint-cream`, 14.680 / 7.989 on `dark-tint-cream-raised`. **text-secondary NOT sanctioned on `tint-cream-raised`** — 4.306:1 fails 4.5:1, use text-primary there (the v1 on-tint ruling precedent) |
+| Stepper badge brown (v2, business, 9.1) | 5.413:1 / 4.674:1 | REQUIRED: white numeral on `tint-brown` **5.413:1** ✓ (badge fill, both themes — `tint-brown` is theme-invariant, charcoal mold); `tint-brown` on `tint-cream` **4.674:1** ✓ (badge over page cream). RECORDED-FAILING: `tint-brown` on `tint-cream-raised` **4.136:1** (< 4.5) — the badge never sits on raised cream (its card-top overlap is white); pinned, not fixed |
 
 ## Typography
 
@@ -410,7 +425,7 @@ Visual specs for the 19 v1 components (behaviors live in EXPERIENCE.md):
 | ComboboxSearch | Field-language search with typeahead listbox (v2) |
 | MegaNav | Two-deep header: bank-wide row (72px) + domain sub-nav row (56px) — extension of tk-navbar (v2, business/invest) |
 | CookieBanner | Consent dialog, `{rounded.lg}` card + default shadow, link + accept (v2) |
-| Stepper | Numbered steps: white cards `{rounded.lg}`, brown number badge overlapping the top edge, white numeral (v2, business) |
+| Stepper | Numbered steps: white cards `{rounded.xl}`, brown number badge overlapping the top edge, white numeral (v2, business) |
 | StoreBadges | App-store pill badges (AppGallery/RuStore/Samsung molds), muted fill, brand icon RIGHT (v2, invest-mobile) |
 | QrBlock | QR install tablist + monochrome QR in white tile `{rounded.lg}` (v2, invest-mobile) |
 

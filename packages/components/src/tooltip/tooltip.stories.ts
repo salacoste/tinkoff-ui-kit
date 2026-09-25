@@ -214,29 +214,47 @@ export const Placements: Story = {
       <p class="tku-note">
         Запрошенная сторона держится, пока помещается; у края вьюпорта
         контроллер переключает на противоположную (все четыре грани). Отступ
-        от триггера — 8.
+        от триггера — 8. Тексты намеренно длинные: пилюля упирается в лимит
+        ширины 288 (--tk-space-48 × 6) и переносится — зонд 9.1 фиксирует
+        ширину всех четырёх ровно на лимите.
       </p>
       <div class="tku-row">
         <figure>
-          <tk-tooltip content="Сверху" placement="top" open>
+          <tk-tooltip
+            content="Сверху: подсказка с длинным текстом упирается в максимум ширины пилюли и переносится на несколько строк"
+            placement="top"
+            open
+          >
             <button type="button">top</button>
           </tk-tooltip>
           <figcaption>placement="top"</figcaption>
         </figure>
         <figure>
-          <tk-tooltip content="Снизу" placement="bottom" open>
+          <tk-tooltip
+            content="Снизу: подсказка с длинным текстом упирается в максимум ширины пилюли и переносится на несколько строк"
+            placement="bottom"
+            open
+          >
             <button type="button">bottom</button>
           </tk-tooltip>
           <figcaption>placement="bottom"</figcaption>
         </figure>
         <figure>
-          <tk-tooltip content="Слева" placement="left" open>
+          <tk-tooltip
+            content="Слева: подсказка с длинным текстом упирается в максимум ширины пилюли и переносится на несколько строк"
+            placement="left"
+            open
+          >
             <button type="button">left</button>
           </tk-tooltip>
           <figcaption>placement="left"</figcaption>
         </figure>
         <figure>
-          <tk-tooltip content="Справа" placement="right" open>
+          <tk-tooltip
+            content="Справа: подсказка с длинным текстом упирается в максимум ширины пилюли и переносится на несколько строк"
+            placement="right"
+            open
+          >
             <button type="button">right</button>
           </tk-tooltip>
           <figcaption>placement="right"</figcaption>
