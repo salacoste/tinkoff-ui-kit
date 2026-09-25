@@ -184,6 +184,17 @@ test.describe('invest landing [1280] cluster', () => {
       const block = page.locator('main tk-qr-block');
       await block.locator('tk-tabs [role="tab"]').nth(1).click();
 
+      // The revealed panel's QR is loading="lazy" inside a just-unhidden
+      // panel — its decode races the rect measurement below (the first CI
+      // round of the 10.2 push caught the flip: ubuntu measured the LOADED
+      // block at 442px, the macOS baseline held the pre-decode 274px —
+      // the stale-clip class; revalidate after the await). Await the
+      // visible image's decode so the clip reflects the settled panel on
+      // every platform.
+      await block
+        .locator('.panel__qr:visible')
+        .evaluate((img) => (img as HTMLImageElement).decode());
+
       const clip = await block.evaluate((node: Element) => {
         const rect = node.getBoundingClientRect();
         return {
@@ -195,7 +206,15 @@ test.describe('invest landing [1280] cluster', () => {
       });
       // Page-level clip (the region rides the page, not a top layer here —
       // the clip keeps the baseline scoped to the block's swapped state).
-      await expect(page).toHaveScreenshot({ clip });
+      // CI-only tolerance (the CI_VISUAL_TOLERANCE mold in visual.spec.ts):
+      // the clip's small area (1200×~442) amplifies the ubuntu-vs-macos
+      // text-advance subpixel deltas of the title/copy/tablist lines to
+      // ~1.45% — the same deltas the full-story legs carry at ~0.2% inside
+      // a full 1280 frame. The QR image itself diffs ZERO cross-platform
+      // (measured on run 36189883158 artifacts). Local compare stays at the
+      // config default.
+      const ciTolerance = process.env.CI ? { maxDiffPixelRatio: 0.03 } : {};
+      await expect(page).toHaveScreenshot({ clip, ...ciTolerance });
     }
   });
 });
