@@ -77,8 +77,11 @@ reduced-motion на всю моторику.
 ## 4. Технические долги (`_bmad-output/implementation-artifacts/deferred-work.md` — первоисточник)
 
 Открытые (с условиями revisit):
-1. **Axe re-entrancy race** — «Axe is already running» в visual-сьюте (3 случая; рецепт
-   фикса: per-frame сериализация промисов в хелпере visual.spec.ts). Самый достойный первый PR.
+1. ~~**Axe re-entrancy race**~~ — **ЗАКРЫТ 2026-09-24/25 (окно 7.2)**: механизм
+   `tests/visual/axe-serialize.ts` (per-worker promise chain + wait-and-retry на «Axe is
+   already running», 5 попыток/250ms+; потребляется visual.spec.ts + homepage.spec.ts);
+   co-driver = сервируемый axe-бандл Storybook-аддона. Полная запись — deferred-work.md
+   (закрытая запись с механизмом).
 2. Mono-шрифт-слот — при первой код-поверхности.
 3. iOS momentum-scroll модалки — real-device проверка (мейнтейнерская).
 4. **SR-спот-чеки VoiceOver+NVDA** — протоколы в 19 сторях, исполнение человеком
