@@ -2,7 +2,7 @@
 #
 # Mirrors the local verification chain 1:1 (the local chain is the source of
 # truth — nothing here weakens or widens it):
-#   pnpm lint → pnpm typecheck → pnpm build → pnpm test → pnpm test:visual
+#   pnpm lint → pnpm build → pnpm typecheck → pnpm test → pnpm test:visual
 #   → impeccable detector over changed UI files (FR-9 / AD-1 intent gate)
 #
 # `pnpm test` includes the gen-drift, tokens-drift, consumed-tokens,
@@ -58,11 +58,18 @@ jobs:
       - name: Lint (typescript-eslint + AD-4 import boundaries)
         run: pnpm lint
 
-      - name: Typecheck (TS 7 native over root surfaces)
-        run: pnpm typecheck
-
       - name: Build (workspace build incl. docs prebuild tokens chain)
         run: pnpm build
+
+      # AFTER Build, deliberately: the root tsconfig includes
+      # packages/*/src/**/*.stories.ts, and docs stories import workspace
+      # packages ('pillkit-tokens' in token-reference.stories.ts) whose types
+      # resolve via each package's dist/*.d.ts — present only once the
+      # workspace is built. Before the 2026-09-25 reorder this step failed
+      # TS2307 on every fresh checkout (Actions red since 6962326 while local
+      # runs kept passing on stale dist).
+      - name: Typecheck (TS 7 native over root surfaces)
+        run: pnpm typecheck
 
       - name: Test (unit + gen/tokens drift + zero-hardcoded + boundaries + preview + contrast)
         run: pnpm test
