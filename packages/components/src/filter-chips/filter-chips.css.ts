@@ -50,6 +50,13 @@ export const filterChipsStyles = css`
     max-width: 100%;
   }
 
+  /* :host display above out-ranks the UA [hidden] rule — enforce hidden
+     (the HOST sheet's own guard; the menu sheet carries its own for the
+     panel — the 8.1 kit-wide sweep). */
+  :host([hidden]) {
+    display: none;
+  }
+
   /* One NON-wrapping row: the overflow scrolls horizontally (the spec's
      anatomy — the reference row never wraps). */
   .row {

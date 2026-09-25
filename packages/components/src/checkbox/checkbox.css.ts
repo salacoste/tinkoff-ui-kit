@@ -44,6 +44,11 @@ export const checkboxStyles = css`
     max-width: 100%;
   }
 
+  /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */
+  :host([hidden]) {
+    display: none;
+  }
+
   /* Disabled (EXPERIENCE State Patterns): 40% opacity, no pointer events at
      the host boundary. The inner input keeps aria-disabled (focusable — the
      button-pilot pattern); the change guard in checkbox.ts reverts any

@@ -51,6 +51,11 @@ export const paginationStyles = css`
     display: block;
   }
 
+  /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */
+  :host([hidden]) {
+    display: none;
+  }
+
   .pagination {
     box-sizing: border-box;
     display: flex;

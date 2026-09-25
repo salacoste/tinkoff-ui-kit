@@ -33,6 +33,11 @@ export const linkStyles = css`
     display: inline;
   }
 
+  /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */
+  :host([hidden]) {
+    display: none;
+  }
+
   /* Interactive-target floor while disabled: clicks die at the element
      boundary (the aria-disabled pattern keeps the link focusable). */
   :host([disabled]) {

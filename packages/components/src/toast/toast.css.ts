@@ -54,6 +54,11 @@ export const toastStyles = css`
       var(--tk-motion-curve-productive-entrance);
   }
 
+  /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */
+  :host([hidden]) {
+    display: none;
+  }
+
   :host([data-exiting]) {
     animation: tk-toast-out var(--tk-motion-duration-fast)
       var(--tk-motion-curve-productive-exit);

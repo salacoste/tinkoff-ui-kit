@@ -3,9 +3,10 @@ import { expect, test, type Page } from 'playwright/test';
 import { buildStoryUrl, THEMES } from './stories';
 
 /**
- * A11Y SWEEP MATRIX (specs 5.1–5.3) — the mechanized engine behind the
- * `.playwright-cli/verify/a11y-sweep/` ledgers. Runs the six-check method's
- * MECHANIZABLE half against the BUILT docs bundle for all 19 components:
+ * A11Y SWEEP MATRIX (specs 5.1–5.3; Group V added by story 8.1) — the
+ * mechanized engine behind the `.playwright-cli/verify/a11y-sweep/`
+ * ledgers. Runs the six-check method's MECHANIZABLE half against the
+ * BUILT docs bundle for all 19 v1 components + the nine v2 surfaces:
  *
  * - CHECK 1 (keyboard, Tab/Shift-Tab legs): a REAL Tab walk over each
  *   component's story — every stop is recorded, and a Shift+Tab walk back
@@ -56,7 +57,7 @@ async function waitForStorySettled(page: Page): Promise<void> {
 
 interface SweepTarget {
   component: string;
-  group: 'I' | 'II' | 'III';
+  group: 'I' | 'II' | 'III' | 'V';
   story: string;
   /** EXACT distinct KIT Tab stops (measured; order is not pinned) — a story
    * adding/removing an interactive surface must update this deliberately. */
@@ -67,6 +68,11 @@ interface SweepTarget {
   underlineStops?: string[];
   /** Stories whose interactive set differs (open menus etc.). */
   scanStory?: string;
+  /** A legitimate ANCESTOR ring carrier (group V: tk-data-table paints the
+   * unified ring on the whole `.row` via `:has(.row__link:focus-visible)`,
+   * not on the stop). Explicit + per-target — the carrier topology stays
+   * closed otherwise (the 5.1 review's permissiveness fix). */
+  ringAncestor?: string;
 }
 
 const SWEEP: readonly SweepTarget[] = [
@@ -92,6 +98,24 @@ const SWEEP: readonly SweepTarget[] = [
   { component: 'tk-feature-card', group: 'III', story: 'components-featurecard--playground', stops: 2, minKitSurfaces: 2 },
   { component: 'tk-service-card', group: 'III', story: 'components-servicecard--playground', stops: 3, minKitSurfaces: 3 },
   { component: 'tk-article-card', group: 'III', story: 'components-articlecard--playground', stops: 3, minKitSurfaces: 3, underlineStops: ['tk-article-card .card__link'] },
+  // --- Group V: the v2 cluster (story 8.1 — the 6.5 engine note's deferred
+  //     matrix extension). Navbar's row here is the MEGA extension story; the
+  //     v1 playground walk stays the Group III row above (both are the contract).
+  { component: 'tk-filter-chips', group: 'V', story: 'components-filterchips--playground', stops: 8, minKitSurfaces: 8 },
+  { component: 'tk-pagination', group: 'V', story: 'components-pagination--playground', stops: 9, minKitSurfaces: 9 },
+  { component: 'tk-combobox-search', group: 'V', story: 'components-comboboxsearch--playground', stops: 1, minKitSurfaces: 1, scanStory: 'components-comboboxsearch--open' },
+  { component: 'tk-navbar', group: 'V', story: 'components-navbar--mega-nav', stops: 14, minKitSurfaces: 14 },
+  { component: 'tk-data-table', group: 'V', story: 'components-datatable--playground', stops: 1, minKitSurfaces: 10, ringAncestor: '.row' },
+  // The playground renders the banner OPEN at first paint (top-layer): a
+  // forward Tab walk from body never enters the top layer (probed — focus
+  // stays on body while Shift+Tab reaches the accept), so the generic walk
+  // runs on the variants story (closed banners + demo triggers) and the
+  // OPEN card's keyboard contract rides the targeted leg below + the
+  // cookie-banner.spec.ts live matrix.
+  { component: 'tk-cookie-banner', group: 'V', story: 'components-cookie-banner--variants', stops: 4, minKitSurfaces: 3, scanStory: 'components-cookie-banner--playground' },
+  { component: 'tk-stepper', group: 'V', story: 'components-stepper--playground', stops: 0, minKitSurfaces: 0 },
+  { component: 'tk-store-badges', group: 'V', story: 'components-storebadges--playground', stops: 3, minKitSurfaces: 3 },
+  { component: 'tk-qr-block', group: 'V', story: 'components-qrblock--playground', stops: 1, minKitSurfaces: 2 },
 ];
 
 /** The live focus-ring token color, resolved from the themed document root. */
@@ -112,9 +136,12 @@ function focusTokenColor(page: Page): Promise<string> {
  * ONE Tab stop probe: reads the DEEPEST active element (through every
  * shadow root), then resolves where the ring should paint. Passed as a real
  * function (Playwright 1.63 no longer CALLS string arrows in evaluate —
- * probed: `evaluate('() => 42')` returns undefined).
+ * probed: `evaluate('() => 42')` returns undefined). The optional argument
+ * names a legitimate ANCESTOR ring carrier (see SweepTarget.ringAncestor —
+ * the group V row-ring pattern); without it the carrier topology stays
+ * self / `+` sibling / `.field` only.
  */
-function probeStop(): StopProbe | null {
+function probeStop(ringAncestor?: string): StopProbe | null {
   const deepActive = (): Element | null => {
     let node = document.activeElement;
     while (node && node.shadowRoot && node.shadowRoot.activeElement) {
@@ -171,6 +198,12 @@ function probeStop(): StopProbe | null {
   const siblingRing = el.nextElementSibling ? readRing(el.nextElementSibling) : null;
   const field = el.closest('.field');
   const fieldRing = field && field !== el ? readRing(field) : null;
+  // Explicitly registered ANCESTOR carrier (tk-data-table's whole-row ring):
+  // resolved only when the registry names the selector — an unconditioned
+  // ancestor sweep would accept rings painted for other reasons (the 5.1
+  // permissiveness class).
+  const ancestorCarrier = ringAncestor ? el.closest(ringAncestor) : null;
+  const ancestorRing = ancestorCarrier && ancestorCarrier !== el ? readRing(ancestorCarrier) : null;
   const anchorStyle = getComputedStyle(el);
   const rect = el.getBoundingClientRect();
   const rootNode = el.getRootNode();
@@ -212,7 +245,7 @@ function probeStop(): StopProbe | null {
     height: rect.height,
     kitSurface: insideKit(el),
     ordinal: seen.__sweepOrd.get(el) ?? -1,
-    rings: [selfRing, siblingRing, fieldRing].filter(
+    rings: [selfRing, siblingRing, fieldRing, ancestorRing].filter(
       (ring): ring is NonNullable<typeof ring> => ring !== null,
     ),
   };
@@ -333,7 +366,7 @@ for (const target of SWEEP) {
       const kitStops: StopProbe[] = [];
       for (let press = 0; press < 80; press += 1) {
         await page.keyboard.press('Tab');
-        const stop = await page.evaluate(probeStop);
+        const stop = await page.evaluate(probeStop, target.ringAncestor);
         if (stop === null) break;
         const key = stopKey(stop);
         if (forward.some((seen) => stopKey(seen) === key)) break; // cycle closed
@@ -356,7 +389,7 @@ for (const target of SWEEP) {
       const revisited = new Set<string>();
       for (let press = 0; press < forward.length + 2; press += 1) {
         await page.keyboard.press('Shift+Tab');
-        const stop = await page.evaluate(probeStop);
+        const stop = await page.evaluate(probeStop, target.ringAncestor);
         if (stop === null) break;
         const key = stopKey(stop);
         if (revisited.has(key)) break;
@@ -646,7 +679,7 @@ test.describe('tk-navbar [360] — the burger drawer', () => {
     // A real Tab inside the trap lands keyboard focus on a drawer link — the
     // unified ring must paint there (deep probe, same as the walk).
     await page.keyboard.press('Tab');
-    const stop = await page.evaluate(probeStop);
+    const stop = await page.evaluate(() => probeStop());
     expect(stop, 'Tab inside the drawer keeps focus on a drawer link').not.toBeNull();
     expect(stop?.host).toBe('tk-navbar');
     expect(
@@ -669,4 +702,41 @@ test.describe('tk-navbar [360] — the burger drawer', () => {
     });
     expect(active).toContain('tk-navbar');
   });
+});
+
+test('tk-cookie-banner: the open card is a REAL keyboard stop with the unified ring; Esc does not dismiss (the recorded ruling)', async ({
+  page,
+}) => {
+  // The playground story renders the banner OPEN at first paint (top-layer).
+  // A forward Tab walk from body never enters the top layer (probed — the
+  // generic walk rides the variants story instead), but the accept pill IS
+  // keyboard-reachable in REVERSE: a bounded Shift+Tab walk from body finds
+  // it (first press may land on the slotted link depending on the entry
+  // point — both directions are keyboard focus, so focus-visible engages).
+  await openStory(page, 'components-cookie-banner--playground', 'light');
+  const tokenColor = await focusTokenColor(page);
+  let stop: StopProbe | null = null;
+  for (let press = 0; press < 5; press += 1) {
+    await page.keyboard.press('Shift+Tab');
+    stop = await page.evaluate(() => probeStop());
+    if (stop?.classes.includes('banner__accept')) break;
+  }
+  expect(stop, 'a bounded Shift+Tab walk reaches the open card’s accept pill').not.toBeNull();
+  expect(stop?.tag).toBe('button');
+  expect(stop?.classes).toContain('banner__accept');
+  expect(stop?.kitSurface, 'the pill lives inside the tk-cookie-banner tree').toBe(true);
+  expect(ringFailures(stop ?? NO_STOP, tokenColor, []), 'the accept ring').toEqual([]);
+
+  // The RECORDED RULING (7.2): consent is a POSITIVE act — Esc is prevented,
+  // never dismisses. Live pin at the story level (unit pins the mechanics).
+  await page.keyboard.press('Escape');
+  const stillOpen = await page.evaluate(() => {
+    const host = document.querySelector('main tk-cookie-banner') as (HTMLElement & { open: boolean }) | null;
+    const card =
+      host?.shadowRoot?.querySelector('div') ??
+      document.querySelector('#tk-overlay-root > div');
+    return { open: host?.open ?? false, cardVisible: card ? getComputedStyle(card).display !== 'none' : false };
+  });
+  expect(stillOpen.open, 'Esc does not dismiss (the deliberate no-dismiss ruling)').toBe(true);
+  expect(stillOpen.cardVisible).toBe(true);
 });

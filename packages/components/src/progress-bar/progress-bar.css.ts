@@ -56,6 +56,11 @@ export const progressBarStyles = css`
     max-width: 100%;
   }
 
+  /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */
+  :host([hidden]) {
+    display: none;
+  }
+
   /* --- Header row (the reference composition): label left, % right, one
      body-s line 8px above the track (capture: ~8–10px gap; 8 is the scale
      step). Rendered only when it carries content (label, slotted %, or the

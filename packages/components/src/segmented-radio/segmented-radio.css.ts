@@ -55,6 +55,11 @@ export const segmentedRadioStyles = css`
     max-width: 100%;
   }
 
+  /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */
+  :host([hidden]) {
+    display: none;
+  }
+
   /* Disabled group (EXPERIENCE State Patterns): 40% opacity, no pointer
      events at the host boundary. The inner inputs keep aria-disabled
      (focusable — the button-pilot pattern); the change guard reverts any

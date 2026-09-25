@@ -59,6 +59,11 @@ export const footerStyles = css`
     display: block;
   }
 
+  /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */
+  :host([hidden]) {
+    display: none;
+  }
+
   .footer {
     font-family: var(--tk-font-body);
     color: var(--tk-color-text-primary);

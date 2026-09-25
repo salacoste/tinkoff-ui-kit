@@ -858,6 +858,42 @@ describe('tk-navbar', () => {
     ).toHaveLength(1);
   });
 
+  it('MEGA empty-name fallback (8.1, 7.1 N1): sub-label=""/burger-label="" fall back to the defaults — no nameless landmark or control', async () => {
+    const el = await mount({
+      props: { links: MEGA_LINKS, subLinks: SUB_LINKS },
+      attributes: { 'sub-label': '', 'burger-label': '' },
+    });
+    // The sub-nav landmark keeps its default name instead of aria-label="".
+    expect(el.shadowRoot?.querySelector('nav.subnav')?.getAttribute('aria-label')).toBe(
+      'Разделы',
+    );
+    // The burger button AND the drawer dialog (same prop) keep «Меню».
+    expect(el.shadowRoot?.querySelector('button.burger')?.getAttribute('aria-label')).toBe(
+      'Меню',
+    );
+    expect(el.shadowRoot?.querySelector('.drawer')?.getAttribute('aria-label')).toBe('Меню');
+    // Whitespace-only is equally empty; a live prop flip re-applies the fallback.
+    el.subLabel = '   ';
+    el.burgerLabel = ' \t ';
+    await elementUpdated(el);
+    expect(el.shadowRoot?.querySelector('nav.subnav')?.getAttribute('aria-label')).toBe(
+      'Разделы',
+    );
+    expect(el.shadowRoot?.querySelector('button.burger')?.getAttribute('aria-label')).toBe(
+      'Меню',
+    );
+    // A REAL override still wins — the fallback is the empty case only.
+    el.subLabel = 'Разделы каталога';
+    el.burgerLabel = 'Открыть меню';
+    await elementUpdated(el);
+    expect(el.shadowRoot?.querySelector('nav.subnav')?.getAttribute('aria-label')).toBe(
+      'Разделы каталога',
+    );
+    expect(el.shadowRoot?.querySelector('button.burger')?.getAttribute('aria-label')).toBe(
+      'Открыть меню',
+    );
+  });
+
   it('MEGA no-channel ruling carries into row 2: sub-link clicks dispatch nothing', async () => {
     const el = await mount({
       props: { links: MEGA_LINKS, subLinks: SUB_LINKS, subActiveValue: 'catalog' },

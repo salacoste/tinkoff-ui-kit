@@ -109,6 +109,11 @@ export const navbarStyles = css`
     display: block;
   }
 
+  /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */
+  :host([hidden]) {
+    display: none;
+  }
+
   /* --- The bar ------------------------------------------------------------- */
   .bar {
     height: var(--tk-navbar-height, 72px);
