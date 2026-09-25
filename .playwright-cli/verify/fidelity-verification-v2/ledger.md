@@ -62,7 +62,7 @@ covers them below):
 `../stocks-catalog/` (6.5 — assembly VERDICT: каркас/кластер/связь совпадают,
 39-шаговый клавиатурный walkthrough; scope fences: без «За год»-колонки,
 вторичных дропдаунов и cookie-оверлея),
-`../business-landing/` (7.4 — 15 отклонений в ledger NOTES:87–117, 6 кит-гэпов
+`../business-landing/` (7.4 — 15 отклонений в ledger NOTES:87–105, 6 кит-гэпов
 зарепортировано в deferred-work),
 `../invest-landing/` (7.5 — 10 assembly-дельт: порядок кластера qr→steps→badges
 опровергнут капчей и поправлен; 2 кит-гэпа в deferred-work).

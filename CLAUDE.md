@@ -96,8 +96,22 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   class 256e5cf adjudicated — the docs PAGE was missed); STOP obeyed by the executor,
   orchestrator adjudicated LEGITIMATE → re-taken exactly-2 (1280×3372→3413, prediction
   exact). Lens SHIP 0/0/5 (3 pointer/arithmetic notes fixed in-window); true unit count
-  trued 876→881 (8.3's +5 had been missed).** **IN FLIGHT: 8.4 (v2 verification ledger +
-  v1.1.0 release PREP — NEVER tag; maintainer gate). Sequencing in
+  trued 876→881 (8.3's +5 had been missed).** **8.4 DONE (b05613d worktree = 83f2b7e
+  verify-trio + batch package, b05613d RELEASE §8 + HANDOFF close; base aa9780f →
+  FAST-FORWARD merge; spec-8-4 closed): fidelity ledger 25 rows (58 documented
+  deviations, HYBRID/pattern-consistency honesty), yellow audit 13/13 PASS (0
+  violations), impeccable kit-wide 207 files exit 0 (lens re-ran the detector + the
+  can-fail probe itself), baseline package ЧАСТЬ v2 (414 PNG; re-takes R-14/R-2/R-2′ =
+  16+2), RELEASE.md «Релиз v1.1.0» §8.1–8.7 (tag = MAINTAINER-only; PROOF nothing
+  executed: tags = v1.0.0 only, versions 1.0.0, CHANGELOG clean), HANDOFF v2 ✅ 14/14.
+  Lens SHIP 0/0/5 (4 citation fixes in-window). Visual proof INHERITED — the range is
+  docs-only and `git diff --exit-code -- packages/ tests/` vs aa9780f is CLEAN (the
+  8.2-close ×2 1368/1368 stands for the bit-identical served tree).** **v2 COMPLETE —
+  14/14 stories (2026-09-25). The repo now waits on the MAINTAINER QUEUE only: (a)
+  baseline batch-confirm (ЧАСТЬ v2 of baseline-review-package.md — 140 new + 18
+  adjudicated re-takes), (b) release v1.1.0 per RELEASE.md §8.1–8.5 (THE tag — never
+  automated), (c) SR spot-checks v2 + iOS momentum-scroll, (d) the stepper brown-token
+  decision. Sequencing in
   epics-v2.md; the v1 component-story gate applies VERBATIM (FR-16). Key v2 decisions: delta
   semantics via AA-override (green-300/red-300); warm-cream family DISTINCT from beige (dark
   first-pass [ASSUMPTION] → 8.2); typography registers = mappings (h1 44→heading-2, 36→heading-3),

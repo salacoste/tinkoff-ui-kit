@@ -45,7 +45,7 @@ find packages/tokens/src packages/components/src packages/react/src \
 | Класс | Метод | Результат |
 |---|---|---|
 | TODO/FIXME/HACK/XXX в shipped-источниках и тестах | grep по всем пакетам + tests/ | **0 хитов** |
-| console/debugger-остатки | grep по 5 корням источников | 3 хита — все `console.log(event.detail.value)` в docs-сториях v2 (шаблон обработчика события в демо, v1-паттерн; не отладка) — НЕ блокер |
+| console/debugger-остатки | grep по 5 корням источников | 3 хита `console.log` — все `console.log(event.detail.value)` в docs-сториях v2 (шаблон обработчика события в демо, v1-паттерн; не отладка); 15 рантайм-`console.warn` вне счёта осознанно — это штатный error-канал кита, не отладка — НЕ блокер |
 | Мёртвый код / файлы-сироты | каждый non-test/non-story .ts в components/src проверен на ссылки | 0 сирот |
 | Закомментированный код | паттерн `^\s*//\s*(const\|let\|import\|if\|for\|return)` | 0 реальных (хиты — проза-комментарии) |
 | Протухшие prose-числа (урок 5.6 «radius-xxl 32») | grep «xxl…32», radius-копирайт store-badges (16→24 truing), pagination bar (52→44), qr note | все заголовки css.ts соответствуют trued-значениям; 0 протухших |
