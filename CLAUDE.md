@@ -111,8 +111,11 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   baseline batch-confirm (ЧАСТЬ v2 of baseline-review-package.md — 140 new + 18
   adjudicated re-takes) — **CONFIRMED 2026-09-25 (gate closed, see the ✅ block in ЧАСТЬ v2)**,
   (b) release v1.1.0 per RELEASE.md §8.1–8.5 (THE tag — never
-  automated), (c) SR spot-checks v2 + iOS momentum-scroll, (d) the stepper brown-token
-  decision. Sequencing in
+  automated), (c) SR spot-checks v2 — **DONE 2026-09-25: VoiceOver 18/18 ✓, zero
+  deviations (run-sheet SR-RUNSHEET-v2.md + digest)**; iOS momentum-scroll stays
+  maintainer-side debt (NOT release-gating), (d) the stepper brown-token
+  decision — **REFUSED 2026-09-25 (recorded in deferred-work 7.3, revisit v1.2.0)**.
+  Sequencing in
   epics-v2.md; the v1 component-story gate applies VERBATIM (FR-16). Key v2 decisions: delta
   semantics via AA-override (green-300/red-300); warm-cream family DISTINCT from beige (dark
   first-pass [ASSUMPTION] → 8.2); typography registers = mappings (h1 44→heading-2, 36→heading-3),

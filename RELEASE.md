@@ -261,6 +261,10 @@ pnpm exec vite
    компонентов (метод — `verify/a11y-sweep/METHOD.md` §SR; VoiceOver; NVDA
    по-прежнему осознанно отложен — нет Windows-машины, решение 2026-09-23
    в §0 выше).
+   **Исполнено 2026-09-25 (мейнтейнер, живая сессия):** VoiceOver-проход по
+   run-sheet `.playwright-cli/verify/a11y-sweep/SR-RUNSHEET-v2.md` (9
+   компонентов × light/dark) — **18/18 ✓, отклонений нет**; v2-таблица
+   дописана в `verify/sr-spot-check/PROTOCOL-DIGEST.md`.
 5. **Решение по коричневому токену бейджа stepper** (deferred-work, 7.3):
    либо добавить токен (DESIGN.md + `pnpm gen:tokens`), либо зафиксировать
    отказ — не блокирует релиз, но решение должно быть записано.

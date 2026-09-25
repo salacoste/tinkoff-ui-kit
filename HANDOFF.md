@@ -94,9 +94,11 @@ v2-базлайнов по ЧАСТИ v2 `baseline-review-package.md` (140 но�
 — **ЗАКРЫТ 2026-09-25: батч подтверждён целиком (salacoste, contact-sheet
 `.playwright-cli/verify/baseline-review-v2.html`; ✅-блок в ЧАСТИ v2)**;
 (b) релиз v1.1.0 по RELEASE.md §8.1–8.5 (bump версий + CHANGELOG + `git tag v1.1.0` —
-тег ТОЛЬКО мейнтейнер); (c) SR-спот-чеки v2 (п. 4) + iOS momentum-scroll (п. 3);
-(d) решение по коричневому токену бейджа stepper (deferred-work 7.3 — добавить токен
-или зафиксировать отказ; не блокирует релиз).
+тег ТОЛЬКО мейнтейнер); (c) SR-спот-чеки v2 — **ЗАКРЫТЫ 2026-09-25: VoiceOver
+18/18 ✓, отклонений нет** (run-sheet `.playwright-cli/verify/a11y-sweep/SR-RUNSHEET-v2.md`,
+v2-таблица в PROTOCOL-DIGEST.md); iOS momentum-scroll (п. 3) остаётся
+мейнтейнерским долгом, релиз не гейтит;
+(d) **РЕШЕНО 2026-09-25 — ОТКАЗ зафиксирован** (deferred-work 7.3, revisit v1.2.0).
 
 ## 5. Нюансы и специфика (уроки, оплаченные багами — НЕ переоткрывайте)
 
