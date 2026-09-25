@@ -10,3 +10,10 @@ export declare function renderArtifacts(designText: string): {
   tokensTs: string;
   tokensMd: string;
 };
+
+/**
+ * The literal (non-AA) design-intent annotations — exported for the story-9.2
+ * migration self-checks in tests/tokens-drift.test.ts (no literal may be
+ * AA-bearing or double-sourced with the `aa-annotations:` block).
+ */
+export declare const TOKEN_NOTE_LITERALS: ReadonlyMap<string, string>;

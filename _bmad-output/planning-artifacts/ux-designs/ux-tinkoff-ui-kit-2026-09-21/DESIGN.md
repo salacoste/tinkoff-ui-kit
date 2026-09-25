@@ -38,6 +38,7 @@ colors:
   red-100: '#E01F19'
   red-200: '#D3120E'
   red-300: '#C40B08'
+  # error-on-field semantic (AA addition, Story 1.3; aa-annotations anchor — the Colors body AA table has no row): red-200 carries errors on field/muted surfaces; red-100 = 4.22:1 on surface-field / 4.40:1 on surface-muted
   white: '#FFFFFF'
   # Semantic — light theme (extracted aliases, AA-adjusted — see Colors body)
   surface-base: '#FFFFFF'
@@ -103,6 +104,67 @@ colors:
   dark-delta-negative: '#F63434' # authored lightened delta red — verified 8.2: base 4.525 ✓ (sanctioned scope); hover composite #313131 3.382 / step1 4.136 fail per the closed 6.1 scope ruling (pinned, live-confirmed)
   dark-border-table: '#FFFFFF1F' # white-alpha hairline at the extracted divider's own alpha (0x1F ≈ 12% white mirrors rgba(0,16,36,0.12)), one step under dark-border — verified 8.2: composite #363636 on base (Δ+13.4 L*), 1.8 L* under the dark-border composite
   dark-surface-row-hover: '#FFFFFF1A' # white-alpha fill grammar — reuses the family's established fill step (dark-field, 10% white); verified 8.2: composite #313131 on base, text pairs on it 13.009/7.303 ✓
+# v2.2 — AA-annotation machine truth (story 9.2): the AA-bearing color notes
+# (TOKENS.md Notes column + tokens.css comments) are GENERATED from this block,
+# not held as generator literals. Grammar per entry: kind (override | addition |
+# restricted | pairing | measured — drives the note prefix), status (verified |
+# assumed — assumed emits a [ASSUMPTION] flag and counts in the TOKENS.md
+# status line), story (closure pointer, required for verified/measured), text
+# (the note body). Every entry must still ANCHOR in the Colors body / colors
+# frontmatter: a line carrying the token ref plus a factual substring (a
+# N.NNN:1 ratio or a hex) from the text — anchor lost → generation aborts.
+# Unknown keys/fields abort; entry names must be declared color semantics.
+aa-annotations:
+  text-secondary:
+    kind: override
+    status: verified
+    story: '1.2'
+    text: 'gray-600 `#616871` replaces the extracted `#79818C` (gray-500, 3.94:1 on white fails 4.5:1; `#616871` = 5.64:1). DESIGN.md Colors.'
+  focus-ring:
+    kind: override
+    status: verified
+    story: '1.2'
+    text: 'unified `blue-100` ring at 2px offset 2px (the reference ink-on-ink ring is invisible; border-default = 1.23:1). DESIGN.md Colors.'
+  link-on-tint:
+    kind: addition
+    status: verified
+    story: '1.2'
+    text: '`blue-200` for links on tinted/field surfaces (blue-100 = 4.07:1 on field, fails). DESIGN.md Colors.'
+  error-on-field:
+    kind: addition
+    status: verified
+    story: '1.3'
+    text: '`red-200` for errors on field/muted surfaces (red-100 = 4.22:1 on surface-field and 4.40:1 on surface-muted — both fail 4.5:1; red-200 passes). Mirrors the link-on-tint precedent. DESIGN.md Colors.'
+  text-muted:
+    kind: restricted
+    status: verified
+    story: '1.2'
+    text: 'placeholder/disabled/non-essential text only — `#959BA4` fails AA for body text. DESIGN.md Colors.'
+  delta-positive:
+    kind: override
+    status: verified
+    story: '6.1'
+    text: 'DESIGN.md reference `{colors.green-300}` resolves to `#168821` (4.587:1 on surface-base): the site''s delta green `#00A328` = 3.350:1 fails 4.5:1. RULING: sanctioned on surface-base only — green-300 fails on surface-muted (4.210:1), surface-field (4.039:1) and the row-hover composite `#F2F4F7` (4.163:1); 6.2/6.4 hold deltas on unhovered rows or re-derive at 8.2. Anchors live in DESIGN.md Colors (Table delta semantics).'
+  delta-negative:
+    kind: override
+    status: verified
+    story: '6.1'
+    text: 'DESIGN.md reference `{colors.red-300}` resolves to `#C40B08` (6.179:1 on surface-base): the site''s delta red `#F52222` = 4.090:1 fails 4.5:1. RULING: sanctioned on surface-base only — red-300 itself clears the adjacent surfaces (muted 5.671:1, field 5.441:1, hover `#F2F4F7` 5.608:1) but the green leg does not, so the pair-level ruling holds: 6.2/6.4 keep deltas on unhovered base-surface rows or re-derive at 8.2. Anchors live in DESIGN.md Colors (Table delta semantics).'
+  tint-cream:
+    kind: pairing
+    status: verified
+    story: '6.1'
+    text: 'Warm-cream family (v2, business) — DISTINCT from tint-beige per step (computed OKLCH vs beige 93.8°/C0.029: base 84.6°/C0.009, raised 80.7°/C0.022 — 9–13° toward orange, chroma 0.31×–0.76×; DESIGN.md Colors). AA sanctioned: text-primary 10.911:1 / text-secondary 4.866:1 on the tint (tests/contrast.test.ts).'
+  tint-cream-raised:
+    kind: pairing
+    status: verified
+    story: '6.1'
+    text: 'Warm-cream raised step (v2, business). AA sanctioned: text-primary 9.655:1; text-secondary = 4.306:1 FAILS 4.5:1 — NOT sanctioned on raised cream, use text-primary there (the v1 on-tint ruling precedent; tests/contrast.test.ts).'
+  tint-brown:
+    kind: measured
+    status: verified
+    story: '9.1'
+    text: 'stepper badge fill `#8D6040` from the archived reference block (.playwright-cli/verify/stepper/reference-block.png; the 7.3 placeholder mapped it to tint-cream-raised). Theme-invariant (charcoal mold). AA REQUIRED: white numeral 5.413:1 ✓, on tint-cream 4.674:1 ✓; RECORDED-FAILING: on tint-cream-raised 4.136:1 (the badge never sits there — its card overlap is white). DESIGN.md Colors.'
 shadows:
   default: '0 4px 24px rgba(0,0,0,.12)'
   default-hover: '0 12px 36px rgba(0,0,0,.2)'

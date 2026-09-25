@@ -3,6 +3,17 @@ import { dirname, isAbsolute, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
+import {
+  ALLOWED_SPECIFIERS,
+  CANONICAL_DIRECTIONS,
+  PACKAGE_DIRS,
+  SCAN_ROOTS,
+  escapeRegexSource,
+  forbiddenGroups,
+} from '../ad4-matrix.mjs';
+import * as ad4Module from '../ad4-matrix.mjs';
+import eslintConfig from '../eslint.config.js';
+
 /**
  * Committed guards for the two spec-1.1 matrix rows that were originally verified
  * ad hoc (add-then-revert lint probe, dist grep):
@@ -10,12 +21,15 @@ import { describe, expect, it } from 'vitest';
  * - Row 2 (import-boundary violation -> lint fails): static scan of workspace
  *   sources against the AD-4 import matrix. Belt to eslint's `no-restricted-imports`
  *   braces — it runs in `pnpm test`, so the test gate alone cannot pass a tree
- *   that violates the allowed directions (components→tokens, react→components,
- *   docs→{react, components, tokens}). Relative imports that resolve out of their
+ *   that violates the allowed directions. Relative imports that resolve out of their
  *   package are mapped to the target package and checked against the same matrix.
  * - Row 3 (build isolation): reads the built `packages/react` artifact and asserts
  *   `pillkit-components` stayed external and no Lit source got bundled; also guards
  *   the `pillkit-tokens` `./tokens.css` export target (`dist/index.css`).
+ *
+ * Story 9.2: the matrix (package dirs, allowed specifiers, scan roots) is
+ * SINGLE-SOURCED in ../ad4-matrix.mjs — this suite, eslint.config.js and the
+ * README pin all derive from it; the matrix lives in exactly one place.
  *
  * Build-artifact assumption: `pnpm build` precedes `pnpm test` — the AC command
  * chain is `pnpm install && pnpm build && pnpm test`. This suite reads `dist/` as
@@ -25,27 +39,7 @@ import { describe, expect, it } from 'vitest';
 const REPO_ROOT = fileURLToPath(new URL('..', import.meta.url));
 
 /** AD-4 allowed import directions: package dir -> allowed pillkit-* specifiers. */
-const AD4_MATRIX: Record<string, readonly string[]> = {
-  'packages/tokens': [],
-  'packages/components': ['pillkit-tokens'],
-  'packages/react': ['pillkit-components'],
-  // docs may import every kit package (AD-4).
-  'packages/docs': ['pillkit-react', 'pillkit-components', 'pillkit-tokens'],
-};
-
-/**
- * Per-package scan roots — this vitest suite is the ONE net covering docs
- * .storybook (chosen over an eslint glob so the boundary rules live in a
- * single place; eslint keeps no docs-specific restriction). The Storybook
- * config dir imports workspace packages (preview.ts pulls the tokens sheet)
- * and must not sit outside the matrix walk.
- */
-const SCAN_ROOTS: Record<string, readonly string[]> = {
-  'packages/tokens': ['src'],
-  'packages/components': ['src'],
-  'packages/react': ['src'],
-  'packages/docs': ['src', '.storybook'],
-};
+const AD4_MATRIX: Record<string, readonly string[]> = ALLOWED_SPECIFIERS;
 
 const SPECIFIER_PATTERNS: readonly RegExp[] = [
   /import\s[^;]*?from\s*['"]([^'"]+)['"]/g,
@@ -189,7 +183,7 @@ describe('AD-4 import boundaries (spec 1.1, matrix row 2)', () => {
     }
     if (violations.length > 0) {
       throw new Error(
-        `AD-4 import-boundary violations (allowed directions: components→tokens, react→components, docs→{react, components, tokens}):\n${violations
+        `AD-4 import-boundary violations (allowed directions: ${CANONICAL_DIRECTIONS}):\n${violations
           .map((violation) => `  - ${violation}`)
           .join('\n')}`,
       );
@@ -213,6 +207,62 @@ describe('AD-4 import boundaries (spec 1.1, matrix row 2)', () => {
     const found = violationsIn(badSource, syntheticPath, 'packages/tokens', AD4_MATRIX['packages/tokens']!);
     expect(found).toHaveLength(5);
     expect(found.every((line) => line.startsWith(syntheticPath))).toBe(true);
+  });
+});
+
+describe('AD-4 single-source module (spec 9.2)', () => {
+  it('type twin declares exactly the module runtime exports (shape-assert)', () => {
+    const twin = readFileSync(join(REPO_ROOT, 'ad4-matrix.d.mts'), 'utf8');
+    const declared = [...twin.matchAll(/export\s+(?:declare\s+)?(?:const|function)\s+([A-Za-z0-9_]+)/g)].map(
+      (match) => match[1]!,
+    );
+    const module = ad4Module;
+    const runtime = Object.keys(module).sort();
+    expect(declared.sort()).toEqual(runtime);
+    expect(runtime.length, 'twin <-> module export sets diverged').toBe(declared.length);
+  });
+
+  it('eslint config restriction blocks equal the derived module exports (structure equality)', () => {
+    const blocks = (eslintConfig as Array<Record<string, unknown>>).filter(
+      (block) =>
+        typeof block === 'object' &&
+        block !== null &&
+        'rules' in block &&
+        (block['rules'] as Record<string, unknown>)['no-restricted-imports'] !== undefined,
+    ) as Array<{ files: string[]; rules: Record<string, unknown> }>;
+    const restricted = PACKAGE_DIRS.filter(
+      (packageDir) => forbiddenGroups(packageDir).length > 0 || escapeRegexSource(packageDir) !== null,
+    );
+    expect(blocks).toHaveLength(restricted.length);
+    for (const packageDir of restricted) {
+      const block = blocks.find(({ files }) =>
+        files.some((glob) => glob.startsWith(`${packageDir}/`)),
+      );
+      expect(block, `no eslint restriction block derived for ${packageDir}`).toBeDefined();
+      const patterns = (
+        (block!.rules['no-restricted-imports'] as [string, { patterns: Array<Record<string, string>> }])[1]
+      ).patterns;
+      const groupPattern = patterns.find((pattern) => 'group' in pattern);
+      const regexPattern = patterns.find((pattern) => 'regex' in pattern);
+      if (forbiddenGroups(packageDir).length > 0) {
+        expect(groupPattern?.group).toEqual(forbiddenGroups(packageDir));
+      } else {
+        expect(groupPattern).toBeUndefined();
+      }
+      expect(regexPattern?.regex ?? null).toEqual(escapeRegexSource(packageDir));
+      for (const pattern of patterns) {
+        expect(pattern.message, `${packageDir} message must embed CANONICAL_DIRECTIONS`).toContain(
+          CANONICAL_DIRECTIONS,
+        );
+      }
+    }
+  });
+
+  it('README pins the canonical directions line verbatim', () => {
+    const readme = readFileSync(join(REPO_ROOT, 'README.md'), 'utf8');
+    expect(readme, 'README must carry ad4-matrix CANONICAL_DIRECTIONS verbatim').toContain(
+      CANONICAL_DIRECTIONS,
+    );
   });
 });
 

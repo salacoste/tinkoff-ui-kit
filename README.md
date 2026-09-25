@@ -167,6 +167,9 @@ Imaging Inc.) и **DaytonaPragma** (переименованная Pragmatica, �
 pnpm install && pnpm build && pnpm test   # зелёный baseline
 pnpm lint                                 # typescript-eslint + AD-4 import boundaries
 pnpm typecheck                            # TS 7 по корневым поверхностям (tests/, конфиги)
+# Матрица AD-4 задана в ad4-matrix.mjs (единый источник для eslint, теста
+# границ импорта и этой строки): allowed directions:
+# components→tokens, react→components, docs→{react, components, tokens}
 pnpm test:visual                          # визуальная регрессия + axe в обеих темах
 ```
 

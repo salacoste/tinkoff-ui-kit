@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
-import { renderArtifacts } from '../packages/tokens/scripts/generate.mjs';
+import { TOKEN_NOTE_LITERALS, renderArtifacts } from '../packages/tokens/scripts/generate.mjs';
 
 /**
  * Token-pipeline drift guard (spec 1.2 review): DESIGN.md is the sole source of
@@ -168,5 +168,96 @@ describe('token-pipeline drift (spec 1.2 review)', () => {
     const mutated = original.replace("  dark-tint-brown: '#8D6040'", "  dark-tint-brown: '#7A5236'");
     expect(mutated, 'mutation did not apply — the dark-tint-brown anchor moved').not.toBe(original);
     expect(() => renderArtifacts(mutated)).toThrow(/dark-tint-brown.*no longer equals tint-brown/);
+  });
+
+  it('renderer fails loudly on an unknown aa-annotations entry field (spec 9.2, negative self-check)', () => {
+    const original = readFileSync(DESIGN_MD, 'utf8');
+    const mutated = original.replace(
+      '  text-secondary:\n    kind: override',
+      '  text-secondary:\n    mood: dark\n    kind: override',
+    );
+    expect(mutated, 'mutation did not apply — the text-secondary entry anchor moved').not.toBe(original);
+    expect(() => renderArtifacts(mutated)).toThrow(
+      /unexpected field 'mood' in aa-annotations\.text-secondary/,
+    );
+  });
+
+  it('renderer fails loudly on an out-of-grammar aa-annotations kind (spec 9.2, negative self-check)', () => {
+    const original = readFileSync(DESIGN_MD, 'utf8');
+    const mutated = original.replace('  text-secondary:\n    kind: override', '  text-secondary:\n    kind: whim');
+    expect(mutated, 'mutation did not apply — the text-secondary entry anchor moved').not.toBe(original);
+    expect(() => renderArtifacts(mutated)).toThrow(
+      /aa-annotations\.text-secondary\.kind: expected one of override \| addition \| restricted \| pairing \| measured/,
+    );
+  });
+
+  it('renderer fails loudly on an aa-annotations name that is not a declared color semantic (spec 9.2, negative self-check)', () => {
+    const original = readFileSync(DESIGN_MD, 'utf8');
+    const mutated = original.replace('  error-on-field:\n', '  brand-vibe:\n');
+    expect(mutated, 'mutation did not apply — the error-on-field entry anchor moved').not.toBe(original);
+    expect(() => renderArtifacts(mutated)).toThrow(
+      /aa-annotations\.brand-vibe: not a declared color semantic/,
+    );
+  });
+
+  it('renderer fails loudly when a verified entry loses its story pointer (spec 9.2, negative self-check)', () => {
+    const original = readFileSync(DESIGN_MD, 'utf8');
+    const mutated = original.replace("  tint-brown:\n    kind: measured\n    status: verified\n    story: '9.1'\n", '  tint-brown:\n    kind: measured\n    status: verified\n');
+    expect(mutated, 'mutation did not apply — the tint-brown entry anchor moved').not.toBe(original);
+    expect(() => renderArtifacts(mutated)).toThrow(/tint-brown.*requires.*story/);
+  });
+
+  it('renderer fails loudly when a Colors-body edit removes the anchored fact (spec 9.2, negative self-check)', () => {
+    // focus-ring anchors ONLY on the AA-table row (its sole fact is the
+    // border-default 1.23:1 ratio; its frontmatter declaration carries
+    // #1771E6 which the note text never cites) — editing the ratio away must
+    // abort instead of shipping a stale annotation.
+    const original = readFileSync(DESIGN_MD, 'utf8');
+    // Body-unique wording (the block's own text phrases the same fact
+    // differently, and the frontmatter precedes the body — a bare fact
+    // replace would hit the block first).
+    const mutated = original.replace(
+      "site's ink-on-ink = invisible; border-default = 1.23:1",
+      "site's ink-on-ink = invisible; border-default is too weak",
+    );
+    expect(mutated, 'mutation did not apply — the focus-ring body anchor moved').not.toBe(original);
+    expect(() => renderArtifacts(mutated)).toThrow(/aa-annotations\.focus-ring: note no longer anchors/);
+  });
+
+  it('[ASSUMPTION] machinery: an assumed entry emits the flag and counts in the derived status line (spec 9.2)', () => {
+    // Zero open flags ship today BY DESIGN — the machinery proves itself via
+    // this probe: flip one status to assumed and the note carries the flag,
+    // the derived TOKENS.md line counts it and names it.
+    const original = readFileSync(DESIGN_MD, 'utf8');
+    const mutated = original.replace(
+      '  text-muted:\n    kind: restricted\n    status: verified',
+      '  text-muted:\n    kind: restricted\n    status: assumed',
+    );
+    expect(mutated, 'mutation did not apply — the text-muted entry anchor moved').not.toBe(original);
+    const { tokensMd } = renderArtifacts(mutated);
+    expect(tokensMd).toContain('[ASSUMPTION] Restricted: placeholder/disabled/non-essential text only');
+    expect(tokensMd).toContain('1 open `[ASSUMPTION]` flags — OPEN: text-muted');
+  });
+
+  it('the AA-note migration is complete: every remaining literal is non-AA-class and absent from the block (spec 9.2)', () => {
+    // Day-one truth of both migration aborts: no literal carries a contrast
+    // ratio or an AA ruling (those must live in the DESIGN.md block), and no
+    // literal name is also a block entry (double source). The block side is
+    // read from the committed TOKENS.md derived status line.
+    const aaBearing = (text: string) => /\d+\.\d+:1/.test(text) || /\bAA\b/.test(text);
+    const statusLine =
+      readFileSync(ARTIFACTS.tokensMd, 'utf8')
+        .split('\n')
+        .find((line) => line.includes('open `[ASSUMPTION]` flags')) ?? '';
+    const blockNames = new Set(
+      [...statusLine.matchAll(/`?([a-z0-9-]+)`? \(Story \d+\.\d+\)/g)].map((match) => `--tk-color-${match[1]}`),
+    );
+    expect(blockNames.size, 'the derived status line names no block entries — anchor moved').toBe(10);
+    for (const [name, literal] of TOKEN_NOTE_LITERALS) {
+      expect(aaBearing(literal), `${name} literal is AA-bearing — must derive from the aa-annotations block`).toBe(
+        false,
+      );
+      expect(blockNames.has(name), `${name} exists as BOTH a literal and a block entry — double source`).toBe(false);
+    }
   });
 });

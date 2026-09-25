@@ -23,6 +23,10 @@
  * - Loud failures: anything unexpected aborts rendering (thrown Error from the
  *   pure function; exit 1 from the CLI) instead of being guessed around.
  * - The `components:` frontmatter block is consumer spec prose — never rendered.
+ * - The `aa-annotations:` frontmatter block (story 9.2) is the machine source
+ *   for every AA-bearing color note — the notes DERIVE from it (prefix from
+ *   kind, [ASSUMPTION] flag from status) and each must anchor in the Colors
+ *   body via a factual substring; anchor lost → abort.
  * - `dark-*` color entries are the palette SOURCE for the dark layer's semantic
  *   overrides — never emitted as `--tk-color-dark-*` custom properties, never
  *   rendered into the light layer. Every `dark-*` key must be consumed by
@@ -78,6 +82,9 @@ const NON_TOKEN_KEYS = new Set([
   'updated',
   'sources',
   'components', // consumer spec prose — components reference it, the pipeline never renders it
+  // machine-consumed annotation source (story 9.2) — the AA-bearing color notes
+  // derive from it at generation; it never emits tokens itself.
+  'aa-annotations',
 ]);
 
 function parseFrontmatter(designText) {
@@ -669,25 +676,21 @@ const Z_SCALE = [
 ];
 
 /**
- * Design-intent annotations recorded at capture time. The frontmatter carries
- * values only; these notes trace to DESIGN.md body prose (the Colors AA-override
- * table and [ASSUMPTION] markers) and ship alongside the values. Facts stated
- * here are cross-checked against the parsed DESIGN.md in
- * assertAnnotationConsistency — annotations cannot drift from the values.
+ * Design-intent annotations recorded at capture time — the LITERAL residue.
+ * Story 9.2 moved every AA-BEARING note (a contrast ratio or an AA ruling in
+ * its text) into the DESIGN.md `aa-annotations:` frontmatter block; the notes
+ * are DERIVED from it in `aaAnnotationsModel` and merged into the live
+ * TOKEN_NOTES map at render time. What stays a literal here BY DESIGN:
+ * semantic-alias stories (link/error — alias equalities, no AA facts),
+ * probe-closure Verified Shapes/Colors entries (mint/beige — measured values,
+ * no AA ruling), verbatim-extract entries (border-table/surface-row-hover —
+ * decorative structure, no AA ruling), and BLOCK_NOTE_SPACING below. Both
+ * migration directions abort: a literal for a name also in the block is a
+ * double source; any AA-bearing literal without a block entry aborts (the
+ * class test lives in isAaBearing). Exported for the migration self-checks in
+ * tests/tokens-drift.test.ts.
  */
-const TOKEN_NOTES = new Map([
-  [
-    '--tk-color-text-secondary',
-    'AA override — gray-600 `#616871` replaces the extracted `#79818C` (gray-500, 3.94:1 on white fails 4.5:1; `#616871` = 5.64:1). DESIGN.md Colors.',
-  ],
-  [
-    '--tk-color-focus-ring',
-    'AA override — unified `blue-100` ring at 2px offset 2px (the reference ink-on-ink ring is invisible; border-default = 1.23:1). DESIGN.md Colors.',
-  ],
-  [
-    '--tk-color-link-on-tint',
-    'AA addition — `blue-200` for links on tinted/field surfaces (blue-100 = 4.07:1 on field, fails). DESIGN.md Colors.',
-  ],
+export const TOKEN_NOTE_LITERALS = new Map([
   [
     '--tk-color-link',
     'Semantic alias — `blue-100`, added in Story 1.3: components consume semantics, not scales (AD-2/AD-3), and the dark layer needs a semantic name to override (`dark-link`). DESIGN.md Colors (TextLink).',
@@ -695,14 +698,6 @@ const TOKEN_NOTES = new Map([
   [
     '--tk-color-error',
     'Semantic alias — `red-100`, added in Story 1.3 alongside `link` so both themes expose error semantics (the dark layer overrides it with `dark-error`). DESIGN.md Colors.',
-  ],
-  [
-    '--tk-color-error-on-field',
-    'AA addition — `red-200` for errors on field/muted surfaces (red-100 = 4.22:1 on surface-field and 4.40:1 on surface-muted — both fail 4.5:1; red-200 passes). Mirrors the link-on-tint precedent. DESIGN.md Colors.',
-  ],
-  [
-    '--tk-color-text-muted',
-    'Restricted: placeholder/disabled/non-essential text only — `#959BA4` fails AA for body text. DESIGN.md Colors.',
   ],
   [
     '--tk-color-tint-mint',
@@ -720,17 +715,6 @@ const TOKEN_NOTES = new Map([
     '--tk-radius-xxl',
     'Verified — Story 5.6 closure: pixel-probes of the archived card captures measure 22–24px (two sub-signatures within the band — banners 21.9–22.2, tiles 23.5–23.9 — collapsed to one token); the 32px vision estimate is corrected to the measured card radius — xxl equals xl. DESIGN.md Shapes.',
   ],
-  // v2 additions (Story 6.1) — the delta aliases state the AA-override fact
-  // (site anchors fail; anchors live in DESIGN.md Colors), cross-checked in
-  // assertAnnotationConsistency via the resolved reference values.
-  [
-    '--tk-color-delta-positive',
-    'AA override — DESIGN.md reference `{colors.green-300}` resolves to `#168821` (4.587:1 on surface-base): the site\'s delta green `#00A328` = 3.350:1 fails 4.5:1. RULING: sanctioned on surface-base only — green-300 fails on surface-muted (4.210:1), surface-field (4.039:1) and the row-hover composite `#F2F4F7` (4.163:1); 6.2/6.4 hold deltas on unhovered rows or re-derive at 8.2. Anchors live in DESIGN.md Colors (Table delta semantics).',
-  ],
-  [
-    '--tk-color-delta-negative',
-    'AA override — DESIGN.md reference `{colors.red-300}` resolves to `#C40B08` (6.179:1 on surface-base): the site\'s delta red `#F52222` = 4.090:1 fails 4.5:1. RULING: sanctioned on surface-base only — red-300 itself clears the adjacent surfaces (muted 5.671:1, field 5.441:1, hover `#F2F4F7` 5.608:1) but the green leg does not, so the pair-level ruling holds: 6.2/6.4 keep deltas on unhovered base-surface rows or re-derive at 8.2. Anchors live in DESIGN.md Colors (Table delta semantics).',
-  ],
   [
     '--tk-color-border-table',
     'Extracted verbatim (v2, invest/stocks table divider) — `rgba(0,16,36,0.12)`; decorative structure (non-text), dark first-pass in the dark layer. DESIGN.md Colors (Table delta semantics).',
@@ -739,22 +723,179 @@ const TOKEN_NOTES = new Map([
     '--tk-color-surface-row-hover',
     'Extracted verbatim (v2, invest/stocks row hover fill) — `rgba(36,74,127,0.06)`; decorative fill (non-text), dark first-pass in the dark layer. DESIGN.md Colors (Table delta semantics).',
   ],
-  [
-    '--tk-color-tint-cream',
-    'Warm-cream family (v2, business) — DISTINCT from tint-beige per step (computed OKLCH vs beige 93.8°/C0.029: base 84.6°/C0.009, raised 80.7°/C0.022 — 9–13° toward orange, chroma 0.31×–0.76×; DESIGN.md Colors). AA sanctioned: text-primary 10.911:1 / text-secondary 4.866:1 on the tint (tests/contrast.test.ts).',
-  ],
-  [
-    '--tk-color-tint-cream-raised',
-    'Warm-cream raised step (v2, business). AA sanctioned: text-primary 9.655:1; text-secondary = 4.306:1 FAILS 4.5:1 — NOT sanctioned on raised cream, use text-primary there (the v1 on-tint ruling precedent; tests/contrast.test.ts).',
-  ],
-  // v2 addition (Story 9.1) — the stepper badge brown, measured from the
-  // archived reference block and gated on AA before landing (the 7.3
-  // cream-raised mapping is corrected to the reference's own brown).
-  [
-    '--tk-color-tint-brown',
-    'Measured (Story 9.1) — stepper badge fill `#8D6040` from the archived reference block (.playwright-cli/verify/stepper/reference-block.png; the 7.3 placeholder mapped it to tint-cream-raised). Theme-invariant (charcoal mold). AA REQUIRED: white numeral 5.413:1 ✓, on tint-cream 4.674:1 ✓; RECORDED-FAILING: on tint-cream-raised 4.136:1 (the badge never sits there — its card overlap is white). DESIGN.md Colors.',
-  ],
 ]);
+
+/**
+ * The LIVE annotation map the renderers read — TOKEN_NOTE_LITERALS plus the
+ * AA notes derived from the DESIGN.md `aa-annotations:` block, rebuilt on
+ * every `renderArtifacts` call (deterministic; no cross-render state).
+ */
+const TOKEN_NOTES = new Map();
+
+// ---------------------------------------------------------------------------
+// AA annotations (story 9.2) — derived from the DESIGN.md `aa-annotations:`
+// frontmatter block; the string literals died with the migration
+// ---------------------------------------------------------------------------
+
+const AA_KINDS = new Set(['override', 'addition', 'restricted', 'pairing', 'measured']);
+const AA_STATUSES = new Set(['verified', 'assumed']);
+const AA_ENTRY_FIELDS = new Set(['kind', 'status', 'story', 'text']);
+const AA_STORY_RE = /^\d+\.\d+$/;
+
+/**
+ * The AA-class test (spec 9.2): a note is AA-bearing when its text carries a
+ * contrast ratio (`N.NNN:1`) or an explicit AA ruling. Every AA-bearing note
+ * must live in the DESIGN.md block — a literal here that matches is an abort.
+ */
+const AA_RATIO_RE = /\d+\.\d+:1/;
+const AA_CLASS_RE = /\bAA\b/;
+const isAaBearing = (text) => AA_RATIO_RE.test(text) || AA_CLASS_RE.test(text);
+
+/**
+ * Note prefix per kind (executor pin, spec 9.2 Implementation Notes): override
+ * and addition read "AA <kind> — ", restricted reads "Restricted: ", measured
+ * interpolates its story pointer ("Measured (Story N.N) — "). The pairing kind
+ * injects NOTHING: its notes open with the pairing narrative itself (the
+ * warm-cream family phrasing) — pinned by byte-identity of the regenerated
+ * artifacts, which forces the exact pre-migration strings.
+ */
+const aaNotePrefix = (entry) => {
+  if (entry.kind === 'measured') return `Measured (Story ${entry.story}) — `;
+  if (entry.kind === 'pairing') return '';
+  if (entry.kind === 'restricted') return 'Restricted: ';
+  return `AA ${entry.kind} — `;
+};
+
+/** Factual substrings a note may anchor on: `N.NNN:1` ratios and hex colors. */
+const AA_RATIO_FACT_RE = /\d+\.\d+:1/g;
+const AA_HEX_FACT_RE = /#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\b/g;
+/** The AA threshold itself is not a distinguishing fact — real measurements only. */
+const aaFactsOf = (text) => {
+  const facts = new Set([...text.matchAll(AA_RATIO_FACT_RE)].map((match) => match[0]));
+  for (const match of text.matchAll(AA_HEX_FACT_RE)) facts.add(match[0]);
+  facts.delete('4.5:1');
+  return [...facts];
+};
+
+/** The colors frontmatter block body (indented lines + comments only). */
+const colorsFrontmatterOf = (designText) => {
+  const match = /^colors:\r?\n((?:[ \t][^\n]*\r?\n|\#[^\n]*\r?\n)*)/m.exec(designText);
+  return match === null ? '' : match[1];
+};
+
+/** The `## Colors` body section (the human narrative + the AA table). */
+const colorsBodyOf = (designText) => {
+  const match = /\n## Colors\r?\n([\s\S]*?)(?=\r?\n## )/.exec(designText);
+  return match === null ? '' : match[1];
+};
+
+/**
+ * Derive the AA-bearing notes from the DESIGN.md `aa-annotations:` block.
+ *
+ * Wiring is DELIBERATE (the 9.1 fonts mold): unknown entry fields abort, kind
+ * and status are closed sets, `story` is required for verified and measured
+ * entries, entry names must be declared color semantics (rendered light token
+ * names). Every derived note must ANCHOR in the Colors body / colors
+ * frontmatter: at least one line there carries the entry's token ref together
+ * with a factual substring from its text (a `N.NNN:1` ratio or a hex) — a
+ * Colors-body edit that removes the anchored fact aborts generation instead of
+ * shipping a stale annotation. `status: assumed` emits a leading
+ * `[ASSUMPTION]` flag (counted in the derived TOKENS.md status line);
+ * `verified` + `story` is the resolved form.
+ */
+function aaAnnotationsModel(block, lightNameSet, designText) {
+  assertMapping(block, 'aa-annotations');
+  assert(Object.keys(block).length > 0, 'aa-annotations: block is empty — the AA-bearing notes are mandatory machine truth');
+  const anchorLines = [
+    ...colorsFrontmatterOf(designText).split(/\r?\n/),
+    ...colorsBodyOf(designText).split(/\r?\n/),
+  ];
+  assert(anchorLines.some((line) => line.trim() !== ''), 'DESIGN.md Colors body / colors frontmatter not found — the aa-annotations anchor space is missing');
+  const derived = new Map();
+  for (const [name, spec] of Object.entries(block)) {
+    assertKey(name, `aa-annotations.${name}`);
+    assert(
+      lightNameSet.has(`--tk-color-${name}`),
+      `aa-annotations.${name}: not a declared color semantic — entry names must name light-layer color tokens`,
+    );
+    assertMapping(spec, `aa-annotations.${name}`);
+    for (const field of Object.keys(spec)) {
+      assert(
+        AA_ENTRY_FIELDS.has(field),
+        `unexpected field '${field}' in aa-annotations.${name} — extend the annotation grammar deliberately (allowed: ${[...AA_ENTRY_FIELDS].join(', ')})`,
+      );
+    }
+    assert(
+      typeof spec.kind === 'string' && AA_KINDS.has(spec.kind),
+      `aa-annotations.${name}.kind: expected one of ${[...AA_KINDS].join(' | ')}, got ${JSON.stringify(spec.kind)}`,
+    );
+    assert(
+      typeof spec.status === 'string' && AA_STATUSES.has(spec.status),
+      `aa-annotations.${name}.status: expected verified | assumed, got ${JSON.stringify(spec.status)}`,
+    );
+    if ('story' in spec) {
+      assert(
+        typeof spec.story === 'string' && AA_STORY_RE.test(spec.story),
+        `aa-annotations.${name}.story: expected a story pointer string like '9.1', got ${JSON.stringify(spec.story)}`,
+      );
+    }
+    assert(
+      spec.status !== 'verified' || typeof spec.story === 'string',
+      `aa-annotations.${name}: status 'verified' requires its closure 'story' pointer`,
+    );
+    assert(
+      spec.kind !== 'measured' || typeof spec.story === 'string',
+      `aa-annotations.${name}: kind 'measured' requires 'story' — the note prefix embeds it ("Measured (Story N.N) — ")`,
+    );
+    assert(
+      typeof spec.text === 'string' && spec.text.length > 0,
+      `aa-annotations.${name}.text: expected the note body string`,
+    );
+    const entry = { name, kind: spec.kind, status: spec.status, story: spec.story, text: spec.text };
+    const note = `${entry.status === 'assumed' ? '[ASSUMPTION] ' : ''}${aaNotePrefix(entry)}${entry.text}`;
+    // Body-anchor assert (the debt's core): the note must trace to DESIGN.md.
+    const facts = aaFactsOf(entry.text);
+    assert(
+      facts.length > 0,
+      `aa-annotations.${name}: text carries no anchorable fact (no N.NNN:1 ratio, no hex) — every derived note must anchor in the Colors body`,
+    );
+    const refRe = new RegExp(`\\{colors\\.${name}\\}|\\b${name}\\b`);
+    const anchored = anchorLines.some(
+      (line) => refRe.test(line) && facts.some((fact) => line.includes(fact)),
+    );
+    assert(
+      anchored,
+      `aa-annotations.${name}: note no longer anchors in DESIGN.md — no Colors-body/frontmatter line carries the token ref '${name}' together with a factual substring (${facts.slice(0, 4).join(', ')}${facts.length > 4 ? ', …' : ''}) from its text; restore the anchor or re-record the annotation deliberately`,
+    );
+    derived.set(`--tk-color-${name}`, { ...entry, note, tokenName: `--tk-color-${name}` });
+  }
+  return derived;
+}
+
+/**
+ * Merge the derived AA notes into the live TOKEN_NOTES map, enforcing the
+ * both-direction migration aborts (spec 9.2): a literal remaining for a name
+ * present in the block is a double source; an AA-class literal whose name is
+ * NOT in the block aborts (the 10-entry migration must stay complete).
+ */
+function mergeAaNotes(derived) {
+  for (const tokenName of derived.keys()) {
+    assert(
+      !TOKEN_NOTE_LITERALS.has(tokenName),
+      `TOKEN_NOTES still carries a literal for '${tokenName}' which the aa-annotations block also defines — double source; the literal must die`,
+    );
+  }
+  for (const [tokenName, literal] of TOKEN_NOTE_LITERALS) {
+    assert(
+      derived.has(tokenName) || !isAaBearing(literal),
+      `TOKEN_NOTES literal '${tokenName}' is AA-bearing (a contrast ratio or an AA ruling) but has no aa-annotations entry — AA-bearing notes must derive from the DESIGN.md block`,
+    );
+  }
+  TOKEN_NOTES.clear();
+  for (const [tokenName, literal] of TOKEN_NOTE_LITERALS) TOKEN_NOTES.set(tokenName, literal);
+  for (const [tokenName, { note }] of derived) TOKEN_NOTES.set(tokenName, note);
+  return derived;
+}
 
 const BLOCK_NOTE_SPACING =
   'Verified-systematized — Story 5.6 closure: the reference exposes no root spacing scale (inline utilities), so the kit systematizes the 4-based grid; the load-bearing steps are probe-verified at composition (container 1200px, grid-gap 20px, 96–120 section rhythm — Story 3.10 probes). DESIGN.md Layout & Spacing.';
@@ -1050,6 +1191,15 @@ function renderMd(model, dark) {
     ['z-scale', z.length],
   ];
   const total = counts.reduce((sum, [, count]) => sum + count, 0);
+  // DERIVED [ASSUMPTION] ledger (story 9.2) — replaces the hand-written
+  // resolved-history bullet: the counts and the per-entry story pointers come
+  // from the `aa-annotations:` block statuses, so an entry flipping to
+  // `assumed` (or resolving) re-derives this line mechanically. Zero open
+  // flags today; the machinery is proven by the negative self-checks.
+  const aaEntries = [...model.aa.values()];
+  const aaOpen = aaEntries.filter((entry) => entry.status === 'assumed');
+  const aaResolved = aaEntries.filter((entry) => entry.status === 'verified');
+  const aaStatusLine = `- AA-bearing color notes are GENERATED from the DESIGN.md \`aa-annotations:\` block (story 9.2 — the generator literals died; every note must anchor in the Colors body, anchor lost → generation aborts): ${aaEntries.length} entries — ${aaResolved.length} verified / ${aaOpen.length} open \`[ASSUMPTION]\` flags${aaOpen.length > 0 ? ` — OPEN: ${aaOpen.map((entry) => entry.name).join(', ')}` : ''}. Resolved history: ${aaResolved.map((entry) => `${entry.name} (Story ${entry.story})`).join('; ')}.`;
   const lines = [];
   lines.push('# pillkit-tokens — canonical token listing', '');
   lines.push('GENERATED FILE — DO NOT EDIT. Regenerate with `pnpm gen:tokens`.', '');
@@ -1058,7 +1208,7 @@ function renderMd(model, dark) {
     '- The `components:` frontmatter block is consumer spec prose — never rendered.',
     '- The z-scale is scaffold mechanics, not an extraction (own section below).',
     '- The `dark-*` color entries are the palette SOURCE for the dark layer (see "Dark layer") — never emitted as `--tk-color-dark-*` custom properties.',
-    '- All v1 `[ASSUMPTION]` flags are RESOLVED (mint/beige tints — Story 3.6; dark tints — 5.4; xxl/xl radii + the spacing systematization — 5.6): every flagged value was verified against the archived captures and now carries a `Verified —` annotation; none was silently dropped. The v2 dark first-pass keys (Story 6.1) were verified by the 8.2 dark sweep (the 5.4 rule: cream pair — Lab/OKLCH derivation window; delta pair — the three-surface AA scope; white-alpha pair — composite/grammar) — all six HELD and now carry `Verified —` annotations with the computed evidence.',
+    aaStatusLine,
     '',
   );
   lines.push(
@@ -1231,6 +1381,11 @@ export function renderArtifacts(designText) {
   // Dark mapping validates before annotation consistency so its specific
   // failure modes (unconsumed key, missing light target) name the culprit.
   const dark = darkLayerModel(model.colors.byKey, allNames);
+  // AA notes derive from the `aa-annotations:` block AFTER the models exist
+  // (entry names validate against rendered light token names) and BEFORE the
+  // renders (the merged TOKEN_NOTES map is what the renderers read).
+  const aa = mergeAaNotes(aaAnnotationsModel(doc['aa-annotations'], new Set(allNames), designText));
+  model.aa = aa;
   assertAnnotationConsistency(model, allNames);
   return {
     tokensCss: renderCss(model, dark),

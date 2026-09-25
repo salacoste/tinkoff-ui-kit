@@ -79,6 +79,12 @@ describe('pillkit-tokens generated maps', () => {
     const declarationsOnly = css.replace(/\/\*[\s\S]*?\*\//g, '');
     expect(declarationsOnly).not.toMatch(/--tk-color-dark-/);
   });
+
+  it('carries the derived aa-annotations ledger with zero open [ASSUMPTION] flags (story 9.2)', () => {
+    const md = readFileSync(new URL('./TOKENS.md', import.meta.url), 'utf8');
+    expect(md).toContain('`aa-annotations:` block');
+    expect(md).toContain('10 verified / 0 open `[ASSUMPTION]` flags');
+  });
 });
 
 /**

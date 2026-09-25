@@ -6,7 +6,7 @@ GENERATED FILE — DO NOT EDIT. Regenerate with `pnpm gen:tokens`.
 - The `components:` frontmatter block is consumer spec prose — never rendered.
 - The z-scale is scaffold mechanics, not an extraction (own section below).
 - The `dark-*` color entries are the palette SOURCE for the dark layer (see "Dark layer") — never emitted as `--tk-color-dark-*` custom properties.
-- All v1 `[ASSUMPTION]` flags are RESOLVED (mint/beige tints — Story 3.6; dark tints — 5.4; xxl/xl radii + the spacing systematization — 5.6): every flagged value was verified against the archived captures and now carries a `Verified —` annotation; none was silently dropped. The v2 dark first-pass keys (Story 6.1) were verified by the 8.2 dark sweep (the 5.4 rule: cream pair — Lab/OKLCH derivation window; delta pair — the three-surface AA scope; white-alpha pair — composite/grammar) — all six HELD and now carry `Verified —` annotations with the computed evidence.
+- AA-bearing color notes are GENERATED from the DESIGN.md `aa-annotations:` block (story 9.2 — the generator literals died; every note must anchor in the Colors body, anchor lost → generation aborts): 10 entries — 10 verified / 0 open `[ASSUMPTION]` flags. Resolved history: text-secondary (Story 1.2); focus-ring (Story 1.2); link-on-tint (Story 1.2); error-on-field (Story 1.3); text-muted (Story 1.2); delta-positive (Story 6.1); delta-negative (Story 6.1); tint-cream (Story 6.1); tint-cream-raised (Story 6.1); tint-brown (Story 9.1).
 
 Light layer: **139 tokens** on `:host, :root` (colors 52, typography 42, fonts 1, radius 7, spacing 14, shadows 6, motion 11, z-scale 6) plus the dark layer: **23 semantic overrides + 6 shadow-none re-declarations** on `[data-theme="dark"]`.
 
