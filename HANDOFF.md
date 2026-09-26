@@ -1,4 +1,4 @@
-# HANDOFF — tinkoff-ui-kit (2026-09-25; v2 финал)
+# HANDOFF — tinkoff-ui-kit (2026-09-26; v1.2.0-преп финал — эпики-v3)
 
 Полная передача проекта новой команде: состояние, план, долги, нюансы, governance. Прочитайте
 этот файл целиком перед первым коммитом. Документы-первоисточники помечены путями.
@@ -28,6 +28,7 @@
 |---|---|
 | **v1** | ✅ RELEASED `v1.0.0` (2026-09-24). 38 стори / 5 эпиков BMAD-плана исполнены. 19 компонентов, 645 юнит + 921 visual/axe тестов, CI зелёный *(поправка 2026-09-25: «зелёный» означало локальные гейты — Actions был красным с 5.5/6962326 до ba0b622; запись — RELEASE.md §1)*, ноль открытых дизайнерских допущений |
 | **v2** | ✅ ИСПОЛНЕНА 14/14 (2026-09-25, финал — 8.4). Три домена: /invest/stocks (filter-chips, pagination, combobox-search, data-table, stocks-catalog, mega-nav), /business (stepper, business-landing; cookie-banner — эталон invest/stocks), /invest/mobile (store-badges, qr-block, invest-landing) + v2-токены 6.1 (дельта/warm-cream/регистры — ноль новых типо-токенов; шесть dark-допущений УДЕРЖАНЫ 8.2 с нулём изменений значений) + свипы 8.1/8.2 (54/54 a11y-ячеек; `:host([hidden])` 33/33; engine 19→28; F5 store-badges фикс) + доки 8.3 (9 страниц + registers single-source). **8.4 закрыла v2**: fidelity-ledger 25 строк + жёлтый аудит v2 (0 нарушений) + impeccable kit-wide 207 файлов exit 0 + baseline-пакет расширен (140 новых, 16 adjudicated перезаписей: 256e5cf ×14 + d7c36d6 ×2) + RELEASE.md «Релиз v1.1.0» (тег/рецепт/changelog-драфт — НИЧЕГО не исполнено, тега нет). Итоги: **881 unit + 1368 visual/axe ×2**, 27 компонентов/врапперов, 414 базлайн-PNG, CI: в окне v2 «CI зелёный» писалось по локальным гейтам, а Actions был красным с 5.5/6962326 (typecheck до build, маскировка локальными dist) — чинен ba0b622 2026-09-25, запись RELEASE.md §1. Пруфы: `.playwright-cli/verify/{filter-chips,pagination,combobox-search,mega-nav,data-table,cookie-banner,stocks-catalog,stepper,store-badges,qr-block,business-landing,invest-landing,a11y-sweep,dark-sweep,fidelity-verification-v2}/` + `packages/docs/src/v2/`. Кит-гэпы v2 — в deferred-work (qr-block page-copy слот, button href, input sr-only label, checkbox error, stepper subtitle, promo-card full-bleed, ~32 radius, коричневый токен). ПРАВИЛА ПОРТА: 6007 машинно-глобален; критичные круги — приватный VISUAL_PORT-конфиг (6041 main; 6061 использован 8.4, конфиг удалён) |
+| **v1.2.0 / эпики-v3** | ✅ ИСПОЛНЕНА 8/8 стори-юнитов (2026-09-26, финал — 11.3): 9.1 (tint-brown + font-mono токены; brown-badge ADOPTED — белый нумерал на коричневом, AA 5.413:1; radius-3xl REFUSED пробой 23.8px — «≈32» был артефактом зрения; tooltip 288px-cap) + 9.2 (генератор-истина: aa-annotations из DESIGN.md, AD-4 single-source) + 10.1+10.2 (sr-only ×2, error-канал, слоты subtitle/page-copy; референс-дословные копии лендингов — render-верификация после lens-MAJOR на выдуманном подзаголовке) + 10.3 (promo-card art-mode=bleed + floating-pill, оффсет space-32 Δ=0) + 10.4 (button href/target/rel; no-href байт-идентичен; НОЛЬ отклонений спека — первый в цикле) + 11.1 (a11y-свип режимов: +12 engine-ног, group-VI 42/42, SR-RUNSHEET-v1.2.0) + 11.2 (доки-mono: --tk-font-mono первый потребитель, 36+2+36 перезаписей, харнесс-пин JetBrains Mono) + 11.3 (эта — verification ledger v1.2.0 + жёлтый аудит + impeccable + ЧАСТЬ v1.2.0 + RELEASE §9 + этот close). Итоги: **943 unit + 1380 visual/axe**, 414 базлайн-PNG (392 сюиты + 22 per-component; файлов за окно не прибавилось), packages/react ZERO diff (пропсы едут через CEM). Пруфы: `.playwright-cli/verify/{tokens-9-1,tokens-9-2,batch-10-1-10-2,promo-card-10-3,button-10-4,docs-11-2,a11y-sweep/group-VI.md,fidelity-verification-v1-2-0}/`. Тег НЕ ставился (гейт мейнтейнера — очередь ниже) |
 | Репо | `github.com/salacoste/tinkoff-ui-kit`, ветка `main`. HEAD документирован в CLAUDE.md |
 
 Стек (ЗАМОРОЖЕН, пере-планирование не требуется): Lit 3.3.3 core (shadow DOM) в
@@ -107,6 +108,20 @@ v2-таблица в PROTOCOL-DIGEST.md); iOS momentum-scroll (п. 3) остаё
 мейнтейнерским долгом, релиз не гейтит;
 (d) **РЕШЕНО 2026-09-25 — ОТКАЗ зафиксирован** (deferred-work 7.3, revisit v1.2.0).
 
+**Мейнтейнерская очередь v1.2.0 (открыта 11.3, все — ручные гейты, nothing
+executed):** (a) batch-confirm базлайнов окна v1.2.0 по ЧАСТИ v1.2.0
+`baseline-review-package.md` (реестр 11 коммитов / 163 PNG-события с
+forensic-однострочниками; порядок присеста ~1 час — v1.2.0-§3); (b) релиз
+v1.2.0 по RELEASE.md «Релиз v1.2.0» §9.1–9.5 (версии + CHANGELOG из драфта
+§9.5 + **тег v1.2.0 — ТОЛЬКО мейнтейнер** + свежий клон §9.4 рендерит
+tk-promo-card в bleed-режиме; §9.6 — JetBrains Mono ТЕСТ-ТОЛЬКО, не
+поставляемый ассет); (c) исполнить
+`.playwright-cli/verify/a11y-sweep/SR-RUNSHEET-v1.2.0.md` — файл написан
+историей 11.1 (14 пустых строк по семи поверхностям × обе темы; УКАЗАТЕЛЬ,
+не пересобирать); (d) оппортунистически: iOS momentum-scroll спот-чек
+модалки (п. 3 выше) + cookie-banner 16px-inset перемер (deferred-work
+7.2(c), при стабильной капче) — оба не гейтят релиз.
+
 ## 5. Нюансы и специфика (уроки, оплаченные багами — НЕ переоткрывайте)
 
 **Стек/сборка:**
@@ -156,7 +171,7 @@ v2-таблица в PROTOCOL-DIGEST.md); iOS momentum-scroll (п. 3) остаё
 ```
 pnpm build && pnpm test && pnpm lint && pnpm typecheck && pnpm gen && pnpm gen:tokens
 git add -A && pnpm gen && git diff --exit-code   # gen-drift
-pnpm test:visual                                  # 1368 тест, compare-режим
+pnpm test:visual                                  # 1380 тест, compare-режим
 ```
 CI (GitHub Actions) гоняет всё это + impeccable headless детектор на каждый push.
 
@@ -177,7 +192,11 @@ CI (GitHub Actions) гоняет всё это + impeccable headless детек�
 | Оверлей-механика | `packages/components/src/overlays/` (AD-12) |
 | Пакет базлайнов (v1 закрыт; ЧАСТЬ v2 — гейт v1.1.0) | `_bmad-output/implementation-artifacts/baseline-review-package.md` |
 | Фиделити-ledger v2 (25 строк) + жёлтый аудит + impeccable | `.playwright-cli/verify/fidelity-verification-v2/` |
+| Фиделити-ledger v1.2.0 (13 строк) + жёлтый аудит окна + impeccable | `.playwright-cli/verify/fidelity-verification-v1-2-0/` |
 | Релиз v1.1.0 (тег/рецепт/changelog-драфт) | `RELEASE.md`, раздел «Релиз v1.1.0» (§8.1–8.7) |
+| Релиз v1.2.0 (тег/рецепт/changelog-драфт) | `RELEASE.md`, раздел «Релиз v1.2.0» (§9.1–9.7) |
+| Пакет базлайнов v1.2.0 (гейт v1.2.0) | `_bmad-output/implementation-artifacts/baseline-review-package.md`, ЧАСТЬ v1.2.0 |
+| SR-спот-чеки v1.2.0 (run-sheet мейнтейнера) | `.playwright-cli/verify/a11y-sweep/SR-RUNSHEET-v1.2.0.md` |
 
 ## 7. С чего начать
 

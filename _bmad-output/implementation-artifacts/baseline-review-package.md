@@ -321,3 +321,165 @@ R-14 → R-2 → R-2' (перезаписи, ~10 минут) → 7.3-трио (�
 
 После подтверждения: гейт релиза v1.1.0 — RELEASE.md, раздел «Релиз v1.1.0»
 (тег ставит ТОЛЬКО мейнтейнер; эта история ничего не исполняла).
+
+# ЧАСТЬ v1.2.0 — пакет для гейта v1.2.0 (Story 11.3, 2026-09-26)
+
+**Для мейнтейнера.** Окно v1.2.0 (тег v1.1.0..HEAD, эпики-v3: 9.1–11.3) —
+**ИНВЕНТАРЬ ИЗМЕРЕН на голове 11.3** (`git ls-tree`/`ls`/`pnpm test`/
+`playwright --list`): сюита **392 PNG + 22 per-component PNG (12 дир) = 414
+всего — ФАЙЛОВ НЕ ПРИБЫЛО** (ни одного нового/удалённого PNG за окно;
+392→392, 84 модифицировано), **943 юнит** (tokens 17 + components 708 +
+react 70 + root 148), **1380 visual/axe тестов в 21 файле** (1368→1380 =
++12 НОВЫХ engine-ног 11.1 — БЕЗ снапшотов: a11y-sweep +468 строк,
+cookie-banner +158; PNG-плоскость сюиты не росла). Этот присест
+подтверждает ТОЛЬКО перезаписи окна v1.2.0; новые НОГИ — engine/DOM-ноги,
+их пруфы в group-VI. Правила те же (§3 v1): подтверждение/перезапись —
+только человеком; **гейт этой историей НЕ исполнялся.**
+
+Фиделити-контекст присеста: `.playwright-cli/verify/fidelity-verification-v1-2-0/`
+(ledger 13 строк по moved-множеству v1.1.0..HEAD + жёлтый аудит + impeccable).
+**packages/react за окно — ZERO diff** (пропсы 10.x едут через CEM-атрибуты,
+не через код врапперов — проверено по generated/button.ts + kit-component.ts).
+
+## v1.2.0-§1. Реестр перезаписей поверх ПОДТВЕРЖДЁННЫХ v2-базлайнов (11 коммитов, 163 PNG-события)
+
+Формат: коммит — счёт — forensic-однострочник (проверяется
+`git show --stat <h> -- 'tests/visual/*snapshots*'`). Byte-identical-пары
+ПОМЕЧЕНЫ — это доказательства нулевой пиксельной дельты API-добавлений,
+не шум.
+
+### 9.1 — THE single baseline round (c13ba12, 09-25): 22 удалено → 20 git-visible
+
+- **Что:** tint-brown флип бейджа stepper + шрифтовой слот. Санкционированный
+  набор: A «16 stepper-bearing» (stepper-{playground,variants,theming,
+  accessibility,api} ×2 + v2-stepper--page ×2 + business-landing ×2 +
+  invest-landing ×2) + C tooltip--placements ×2 + D token-reference--colors
+  ×2 + --typography ×2.
+- **Forensic:** «brown badge flip re-took the stepper-bearing set; api ×2
+  returned BYTE-IDENTICAL (no badge on the API page); token pages grew the
+  two new token rows (tint-brown, font-mono); tooltip placements hit the
+  288px cap (pill 288×68.17 ×4, probe-pinned)».
+- **Действие:** подтвердить stepper-ножи по `verify/tokens-9-1/
+  stepper-brown-side-by-side.png` (коричневые бейджи + белые цифры, оба
+  полукадра совпадают); api-пару можно листать не глядя — blob-hash-equal.
+
+### 10.1+10.2 (325631c, 09-25): 30 + 2 кластер = 32
+
+- **Что:** sr-only метки (input/segmented ×{accessibility,api}), error-канал
+  (checkbox ×{variants,accessibility,api}), слоты (stepper ×{variants,api},
+  v2-stepper--page, qrblock ×{variants,api}, v2-qr-block--page), оба
+  лендинга. Invest-кластер ×2 — тронутая QR-зона.
+- **Forensic:** «new-mode demos grew the documenting stories; TWO STOP
+  root-causes en route — adjacency rhythm (listening slot moved to container
+  end) and slotchange oscillation (presence sync re-queries the live tree —
+  the CONVERGENCE RULE)». Ноль несанкционированных движений (run 3: ровно
+  31 failed = 30+1 кластер-тест).
+
+### 10.1+10.2 CI-раунд (15a5ac6): 1 PNG — invest qr-tab light
+
+- **Forensic:** «the qr-tab interactive leg raced lazy-QR decode at
+  rect-time (macOS-light baselined PRE-decode 1200×274; ubuntu loaded-in-
+  both → 1 spurious RED, run 36189883158); decode-wait before the rect +
+  CI-only 0.03 clip tolerance + LIGHT baseline re-take (→1200×442,
+  byte-identical to its own dark twin's post-fix state)». Standing rule:
+  interactive-baseline legs AWAIT LAZY-MEDIA DECODE.
+
+### 10.1+10.2 lens (afb6089, 09-25): 6 PNG
+
+- **Forensic:** «the business subheading shipped INVENTED (probe (a) never
+  had the render table — exactly where the slip hid); lens decoded the true
+  line on three artifacts; render-verify 731px vs capture 729px (Δ2, 0.27%);
+  six tainted baselines re-taken: business ×2, stepper--variants ×2,
+  v2-stepper--page ×2».
+
+### 10.3 (9813a65, 09-26): 8 PNG
+
+- **Forensic:** «promo-card art-mode='bleed' — promocard
+  {variants,accessibility,api} ×2 + business-landing ×2 (bento composes from
+  bleed directly, .tkb-stage retired); playground/theming canaries
+  BYTE-STABLE (no-attr stability proof)».
+
+### 10.4 (de304e7, 09-26): 6 git-visible + 2 BYTE-IDENTICAL
+
+- **Forensic:** «button href/target/rel — button {variants-and-sizes,
+  accessibility, api} ×2 (href demo row + anchor checklist row + CEM-таблица
+  +63/−1); invest-landing ×2 re-took BLOB-HASH-EQUAL — the anchor paints the
+  hero CTA pixel-for-pixel».
+
+### 11.1 (d1a210a, 09-26): 14 PNG + 12 БЕЗ-снапшотных ног
+
+- **Что:** accessibility-пары ×7 поверхностей (button, checkbox, input,
+  promocard, qrblock, segmentedradio, stepper) — режимные демо-фигуры в
+  «Доступность»-историях (sr-only/error/subtitle/page-copy/href).
+- **Forensic:** «+12 engine legs = Group VI registry 6 + targeted 5 (вкл.
+  `&args=` ASCII-границу канала) + cookie 7.2(b) Shift+Tab-обход; 42/42
+  ledger-ячеек group-VI». Ноги DOM/axe —PNG не производят (счёт сюиты
+  1368→1380, снапшоты 392→392).
+
+### 11.1 lens (7ee97e1, 09-26): 2 PNG
+
+- **Forensic:** «birth-stale «+20%» badge-announcement expectations fixed to
+  the shipped +30% (4 sites + 2 PNG: input accessibility pair)».
+
+### 11.2 — mono flip (6119d37, 09-26): 36 PNG
+
+- **Forensic:** «--tk-font-mono first consumer = ALL docs code surfaces;
+  MEASURED 18 stories ×2 (BLOCK+INLINE attribution, spec's ~24 estimate
+  superseded by the record); все 36 отличаются от HEAD (stale-dist alarm
+  clear)».
+
+### 11.2 CI-попытка (90c8e6a): 0 PNG
+
+- **Forensic:** «CI-scoped tolerance 0.10 НЕ сработала (run 36256418333:
+  Playwright 1.63 compareImages hard-fails SIZE MISMATCH до
+  maxDiffPixelRatio — +17…+28px высоты страниц); запись удалена в тот же
+  день; базлайны НЕ трогала».
+
+### 11.2 lens (a0fb95c, 09-26): 2 PNG
+
+- **Forensic:** «`.tkcs-grid code` tag chips — hyphen-blind sweep regex
+  `\.tk\w+` не видел стем с дефисом; flip + re-take getting-started pair».
+
+### 11.2 pin (b185cc4, 09-26): 36 PNG — ФИНАЛЬНОЕ состояние mono-ног
+
+- **Forensic:** «structural fix: --tk-font-mono joins the harness font pin
+  (JetBrains Mono via @fontsource, TEST-ONLY devDep; token layer stays
+  system-first per 9.1); platform-independent metrics → canvas heights equal
+  → default tolerance; ровно те же 36 ног перезаписаны под пином; CI green
+  (runs 36260365889 / 36261862359)».
+
+## v1.2.0-§2. Инвентарь окна по историям
+
+| Группа | Базлайны окна | Side-by-side / доказательство | Коммит(ы) |
+|---|---|---|---|
+| токены 9.1 | stepper-семейство + лендинги + tooltip + token-reference (см. §1) | `verify/tokens-9-1/` (3 gate-транскрипта + side-by-side) | c13ba12 |
+| токены 9.2 | НОЛЬ PNG (значения не менялись; regen byte-stable) | `verify/tokens-9-2/` (anchor-транскрипт + zero-PNG манифест) | 3354a2f+1c9a450 |
+| 10.1+10.2 API-режимы | 32 + 1 (CI) + 6 (lens) | `verify/batch-10-1-10-2/` (probe (a)/(b) + render-таблицы) | 325631c, 15a5ac6, afb6089 |
+| 10.3 bleed | 8 | `verify/promo-card-10-3/` (probes A–D + render-verify) | 9813a65 |
+| 10.4 href | 6 + 2 byte-identical | `verify/button-10-4/` (no-probe disposition + DOM-pin) | de304e7 |
+| 11.1 sweep | 14 + 2 lens; +12 engine-ног | `verify/a11y-sweep/group-VI.md` (42/42) + `SR-RUNSHEET-v1.2.0.md` | d1a210a, 7ee97e1 |
+| 11.2 mono | 36 + 2 lens + 36 pin | `verify/docs-11-2/` (36-leg матрица + FORENSICS) | 6119d37, a0fb95c, b185cc4 |
+| 11.3 (эта) | перезаписей НЕТ — docs-only окно | `verify/fidelity-verification-v1-2-0/` (троица) | рабочее дерево |
+
+## v1.2.0-§3. Порядок присеста (~1 час)
+
+1. **9.1 stepper-сэт** (~10 мин) — самый плотный: side-by-side в
+   `verify/tokens-9-1/stepper-brown-side-by-side.png` против
+   re-taken`--playground/--variants` обеих тем; коричневый бейдж = РЕШЕНИЕ
+   мейнтейнера (ADOPTED), белая цифра, полуперекрытие карт.
+2. **11.2 mono-финал** (~10 мин) — 36 ног под пином: код-блоки моно,
+   стабильная высота страниц; светлая+тёмная пара getting-started (tag
+   chips).
+3. **10.3 bento + 10.4 button** (~10 мин) — bleed-арт по нижней кромке,
+   пилюля в арт-зоне на 32px; href-строки в variants/accessibility.
+4. **10.1+10.2 режимные демо** (~15 мин) — вторые ряды в «Доступность»-
+   историях пяти поверхностей + error-строка checkbox + слоты
+   subtitle/page-copy (референс-дословные копии — render-проверены).
+5. **token-reference + tooltip** (~5 мин) — две новые строки токенов;
+   placements-пилюли на кэпе 288.
+6. Хвост: invest-кластер clip-пара, byte-identical пары (api/invest-hero) —
+   беглый eyeball.
+
+После подтверждения: гейт релиза v1.2.0 — RELEASE.md «Релиз v1.2.0» §9.1–9.5
+(тег ставит ТОЛЬКО мейнтейнер; эта история ничего не исполняла).
+

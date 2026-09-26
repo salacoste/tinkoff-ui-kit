@@ -438,3 +438,212 @@ roving tabindex; `<html data-theme="dark">`: текст #333→#fff; 0 ошиб�
 - РОВНО НИЧЕГО из §8.2–8.3 НЕ исполнено: `git tag -l` не содержит v1.1.0,
   версии пакетов на 1.0.0, CHANGELOG без [1.1.0] — это гейт мейнтейнера.
 
+# Релиз v1.2.0 (эпики-v3) — подготовлено Story 11.3 (2026-09-26)
+
+**Всё до тега подготовлено и проверено автономным прогоном 11.3; шаги ниже
+исполняет ТОЛЬКО мейнтейнер.** v1.2.0 = 9 стори-юнитов эпиков-v3 (9.1, 9.2,
+10.1+10.2, 10.3, 10.4, 11.1, 11.2, 11.3): два токена (tint-brown,
+font-mono), режимные API (sr-only ×2, error, subtitle, page-copy, art-mode,
+href), a11y-свип по новым режимам, доки-mono. Итог (ИЗМЕРЕНО на голове
+11.3): 27 компонентов, **943 юнит + 1380 visual/axe тестов**, 414
+базлайн-PNG (файлов не прибавилось — окно перезаписывало и добавляло
+engine-ноги). Модель та же: **только GitHub, тег `v1.2.0` на `main`; npm —
+никогда**; `private: true` навсегда; npm-команды не запускались, тег НЕ
+ставился (11.3 завершилась с `git tag -l` = v1.0.0 v1.1.0 — проверяемо, §9.7).
+
+## 9.1. Гейты до релиза (pre-flight v1.2.0)
+
+1. **CI зелёный на HEAD `main`** — вердикт только по `gh run` (правило
+   CLAUDE.md: никогда не выводить из локальных гейтов). Окно v1.2.0 держало
+   CI зелёным с 9.1 (после tooltip-tolerance восстановления) — каждый
+   CI-круг 9.x–11.2 записан в соответствующем спеке.
+2. Локально на HEAD: `pnpm install && pnpm build && pnpm test && pnpm lint &&
+   pnpm typecheck && pnpm gen && pnpm gen:tokens` — всё зелёное, `git status`
+   чистый.
+3. **Gen-drift после коммита:** `pnpm gen && pnpm gen:tokens && git diff
+   --exit-code -- packages/ tests/` — пустой (генераторы воспроизводимы).
+4. **Визуальная сюита ×2:** `pnpm test:visual` дважды — 1380/1380 оба прогона
+   (порт 6007 машинно-глобален: перед прогонами `lsof -ti:6007` пуст; для
+   критичных кругов — приватный порт через временный конфиг, удалить до
+   коммита — прецедент 8.4/9.x).
+5. **БАТЧ-ПОДТВЕРЖДЕНИЕ v1.2.0-базлайнов** — ЧАСТЬ v1.2.0 пакета
+   `_bmad-output/implementation-artifacts/baseline-review-package.md`
+   (реестр перезаписей окна: 11 коммитов / 161 PNG-событие, forensic-
+   однострочники; byte-identical-пары помечены). Фиделити-контекст:
+   `.playwright-cli/verify/fidelity-verification-v1-2-0/` (ledger 13 строк,
+   жёлтый аудит, impeccable). Неподтверждённые — перезаписать по правилу
+   delete+update (§3 v1-части).
+6. **SR-спот-чеки v1.2.0** — исполнить
+   `.playwright-cli/verify/a11y-sweep/SR-RUNSHEET-v1.2.0.md` (файл написан
+   историей 11.1: 14 пустых строк-«Результат» по семи поверхностям × обе
+   темы; NVDA осознанно отложена — решение 2026-09-23 в §0). Может ехать
+   ПОСЛЕ тега (как v2) — но протоколы уже в «Доступность»-историях.
+
+## 9.2. Версия и CHANGELOG (прецедент §2/§8.2)
+
+1. Во всех трёх `packages/{tokens,components,react}/package.json` выставить
+   `"version": "1.2.0"` (манифесты остаются `private: true`; корневой
+   0.1.0 и docs 0.0.0 вне релизного контракта — прецедент 8.4).
+2. В `CHANGELOG.md`: заменить `[Unreleased]` на `[1.2.0] - <дата релиза>`,
+   добавить пустой `[Unreleased]` сверху. Текст — из драфта §9.5 ниже.
+3. Закоммитить («chore(release): v1.2.0 — version + changelog»); дождаться
+   зелёного CI на ЭТОМ коммите.
+
+## 9.3. Тег (мейнтейнер — единственный исполнитель)
+
+```sh
+# на чистом main, после §9.1–9.2 (тег указывает на релизный коммит с зелёным CI):
+git tag v1.2.0
+git push origin main --tags
+```
+
+Откат — тот же механизм, что §7.
+
+## 9.4. Верификация релиза — свежий потребитель рендерит tk-promo-card в bleed-режиме
+
+По молду §5/SM-6/§8.4, но проверяем v1.2.0-поверхность (клон — релизный тег):
+арт-режим `bleed` (10.3) — full-bleed нижняя арт-зона + парящая CTA-пилюля
+на зондируемой высоте 32px. Экспорт и пропсы сверены с реальным API
+(`packages/react/src/generated/promo-card.ts` → `PromoCard`; проп
+`artMode: 'top' | 'bleed'`, невалидное значение клампится в `top`; слоты
+`art`/`heading`/`description`/`actions`; CTA — `Button variant="secondary"
+size="card"`, строки дословно из promo-card.stories.ts).
+
+```sh
+d=$(mktemp -d) && cd "$d"
+git clone --depth 1 --branch v1.2.0 https://github.com/salacoste/tinkoff-ui-kit
+mkdir my-app && cd my-app
+pnpm init
+cat > pnpm-workspace.yaml <<'EOF'
+packages:
+  - .
+  - ../tinkoff-ui-kit/packages/*
+EOF
+cd ../tinkoff-ui-kit && pnpm install && pnpm build && cd ../my-app
+pnpm add -w pillkit-components pillkit-react pillkit-tokens --workspace
+pnpm add -w react@19.3.0 react-dom@19.3.0
+pnpm add -w -D vite
+cat > vite.config.ts <<'EOF'
+import { defineConfig } from 'vite';
+export default defineConfig({ resolve: { dedupe: ['react', 'react-dom'] } });
+EOF
+cat > index.html <<'EOF'
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <title>v1.2.0 check</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/main.tsx"></script>
+  </body>
+</html>
+EOF
+cat > main.tsx <<'EOF'
+import 'pillkit-tokens/tokens.css';
+import 'pillkit-components';
+import { createRoot } from 'react-dom/client';
+import { Button, PromoCard } from 'pillkit-react';
+
+const el = document.createElement('div');
+el.setAttribute('data-theme', 'light');
+document.getElementById('root')!.append(el);
+createRoot(el).render(
+  <PromoCard
+    artMode="bleed"
+    heading="Т-Мобайл"
+    description="Связь, интернет и подписки в одном тарифе"
+  >
+    <svg slot="art" viewBox="0 0 200 120" fill="none" aria-hidden="true">
+      <rect x="30" y="52" width="120" height="52" rx="10" fill="#FFFFFF" />
+      <rect x="46" y="38" width="120" height="52" rx="10" fill="#FFDD2D" />
+      <rect x="62" y="24" width="120" height="52" rx="10" fill="#333333" />
+    </svg>
+    <Button slot="actions" variant="secondary" size="card">Подробнее</Button>
+  </PromoCard>,
+);
+EOF
+pnpm exec vite
+```
+
+**Замечание о самодостаточности (кэваут §8.4 снят):** рецепт больше НЕ
+нуждает в отдельном предупреждении — корневой README («Быстрый старт») и
+getting-started-страница доков ОБА несут те же три строки
+`resolve.dedupe: ['react', 'react-dom']` (README.md:76,
+getting-started.stories.ts:217; поправки внесены самим гейтом v1.1.0 +
+историей 11.2). `vite.config.ts` выше — те же строки дословно.
+
+Проверить: арт-зона прижата к нижней кромке карты и достигает её краёв
+(bleed), пилюля «Подробнее» ПАРИТ внутри арт-зоны (отступ снизу 32px) —
+не под картой; заголовок/описание над артом; `<html data-theme="dark">` —
+тёмная тема; пилюля остаётся белой (theme-invariant white pills — техника
+charcoal-CTA внутри компонента). Этот прогон — релизный гейт v1.2.0.
+
+## 9.5. Драфт changelog v1.2.0 (EN — перенести в CHANGELOG.md на §9.2)
+
+```
+### Added — v1.2.0 surface (epics-v3)
+- Token layer: `tint-brown` #8D6040 (theme-invariant, the charcoal mold; AA gates pinned in
+  tests/contrast.test.ts) and the `--tk-font-mono` font slot (system-first chain) (9.1)
+- tk-input + tk-segmented-radio: `srOnly` label mode — visually hidden label keeps the full
+  accessible-name chain (1px-clip utility) (10.1)
+- tk-checkbox: `error` channel — the tk-input error line verbatim (consumer copy, described-by
+  wired, error-on-field pairing in both themes) (10.2)
+- tk-stepper: `subtitle` slot; tk-qr-block: `page-copy` slot — presence-mold slots; showcase copy
+  is reference-verbatim, render-verified (10.1/10.2)
+- tk-promo-card: `artMode="bleed"` — CSS-only full-bleed bottom art zone + floating-pill actions
+  overlay (pill offset probe-measured at --tk-space-32) (10.3)
+- tk-button: `href`/`target`/`rel` anchor mode — `<a class="button">` when href is set; no-href
+  render byte-identical; rel = noopener noreferrer iff target=_blank (10.4)
+
+### Changed
+- tk-stepper badge pairing switched to the reference reading: brown `tint-brown` fill + WHITE
+  numeral (AA 5.413:1; hooks --tk-stepper-badge-fill/-number unchanged) — the v1.1.0 cream-raised
+  mapping retired by the maintainer's ADOPT decision (9.1)
+
+### Internal
+- 9.2 generator truth (aa-annotations derive from DESIGN.md, AD-4 matrix single-sourced),
+  11.1 a11y engine legs for the new modes (+12; group-VI ledger 42/42; SR-RUNSHEET-v1.2.0),
+  11.2 docs code surfaces flipped to --tk-font-mono with the harness font pin (JetBrains Mono,
+  test-only) — no consumer-facing surface beyond the lines above
+```
+
+## 9.6. Шрифты и право (НЕИЗМЕННО — напоминание + ОДНО НОВОЕ)
+
+- **DaytonaSans/DaytonaPragma — отдельно лицензированные бинарники**
+  (© Monotype Imaging / © ParaType), НЕ MIT: права потребителя определяет
+  ТОЛЬКО `packages/tokens/fonts/LICENSE-FONTS.md`. Договоры лицензируют
+  МЕЙНТЕЙНЕРА и НЕ передаются с пакетом. Модель распределения не менялась
+  с v1.0.0 (решение 2026-09-23, §0).
+- **Новое окно v1.2.0 — JetBrains Mono ТЕСТ-ТОЛЬКО:** `@fontsource/
+  jetbrains-mono@5.3.0` (OFL-1.1) — КОРНЕВАЯ devDependency харнесса
+  (`package.json:28`, монтируется `tests/visual/serve.mjs` в /jetbrains-mono
+  для пина детерминистских метрик моно при захвате базлайнов). Это НЕ
+  поставляемый шрифтовый ассет: потребители его не получают, ни один пакет
+  кита его не декларирует; токенный слой не тронут — `--tk-font-mono`
+  остаётся систем-first цепочкой по решению 9.1 (лицензированного моно-
+  начертания не существует, у Daytona нет моно-ката). Рантьера OFL-1.1
+  обязательств на репозиторий не накладывает (использование — dev-тесты).
+- Вендорные transitions.dev-рецепты — провенанс-заголовки, статус §0.3;
+  новых v2/v1.2.0 компонентов на них не добавилось.
+- Товарный знак: свип 5.7 в силе; строки окна v1.2.0 прошли тот же grep в
+  11.3 (жёлтый аудит + impeccable включали сырой-hex и prose-свипы) — ноль
+  попаданий Т-Банк/Tinkoff/tbank вне фактологических URL и дисклеймера.
+
+## 9.7. Что 11.3 уже проверила (не нужно повторять)
+
+- Гейты на голове 11.3: build/test/lint/typecheck/gen/gen:tokens зелёные;
+  юниты **943/943** (17+708+70+148); `playwright --list` = **1380 тестов в
+  21 файле**; визуальная сюита ×2 — вердикт в спеке 11.3 (Verification).
+- Жёлтый аудит окна (13 строк moved-множества): ноль нарушений; impeccable
+  детектор kit-wide (207 файлов): exit 0, ноль блокеров; can-fail-проба
+  exit 2 воспроизведена.
+- Фиделити-ledger v1.2.0 (13 строк) с валидными указателями —
+  `.playwright-cli/verify/fidelity-verification-v1-2-0/ledger.md`.
+- **РОВНО НИЧЕГО из §9.2–9.3 НЕ исполнено — ПРУФЫ ИСПОЛНЕНЫ 2026-09-26:**
+  `git tag -l` = `v1.0.0 v1.1.0` (без v1.2.0); `packages/{tokens,components,
+  react}/package.json` = `"version": "1.1.0"` (все три); `grep "1\.2\.0"
+  CHANGELOG.md` = 0 совпадений (exit 1). Это гейт мейнтейнера.
+
+
