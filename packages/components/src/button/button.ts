@@ -21,11 +21,31 @@ import { buttonStyles } from './button.css.js';
  * activation; kit occurrence events arrive with the first component that
  * needs one (CONVENTIONS.md §3, resolved at the 1.7 pilot).
  *
+ * Anchor mode (Story 10.4): set `href` to a non-empty string and the pill
+ * renders a native `<a class="button">` INSTEAD of the button — same class,
+ * same inner tree (spinner + label slots), same styling: button.css.ts gates
+ * everything on the `.button` class and `:host([...])` attributes, never on
+ * the tag. With `href` unset/empty the render is literally today's button
+ * DOM, byte-for-byte. Nothing is reflected and nothing is minted on the host:
+ * the union of absent attributes IS the byte-stability guarantee (the 10.3
+ * lesson). `disabled`/`loading` keep the link inert via the host-level click
+ * interception (constructor listener covers both tags); an href link stays
+ * focusable while disabled (the aria-disabled pattern — it must not lose its
+ * address). External-link safety rides the store-badges contract, made
+ * deterministic: `rel` defaults to `noopener noreferrer` IFF `target` is
+ * `_blank` (noopener only matters when a NEW browsing context opens — target
+ * is that signal; no URL parsing in the render path); a consumer `rel` always
+ * wins verbatim. Keyboard: Enter navigates; Space scrolls the page (native
+ * anchor semantics — the documented delta, see the Accessibility story).
+ *
  * @tag tk-button
  * @attr {primary|secondary|inverse} variant - Visual variant (default `primary`).
  * @attr {hero|card|compact} size - Control height scale (default `card`).
  * @attr {boolean} loading - In-place spinner; width frozen; clicks do not activate.
  * @attr {boolean} disabled - 40% opacity, no pointer events, aria-disabled.
+ * @attr {string} href - URL: with a non-empty value the pill renders a native anchor instead of the button; unset/empty renders the button byte-identically.
+ * @attr {string} target - Anchor browsing-context hint (href mode only); `target="_blank"` is the signal that mints the default `rel`.
+ * @attr {string} rel - Anchor rel override (href mode only); a consumer value wins verbatim over the `_blank` default.
  * @slot - Label (primary content).
  * @slot icon - Optional icon, rendered left of the label.
  */
@@ -51,6 +71,31 @@ export class TkButton extends LitElement {
   /** Disabled: no pointer events, announced as disabled (aria-disabled); wins over loading. */
   @property({ type: Boolean, reflect: true })
   disabled = false;
+
+  /**
+   * Anchor mode: a non-empty URL flips the interactive tag to a native
+   * `<a class="button" href>` (Story 10.4). NO reflect, NO default — nothing
+   * is minted on the host; `''`/null/undefined all mean the button branch
+   * (null-tolerance, the checkbox `error` mold).
+   */
+  @property()
+  href?: string;
+
+  /**
+   * Browsing-context hint for the anchor (`href` mode only). Also the signal
+   * for the default `rel`: `target="_blank"` opens a new browsing context,
+   * which is the only case where noopener/noreferrer matter. NO reflect, NO
+   * default.
+   */
+  @property()
+  target?: string;
+
+  /**
+   * Consumer `rel` override (`href` mode only): always wins verbatim over the
+   * `_blank`-conditioned default. NO reflect, NO default.
+   */
+  @property()
+  rel?: string;
 
   static override readonly styles = [buttonStyles];
 
@@ -128,7 +173,44 @@ export class TkButton extends LitElement {
     this.#warnIfUnnamed();
   }
 
+  /**
+   * rel contract (deterministic, no URL parsing): a consumer `rel` wins
+   * verbatim; otherwise `target="_blank"` — the only case that opens a new
+   * browsing context, where noopener/noreferrer matter — mints the
+   * store-badges contract `noopener noreferrer`; any other target (or none)
+   * renders NO rel attribute (same-tab navigation needs none).
+   */
+  #anchorRel(): string | typeof nothing {
+    if (this.rel != null && this.rel.length > 0) return this.rel;
+    return this.target === '_blank' ? 'noopener noreferrer' : nothing;
+  }
+
   override render() {
+    // href mode: a non-empty string flips the interactive tag to a native
+    // anchor — same `.button` class, same inner tree, no `type` (button-only),
+    // no role (native anchor semantics are correct), no part (none exists).
+    // The two branches duplicate the inner tree ON PURPOSE: sharing it through
+    // a child expression would inject Lit part markers (<!---->) into the
+    // button branch's DOM — the no-href render must stay byte-identical (the
+    // byte-stability invariant, pinned by the DOM-identity unit test).
+    if (this.href != null && this.href.length > 0) {
+      return html`
+        <a
+          class="button"
+          href=${this.href}
+          target=${this.target != null && this.target.length > 0 ? this.target : nothing}
+          rel=${this.#anchorRel()}
+          aria-disabled=${this.disabled ? 'true' : nothing}
+          aria-busy=${this.loading ? 'true' : nothing}
+        >
+          <span class="button__spinner" aria-hidden="true"></span>
+          <span class="button__label">
+            <slot name="icon"></slot>
+            <slot @slotchange=${this.handleSlotChange}></slot>
+          </span>
+        </a>
+      `;
+    }
     return html`
       <button
         class="button"

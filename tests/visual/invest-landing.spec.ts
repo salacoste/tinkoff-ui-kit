@@ -22,6 +22,10 @@ import { buildStoryUrl, THEMES } from './stories';
  * - BADGES ARE EXTERNAL LINKS: three pills in the capture's order, each
  *   target=_blank + rel=noopener noreferrer (the 7.3 external-link
  *   contract), hrefs out of the page origin.
+ * - HERO CTA IS A LINK (10.4): the iOS pill renders an anchor — href="#ios"
+ *   (the #fragment placeholder mold beside tk-link's href="#android"; captures
+ *   carry no URLs) — pinned on the narrow hero leg together with the .button
+ *   class; no new leg.
  * - NARROW VIEWPORT: the hero stacks (the CTA pair becomes a column and the
  *   pill stretches to the actions row), the art scales down (≤64% of the
  *   viewport), the stepper cards collapse to one column and the badge pills
@@ -244,6 +248,9 @@ test.describe('invest landing [360] narrow', () => {
         actionsW: actionsRect.width,
         artW: art.getBoundingClientRect().width,
         viewportW: window.innerWidth,
+        pillTag: pill.tagName,
+        pillHref: pill.getAttribute('href'),
+        shadowHasButton: buttonHost.shadowRoot?.querySelector('button') != null,
       };
     });
     expect(geo, 'hero geometry resolves at 360').not.toBeNull();
@@ -255,6 +262,14 @@ test.describe('invest landing [360] narrow', () => {
     expect(geo ? geo.artW <= 0.64 * geo.viewportW + 1 : false, 'the phone art scales down').toBe(
       true,
     );
+    // 10.4 anchor pins: the hero CTA is a LINK — the shadow root's interactive
+    // element is an <a> carrying href="#ios" (the #fragment placeholder mold
+    // beside tk-link's href="#android"; the capture carries no URLs, so the
+    // real store URL is unknowable and must not be invented) and the SAME
+    // .button class the geometry asserts above pierce to (tag-agnostic).
+    expect(geo?.pillTag, 'the adopted CTA renders an anchor').toBe('A');
+    expect(geo?.pillHref).toBe('#ios');
+    expect(geo?.shadowHasButton, 'no native button left in the adopted CTA').toBe(false);
   });
 
   test('cluster reflows: stepper collapses to one column, badge pills wrap one per row', async ({

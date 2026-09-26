@@ -544,7 +544,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "tk-button — the kit's pilot component (Story 1.7).\n\nPill button in the Tinkoff (T-Bank) register: primary yellow (ink text),\nsecondary surface (default shadow), inverse ink (white text); heights\n56 (hero) / 48 (card) / 32 (compact, padded to the 44px target floor).\nVisual spec: DESIGN.md `components.button-*`; behavior: EXPERIENCE.md\nComponent Patterns (Button row).\n\nTheming crosses the shadow boundary exclusively through inherited\n`var(--tk-*)` custom properties (AD-2/AD-3) — this element never adopts\nthe token sheet and never injects document-level styles.\n\nEvents: none custom at v1 — the native `click` (composed, bubbles) serves\nactivation; kit occurrence events arrive with the first component that\nneeds one (CONVENTIONS.md §3, resolved at the 1.7 pilot).",
+          "description": "tk-button — the kit's pilot component (Story 1.7).\n\nPill button in the Tinkoff (T-Bank) register: primary yellow (ink text),\nsecondary surface (default shadow), inverse ink (white text); heights\n56 (hero) / 48 (card) / 32 (compact, padded to the 44px target floor).\nVisual spec: DESIGN.md `components.button-*`; behavior: EXPERIENCE.md\nComponent Patterns (Button row).\n\nTheming crosses the shadow boundary exclusively through inherited\n`var(--tk-*)` custom properties (AD-2/AD-3) — this element never adopts\nthe token sheet and never injects document-level styles.\n\nEvents: none custom at v1 — the native `click` (composed, bubbles) serves\nactivation; kit occurrence events arrive with the first component that\nneeds one (CONVENTIONS.md §3, resolved at the 1.7 pilot).\n\nAnchor mode (Story 10.4): set `href` to a non-empty string and the pill\nrenders a native `<a class=\"button\">` INSTEAD of the button — same class,\nsame inner tree (spinner + label slots), same styling: button.css.ts gates\neverything on the `.button` class and `:host([...])` attributes, never on\nthe tag. With `href` unset/empty the render is literally today's button\nDOM, byte-for-byte. Nothing is reflected and nothing is minted on the host:\nthe union of absent attributes IS the byte-stability guarantee (the 10.3\nlesson). `disabled`/`loading` keep the link inert via the host-level click\ninterception (constructor listener covers both tags); an href link stays\nfocusable while disabled (the aria-disabled pattern — it must not lose its\naddress). External-link safety rides the store-badges contract, made\ndeterministic: `rel` defaults to `noopener noreferrer` IFF `target` is\n`_blank` (noopener only matters when a NEW browsing context opens — target\nis that signal; no URL parsing in the render path); a consumer `rel` always\nwins verbatim. Keyboard: Enter navigates; Space scrolls the page (native\nanchor semantics — the documented delta, see the Accessibility story).",
           "name": "TkButton",
           "slots": [
             {
@@ -625,6 +625,33 @@
             },
             {
               "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Anchor mode: a non-empty URL flips the interactive tag to a native\n`<a class=\"button\" href>` (Story 10.4). NO reflect, NO default — nothing\nis minted on the host; `''`/null/undefined all mean the button branch\n(null-tolerance, the checkbox `error` mold).",
+              "attribute": "href"
+            },
+            {
+              "kind": "field",
+              "name": "target",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Browsing-context hint for the anchor (`href` mode only). Also the signal\nfor the default `rel`: `target=\"_blank\"` opens a new browsing context,\nwhich is the only case where noopener/noreferrer matter. NO reflect, NO\ndefault.",
+              "attribute": "target"
+            },
+            {
+              "kind": "field",
+              "name": "rel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Consumer `rel` override (`href` mode only): always wins verbatim over the\n`_blank`-conditioned default. NO reflect, NO default.",
+              "attribute": "rel"
+            },
+            {
+              "kind": "field",
               "name": "handleClick",
               "privacy": "private",
               "readonly": true,
@@ -659,6 +686,17 @@
                   "text": "void"
                 }
               }
+            },
+            {
+              "kind": "method",
+              "name": "#anchorRel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | typeof nothing"
+                }
+              },
+              "description": "rel contract (deterministic, no URL parsing): a consumer `rel` wins\nverbatim; otherwise `target=\"_blank\"` — the only case that opens a new\nbrowsing context, where noopener/noreferrer matter — mints the\nstore-badges contract `noopener noreferrer`; any other target (or none)\nrenders NO rel attribute (same-tab navigation needs none)."
             }
           ],
           "attributes": [
@@ -697,6 +735,30 @@
               "name": "disabled",
               "default": "false",
               "fieldName": "disabled"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Anchor mode: a non-empty URL flips the interactive tag to a native\n`<a class=\"button\" href>` (Story 10.4). NO reflect, NO default — nothing\nis minted on the host; `''`/null/undefined all mean the button branch\n(null-tolerance, the checkbox `error` mold).",
+              "name": "href",
+              "fieldName": "href"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Browsing-context hint for the anchor (`href` mode only). Also the signal\nfor the default `rel`: `target=\"_blank\"` opens a new browsing context,\nwhich is the only case where noopener/noreferrer matter. NO reflect, NO\ndefault.",
+              "name": "target",
+              "fieldName": "target"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Consumer `rel` override (`href` mode only): always wins verbatim over the\n`_blank`-conditioned default. NO reflect, NO default.",
+              "name": "rel",
+              "fieldName": "rel"
             }
           ],
           "superclass": {

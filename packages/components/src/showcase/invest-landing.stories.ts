@@ -240,7 +240,7 @@ export const InvestLanding: Story = {
             <h1 id="tki-hero-title">Мобильное приложение Т-Инвестиций</h1>
             <p class="tki-hero__body">Простой и удобный доступ к мировым фондовым рынкам</p>
             <div class="tki-hero__actions">
-              <tk-button variant="primary" size="hero">Скачать для iOS</tk-button>
+              <tk-button variant="primary" size="hero" href="#ios">Скачать для iOS</tk-button>
               <tk-link class="tki-hero__alt" variant="standalone" href="#android">
                 Скачать для Android
               </tk-link>

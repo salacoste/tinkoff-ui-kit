@@ -199,6 +199,37 @@ export const VariantsAndSizes: Story = {
           </section>
         `,
       )}
+      <section>
+        <h2>href: CTA-ссылка</h2>
+        <p class="tkbtn-note">
+          Непустой <code>href</code> рендерит ту же пилюлю нативной ссылкой
+          (<code>&lt;a class="button"&gt;</code> вместо
+          <code>&lt;button&gt;</code>) — тот же класс, то же внутреннее дерево,
+          та же стилизация. Без <code>href</code> рендер байт-в-байт совпадает с
+          кнопкой. Для <code>target="_blank"</code> атрибут
+          <code>rel="noopener noreferrer"</code> проставляется автоматически;
+          собственный <code>rel</code> всегда выигрывает дословно.
+        </p>
+        <div class="tkbtn-row">
+          <figure>
+            <tk-button variant="primary" size="hero" href="https://example.com">
+              Открыть страницу
+            </tk-button>
+            <figcaption>href — переход в той же вкладке</figcaption>
+          </figure>
+          <figure>
+            <tk-button
+              variant="secondary"
+              size="hero"
+              href="https://example.com"
+              target="_blank"
+            >
+              Открыть в новой вкладке
+            </tk-button>
+            <figcaption>target="_blank" — rel="noopener noreferrer" ставится сам</figcaption>
+          </figure>
+        </div>
+      </section>
     </main>
   `,
 };
@@ -405,7 +436,9 @@ export const Accessibility: Story = {
         состоянии loading сохраняется для скринридеров за спиннером. Компактная
         кнопка 32px добивает эффективную цель до порога 44px (EXPERIENCE.md A11y
         Floor) — hover никогда не единственный путь; у каждого действия есть
-        паритет касания и клавиатуры.
+        паритет касания и клавиатуры. С непустым <code>href</code> рендерится
+        нативная ссылка — строка режима href в чек-листе ниже фиксирует её
+        клавиатурную дельту.
       </p>
       <h2>Чек-лист: только с клавиатуры</h2>
       <table>
@@ -428,6 +461,16 @@ export const Accessibility: Story = {
           <tr>
             <td><code>Space</code></td>
             <td>Активирует кнопку (нативная активация); в состояниях loading и disabled активации нет.</td>
+          </tr>
+          <tr>
+            <td>Режим <code>href</code>: <code>Enter</code> / <code>Space</code></td>
+            <td>
+              Кнопка-ссылка фокусируется тем же Tab-кольцом; <code>Enter</code>
+              переходит по <code>href</code> (в loading/disabled — навигации нет);
+              <code>Space</code> прокручивает страницу — нативная семантика
+              ссылки, задокументированная дельта режима href, а не дефект
+              (ссылки референса ведут себя так же).
+            </td>
           </tr>
           <tr>
             <td>Скринридер</td>

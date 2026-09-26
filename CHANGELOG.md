@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- tk-button: href/target/rel anchor mode — the pill renders an anchor when href is set;
+  no-href renders byte-identical (additive minor, story 10.4)
+
 ## [1.1.0] - 2026-09-25
 
 ### Added — v2 (tbank.ru/invest + /business reference domains)

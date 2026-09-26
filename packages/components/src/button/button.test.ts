@@ -8,6 +8,11 @@ import { TkButton } from './button.js';
  * loading width-freeze, disabled semantics, attribute reflection, icon slot
  * projection, and the click-interception matrix from the I/O table.
  *
+ * Story 10.4 (href mode): the anchor branch — DOM identity of the no-href
+ * render (the byte-stability pin, FIRST below), anchor shape, the
+ * deterministic rel contract, disabled/loading inertia on the link, and the
+ * name guard on the anchor path.
+ *
  * Width-freeze split: happy-dom runs no layout engine, so HERE the freeze is
  * pinned by its structural invariants (the label node is never removed,
  * replaced, or taken out of flow — opacity 0 keeps it in the accessibility
@@ -248,6 +253,214 @@ describe('tk-button', () => {
     // A labeled button never warns.
     warnSpy.mockClear();
     await mount({}, 'Continue');
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  // --- Story 10.4: href mode (anchor rendering) ---------------------------------
+  //
+  // The byte-stability pin leads: with href unset the shadow DOM is TODAY's
+  // render, byte-for-byte — the branch must be inert by construction.
+
+  /**
+   * The exact no-href shadow DOM (Lit 3 through happy-dom): the render-root
+   * ChildPart marker, then the button template verbatim. Every whitespace
+   * character is load-bearing — this is the byte pin.
+   */
+  const BUTTON_BRANCH_DOM = `<!---->
+      <button class="button" type="button">
+        <span class="button__spinner" aria-hidden="true"></span>
+        <span class="button__label">
+          <slot name="icon"></slot>
+          <slot></slot>
+        </span>
+      </button>
+    `;
+
+  it('no-href DOM identity (FIRST, 10.4): absent/""/null/undefined href all render today\'s button DOM byte-for-byte', async () => {
+    // Attribute-absent — the literal pin against the pre-story render.
+    const plain = await mount({}, 'Continue');
+    expect(plain.shadowRoot?.innerHTML).toBe(BUTTON_BRANCH_DOM);
+    // The host attribute set is exactly the pre-story one (variant/size
+    // defaults; nothing href-related is minted).
+    expect(plain.getAttributeNames().sort()).toEqual(['size', 'variant']);
+
+    // '' via attribute → the button branch (null-tolerance, the checkbox
+    // `error` mold).
+    const emptyAttr = await mount({ href: '' }, 'Continue');
+    expect(emptyAttr.shadowRoot?.innerHTML).toBe(BUTTON_BRANCH_DOM);
+
+    // Property round-trip: live href mode, then cleared, returns to the
+    // byte-identical button render.
+    for (const cleared of ['', null, undefined] as const) {
+      const el = await mount({}, 'Continue');
+      el.href = '#ios';
+      await elementUpdated(el);
+      expect(el.shadowRoot?.querySelector('a.button'), 'sanity: href mode was live').not.toBeNull();
+      el.href = cleared as unknown as string | undefined;
+      await elementUpdated(el);
+      expect(
+        el.shadowRoot?.innerHTML,
+        `href cleared to ${JSON.stringify(cleared)} → the byte-identical button branch`,
+      ).toBe(BUTTON_BRANCH_DOM);
+    }
+  });
+
+  it('href mode renders <a class="button"> with the same inner tree; NO type/role/part; NOTHING is minted on the host (no reflect, 10.3 lesson)', async () => {
+    // Property path — the host never sees an href/target/rel attribute.
+    const el = await mount({}, 'Скачать для iOS');
+    el.href = '#ios';
+    await elementUpdated(el);
+
+    const anchor = el.shadowRoot?.querySelector('a.button');
+    expect(anchor, 'the anchor renders').toBeInstanceOf(HTMLAnchorElement);
+    expect(anchor?.getAttribute('href')).toBe('#ios');
+    expect(el.shadowRoot?.querySelector('button'), 'no button in href mode').toBeNull();
+    // Button-only / never-minted attributes stay absent.
+    expect(anchor?.getAttribute('type')).toBeNull();
+    expect(anchor?.getAttribute('role'), 'native anchor semantics are correct').toBeNull();
+    expect(anchor?.getAttribute('part'), 'no part exists today').toBeNull();
+    // Same inner tree: spinner + label wrapper + both slots, icon LEFT of label.
+    expect(el.shadowRoot?.querySelector('.button__spinner[aria-hidden="true"]')).not.toBeNull();
+    const labelNode = el.shadowRoot?.querySelector('.button__label');
+    expect(labelNode?.querySelector('slot[name="icon"]')).not.toBeNull();
+    expect(labelNode?.querySelector('slot:not([name])')).not.toBeNull();
+    const shadowHtml = el.shadowRoot?.innerHTML ?? '';
+    expect(shadowHtml.indexOf('slot name="icon"')).toBeLessThan(shadowHtml.indexOf('<slot>'));
+    // The accessible name is the slotted label (projection unchanged).
+    const defaultSlot = el.shadowRoot?.querySelector('slot:not([name])');
+    const projected = (defaultSlot?.assignedNodes() ?? [])
+      .map((node) => node.textContent ?? '')
+      .join('');
+    expect(projected).toContain('Скачать для iOS');
+    // NO reflect: the union of absent host attributes IS the byte-stability
+    // guarantee — only the pre-story variant/size defaults sit on the host.
+    expect(el.getAttributeNames().sort()).toEqual(['size', 'variant']);
+  });
+
+  it('rel contract (1/3): target="_blank" with no consumer rel mints the store-badges "noopener noreferrer"', async () => {
+    const el = await mount({}, 'Открыть');
+    el.href = 'https://example.com';
+    el.target = '_blank';
+    await elementUpdated(el);
+    expect(el.shadowRoot?.querySelector('a.button')?.getAttribute('rel')).toBe(
+      'noopener noreferrer',
+    );
+    expect(el.shadowRoot?.querySelector('a.button')?.getAttribute('target')).toBe('_blank');
+
+    // '' rel is "unset" (same null-tolerance as href) → the default mints.
+    const emptyRel = await mount({}, 'Открыть');
+    emptyRel.href = 'https://example.com';
+    emptyRel.target = '_blank';
+    emptyRel.rel = '';
+    await elementUpdated(emptyRel);
+    expect(
+      emptyRel.shadowRoot?.querySelector('a.button')?.getAttribute('rel'),
+      "rel='' reads as unset — the _blank default applies",
+    ).toBe('noopener noreferrer');
+  });
+
+  it('rel contract (2/3): a consumer rel wins VERBATIM, even with target="_blank" — never force-injects noopener', async () => {
+    const el = await mount({}, 'Открыть');
+    el.href = 'https://example.com';
+    el.target = '_blank';
+    el.rel = 'next';
+    await elementUpdated(el);
+    const rel = el.shadowRoot?.querySelector('a.button')?.getAttribute('rel');
+    expect(rel).toBe('next');
+    expect(rel).not.toContain('noopener');
+  });
+
+  it('rel contract (3/3): no _blank → NO rel attribute at all (same-tab navigation; blanket rel never)', async () => {
+    // No target whatsoever.
+    const noTarget = await mount({}, 'Скачать');
+    noTarget.href = '#ios';
+    await elementUpdated(noTarget);
+    expect(noTarget.shadowRoot?.querySelector('a.button')?.getAttribute('rel')).toBeNull();
+    expect(noTarget.shadowRoot?.querySelector('a.button')?.getAttribute('target')).toBeNull();
+
+    // A target that is NOT _blank renders verbatim and still mints no rel —
+    // noopener only matters when a NEW browsing context opens.
+    const selfTarget = await mount({}, 'Скачать');
+    selfTarget.href = '#ios';
+    selfTarget.target = '_self';
+    await elementUpdated(selfTarget);
+    expect(selfTarget.shadowRoot?.querySelector('a.button')?.getAttribute('target')).toBe('_self');
+    expect(selfTarget.shadowRoot?.querySelector('a.button')?.getAttribute('rel')).toBeNull();
+  });
+
+  it('href + disabled: aria-disabled anchor, href kept (must not lose its address), synthetic clicks prevented from BOTH dispatch paths', async () => {
+    const el = await mount({}, 'Скачать');
+    el.href = '#ios';
+    el.disabled = true;
+    await elementUpdated(el);
+
+    const anchor = el.shadowRoot?.querySelector('a.button');
+    expect(anchor?.getAttribute('aria-disabled')).toBe('true');
+    expect(anchor?.getAttribute('href'), 'an href link keeps its address (right-click/copy)').toBe(
+      '#ios',
+    );
+    expect(
+      anchor?.getAttribute('tabindex'),
+      'nothing mints tabindex — the link stays in the tab order (aria-disabled pattern)',
+    ).toBeNull();
+
+    // The host-level constructor listener covers the anchor exactly as it
+    // covers the button: dispatch on the inner anchor (composed, bubbles).
+    const innerClick = activationClick();
+    expect(anchor?.dispatchEvent(innerClick)).toBe(false);
+    expect(innerClick.defaultPrevented, 'no navigation from the inner dispatch').toBe(true);
+    // Dispatch on <tk-button> itself (el.click(), delegation).
+    const hostClick = activationClick();
+    expect(el.dispatchEvent(hostClick)).toBe(false);
+    expect(hostClick.defaultPrevented, 'no navigation from the host dispatch').toBe(true);
+
+    // Rest re-enables activation (the click is no longer canceled).
+    el.disabled = false;
+    await elementUpdated(el);
+    const restClick = activationClick();
+    expect(el.dispatchEvent(restClick)).toBe(true);
+    expect(restClick.defaultPrevented).toBe(false);
+  });
+
+  it('href + loading: aria-busy + spinner, clicks prevented; disabled-over-loading precedence unchanged on the anchor', async () => {
+    const el = await mount({}, 'Скачать');
+    el.href = '#ios';
+    el.loading = true;
+    await elementUpdated(el);
+
+    const anchor = el.shadowRoot?.querySelector('a.button');
+    expect(anchor?.getAttribute('aria-busy')).toBe('true');
+    expect(el.shadowRoot?.querySelector('.button__spinner')).not.toBeNull();
+    const loadingClick = activationClick();
+    expect(anchor?.dispatchEvent(loadingClick)).toBe(false);
+    expect(loadingClick.defaultPrevented, 'no navigation while loading').toBe(true);
+
+    // Precedence: disabled wins semantics; the spinner may keep rendering.
+    el.disabled = true;
+    await elementUpdated(el);
+    expect(anchor?.getAttribute('aria-disabled')).toBe('true');
+    expect(anchor?.getAttribute('aria-busy')).toBe('true');
+    expect(el.shadowRoot?.querySelector('.button__spinner')).not.toBeNull();
+    const bothClick = activationClick();
+    expect(el.dispatchEvent(bothClick)).toBe(false);
+    expect(bothClick.defaultPrevented).toBe(true);
+  });
+
+  it('name guard fires identically on the anchor path: empty default slot warns once', async () => {
+    warnSpy.mockClear();
+    const el = await mount({ href: '#ios' });
+    await elementUpdated(el);
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(String(warnSpy.mock.calls[0]?.[0])).toMatch(/^tk-button: .*accessible name/);
+
+    // Once per element — a later anchor-branch update does not re-warn.
+    el.loading = true;
+    await elementUpdated(el);
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+
+    // A labeled link never warns.
+    warnSpy.mockClear();
+    await mount({ href: '#ios' }, 'Скачать');
     expect(warnSpy).not.toHaveBeenCalled();
   });
 });
