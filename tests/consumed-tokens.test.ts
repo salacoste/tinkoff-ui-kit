@@ -173,13 +173,16 @@ describe('consumed --tk-* tokens exist in the token sheet (spec 1.7 review)', ()
       bareMonoConsumers.length,
       `docs files consuming --tk-font-mono bare: [${bareMonoConsumers.join(', ')}] — the 11.2 flip regressed`,
     ).toBeGreaterThan(0);
-    // The four flipped surfaces, each named — a partial regression (one file
-    // reverted) fails on exactly the file that vanished.
+    // The five flipped surfaces, each named — a partial regression (one file
+    // reverted) fails on exactly the file that vanished. component-search.ts
+    // (the tag chips) joined in the story 11.2 fix round — the review lens
+    // caught the story round's sweep missing its hyphenated selector stem.
     const flipped = [
       'getting-started.stories.ts',
       'theming-guide.stories.ts',
       'page-scaffold.ts',
       'token-reference.stories.ts',
+      'component-search.ts',
     ] as const;
     for (const file of flipped) {
       expect(

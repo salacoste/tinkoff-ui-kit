@@ -142,7 +142,11 @@ export class DocsComponentSearch extends LitElement {
         .tkcs-grid code {
           display: block;
           margin-top: var(--tk-space-4);
-          font-family: var(--tk-font-body);
+          /* Code surfaces render the mono chain — --tk-font-mono's first
+             consumer (story 11.2); block and inline alike. The tag chips
+             are code content (element tags); missed by the story round's
+             sweep (hyphenated selector stem), caught by the review lens. */
+          font-family: var(--tk-font-mono);
           font-size: var(--tk-text-body-xs-size);
           line-height: var(--tk-text-body-xs-leading);
           letter-spacing: var(--tk-text-body-xs-tracking);

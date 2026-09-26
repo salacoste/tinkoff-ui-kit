@@ -42,15 +42,27 @@ files above — no v2 page is a canary. Spec's ~24-leg estimate vs measured 36:
 the RECORD is the contract (spec Boundaries). Canaries: every other story in
 the index (components ×19 families, showcase ×6).
 
-## Flip completeness (acceptance grep)
+## Flip completeness (acceptance grep) — CORRECTED in the fix round
 
-- Selector-level sweep AFTER the flip: ZERO pre/code rules carrying
-  `font-family: var(--tk-font-body)` in docs sources. All 7 rules
-  (tkgs pre/code, tktg code/pre, tkv2 pre/code, tktr code) now
-  `var(--tk-font-mono)`.
-- The ONE other body-font hit in the scan root (`.storybook/preview.ts:88`)
-  is the `.tk-docs-disclaimer` banner (prose chrome, not a code surface) —
-  correctly untouched.
+- Story round (commit 6119d37): the 7 rules of the four mapped files
+  (tkgs pre/code, tktg code/pre, tkv2 pre/code, tktr code) flipped to
+  `var(--tk-font-mono)`. The story round's completeness sweep reported
+  «zero remaining body-font pre/code rules» — that sentence was FALSE:
+  the sweep's selector regex (`\.tk\w+\s+(pre|code)`) did not match
+  HYPHENATED stems, so `.tkcs-grid code` (packages/docs/src/
+  component-search.ts:142) escaped it.
+- FIX ROUND (lens MAJOR-1): `.tkcs-grid code` flipped (tag chips = code
+  content — element tags; orchestrator adjudication: the block+inline
+  ruling's half-adoption argument applies verbatim). Corrected sweep
+  (selector = any rule whose selector mentions pre/code, hyphen-safe):
+  the ONLY body-font code rule left anywhere in packages/docs was exactly
+  this one; post-fix ZERO remain.
+- `.storybook/preview.ts:88` is the `.tk-docs-disclaimer` banner — prose
+  chrome (not a code surface), correctly out of scope.
+- Lens N1 (recorded by the orchestrator, no action here): ~33 component-
+  story canvas / api-reference / showcase code rules in
+  packages/components stay body — outside this story's declared
+  packages/docs scope; deferred-work entry opened.
 
 ## «invest tables» grep — claim-bearing sites: ZERO
 
@@ -190,4 +202,30 @@ NO v2 page is walked, no stop-count impact.
 
 **Baseline round totals:** 36/36 legs re-taken (delete+update, explicit
 rm), zero non-sanctioned movers, ×2 stable, axe suite-wide green.
+
+## FORENSICS — the component-search miss (lens MAJOR-1, fix round 2026-09-26)
+
+**The miss:** `.tkcs-grid code` (packages/docs/src/component-search.ts:142,
+`font-family: var(--tk-font-body)` at :145) — the tag chips under each card
+in the component search grid (19 element-tag chips), rendered TWICE in the
+baselined getting-started--page (the live search + the empty-state demo at
+`query="несуществующий"`). A docs code surface per the spec's own Intent
+(«every docs code surface»); the story round left it on body font.
+
+**Root cause (honest-deviation record):** the story round's completeness
+sweep regex `\.tk\w+\s+(pre|code)\s*\{` matches selector stems of
+`[A-Za-z0-9_]+` only — `.tkcs-grid` contains a hyphen, so the rule was
+invisible to the sweep AND to its `-B2` context grep (the font-family sits
+3 lines below the selector). The sweep's «zero remaining» conclusion was
+therefore over-broad: it proved «zero UNHYPHENATED-stem body-font code
+rules». A hyphen-safe sweep (any rule whose selector mentions pre/code)
+run in the fix round lists exactly ONE body-font code rule in
+packages/docs — the missed one; zero remain after the fix.
+
+**Adjudication (orchestrator, FIX-THEN-SHIP):** flip it — the chips render
+element tags (code content; mono is conventional; the block+inline
+ruling's half-adoption argument applies verbatim). Pin updated to five
+named files. Fix-round baseline protocol: re-take ONLY the two
+getting-started--page PNGs (the sole story rendering the chips —
+component-search is imported nowhere else), one full compare pass after.
 
