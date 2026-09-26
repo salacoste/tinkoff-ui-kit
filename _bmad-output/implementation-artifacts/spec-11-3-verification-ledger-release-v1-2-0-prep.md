@@ -270,4 +270,10 @@ killed after verdict delivery (standing rule).
   11.3's green code head = 602262e; NO tag exists.
 - Docs round: spec post-sections + CLAUDE.md cycle bullet; docs-head CI
   verdict recorded below.
-- **CI VERDICT on the docs head: <docs-run-placeholder>.**
+- **CI VERDICT on the docs head (a23ecf6): GREEN — run 36272937423
+  (21:26:27Z → 21:47:22Z, 20.9m).** The terminal head's own run is verified
+  via `gh` after landing (the non-self-referential close mold, story 11.1).
+  **Story 11.3 CLOSED — epics-v3 complete (8/8). The v1.2.0 TAG itself
+  remains the maintainer's explicit act (IRON RULE): batch-confirm ЧАСТЬ
+  v1.2.0 → RELEASE §9.1–9.5 → SR-RUNSHEET-v1.2.0 → opportunistic
+  spot-checks, per HANDOFF.**
