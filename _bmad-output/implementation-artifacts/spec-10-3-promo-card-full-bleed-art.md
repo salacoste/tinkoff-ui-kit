@@ -174,20 +174,28 @@ below) + the pill's own white surface. No token is added.
 
 ## Tasks & Acceptance
 
-- [ ] Probes FIRST: (a) pill box + bottom offset from the hires card; (b) art zone span
+- [x] Probes FIRST: (a) pill box + bottom offset from the hires card; (b) art zone span
       per card from the grid crop; (c) adoption art span render-verified vs capture ink
-      — all in verify NOTES with measured → token + Δ
-- [ ] `artMode` union prop (reflect, clamp, jsdoc) + the bleed CSS set (zone geometry,
+      — all in verify NOTES with measured → token + Δ *(probes A–D + the render-verify
+      fixture; probe A's pill offset OVERTURNED the spec's expected neighborhood — see
+      Implementation Notes 1)*
+- [x] `artMode` union prop (reflect, clamp, jsdoc) + the bleed CSS set (zone geometry,
       actions overlay + re-scope, skeleton mirror, <768 chain) — CSS-only, no template
-      edit
-- [ ] Stories: Variants bleed demo + Accessibility row; showcase bento adoption
-      (`.tkb-stage` retired, slots flipped); tests per the matrix
-- [ ] `pnpm gen` (CEM + wrappers) + `pnpm gen:tokens` byte-stable; DOM-identity proof
-      (no attr → byte-identical)
-- [ ] THE baseline round: sanctioned set explicit-delete + update, both themes, ×2
+      edit *(gating invariant pinned by unit test; the `attribute: 'art-mode'` pin —
+      Implementation Notes 6)*
+- [x] Stories: Variants bleed demo + Accessibility row; showcase bento adoption
+      (`.tkb-stage` retired, slots flipped); tests per the matrix *(components
+      696→700; business-landing.spec.ts re-pinned to the live anatomy — Implementation
+      Notes 10)*
+- [x] `pnpm gen` (CEM + wrappers) + `pnpm gen:tokens` byte-stable; DOM-identity proof
+      (no attr → byte-identical) *(shadow-render identity pinned by unit test; the
+      host-mint deviation honestly recorded — Spec Change Log 1)*
+- [x] THE baseline round: sanctioned set explicit-delete + update, both themes, ×2
       stable, zero movement outside the set; `lsof -ti:6007` clean before each pass
-- [ ] Full gates (build → test → lint → typecheck → gen-drift post-commit → visual ×2);
-      spec closed; conventional commit EN; CI green by `gh run`
+      *(exactly the 8 sanctioned PNGs; playground/theming canaries byte-stable)*
+- [x] Full gates (build → test → lint → typecheck → gen-drift post-commit → visual ×2);
+      spec closed; conventional commit EN; CI green by `gh run` *(executor 9813a65 +
+      orchestrator merge round; CI verdict in Verification)*
 
 **Acceptance Criteria:**
 - Given `<tk-promo-card art-mode="bleed">` with slotted art + a secondary button, then
@@ -200,3 +208,144 @@ below) + the pill's own white surface. No token is added.
   cards compose from the mode directly, and deviation 2 is closed in NOTES.
 - Given the merged tree, then every gate exits 0, gen-drift is clean, and the only
   moved PNGs are inside the sanctioned set.
+
+## Implementation Notes
+
+Executor judgment calls (worktree commit 9813a65; lens-audited — all five mandated
+adjudications returned in the executor's favor where they clashed with the spec's
+expectations):
+1. **Pill bottom offset = `var(--tk-space-32)`, Δ=0.0 in 6/6 cards** (probe A hires
+   528×408: pill rows 332–375, cols 208–319, center 263.5 = card center EXACTLY;
+   probe B: 32px in all five grid cards) — the spec's expected space-12–16
+   neighborhood REFUTED by pixels. That neighborhood traced to the retired
+   `.tkb-stage__cta { bottom: calc(-1*var(--tk-space-16)) }` workaround — a proxy of
+   the old stage, not the reference. The lens's independent strict detector
+   (contiguous white-run ≥246, run ≥80px — excludes art-white contamination) reproduced
+   the same boxes. Probe D re-confirmed on the re-taken baseline (33 PNG px ≈ 32 CSS).
+2. **No scrim held** (probe A: 0 colorful px above the art zone in any reference card;
+   text bands all above art; art top at 42–52% of card) — the spec's probe gate
+   confirmed the no-overlay decision.
+3. **Sizing anchored on ZONE HEIGHT, not ink width:** reference art ink spans 99–100%
+   of card width; the kit's five bentoArt SVGs reach only 43–71% intrinsically and
+   redrawing is forbidden → `width:100%; max-width:400px` on the sizing hook (zone h =
+   0.6 × svg width): wide cards +1.7% (card 0: 240 vs 236) / +0.4% (card 1: 240 vs
+   239); trio at 100% width undershoot −9.0…−19.1% — the closest possible without
+   >100% width. *(The +1.7% figure was initially miswritten +0.4% in NOTES/ledger/
+   commit message — corrected in the docs round, see Change Log 3.)*
+4. **Zone height stays NATURAL** (reference varies 208–239 per card) — `height:auto`,
+   nothing pinned; render-verified: aspect checks 0.989–1.002 on all five shapes, svg
+   box flush to card bottom (each ink-bottom gap equals the shape's intrinsic empty
+   strip exactly).
+5. **Charcoal + bleed coexist:** both selectors declare the IDENTICAL re-scope pair —
+   one cascade result, no conflict; both kept (each documents its own surface).
+6. **`attribute: 'art-mode'` pin on the @property options** (with `reflect: true`):
+   Lit's default reflected name is the property PLAIN-LOWERCASED (`artmode`), NOT
+   kebab — without the pin the CSS gate `[art-mode='bleed']` would never match and
+   `setAttribute('art-mode', …)` would never reach the property. Lens mutation-proved
+   it on the worktree's own deps (happy-dom + Lit probe: unit test's first assertion
+   fails without the pin). Pagination `show-more` precedent.
+7. **Host attribute minting** — see Spec Change Log 1 (the round's one honest
+   deviation).
+8. **400px is a showcase-side length literal** (probe-measured): the zero-hardcoded
+   guard's letter covers colors/z-index — lengths are its documented blind spot
+   (tests/zero-hardcoded.test.ts:31-37); the literal carries a provenance comment
+   (flag-don't-invent).
+9. **Showcase art wrapper** `<span class="tkb-bento__art" slot="art">`: `bentoArt()`
+   returns raw svg strings (unsafeSVG) and the component's `::slotted(svg)` cannot
+   reach nested svgs — the wrapper carries the slot + aria-hidden, wrapper sizing lives
+   in showcase CSS (the retired stage's own mold); the component stays generic
+   (`::slotted(img)` verbatim + the documented svg companion).
+10. **business-landing.spec.ts geometry leg re-pinned:** the old leg asserted the DEAD
+    `.tkb-stage` DOM (rects 0 → `0 < 0`) — mandatory, not discretionary. Lens diffed
+    old vs new: NO coverage lost (wide/trio zone tracks, cta/zone overlap, ≥44 pill hit
+    all retained), three assertions GAINED (zone ≈ card width ±0.5, zone flush to card
+    bottom ±0.5, pill offset ≈32 digits-0) — the shadow bleed zone measured through the
+    open shadowRoot.
+11. Baseline-update round triaged two failures: the geometry leg above (spec fix, not a
+    PNG) and a `token-reference--motion [light]` 2.7m duration vs ~850ms siblings with
+    the PNG unchanged on disk — pre-capture timeout under the loaded run (starvation
+    class); passed both ×2 passes, no action.
+
+## Spec Change Log
+
+Frozen block untouched. Recorded changes beyond the frozen text:
+1. **Honest deviation (MINOR-3, lens-required): the host MINTS `art-mode="top"` from
+   the first update on every card.** The frozen byte-stability text said «no attribute
+   is minted», but the SAME frozen block mandated `@property({ reflect: true })` with
+   the `'top'` default — reflect + a non-undefined default necessarily writes the
+   attribute; the two sentences were internally inconsistent. The mint is the exact
+   `variant="gray"` precedent (minted on every card since 3.6 — that IS the baseline
+   state). Operative mitigations, all lens-verified: the SHADOW render is
+   byte-identical (unit-pinned CSS-ONLY identity test — bleed vs plain innerHTML
+   equal, zero `art-mode` attrs inside any shadow tree); zero CSS matches
+   `[art-mode='top']`; canary PNGs byte-stable (the commit moves EXACTLY the 8
+   sanctioned legs). AC-2's operative reading (pixels + shadow DOM) holds; the strict
+   host-DOM reading is this entry.
+2. Pill offset probe outcome (Implementation Notes 1): the spec's frozen
+   «expected neighborhood space-12–16» was a probe-gated EXPECTATION, not a frozen
+   number — the gate fired and the probe won (the spec's own mechanism, no change-log
+   deviation; recorded here because the frozen text named a number).
+3. Docs-round corrections (lens MINOR-1/2): NOTES probe-C card-0 arithmetic corrected
+   +0.4% → +1.7% (also in the business-landing ledger row 10); detector caveat
+   recorded for the committed probe scripts (the RECORDED pill boxes come from strict
+   detection; re-running the committed `probe_a4_hires_final.py`/`probe_b3` yields
+   art-white-contaminated wider boxes on the hires card and grid cards 1/3). The
+   commit message's «wide +0.4%» repeats the slip unamendably — this entry is the
+   correction of record.
+4. Merge round + CI verdicts: see Verification.
+
+## Review Triage Log
+
+Quick review (qr-lens-10-x, 2026-09-26): **SHIP — 0 MAJOR / 3 MINOR; no executor fix
+round. All five mandated adjudications returned EXECUTOR-CORRECT where they clashed
+with the orchestrator/spec expectations:**
+1. [ADJ-1] Pill offset 32 vs 12–16 — executor's 32 CONFIRMED by the lens's own strict
+   detector (hires + 5/5 grid cards, center-exact); the 12–16 neighborhood traced to
+   the retired `.tkb-stage` workaround. `toBeCloseTo(32, 0)` pin CORRECT.
+2. [ADJ-2] max-width:400px — HONEST: the zero-hardcoded guard's documented letter does
+   not cover length literals (no guard evasion); provenance comment thorough.
+   Precision correction extracted as MINOR-2 (+1.7% miswritten +0.4%, card 0).
+3. [ADJ-3] `attribute:'art-mode'` pin — REQUIRED; lens mutation-proved it in probe
+   space (worktree untouched): without the pin reflect writes `artmode`, and
+   `setAttribute('art-mode','bleed')` never reaches the property.
+4. [ADJ-4] The mint — all technical claims TRUE (shadow identity test, zero CSS
+   matches 'top', canaries byte-stable); Change Log entry owed → written at triage
+   (Change Log 1, the MINOR-3 REQUIRED action — this round).
+5. [ADJ-5] spec-test rewrite — NO coverage lost, three pins gained; the old leg
+   asserted dead DOM.
+- [MINOR-1] committed probe scripts over-detect vs the recorded NOTES boxes → caveat
+  recorded (Change Log 3); scripts kept as evidence artifacts.
+- [MINOR-2] +1.7% miswritten as +0.4% (NOTES:77, ledger dev.10, commit message) →
+  corrected in docs round (Change Log 3).
+- [MINOR-3] mint deviation unrecorded in the spec Change Log → REQUIRED triage action,
+  done (Change Log 1).
+- Checklist independently re-verified by the lens: unit 700/700 (29 files) re-run,
+  zero-hardcoded 7/7 re-run, gen+gen:tokens drift 0 re-proven, root lint/typecheck
+  OK, `.tkb-stage` grep = zero live markup, sanctioned containment proven
+  structurally (commit diff moves exactly the 8 PNGs), iron rules held, stories RU
+  content/EN meta held.
+
+## Verification
+
+- Executor round (worktree, 9813a65): probes A–D + the render-verify fixture FIRST →
+  implementation → gen/gen:tokens (byte-stable) → build → test (components 700, total
+  934) → lint → typecheck — all exit 0. Baseline round: exactly the 8 sanctioned PNGs
+  (explicit delete + update; port clean before the run); two update-run failures
+  triaged (Implementation Notes 11); visual **1368/1368 ×2** (8.8m / 8.1m); post-commit
+  gen-drift clean.
+- Lens round (qr-lens-10-x): unit 700/700 (29 files) re-run, zero-hardcoded 7/7 re-run,
+  gen+gen:tokens drift 0 re-proven, root lint/typecheck re-run, `.tkb-stage` grep =
+  zero live markup, sanctioned containment proven structurally (commit diff moves
+  exactly the 8 PNGs), the Lit-casing pin mutation-proved in probe space, the pill
+  offset independently re-measured (strict detector: 32.0px hires + 5/5 grid).
+- Merge round (orchestrator, main tree): fast gates green (build → test **934** (147+
+  17+700+70) → lint → typecheck → gen → gen:tokens); GEN_DRIFT_CLEAN; worktree
+  porcelain clean; visual **1368/1368 ×2** (8.2m / 8.2m), `lsof -ti:6007` clean
+  before every pass.
+- Merge: bdea907..9813a65 ff-only (35 files, +1602/−54); pushed.
+- **CI VERDICT on 9813a65: GREEN — run 36227239549 (07:35:22Z → 07:55:30Z, 20.1m,
+  gates job success).** Story 10.3's green head = 9813a65.
+- Docs round: spec post-execution sections + Change Log (the mint entry — Change Log 1)
+  + MINOR-1/2 corrections (NOTES +1.7%/caveat, ledger row 10) + ledger 7.4(e) closure
+  + CLAUDE.md cycle bullet and totals 930→934; docs-head CI verdict recorded below.
+- **CI VERDICT on the docs head: <docs-run-placeholder>.**

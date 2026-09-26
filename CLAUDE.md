@@ -163,8 +163,18 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   before the rect + CI-only 0.03 tolerance for the clip leg + light baseline re-take —
   standing rule: interactive-baseline legs AWAIT LAZY-MEDIA DECODE before any rect (the
   «revalidate after await» iron rule's media case, in the ledger next to port-6007)).
-  Next: 10.3 → 10.4 → 11.1–11.3. Sequencing in epics-v3.md.
-- **Kit totals: 930 unit + 1368 visual/axe tests, 27 components, 27 React wrappers, v1 design
+  Next: 10.3 → 10.4 → 11.1–11.3. Sequencing in epics-v3.md. **Story 10.3 DONE** (9813a65 —
+  promo-card `art-mode='bleed'`: CSS-only full-bleed bottom art zone + floating-pill
+  actions overlay; pill offset probe-refuted the spec's 12–16 expectation → EXACT
+  space-32 (Δ=0 in 6/6 cards); no scrim (0 text-over-art in reference); showcase
+  adoption retired `.tkb-stage` (deviation 2 + ledger 7.4e closed); Lit reflect pins
+  `attribute:'art-mode'` (default reflect plain-lowercases — pagination show-more mold);
+  host mints `art-mode="top"` from first update — the variant="gray" reflect precedent,
+  shadow render byte-identical (unit-pinned, honest deviation recorded in the spec
+  Change Log); showcase sizing probe-gated to zone height, max-width 400px length
+  literal flagged with provenance (zero-hardcoded guard covers colors/z-index only)).
+  Next: 10.4 → 11.1–11.3.
+- **Kit totals: 934 unit + 1368 visual/axe tests, 27 components, 27 React wrappers, v1 design
   assumptions all closed (6 v2 dark first-pass [ASSUMPTION]s open BY DESIGN until 8.2), CI green —
   CORRECTED 2026-09-25: Actions had been RED since 5.5/6962326 (typecheck step ran before build;
   workspace dist types missing on a fresh checkout; local gates masked it on stale dist — last green

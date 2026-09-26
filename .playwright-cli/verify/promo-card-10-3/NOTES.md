@@ -21,6 +21,15 @@ Superseded/buggy (kept for the record): `probe_a3_hires_edges.py` (bad card-rect
 `probe_b2_grid_segment.py` (needed scipy), `probe_c1_ref_art_span.py` (bad guard slice).
 `probe_b_grid_cards.py` — first grid pass; `probe_b3` is final.
 
+**Detector caveat (lens MINOR-1, recorded 2026-09-26):** the committed "final" pill
+detectors OVER-DETECT — `probe_a4_hires_final.py` (white ≥244, row-sum >30) and
+`probe_b3_grid_project.py` admit art whites on some cards, so RE-RUNNING them as-is
+yields wider contaminated boxes than the tables below record (hires card rows 176–375
+h=200 w=298 center 321.5; grid cards 1/3 w=264/229). The RECORDED numbers came from
+stricter detection (contiguous white-run per row, threshold ≥246, run ≥80px — excludes
+art-white contamination; independently reproduced by the lens's strict detector on
+hires + 5/5 grid cards). Scripts kept as evidence artifacts, unmodified.
+
 ## Probe A — card anatomy (source: `probe-beige-card-hires.png`, 528x408 @1x)
 
 The image IS the card (page bg shows only through radius AA corners). Fill = [233,224,209]
@@ -74,7 +83,7 @@ Candidate mapping (probe-gated): `.card__art ::slotted(svg)`-side sizing
 
 | card | svg w | our zone h | ref zone h | delta |
 |---|---|---|---|---|
-| 0,1 wide | 400 (capped) | 240 | 236 / 239 | +0.4% / +0.4% |
+| 0,1 wide | 400 (capped) | 240 | 236 / 239 | +1.7% / +0.4% |
 | 2 trio | 304 (100%) | 182 | 208 | −12.5% |
 | 3 trio-mid | 336 (100%) | 202 | 222 | −9.0% |
 | 4 trio | 304 (100%) | 182 | 225 | −19.1% |
