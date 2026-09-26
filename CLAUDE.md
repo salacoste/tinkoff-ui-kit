@@ -183,8 +183,21 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   markers); invest hero adopted href="#ios" (#fragment placeholder mold) and re-took
   BYTE-IDENTICAL both themes (blob-hash-equal — semantics, not pixels); 6 moved PNGs
   not 8; CHANGELOG Unreleased→Added; ledger 7.5b closed). **ZERO spec deviations —
-  the cycle's first.** Next: 11.1–11.3.
-- **Kit totals: 942 unit + 1368 visual/axe tests, 27 components, 27 React wrappers, v1 design
+  the cycle's first.**
+  **Story 11.1 DONE** (7ee97e1 — a11y-sweep deltas on the 10.1–10.4 surfaces: 12 new
+  engine legs — Group VI registry rows button variants (11 stops) + promo-card
+  variants (10), five targeted mode-legs (input/segmented sr-only via `&args=`,
+  checkbox error via property-API — the args channel silently drops multibyte,
+  ASCII-only grammar pinned at the leg site; stepper/qr-block tree legs), cookie
+  7.2(b) closed by a bounded Shift+Tab reverse-entry walk (one-press reading
+  measured-and-refuted; consent-choice + consumer close); ledger group-VI 42/42;
+  SR protocol rows in the seven stories + 3 approved demo figures +
+  SR-RUNSHEET-v1.2.0 (14 EMPTY maintainer rows — execution §8.1.4-side);
+  lens MAJOR: birth-stale «+20%» expectations fixed to the shipped +30% (4 sites +
+  2 PNG re-takes); stale-dist incident caught by the byte-identity-impossibility
+  alarm (6.3 class in miniature — no pipelines around gate commands); visual
+  1368→1380). Next: 11.2 → 11.3.
+- **Kit totals: 942 unit + 1380 visual/axe tests, 27 components, 27 React wrappers, v1 design
   assumptions all closed (6 v2 dark first-pass [ASSUMPTION]s open BY DESIGN until 8.2), CI green —
   CORRECTED 2026-09-25: Actions had been RED since 5.5/6962326 (typecheck step ran before build;
   workspace dist types missing on a fresh checkout; local gates masked it on stale dist — last green
