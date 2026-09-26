@@ -76,12 +76,14 @@ const pageStyles = html`
       background: var(--tk-color-surface-muted);
       border: 1px solid var(--tk-color-border-default);
       border-radius: var(--tk-radius-sm);
-      font-family: var(--tk-font-body);
+      /* Code surfaces render the mono chain — --tk-font-mono's first
+         consumer (story 11.2); block and inline alike. */
+      font-family: var(--tk-font-mono);
       font-size: var(--tk-text-body-s-size);
       line-height: var(--tk-text-body-s-leading);
     }
     .tkgs code {
-      font-family: var(--tk-font-body);
+      font-family: var(--tk-font-mono);
     }
     .tkgs ol {
       margin: 0 0 var(--tk-space-16);
@@ -203,6 +205,20 @@ cd my-app && pnpm init
 cd ../tinkoff-ui-kit && pnpm install && pnpm build && cd ../my-app
 # my-app — корень воркспейса, поэтому каждый add требует -w:
 pnpm add -w pillkit-components pillkit-react pillkit-tokens --workspace</code></pre>
+      <p>
+        Если собираете приложение на vite — обязательны три строки
+        дедупликации: воркспейс-линк даёт бандлеру два физических экземпляра
+        <code>react</code> — ваш и локальную копию из чекаута кита, — и без
+        дедупликации React-обёртки падают с «Invalid hook call» (найдено
+        релизным гейтом v1.1.0).
+      </p>
+      <pre><code>// vite.config.ts
+import { defineConfig } from 'vite';
+export default defineConfig({ resolve: { dedupe: ['react', 'react-dom'] } });</code></pre>
+      <p>
+        Полный рецепт быстрого старта (workspace-файл, index.html, main.ts) —
+        <code>README.md → «Быстрый старт»</code>.
+      </p>
       <p>
         Компоненты — Lit custom elements (<code>tk-*</code>); для React
         используйте сгенерированные обёртки из <code>pillkit-react</code>.

@@ -200,8 +200,9 @@ typography:
   body-s-bold: { fontSize: 13px, fontWeight: '500', fontFamily: 'DaytonaSans, DaytonaPragma, Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif' }
   caps-s: { fontSize: 12px, fontWeight: '500', letterSpacing: 1px, fontFamily: 'DaytonaSans, DaytonaPragma, Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif', note: 'rendered uppercase — see Typography body' }
 # v2 — mono family slot (story 9.1): system-first monospace chain for
-# tabular/code faces; no licensed asset. No 9.1 consumer by design — the first
-# is the invest tables story (11.2). One key today; new keys wire deliberately.
+# tabular/code faces; no licensed asset. No 9.1 consumer by design; the first
+# consumer is the docs code blocks (story 11.2). One key today; new keys wire
+# deliberately.
 fonts:
   mono: 'ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace'
 rounded:

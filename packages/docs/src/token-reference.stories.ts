@@ -132,7 +132,9 @@ const pageStyles = html`
       color: var(--tk-color-text-secondary);
     }
     .tktr code {
-      font-family: var(--tk-font-body);
+      /* Inline code renders the mono chain — --tk-font-mono's first
+         consumer (story 11.2); block and inline alike. */
+      font-family: var(--tk-font-mono);
       white-space: nowrap;
     }
     .tktr .tktr-swatch {

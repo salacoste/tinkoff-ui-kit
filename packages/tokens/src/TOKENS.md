@@ -124,7 +124,7 @@ Per-slot tokens from the `typography` block: `--tk-text-<slot>-size` / `-weight`
 | `--tk-font-body` | `DaytonaSans, DaytonaPragma, Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif` |  |
 | `--tk-font-mono` | `ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace` |  |
 
-The mono slot comes from the `fonts` block (story 9.1): a system-first monospace chain for tabular/code faces, no licensed asset. It has no consumer in 9.1 by design — the first is the invest tables story (11.2).
+The mono slot comes from the `fonts` block (story 9.1): a system-first monospace chain for tabular/code faces, no licensed asset. It had no consumer in 9.1 by design; the first consumer is the docs code blocks (story 11.2).
 
 Daytona-first stacks (maintainer license decision, 2026-09-22): the bundled licensed renames are the default. **DaytonaSans** = `Neue Haas Unica W1G` (renamed build, usage + renaming license from Monotype held by the maintainer) ships in `packages/tokens/fonts/` — import `pillkit-tokens/daytona.css` and the slots render it; **DaytonaPragma** = Pragmatica (ParaType, same arrangement) ships at true weights 400/500/700 (Book/Medium/Bold cuts; no SemiBold — 600/700 requests match the 700 face). Both are separately-licensed assets, NOT covered by the package MIT license (`fonts/LICENSE-FONTS.md`). `TinkoffSans` (the site's heading font, `dsHeading`) remains proprietary/unavailable, so DaytonaSans takes the heading role as the closest licensed grotesk. Consumers self-hosting the originals override the slots with the family names first (recipe below, unchanged); the open fallback is **Inter**, then the site-mirroring system chain.
 

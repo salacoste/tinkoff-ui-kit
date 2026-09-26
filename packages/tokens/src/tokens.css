@@ -141,8 +141,8 @@
   --tk-font-heading: DaytonaSans, DaytonaPragma, Inter, -apple-system, system-ui, "Segoe UI", "Helvetica Neue", sans-serif;
   --tk-font-body: DaytonaSans, DaytonaPragma, Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
   /* Mono slot — DESIGN.md `fonts` block (story 9.1): system-first chain,
-     no licensed asset. No consumer in 9.1 by design — the first is the
-     invest tables story (11.2). */
+     no licensed asset. No consumer in 9.1 by design; the first consumer
+     is the docs code blocks (story 11.2). */
   --tk-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
 }
 

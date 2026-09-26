@@ -87,12 +87,14 @@ export const v2PageStyles = html`
       background: var(--tk-color-surface-muted);
       border: 1px solid var(--tk-color-border-default);
       border-radius: var(--tk-radius-sm);
-      font-family: var(--tk-font-body);
+      /* Code surfaces render the mono chain — --tk-font-mono's first
+         consumer (story 11.2); block and inline alike. */
+      font-family: var(--tk-font-mono);
       font-size: var(--tk-text-body-s-size);
       line-height: var(--tk-text-body-s-leading);
     }
     .tkv2 code {
-      font-family: var(--tk-font-body);
+      font-family: var(--tk-font-mono);
     }
     .tkv2 table {
       box-sizing: border-box;
@@ -160,7 +162,17 @@ export const v2PageStyles = html`
   </style>
 `;
 
-/** An usage code block (escaped text — markup shown verbatim). */
+/**
+ * An usage code block (escaped text — markup shown verbatim).
+ *
+ * `tabindex="0"`: the mono flip (story 11.2) made long samples actually
+ * overflow their box — a scrollable region must be keyboard-scrollable
+ * (WCAG 2.1.1; axe `scrollable-region-focusable`, fired on the stepper
+ * page sample). This is axe's canonical remediation; on non-scrolling
+ * pages the tab stop on copyable code is good practice, not debt
+ * (orchestrator-adjudicated in-story fix — the adjudication record lives
+ * in .playwright-cli/verify/docs-11-2/NOTES.md).
+ */
 export const codeBlock = (code: string): TemplateResult => html`
-  <pre><code>${code}</code></pre>
+  <pre tabindex="0"><code>${code}</code></pre>
 `;

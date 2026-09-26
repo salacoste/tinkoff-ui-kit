@@ -28,9 +28,9 @@ describe('pillkit-tokens generated maps', () => {
     expect(typographyTokens['--tk-font-mono']).toBe(
       'ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace',
     );
-    // Mono has NO 9.1 consumer by design — the first is the invest tables
-    // story (11.2); the deliberate exemption is recorded in DESIGN.md's
-    // fonts comment and TOKENS.md.
+    // Mono had NO 9.1 consumer by design — the first consumer is the docs
+    // code blocks (story 11.2); DESIGN.md's fonts comment and TOKENS.md now
+    // record the consumer fact (the former exemption sites).
   });
 
   it('keeps caps-s tracking separate (no text-transform in tokens)', () => {

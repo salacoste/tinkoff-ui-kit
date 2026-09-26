@@ -999,8 +999,8 @@ const FONT_SLOT_COMMENT = [
 /** Mono slot comment (story 9.1) — rides right after the Daytona slots. */
 const FONT_MONO_COMMENT = [
   '  /* Mono slot — DESIGN.md `fonts` block (story 9.1): system-first chain,',
-  '     no licensed asset. No consumer in 9.1 by design — the first is the',
-  '     invest tables story (11.2). */',
+  '     no licensed asset. No consumer in 9.1 by design; the first consumer',
+  '     is the docs code blocks (story 11.2). */',
 ].join('\n');
 
 function renderCss(model, dark) {
@@ -1242,7 +1242,7 @@ function renderMd(model, dark) {
     '',
   );
   lines.push(
-    'The mono slot comes from the `fonts` block (story 9.1): a system-first monospace chain for tabular/code faces, no licensed asset. It has no consumer in 9.1 by design — the first is the invest tables story (11.2).',
+    'The mono slot comes from the `fonts` block (story 9.1): a system-first monospace chain for tabular/code faces, no licensed asset. It had no consumer in 9.1 by design; the first consumer is the docs code blocks (story 11.2).',
     '',
   );
   lines.push(

@@ -81,7 +81,9 @@ const pageStyles = html`
       color: var(--tk-color-link);
     }
     .tktg code {
-      font-family: var(--tk-font-body);
+      /* Code surfaces render the mono chain — --tk-font-mono's first
+         consumer (story 11.2); block and inline alike. */
+      font-family: var(--tk-font-mono);
     }
     .tktg pre {
       box-sizing: border-box;
@@ -92,7 +94,7 @@ const pageStyles = html`
       background: var(--tk-color-surface-muted);
       border: 1px solid var(--tk-color-border-default);
       border-radius: var(--tk-radius-sm);
-      font-family: var(--tk-font-body);
+      font-family: var(--tk-font-mono);
       font-size: var(--tk-text-body-s-size);
       line-height: var(--tk-text-body-s-leading);
     }

@@ -144,13 +144,48 @@ describe('consumed --tk-* tokens exist in the token sheet (spec 1.7 review)', ()
 
   it('the two 9.1 declarations exist in the sheet (spec 9.1 fixture pin)', () => {
     // tint-brown is consumed at story 9.1 (stepper.css.ts badge fallback);
-    // --tk-font-mono has NO consumer by design — the first is the invest
-    // tables story (11.2), the deliberate exemption recorded in DESIGN.md's
-    // fonts comment and TOKENS.md. Both pinned so a generator regression that
-    // drops either fails with the NAME, never as later-story noise.
+    // --tk-font-mono had NO consumer in 9.1 by design — the first consumer is
+    // the docs code blocks (story 11.2). The former no-consumer exemption was
+    // recorded in DESIGN.md's fonts comment and TOKENS.md — both now record
+    // the consumer fact. Pinned so a generator regression that drops either
+    // fails with the NAME, never as later-story noise.
     const names = ['--tk-color-tint-brown', '--tk-font-mono'] as const;
     for (const name of names) {
       expect(declaredTokens, `spec 9.1 declaration '${name}' must exist in tokens.css`).toContain(name);
+    }
+  });
+
+  it('the docs code surfaces consume --tk-font-mono bare — the 11.2 flip pinned by file (spec 11.2)', () => {
+    // The mono slot's first consumer is the docs code blocks (story 11.2).
+    // This closes the 9.1 no-consumer era in CODE, not comments: a flip
+    // regression (a pre/code rule back to --tk-font-body) fails here,
+    // naming the files that lost the consumption.
+    const bareMonoConsumers: string[] = [];
+    for (const root of SCAN_ROOTS['packages/docs'] ?? []) {
+      for (const filePath of walkSources(join(REPO_ROOT, 'packages/docs', root))) {
+        const text = stripComments(readFileSync(filePath, 'utf8'));
+        if ([...text.matchAll(CONSUMED_BARE_TOKEN)].some((m) => m[1] === '--tk-font-mono')) {
+          bareMonoConsumers.push(filePath);
+        }
+      }
+    }
+    expect(
+      bareMonoConsumers.length,
+      `docs files consuming --tk-font-mono bare: [${bareMonoConsumers.join(', ')}] — the 11.2 flip regressed`,
+    ).toBeGreaterThan(0);
+    // The four flipped surfaces, each named — a partial regression (one file
+    // reverted) fails on exactly the file that vanished.
+    const flipped = [
+      'getting-started.stories.ts',
+      'theming-guide.stories.ts',
+      'page-scaffold.ts',
+      'token-reference.stories.ts',
+    ] as const;
+    for (const file of flipped) {
+      expect(
+        bareMonoConsumers.some((p) => p.endsWith(`/${file}`)),
+        `${file} no longer consumes --tk-font-mono — the 11.2 flip regressed`,
+      ).toBe(true);
     }
   });
 
