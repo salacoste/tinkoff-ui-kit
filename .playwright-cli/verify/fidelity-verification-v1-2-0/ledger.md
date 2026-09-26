@@ -4,7 +4,7 @@
 component whose pixels/API moved in `git diff v1.1.0..HEAD` gets a row with
 (1) reference source capture, (2) verify dir pointer, (3) deviation count,
 (4) open flags. The moved set was MEASURED from the diff
-(`packages/components/src` 36 files + `packages/docs/src` 7 files + the token
+(`packages/components/src` 30 files + `packages/docs/src` 7 files + the token
 layer), cross-referenced with the re-take register (`git log
 v1.1.0..HEAD -- 'tests/visual/*snapshots*'` = 11 commits / 163 snapshot-file
 events). UNCHANGED components are NOT re-rowed — one aggregate pointer to the
@@ -73,7 +73,8 @@ docs-only, so the served tree is bit-identical to the 11.2 head whose own
 round proved 1380/1380 ×2. Every re-take wave since v1.1.0 is explained in
 the register:
 9.1 baseline round (c13ba12: 22 deleted → 20 git-visible, incl. the
-byte-identical api pair), 10.1+10.2 (325631c: 30+2 cluster; afb6089: 6 lens),
+byte-identical api pair), 10.1+10.2 (325631c: 30+2 cluster; 15a5ac6: 1 CI
+re-take — the qr-tab decode-wait leg; afb6089: 6 lens),
 10.3 (9813a65: 8), 10.4 (de304e7: 6 visible + 2 byte-identical), 11.1
 (d1a210a: 14 accessibility pairs; 7ee97e1: 2 lens), 11.2 (6119d37: 36 mono
 flip; a0fb95c: 2 lens; b185cc4: 36 mono-pin — the tolerance commit 90c8e6a

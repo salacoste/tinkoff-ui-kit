@@ -468,7 +468,7 @@ engine-ноги). Модель та же: **только GitHub, тег `v1.2.0`
    коммита — прецедент 8.4/9.x).
 5. **БАТЧ-ПОДТВЕРЖДЕНИЕ v1.2.0-базлайнов** — ЧАСТЬ v1.2.0 пакета
    `_bmad-output/implementation-artifacts/baseline-review-package.md`
-   (реестр перезаписей окна: 11 коммитов / 161 PNG-событие, forensic-
+   (реестр перезаписей окна: 11 коммитов / 163 PNG-события, forensic-
    однострочники; byte-identical-пары помечены). Фиделити-контекст:
    `.playwright-cli/verify/fidelity-verification-v1-2-0/` (ledger 13 строк,
    жёлтый аудит, impeccable). Неподтверждённые — перезаписать по правилу
