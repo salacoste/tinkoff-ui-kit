@@ -348,4 +348,6 @@ with the orchestrator/spec expectations:**
 - Docs round: spec post-execution sections + Change Log (the mint entry — Change Log 1)
   + MINOR-1/2 corrections (NOTES +1.7%/caveat, ledger row 10) + ledger 7.4(e) closure
   + CLAUDE.md cycle bullet and totals 930→934; docs-head CI verdict recorded below.
-- **CI VERDICT on the docs head: <docs-run-placeholder>.**
+- **CI VERDICT on the docs head: GREEN — run 36228304954, gates job success** (the
+  terminal head's own run verified via `gh run` after this line landed — the standing
+  non-self-referential close).
