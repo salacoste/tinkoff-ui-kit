@@ -360,11 +360,14 @@ async function openStory(page: Page, story: string, theme: 'light' | 'dark'): Pr
  *
  * CHANNEL BOUNDARY (probed on the built bundle, story 11.1): the args
  * channel carries ASCII values ONLY — booleans, numbers, and ASCII strings
- * (spaces via %20 and the `:` as %3A both apply: `error:abc def` renders).
- * A MULTIBYTE UTF-8 value is SILENTLY DROPPED — `error:Подтвердите…` never
- * reaches the render, raw or percent-encoded (the parser discards the pair,
- * no error surfaced). Non-ASCII payloads (RU copy) must ride the element
- * property API instead — the tk-checkbox [error] leg below is the mold.
+ * (spaces via %20 apply: `error:abc%20def` renders). Colon precision: the
+ * key/value SEPARATOR `:` applies raw OR encoded as %3A, but a RAW colon
+ * INSIDE a value is silently dropped (lens-probed) — encode it as %3A and
+ * it reaches the render (probe R). A MULTIBYTE UTF-8 value is SILENTLY
+ * DROPPED — `error:Подтвердите…` never reaches the render, raw or
+ * percent-encoded (the parser discards the pair, no error surfaced).
+ * Non-ASCII payloads (RU copy) must ride the element property API
+ * instead — the tk-checkbox [error] leg below is the mold.
  */
 async function openStoryArgs(page: Page, story: string, args: string): Promise<void> {
   await page.goto(`${buildStoryUrl(story, 'light')}&args=${encodeURIComponent(args)}`);
