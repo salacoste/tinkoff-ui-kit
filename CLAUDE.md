@@ -197,7 +197,27 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   2 PNG re-takes); stale-dist incident caught by the byte-identity-impossibility
   alarm (6.3 class in miniature — no pipelines around gate commands); visual
   1368→1380). Next: 11.2 → 11.3.
-- **Kit totals: 942 unit + 1380 visual/axe tests, 27 components, 27 React wrappers, v1 design
+  **Story 11.2 DONE** (a0fb95c — docs completion: `--tk-font-mono` first
+  consumer = ALL docs code surfaces — 8 rules at 5 files incl. the lens-caught
+  component-search tag chips (hyphen-blind sweep root cause: `\.tk\w+` can't
+  match `.tkcs-grid`); stale «invest tables (11.2)» first-consumer claim
+  corrected at 5 sites (DESIGN.md fonts comment + 2 generator literals +
+  2 tests) with 9.1 provenance kept, regen comment/note-only; consumption pin
+  (consumed-tokens names the 5 files, mutation-proven); getting-started gains
+  the vite-dedupe recipe + README cross-link; adjudicated in-story fix:
+  `tabindex="0"` on codeBlock pre (mono made the stepper sample actually
+  scroll → axe scrollable-region-focusable; zero pixels, sweep untouched);
+  sanctioned baselines MEASURED 36 legs + 2 fix-round re-takes, zero
+  unsanctioned movement; unit 942→943, visual 1380 unchanged. CI round:
+  system-first mono = platform-metric class — ubuntu reflows doc pages
+  (+17…+28px full-page heights, exactly the 36 legs); tolerance CANNOT fix
+  it (Playwright 1.63 compareImages hard-fails size mismatch before
+  maxDiffPixelRatio) → structural fix: `--tk-font-mono` joins the harness
+  font pin (JetBrains Mono via @fontsource, test-only dep — token layer
+  stays system-first per 9.1), 36 baselines re-taken under the pin). Next:
+  11.3 (verification ledger + v1.2.0 release prep — tag is
+  maintainer-only).
+- **Kit totals: 943 unit + 1380 visual/axe tests, 27 components, 27 React wrappers, v1 design
   assumptions all closed (6 v2 dark first-pass [ASSUMPTION]s open BY DESIGN until 8.2), CI green —
   CORRECTED 2026-09-25: Actions had been RED since 5.5/6962326 (typecheck step ran before build;
   workspace dist types missing on a fresh checkout; local gates masked it on stale dist — last green
