@@ -163,7 +163,7 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   before the rect + CI-only 0.03 tolerance for the clip leg + light baseline re-take —
   standing rule: interactive-baseline legs AWAIT LAZY-MEDIA DECODE before any rect (the
   «revalidate after await» iron rule's media case, in the ledger next to port-6007)).
-  Next: 10.3 → 10.4 → 11.1–11.3. Sequencing in epics-v3.md. **Story 10.3 DONE** (9813a65 —
+  Next: 10.4 → 11.1–11.3. Sequencing in epics-v3.md. **Story 10.3 DONE** (9813a65 —
   promo-card `art-mode='bleed'`: CSS-only full-bleed bottom art zone + floating-pill
   actions overlay; pill offset probe-refuted the spec's 12–16 expectation → EXACT
   space-32 (Δ=0 in 6/6 cards); no scrim (0 text-over-art in reference); showcase
@@ -173,8 +173,18 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   shadow render byte-identical (unit-pinned, honest deviation recorded in the spec
   Change Log); showcase sizing probe-gated to zone height, max-width 400px length
   literal flagged with provenance (zero-hardcoded guard covers colors/z-index only)).
-  Next: 10.4 → 11.1–11.3.
-- **Kit totals: 934 unit + 1368 visual/axe tests, 27 components, 27 React wrappers, v1 design
+  **Story 10.4 DONE** (de304e7 — tk-button `href`/`target`/`rel` anchor mode: shadow
+  render swaps `<button>`→`<a class="button">` when href is set, ZERO CSS edits (the
+  sheet already neutralizes anchor UA defaults); rel = noopener noreferrer iff
+  target=_blank (deterministic, no URL parsing; consumer rel verbatim); disabled/
+  loading inertia via the existing host interception; no-href DOM byte-identical —
+  captured-literal pin, lens base-verified + mutation-proven; anchor branch duplicates
+  the inner tree ON PURPOSE (a shared child expression would inject Lit `<!---->`
+  markers); invest hero adopted href="#ios" (#fragment placeholder mold) and re-took
+  BYTE-IDENTICAL both themes (blob-hash-equal — semantics, not pixels); 6 moved PNGs
+  not 8; CHANGELOG Unreleased→Added; ledger 7.5b closed). **ZERO spec deviations —
+  the cycle's first.** Next: 11.1–11.3.
+- **Kit totals: 942 unit + 1368 visual/axe tests, 27 components, 27 React wrappers, v1 design
   assumptions all closed (6 v2 dark first-pass [ASSUMPTION]s open BY DESIGN until 8.2), CI green —
   CORRECTED 2026-09-25: Actions had been RED since 5.5/6962326 (typecheck step ran before build;
   workspace dist types missing on a fresh checkout; local gates masked it on stale dist — last green

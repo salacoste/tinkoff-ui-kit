@@ -170,17 +170,23 @@ mold above. Recorded here so the executor does not invent a probe round.
 
 ## Tasks & Acceptance
 
-- [ ] `href`/`target`/`rel` props + template branch + jsdoc + unit tests (12 → ~19);
-      DOM-identity pin FIRST (no-href render vs baseline shape)
-- [ ] Stories: VariantsAndSizes link row + Accessibility row; showcase adoption
+- [x] `href`/`target`/`rel` props + template branch + jsdoc + unit tests (12 → ~19);
+      DOM-identity pin FIRST (no-href render vs baseline shape) *(12 → 20; the pin
+      leads the 10.4 section; the existing 12 untouched in order — Implementation
+      Notes 4)*
+- [x] Stories: VariantsAndSizes link row + Accessibility row; showcase adoption
       (`href="#ios"`); invest spec anchor pins; CHANGELOG Added bullet
-- [ ] `pnpm gen` (CEM + wrappers) + `pnpm gen:tokens` byte-stable; DOM-identity
-      proof on every existing story surface (canaries byte-stable)
-- [ ] THE baseline round: sanctioned 8 legs explicit-delete + update, both themes,
+- [x] `pnpm gen` (CEM + wrappers) + `pnpm gen:tokens` byte-stable; DOM-identity
+      proof on every existing story surface (canaries byte-stable) *(CEM +63/−1,
+      React wrappers byte-stable by design; tokens no diff)*
+- [x] THE baseline round: sanctioned 8 legs explicit-delete + update, both themes,
       ×2 stable, zero movement outside the set; `lsof -ti:6007` clean before each
-      pass
-- [ ] Full gates (build → test → lint → typecheck → gen-drift post-commit →
+      pass *(all 8 rm'd + re-taken; the 6 button legs moved, the 2 invest legs came
+      back BYTE-IDENTICAL — the sanctioned set legitimately shrank to 6 moved PNGs;
+      see Implementation Notes 7)*
+- [x] Full gates (build → test → lint → typecheck → gen-drift post-commit →
       visual ×2); spec closed; conventional commit EN; CI green by `gh run`
+      *(executor de304e7 + orchestrator merge round; CI verdicts in Verification)*
 
 **Acceptance Criteria:**
 - Given `<tk-button href="#ios">Label</tk-button>`, then the shadow DOM renders an
@@ -195,3 +201,112 @@ mold above. Recorded here so the executor does not invent a probe round.
   closed.
 - Given the merged tree, then every gate exits 0, gen-drift is clean, the CHANGELOG
   carries the Added bullet, and the only moved PNGs are inside the sanctioned set.
+
+## Implementation Notes
+
+Executor judgment calls (worktree commit de304e7; lens-audited — all seven upheld,
+all five mandated adjudications verified with independent evidence):
+1. **Inner tree DUPLICATED between the two template branches** (anchor
+   `button.ts:206-210` vs button `button.ts:221-225`), with the rationale as a code
+   comment (button.ts:192-195): sharing the inner tree through a child expression
+   would inject Lit `<!---->` part markers into the BUTTON branch, breaking
+   byte-identity — probe-verified (today's DOM carries no interior markers). The
+   lens diffed the two literals modulo indentation: byte-equal spinner/label/slots/
+   slotchange binding; only tag + href/target/rel vs type differ.
+2. **`rel=''` reads as unset** (the `_blank` default still mints noopener
+   noreferrer) and **`target=''` renders no attribute** — the href null-tolerance
+   clause extended to the companions; no path renders an empty attribute.
+3. **The DOM-identity byte-pin is a true capture, not self-consistency:** the
+   `BUTTON_BRANCH_DOM` literal was compared by the lens against the BASE-commit
+   component's live render (a /tmp clone at 92dcb34) — equal; and mutation-proven
+   (injecting `data-probe` OR a `${''}` child expression into the button branch
+   fails the pin — the latter simultaneously re-proving call 1's marker rationale).
+4. **The pin is the FIRST test of the 10.4 section; the existing 12 tests untouched
+   in order** — «pin FIRST» in its executable form. Cross-variant equality
+   (absent/''/null/undefined + a live-then-cleared round-trip) asserted in-test;
+   host no-mint pinned (`getAttributeNames()` = exactly `[size, variant]`).
+5. **12 → 20 tests** (spec said ~19 — the `~` tolerance; each matrix row that is
+   testable got a dedicated test; the four no-href inputs folded into the pin).
+6. **Accessibility intro qualifier:** one sentence beyond the mandated checklist row
+   — the note's «рендерит нативный `<button>`» needed the href qualifier to stay
+   truthful. Rides the «documented in the Accessibility story prose» clause.
+7. **The round's strongest outcome — 6 moved PNGs, not 8:** both
+   `showcase-invest-landing` legs were rm'd + re-taken and came back **byte-
+   identical** (equal git blob hashes at base and commit; the PNGs' mtimes prove
+   the re-take rewrote them, not staleness). Structural reason the pixels cannot
+   change: the anchor lives in the shadow root (document styles cannot cross) and
+   button.css.ts already neutralizes anchor UA defaults on `.button`
+   (`text-decoration: none`, font family/size/weight, per-variant `color`,
+   `cursor: pointer`) — ZERO CSS edits, the spec's «semantics, not pixels»
+   prediction held in the strongest form.
+8. Unit totals after the story: **942** (root 147 + tokens 17 + components 708 +
+   react 70) = 934 + 8; zero deleted/skipped (lens re-ran the full suite).
+
+## Spec Change Log
+
+Frozen block untouched. Recorded changes beyond the frozen text:
+1. **Zero deviations** — the first story of the v1.2.0 cycle with an empty
+   deviation ledger. The sanctioned set shrank 8 → 6 MOVED legs by byte-identity
+   (Implementation Notes 7) — not a deviation: the spec's «the ONLY baselines that
+   MAY move» invariant is satisfied in its strongest form by legs that re-take
+   byte-identical.
+2. Merge round + CI verdicts: see Verification.
+
+## Review Triage Log
+
+Quick review (qr-lens-10-4, 2026-09-26): **SHIP — 0 MAJOR / 0 MINOR / 3 NOTE.
+No fix round.** All five mandated adjudications returned VERIFIED with independent
+evidence:
+1. [ADJ-1] duplicated inner tree — byte-equal modulo indentation; marker rationale
+   empirically re-proven (mutation B).
+2. [ADJ-2] the byte-pin — base-verified (literal = BASE-commit live render),
+   mutation-proven (two failure injections), cross-variant + no-mint asserted.
+3. [ADJ-3] rel/target resolver — ordering verified (consumer rel → _blank default
+   → none); no empty attributes on any path; three rel tests cover the contract.
+4. [ADJ-4] the invest byte-identical claim — TRUE and the rm+re-take genuinely
+   happened (blob-hash equality + mtime forensics); `git diff base..commit` touches
+   exactly 6 PNGs.
+5. [ADJ-5] scope sweep — CHANGELOG verbatim per mandate; canaries untouched; CEM
+   +63/−1 with byte-stable wrappers (lens gen re-run: zero drift); anchor pins
+   pierce the shadow root and genuinely pin the adoption; CSS zero-diff;
+   `_bmad-output/` zero edits; no npm; single scoped commit.
+- [NOTE-1] ledger 7.5(b) closure is the orchestrator's post-merge docs step (this
+  round) — noted, done below.
+- [NOTE-2] visual ×2 + CI belong to the orchestrator's merge gates — run in the
+  merge round (Verification).
+- [NOTE-3] the lens's own forensics ran in a /tmp clone (removed); worktree
+  porcelain clean before and after.
+
+## Verification
+
+- Executor round (worktree, de304e7): API-first with the DOM-identity pin leading →
+  stories/adoption/CHANGELOG → gen (CEM +63/−1, wrappers byte-stable) → build → test
+  (942: components 708 + root 147 + tokens 17 + react 70) → lint → typecheck — all
+  exit 0. Baseline round: all 8 sanctioned legs rm'd + re-taken; 6 button legs moved,
+  the 2 invest legs BYTE-IDENTICAL (blob-hash-equal — Implementation Notes 7); visual
+  ×2 **1368/1368** (8.2m each); post-commit gen-drift clean; port verified before
+  every pass.
+- Lens round (qr-lens-10-4): full non-visual gate re-runs green (test 942, lint,
+  typecheck, build, gen-drift — porcelain clean before and after); the byte-pin
+  verified against the BASE commit's live render + two mutation injections in a /tmp
+  clone; the invest byte-identity forensically confirmed (blob hashes + mtimes);
+  the two template literals diffed byte-equal modulo indentation.
+- Merge round (orchestrator, main tree): fast gates green (build → test **942** →
+  lint → typecheck → gen → gen:tokens); GEN_DRIFT_CLEAN; worktree porcelain clean;
+  visual = pass 1 **1368/1368** (8.5m) + pass 3 **1368/1368** (8.2m) — pass 2
+  (1366/1368, 26.1m) failed two story-unrelated legs (modal--theming [light] visual,
+  navbar--mobile-burger [dark] axe) under machine load 9.28 (three busy peer
+  sessions); both re-ran GREEN targeted (8/8 in 5.8s incl. all siblings) — the
+  starvation class, pass 2 documented, ×2 satisfied by passes 1+3; `lsof -ti:6007`
+  clean before every pass.
+- Merge: 92dcb34..de304e7 ff-only (14 files, +507/−3, exactly 6 PNGs); pushed.
+  (Process note: the orchestrator's session cwd briefly drifted into the worktree
+  via a foreground cd — one merge attempt no-op'd against the wrong tree and was
+  caught by the anomaly check; no state was affected, the real merge ran from the
+  main tree.)
+- **CI VERDICT on de304e7: GREEN — run 36234613749 (10:03:16Z → 10:23:01Z, 19.8m,
+  gates job success).** Story 10.4's green head = de304e7.
+- Docs round: spec post-execution sections + ledger 7.5(b) closure + CLAUDE.md
+  cycle bullet and totals 934→942; docs-head CI verdict recorded below.
+- **CI VERDICT on the docs head: <docs-run-placeholder>.**
+- **CI VERDICT on the terminal head: <terminal-run-placeholder>.**
