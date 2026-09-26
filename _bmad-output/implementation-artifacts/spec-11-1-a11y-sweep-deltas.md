@@ -343,5 +343,8 @@ adjudications returned VERIFIED with the lens's OWN evidence:
   Story 11.1's green head = 7ee97e1.
 - Docs round: spec post-sections + ledger 7.2(b) closure + CLAUDE.md totals
   1368→1380 + cycle bullet; docs-head CI verdict recorded below.
-- **CI VERDICT on the docs head: <docs-run-placeholder>.**
+- **CI VERDICT on the docs head: GREEN — run 36244834495, gates job success**
+  (13:20:27Z → 13:38:09Z, 17.7m, on 694934f; the terminal head's own run
+  verified via `gh run` after this line landed — the standing
+  non-self-referential close).
 
