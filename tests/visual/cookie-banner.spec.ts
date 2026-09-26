@@ -231,3 +231,161 @@ for (const theme of THEMES) {
     ).toBe(180);
   });
 }
+
+// --- 7.2(b): the deferred-work Tab-walk revisit, closed by story 11.1 ---------
+//
+// A FORWARD Tab walk cannot enter a first-paint top-layer surface (the 8.1
+// engine finding — fundamental, probed live), but the REVERSE walk reaches
+// the card. The one-press reading is REFUTED by measurement (2026-09-26,
+// built bundle): from body the reverse order is the card's slotted LINK →
+// the story's demo trigger (chrome) → body (transient) → the ACCEPT pill.
+// So the leg rides the 8.1 BOUNDED-walk mold: the FIRST reverse stop is
+// already INSIDE the card (the slotted link — the banner's own content,
+// named via its aria-label; its focus affordance is the recorded 7.2
+// UNDERLINE judgment, ::slotted(a:focus-visible) — the link register, not
+// the unified ring), the walk then reaches the accept pill — ringed (the
+// unified 2px token ring, :focus-visible engaged by the real keypress) and
+// named — and Enter ACCEPTS: `consent-choice` fires (the §3 bare verb) and
+// the CONSUMER close path hides the card. The kit never closes itself (the
+// 7.2 contract): the consumer flip on consent-choice is the only close
+// path, wired here exactly as documented (the same reading the v2 SR
+// protocol records: «объявлений закрытия НЕТ (баннер сам не закрывается)»).
+test('7.2(b) reverse entry: a bounded Shift+Tab walk from body enters the open card (slotted link named + underlined), reaches the ringed accept pill; Enter accepts (consent-choice) and the consumer close hides the card', async ({
+  page,
+}) => {
+  await page.goto(buildStoryUrl('components-cookie-banner--playground', 'light'));
+  await waitForStorySettled(page);
+  const el = page.locator('main tk-cookie-banner').first();
+  await expect(el).toBeAttached();
+
+  // Element-API open path (the interactive mold), then the documented
+  // consumer close wiring — the accept handler dispatches ONLY the event.
+  await el.evaluate(async (node) => {
+    const host = node as HTMLElement & { open: boolean; updateComplete: Promise<unknown> };
+    host.open = false;
+    await host.updateComplete;
+    host.open = true;
+    await host.updateComplete;
+    host.addEventListener('consent-choice', () => {
+      (window as typeof window & { __consentFired?: boolean }).__consentFired = true;
+      host.open = false; // THE consumer close (the only close path)
+    });
+    return true;
+  });
+
+  // Normalize to body: blur the DEEPEST active element (open placed focus on
+  // the accept, inside nested shadow roots — a shallow blur would miss it).
+  await page.evaluate(() => {
+    let node = document.activeElement as Element | null;
+    while (node && node.shadowRoot && node.shadowRoot.activeElement) {
+      node = node.shadowRoot.activeElement;
+    }
+    (node as HTMLElement | null)?.blur?.();
+  });
+
+  const tokenColor = await page.evaluate(() => {
+    const hex = getComputedStyle(document.documentElement)
+      .getPropertyValue('--tk-color-focus-ring')
+      .trim();
+    if (!/^#[0-9a-fA-F]{6}$/.test(hex)) return hex;
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgb(${r}, ${g}, ${b})`;
+  });
+
+  const probeStop = (): Promise<{
+    tag: string;
+    classes: string;
+    name: string;
+    ariaLabel: string | null;
+    inBanner: boolean;
+    underline: string;
+    width: number;
+    height: number;
+    ringWidth: string;
+    ringStyle: string;
+    ringOffset: string;
+    ringColor: string;
+  } | null> =>
+    page.evaluate(() => {
+      let node = document.activeElement as Element | null;
+      while (node && node.shadowRoot && node.shadowRoot.activeElement) {
+        node = node.shadowRoot.activeElement;
+      }
+      if (!node || node === document.body) return null;
+      const style = getComputedStyle(node);
+      const rect = node.getBoundingClientRect();
+      return {
+        tag: node.tagName.toLowerCase(),
+        classes: node.getAttribute('class') ?? '',
+        name: node.textContent?.trim() ?? '',
+        ariaLabel: node.getAttribute('aria-label'),
+        inBanner: node.closest('tk-cookie-banner') !== null,
+        underline: style.textDecorationLine,
+        width: rect.width,
+        height: rect.height,
+        ringWidth: style.outlineWidth,
+        ringStyle: style.outlineStyle,
+        ringOffset: style.outlineOffset,
+        ringColor: style.outlineColor,
+      };
+    });
+
+  // FIRST reverse stop: already INSIDE the card — the slotted link, named via
+  // its aria-label, its recorded affordance (underline) engaged by the real
+  // Shift+Tab keypress.
+  await page.keyboard.press('Shift+Tab');
+  const entry = await probeStop();
+  expect(entry, 'Shift+Tab from body reaches INTO the open top-layer card').not.toBeNull();
+  expect(entry?.inBanner, 'the first reverse stop is the banner\'s own slotted content').toBe(true);
+  expect(entry?.tag).toBe('a');
+  expect(
+    entry?.ariaLabel,
+    'the slotted link is named (the demo anchor\'s aria-label)',
+  ).toBe('Согласие на обработку данных');
+  expect(
+    entry?.underline,
+    '::slotted(a:focus-visible) underlines the focused link (the recorded 7.2 link-register judgment)',
+  ).toContain('underline');
+
+  // Bounded continuation to the accept pill (measured: link → demo trigger →
+  // body → accept; every intermediate REAL stop rides along for the record).
+  let accept: Awaited<ReturnType<typeof probeStop>> = null;
+  for (let press = 0; press < 5; press += 1) {
+    await page.keyboard.press('Shift+Tab');
+    const stop = await probeStop();
+    if (stop?.classes.includes('banner__accept')) {
+      accept = stop;
+      break;
+    }
+  }
+  expect(accept, 'the bounded reverse walk reaches the accept pill').not.toBeNull();
+  expect(accept?.tag).toBe('button');
+  expect(accept?.name, 'the pill is named (its visible label)').toBe('Хорошо');
+  expect(accept?.ringWidth).toBe('2px');
+  expect(accept?.ringStyle).toBe('solid');
+  expect(accept?.ringOffset).toBe('2px');
+  expect(accept?.ringColor).toBe(tokenColor);
+  expect(accept?.width).toBeGreaterThanOrEqual(44);
+  expect(accept?.height).toBeGreaterThanOrEqual(44);
+
+  // Enter ACCEPTS: the native button activation runs the click path →
+  // `consent-choice` (the accept act) → the consumer flip closes the card.
+  await page.keyboard.press('Enter');
+  const after = await el.evaluate((node) => {
+    const host = node as HTMLElement & { open: boolean };
+    const card = host.shadowRoot?.querySelector('div') ?? null;
+    return {
+      consentFired:
+        (window as typeof window & { __consentFired?: boolean }).__consentFired ?? false,
+      open: host.open,
+      hiddenAttr: card?.hasAttribute('hidden') ?? null,
+      display: card ? getComputedStyle(card as HTMLElement).display : '',
+    };
+  });
+  expect(after.consentFired, 'Enter dispatched consent-choice (the accept act)').toBe(true);
+  expect(after.open, 'the consumer flip closed the banner').toBe(false);
+  expect(after.hiddenAttr, 'the released card carries the hidden attribute').toBe(true);
+  expect(after.display, 'the released card computes to display:none').toBe('none');
+});

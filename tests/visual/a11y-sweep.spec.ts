@@ -3,10 +3,11 @@ import { expect, test, type Page } from 'playwright/test';
 import { buildStoryUrl, THEMES } from './stories';
 
 /**
- * A11Y SWEEP MATRIX (specs 5.1–5.3; Group V added by story 8.1) — the
- * mechanized engine behind the `.playwright-cli/verify/a11y-sweep/`
- * ledgers. Runs the six-check method's MECHANIZABLE half against the
- * BUILT docs bundle for all 19 v1 components + the nine v2 surfaces:
+ * A11Y SWEEP MATRIX (specs 5.1–5.3; Group V added by story 8.1; Group VI
+ * added by story 11.1) — the mechanized engine behind the
+ * `.playwright-cli/verify/a11y-sweep/` ledgers. Runs the six-check
+ * method's MECHANIZABLE half against the BUILT docs bundle for all 19 v1
+ * components + the nine v2 surfaces + the seven 10.x new-mode surfaces:
  *
  * - CHECK 1 (keyboard, Tab/Shift-Tab legs): a REAL Tab walk over each
  *   component's story — every stop is recorded, and a Shift+Tab walk back
@@ -57,7 +58,7 @@ async function waitForStorySettled(page: Page): Promise<void> {
 
 interface SweepTarget {
   component: string;
-  group: 'I' | 'II' | 'III' | 'V';
+  group: 'I' | 'II' | 'III' | 'V' | 'VI';
   story: string;
   /** EXACT distinct KIT Tab stops (measured; order is not pinned) — a story
    * adding/removing an interactive surface must update this deliberately. */
@@ -116,6 +117,18 @@ const SWEEP: readonly SweepTarget[] = [
   { component: 'tk-stepper', group: 'V', story: 'components-stepper--playground', stops: 0, minKitSurfaces: 0 },
   { component: 'tk-store-badges', group: 'V', story: 'components-storebadges--playground', stops: 3, minKitSurfaces: 3 },
   { component: 'tk-qr-block', group: 'V', story: 'components-qrblock--playground', stops: 1, minKitSurfaces: 2 },
+  // --- Group VI: the 10.1–10.4 new-mode surfaces (story 11.1 — the
+  //     second-row-per-component precedent: the v1 rows above stay the v1
+  //     contract). MEASURED 2026-09-26 on the built docs bundle: the button
+  //     row's 11 kit stops = 9 size×variant inner buttons + the 2 href-mode
+  //     anchors (ring parity is class-level `.button` CSS, so the anchor
+  //     stops verify the SAME ring contract); the promo-card row's 10 kit
+  //     stops = 5 tint CTAs + 2 no-art CTAs + 3 bleed CTAs (the skeleton
+  //     cards render NO actions slot — their slotted buttons stay
+  //     unprojected light DOM, hence zero stops). Story chrome rides along
+  //     unasserted (the existing rule).
+  { component: 'tk-button', group: 'VI', story: 'components-button--variants-and-sizes', stops: 11, minKitSurfaces: 11 },
+  { component: 'tk-promo-card', group: 'VI', story: 'components-promocard--variants', stops: 10, minKitSurfaces: 10 },
 ];
 
 /** The live focus-ring token color, resolved from the themed document root. */
@@ -334,6 +347,28 @@ async function openStory(page: Page, story: string, theme: 'light' | 'dark'): Pr
   }
   // Normalize the walk start: release any mount-placed focus (the modal trap
   // lands on the first button at open) so the walk starts from body.
+  await page.evaluate(() => {
+    (document.activeElement as HTMLElement | null)?.blur?.();
+  });
+}
+
+/**
+ * Storybook iframe URLs accept per-render arg overrides (`&args=…`,
+ * semicolon-separated) — the args-driven 10.1/10.2 modes ride the SAME URL
+ * shape the maintainer run-sheet hands to VoiceOver (story 11.1). The shared
+ * helper's output is APPENDED to (tests/visual/stories.ts stays untouched).
+ *
+ * CHANNEL BOUNDARY (probed on the built bundle, story 11.1): the args
+ * channel carries ASCII values ONLY — booleans, numbers, and ASCII strings
+ * (spaces via %20 and the `:` as %3A both apply: `error:abc def` renders).
+ * A MULTIBYTE UTF-8 value is SILENTLY DROPPED — `error:Подтвердите…` never
+ * reaches the render, raw or percent-encoded (the parser discards the pair,
+ * no error surfaced). Non-ASCII payloads (RU copy) must ride the element
+ * property API instead — the tk-checkbox [error] leg below is the mold.
+ */
+async function openStoryArgs(page: Page, story: string, args: string): Promise<void> {
+  await page.goto(`${buildStoryUrl(story, 'light')}&args=${encodeURIComponent(args)}`);
+  await waitForStorySettled(page);
   await page.evaluate(() => {
     (document.activeElement as HTMLElement | null)?.blur?.();
   });
@@ -741,4 +776,424 @@ test('tk-cookie-banner: the open card is a REAL keyboard stop with the unified r
   });
   expect(stillOpen.open, 'Esc does not dismiss (the deliberate no-dismiss ruling)').toBe(true);
   expect(stillOpen.cardVisible).toBe(true);
+});
+
+// --- Group VI targeted legs (story 11.1) — the args-driven new modes ----------
+//
+// The 8.1 cookie-accept mold: the generic registry walks the story DEFAULTS;
+// these legs drive the 10.1/10.2 modes through Storybook's `&args=` URL
+// channel (the same URL the maintainer run-sheet hands to VoiceOver) and the
+// two slot-bearing modes through their slotted VARIANTS demos.
+
+test('tk-input [sr-only]: the hidden label still names the field — 1-stop walk, ring on .field, the utility is a 1px clip, not display:none', async ({
+  page,
+}) => {
+  await openStoryArgs(page, 'components-input--playground', 'srOnly:true');
+  const tokenColor = await focusTokenColor(page);
+
+  const state = await page.evaluate(() => {
+    const host = document.querySelector('main tk-input');
+    const label = host?.shadowRoot?.querySelector('label.label');
+    const input = host?.shadowRoot?.querySelector('input');
+    if (!host || !label || !input) return null;
+    const style = getComputedStyle(label);
+    const rect = label.getBoundingClientRect();
+    // The scan's own name resolution (labelledby chain first) — visually
+    // hidden must NOT be nameless.
+    const root = input.getRootNode();
+    const chain = (input.getAttribute('aria-labelledby') ?? '')
+      .split(/\s+/)
+      .filter(Boolean)
+      .map((id) =>
+        root instanceof ShadowRoot || root instanceof Document
+          ? root.getElementById?.(id)
+          : null,
+      )
+      .map((ref) => (ref instanceof Element ? ref.textContent?.trim() ?? '' : ''))
+      .join(' ')
+      .trim();
+    return {
+      srOnlyAttr: host.hasAttribute('sr-only'),
+      labelClass: label.className,
+      labelId: label.id,
+      labelFor: label.getAttribute('for'),
+      inputId: input.id,
+      labelledby: input.getAttribute('aria-labelledby') ?? '',
+      resolvedName: chain,
+      labelText: label.textContent?.trim() ?? '',
+      display: style.display,
+      position: style.position,
+      width: rect.width,
+      height: rect.height,
+      clipPath: style.clipPath,
+      overflow: style.overflow,
+    };
+  });
+  expect(state, 'the sr-only playground resolves its label/input').not.toBeNull();
+  expect(state?.srOnlyAttr, 'the URL args channel set the reflected attribute').toBe(true);
+  expect(state?.labelClass).toBe('label label--sr-only');
+  // The id/for/name chain is INTACT — only the paint is clipped.
+  expect(state?.labelledby.split(/\s+/)[0]).toBe(state?.labelId);
+  expect(state?.labelFor).toBe(state?.inputId);
+  expect(state?.resolvedName).toBe(state?.labelText);
+  expect(state?.resolvedName, 'the hidden label is still the accessible name').toBe(
+    'Фамилия, имя и отчество',
+  );
+  // The utility is APPLIED, not display:none (which would drop the name box):
+  // 1px box, absolutely positioned, clipped.
+  expect(state?.display).not.toBe('none');
+  expect(state?.position).toBe('absolute');
+  expect(Math.round(state?.width ?? 0)).toBe(1);
+  expect(Math.round(state?.height ?? 0)).toBe(1);
+  expect(state?.clipPath).toBe('inset(50%)');
+  expect(state?.overflow).toBe('hidden');
+
+  // Walk: EXACTLY 1 kit stop (the input), ring resolved on the .field
+  // carrier (input focus-within), both directions.
+  const stop = await page.evaluate(probeStop, undefined);
+  expect(stop, 'sanity: no stop before the first Tab').toBeNull();
+  await page.keyboard.press('Tab');
+  const forward = await page.evaluate(probeStop, undefined);
+  expect(forward, 'Tab enters the field').not.toBeNull();
+  expect(forward?.kitSurface).toBe(true);
+  expect(ringFailures(forward ?? NO_STOP, tokenColor, []), 'the .field ring').toEqual([]);
+  await page.keyboard.press('Tab');
+  const second = await page.evaluate(probeStop, undefined);
+  expect(
+    second === null || stopKey(second) === stopKey(forward as StopProbe),
+    '1 kit stop total — the walk cycles/leaves, no second surface',
+  ).toBe(true);
+});
+
+test('tk-segmented-radio [sr-only]: the hidden span keeps the radiogroup named — 1-stop walk, the «Выбор» fallback NOT fired', async ({
+  page,
+}) => {
+  await openStoryArgs(page, 'components-segmentedradio--playground', 'srOnly:true');
+  const tokenColor = await focusTokenColor(page);
+
+  const state = await page.evaluate(() => {
+    const host = document.querySelector('main tk-segmented-radio');
+    const label = host?.shadowRoot?.querySelector('.label');
+    const track = host?.shadowRoot?.querySelector('[role="radiogroup"]');
+    if (!host || !label || !track) return null;
+    const style = getComputedStyle(label);
+    const rect = label.getBoundingClientRect();
+    const root = track.getRootNode();
+    const chain = (track.getAttribute('aria-labelledby') ?? '')
+      .split(/\s+/)
+      .filter(Boolean)
+      .map((id) =>
+        root instanceof ShadowRoot || root instanceof Document
+          ? root.getElementById?.(id)
+          : null,
+      )
+      .map((ref) => (ref instanceof Element ? ref.textContent?.trim() ?? '' : ''))
+      .join(' ')
+      .trim();
+    return {
+      srOnlyAttr: host.hasAttribute('sr-only'),
+      labelClass: label.getAttribute('class') ?? '',
+      labelId: label.id,
+      labelTag: label.tagName.toLowerCase(),
+      trackRole: track.getAttribute('role'),
+      labelledby: track.getAttribute('aria-labelledby') ?? '',
+      ariaLabel: track.getAttribute('aria-label'),
+      resolvedName: chain,
+      labelText: label.textContent?.trim() ?? '',
+      display: style.display,
+      position: style.position,
+      width: rect.width,
+      height: rect.height,
+      clipPath: style.clipPath,
+    };
+  });
+  expect(state, 'the sr-only playground resolves its label/track').not.toBeNull();
+  expect(state?.srOnlyAttr).toBe(true);
+  expect(state?.labelClass).toBe('label label--sr-only');
+  // The span keeps its id and the aria-labelledby wiring — the group is named
+  // by the hidden span, NOT the «Выбор» aria-label fallback.
+  expect(state?.labelTag).toBe('span');
+  expect(state?.labelledby).toBe(state?.labelId);
+  expect(state?.ariaLabel, 'the no-label fallback path must NOT fire alongside a label').toBeNull();
+  expect(state?.resolvedName).toBe('Гражданство РФ?');
+  expect(state?.resolvedName).toBe(state?.labelText);
+  expect(state?.display).not.toBe('none');
+  expect(state?.position).toBe('absolute');
+  expect(Math.round(state?.width ?? 0)).toBe(1);
+  expect(Math.round(state?.height ?? 0)).toBe(1);
+  expect(state?.clipPath).toBe('inset(50%)');
+
+  // Walk: EXACTLY 1 kit stop (the roving tabindex radio), ring topology
+  // unchanged (the segment surface sibling carrier).
+  await page.keyboard.press('Tab');
+  const forward = await page.evaluate(probeStop, undefined);
+  expect(forward, 'Tab enters the group on the selected segment').not.toBeNull();
+  expect(forward?.tag).toBe('input');
+  expect(forward?.host).toBe('tk-segmented-radio');
+  expect(ringFailures(forward ?? NO_STOP, tokenColor, []), 'the segment ring').toEqual([]);
+  await page.keyboard.press('Tab');
+  const second = await page.evaluate(probeStop, undefined);
+  expect(
+    second === null || (forward && stopKey(second) === stopKey(forward)),
+    '1 kit stop total — the roving tabindex contract',
+  ).toBe(true);
+});
+
+test('tk-checkbox [error]: aria-invalid + describedby → the sibling error paragraph, name chain intact, 1-stop walk', async ({
+  page,
+}) => {
+  // CHANNEL BOUNDARY (probed on the built bundle, story 11.1): the `&args=`
+  // URL channel carries booleans, numbers and ASCII strings — spaces via %20
+  // and even the `:` as %3A apply (`error:abc def` renders) — but a MULTIBYTE
+  // UTF-8 value is silently DROPPED (`error:Подтвердите…` never reaches the
+  // render, raw or percent-encoded). The RU error string therefore rides the
+  // element property API — the shipped setter path consumers use; `error` is
+  // the same reactive property either way, so the render branch under test is
+  // identical to the one the URL channel would drive.
+  await openStory(page, 'components-checkbox--playground', 'light');
+  const armed = await page.evaluate(async () => {
+    const host = document.querySelector('main tk-checkbox') as
+      | (HTMLElement & { error: string; updateComplete: Promise<unknown> })
+      | null;
+    if (!host) return false;
+    host.error = 'Подтвердите согласие, чтобы продолжить';
+    await host.updateComplete;
+    return true;
+  });
+  expect(armed, 'the playground renders a tk-checkbox').toBe(true);
+  const tokenColor = await focusTokenColor(page);
+
+  const state = await page.evaluate(() => {
+    const host = document.querySelector('main tk-checkbox');
+    const label = host?.shadowRoot?.querySelector('label.root');
+    const input = host?.shadowRoot?.querySelector('input');
+    const error = host?.shadowRoot?.querySelector('.error');
+    if (!host || !label || !input || !error) return null;
+    const describedBy = input.getAttribute('aria-describedby');
+    const root = input.getRootNode();
+    const describedEl = describedBy
+      ? root instanceof ShadowRoot || root instanceof Document
+        ? root.getElementById?.(describedBy)
+        : null
+      : null;
+    // The input's accessible name (wrapping label — the checkbox mold).
+    const name = label.textContent?.trim() ?? '';
+    return {
+      invalid: input.getAttribute('aria-invalid'),
+      describedBy,
+      errorId: error.getAttribute('id'),
+      errorTag: error.tagName.toLowerCase(),
+      errorText: error.textContent?.trim() ?? '',
+      describedIsError: describedEl === error,
+      errorInsideLabel: label.contains(error),
+      errorFollowsLabel:
+        (label.compareDocumentPosition(error) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0,
+      name,
+      labelText: name,
+    };
+  });
+  expect(state, 'the error playground resolves label/input/error').not.toBeNull();
+  expect(state?.invalid).toBe('true');
+  expect(state?.describedBy).toBe(state?.errorId);
+  expect(state?.describedIsError, 'describedby resolves AT the error paragraph').toBe(true);
+  expect(state?.errorTag).toBe('p');
+  expect(state?.errorText).toContain('Подтвердите согласие');
+  expect(state?.errorInsideLabel, 'the error p is OUTSIDE the label (name purity)').toBe(false);
+  expect(state?.errorFollowsLabel, 'the error p FOLLOWS the label in document order').toBe(true);
+  expect(state?.name, 'the accessible name is the label text').toContain(
+    'Соглашаюсь получать рекламу',
+  );
+  expect(state?.name, 'the error text never joins the accessible name').not.toContain(
+    'Подтвердите согласие',
+  );
+
+  // Walk: EXACTLY 1 kit stop, ring on the `.box` sibling carrier.
+  await page.keyboard.press('Tab');
+  const forward = await page.evaluate(probeStop, undefined);
+  expect(forward, 'Tab enters on the checkbox input').not.toBeNull();
+  expect(forward?.tag).toBe('input');
+  expect(forward?.host).toBe('tk-checkbox');
+  expect(ringFailures(forward ?? NO_STOP, tokenColor, []), 'the box ring').toEqual([]);
+  await page.keyboard.press('Tab');
+  const second = await page.evaluate(probeStop, undefined);
+  expect(
+    second === null || (forward && stopKey(second) === stopKey(forward)),
+    '1 kit stop total',
+  ).toBe(true);
+});
+
+test('tk-stepper [subtitle]: the slotted demo tree — data-has-subtitle on, wrapper + content projected, h2 present, numerals aria-hidden', async ({
+  page,
+}) => {
+  await openStory(page, 'components-stepper--variants', 'light');
+
+  const state = await page.evaluate(() => {
+    const hosts = Array.from(document.querySelectorAll('main tk-stepper'));
+    const read = (host: Element) => {
+      const shadow = host.shadowRoot;
+      const wrapper = shadow?.querySelector('.stepper__subtitle') ?? null;
+      const slot = wrapper?.querySelector<HTMLSlotElement>('slot[name="subtitle"]') ?? null;
+      const assigned = slot
+        ? slot
+            .assignedNodes({ flatten: true })
+            .map((node) => node.textContent?.trim() ?? '')
+            .join(' ')
+            .trim()
+        : '';
+      return {
+        hasSubtitle: host.hasAttribute('data-has-subtitle'),
+        wrapperPresent: wrapper !== null,
+        assigned,
+        heading: shadow?.querySelector('h2.stepper__heading')?.textContent?.trim() ?? '',
+        prevSibling: wrapper?.previousElementSibling?.className ?? '',
+        nextSibling: wrapper?.nextElementSibling?.className ?? '',
+        numeralsHidden: Array.from(shadow?.querySelectorAll('.step__badge') ?? []).every(
+          (badge) => badge.getAttribute('aria-hidden') === 'true',
+        ),
+        interactiveSurfaces: Array.from(
+          shadow?.querySelectorAll(
+            'a[href], button, input, select, textarea, [role="button"]',
+          ) ?? [],
+        ).filter((el) => el.getClientRects().length > 0).length,
+      };
+    };
+    return {
+      total: hosts.length,
+      rows: hosts.map(read),
+      withSubtitle: hosts.filter((h) => h.hasAttribute('data-has-subtitle')).length,
+    };
+  });
+  // The Variants story: 7 hosts — 3 carry the slot (reference copy, no-heading,
+  // empty-state degrades), 4 do not (the wrapper must be ABSENT there).
+  expect(state?.total).toBe(7);
+  expect(state?.withSubtitle).toBe(3);
+  const slotted = state?.rows.filter((row) => row.hasSubtitle) ?? [];
+  const bare = state?.rows.filter((row) => !row.hasSubtitle) ?? [];
+  for (const row of slotted) {
+    expect(row.wrapperPresent).toBe(true);
+    expect(row.assigned.length).toBeGreaterThan(0);
+    // Position: BETWEEN the heading (when set) and the cards/empty copy —
+    // the wrapper never renders outside the heading→list run.
+    expect(['stepper__heading', ''].includes(row.prevSibling)).toBe(true);
+    expect(['stepper__steps', 'stepper__empty'].includes(row.nextSibling)).toBe(true);
+    expect(row.numeralsHidden, 'painted numerals stay aria-hidden decoration').toBe(true);
+    expect(
+      row.interactiveSurfaces,
+      'the block adds no interactive surfaces (CTA rides its own figure)',
+    ).toBe(0);
+  }
+  for (const row of bare) {
+    expect(row.wrapperPresent, 'empty slot ⇒ NO wrapper (the presence mold)').toBe(false);
+  }
+  // The reference composition: h2 + the reference-verbatim subheading copy.
+  const reference = slotted.find((row) => row.heading === 'Откройте счет для бизнеса');
+  expect(reference, 'the reference figure (h2 + subtitle) is in the set').toBeTruthy();
+  expect(reference?.assigned).toContain('Если у вас не зарегистрирован бизнес');
+  // The heading itself: h2 on every headed host (the spec's heading ramp).
+  for (const row of state?.rows ?? []) {
+    if (row.heading) {
+      expect(row.heading.length).toBeGreaterThan(0);
+    }
+  }
+});
+
+test('tk-qr-block [page-copy]: the slotted demo tree — data-has-page-copy on, wrapper + content projected, h2 present; the tab walk unchanged (1 stop per tablist)', async ({
+  page,
+}) => {
+  await openStory(page, 'components-qrblock--variants', 'light');
+  const tokenColor = await focusTokenColor(page);
+
+  const state = await page.evaluate(() => {
+    const hosts = Array.from(document.querySelectorAll('main tk-qr-block'));
+    const read = (host: Element) => {
+      const shadow = host.shadowRoot;
+      const wrapper = shadow?.querySelector('.qr-block__copy') ?? null;
+      const slot = wrapper?.querySelector<HTMLSlotElement>('slot[name="page-copy"]') ?? null;
+      const assigned = slot
+        ? slot
+            .assignedNodes({ flatten: true })
+            .map((node) => node.textContent?.trim() ?? '')
+            .join(' ')
+            .trim()
+        : '';
+      // The tablist lives in the NESTED tk-tabs shadow (compose-verbatim) —
+      // querySelectorAll does not pierce shadow roots, so count the composed
+      // hosts whose own tree actually renders the tablist.
+      const tablists = shadow
+        ? Array.from(shadow.querySelectorAll('tk-tabs')).filter(
+            (tabsHost) => tabsHost.shadowRoot?.querySelector('[role="tablist"]') ?? false,
+          ).length
+        : 0;
+      return {
+        hasPageCopy: host.hasAttribute('data-has-page-copy'),
+        wrapperPresent: wrapper !== null,
+        assigned,
+        title: shadow?.querySelector('h2.qr-block__title')?.textContent?.trim() ?? '',
+        tablists,
+        prevSibling: wrapper?.previousElementSibling?.className ?? '',
+        nextSibling: wrapper?.nextElementSibling?.tagName.toLowerCase() ?? '',
+      };
+    };
+    return { total: hosts.length, rows: hosts.map(read) };
+  });
+  // The Variants story: 5 hosts — 2 carry the copy (reference + the
+  // title-less/tabs-less degrade), 3 do not.
+  expect(state?.total).toBe(5);
+  const withCopy = state?.rows.filter((row) => row.hasPageCopy) ?? [];
+  const bare = state?.rows.filter((row) => !row.hasPageCopy) ?? [];
+  expect(withCopy.length).toBe(2);
+  for (const row of withCopy) {
+    expect(row.wrapperPresent).toBe(true);
+    expect(row.assigned.length).toBeGreaterThan(0);
+    // Position: AFTER the title (when set), BEFORE the tablist (when rendered)
+    // — the independent surfaces degrade around it.
+    expect(['qr-block__title', ''].includes(row.prevSibling)).toBe(true);
+    expect(['', 'tk-tabs'].includes(row.nextSibling)).toBe(true);
+    if (row.tablists > 0) {
+      expect(row.nextSibling, 'with a tablist, the copy sits right before it').toBe('tk-tabs');
+    }
+  }
+  for (const row of bare) {
+    expect(row.wrapperPresent, 'empty slot ⇒ NO wrapper (the presence mold)').toBe(false);
+  }
+  const reference = withCopy.find((row) => row.title === 'Вариант 2. Отсканируйте QR-код');
+  expect(reference, 'the reference figure (h2 + copy + tabs) is in the set').toBeTruthy();
+  expect(reference?.assigned).toContain('Переходите по ссылкам только с этой страницы');
+  expect(reference?.tablists).toBe(1);
+  const tablistHosts = (state?.rows ?? []).filter((row) => row.tablists > 0);
+  expect(tablistHosts.length, '3 hosts render a tablist (figs 1, 2, 4)').toBe(3);
+
+  // The walk: the copy changes NO tab topology — every kit stop is a tab
+  // inside the composed tk-tabs (1 per tablist = 3 stops total), ringed,
+  // and the reverse walk revisits exactly the same stops.
+  const forward: StopProbe[] = [];
+  const kitStops: StopProbe[] = [];
+  for (let press = 0; press < 30; press += 1) {
+    await page.keyboard.press('Tab');
+    const stop = await page.evaluate(probeStop, undefined);
+    if (stop === null) break;
+    const key = stopKey(stop);
+    if (forward.some((seen) => stopKey(seen) === key)) break;
+    forward.push(stop);
+    if (stop.kitSurface) kitStops.push(stop);
+  }
+  expect(kitStops.length, 'EXACTLY 3 kit stops — one per rendered tablist').toBe(3);
+  for (const stop of kitStops) {
+    expect(stop.host, 'every stop is the composed tk-tabs surface').toBe('tk-tabs');
+    expect(ringFailures(stop, tokenColor, [])).toEqual([]);
+  }
+  const reverseKeys = new Set(forward.map(stopKey));
+  const revisited = new Set<string>();
+  for (let press = 0; press < forward.length + 2; press += 1) {
+    await page.keyboard.press('Shift+Tab');
+    const stop = await page.evaluate(probeStop, undefined);
+    if (stop === null) break;
+    const key = stopKey(stop);
+    if (revisited.has(key)) break;
+    revisited.add(key);
+    expect(reverseKeys.has(key)).toBe(true);
+  }
+  for (const key of reverseKeys) {
+    expect(revisited.has(key)).toBe(true);
+  }
 });

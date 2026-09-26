@@ -117,11 +117,17 @@ during the sweep (the vacuous-citation class shipped three times before).
 
 **Extensions after 5.1–5.3 (same method, later stories):**
 `group-IV.md` (6.5 — the v2 catalog cluster + composed page; unit/live
-matrices, engine deferred to 8.1) and `group-V.md` (8.1 — the nine v2
+matrices, engine deferred to 8.1), `group-V.md` (8.1 — the nine v2
 surfaces ON the sweep engine: the Group V registry, the registry-declared
 `ringAncestor` carrier topology, and the cookie-banner targeted leg; the
 kit-wide `:host([hidden])` pattern test `tests/hidden-guard.test.ts` rides
-the same lane).
+the same lane), and `group-VI.md` (11.1 — the 10.1–10.4 new-mode surfaces:
+the Group VI registry rows (second-row-per-component precedent), the five
+mode-targeted legs riding Storybook's `&args=` URL channel (ASCII-only
+grammar boundary pinned empirically — multibyte values are silently
+dropped; RU payloads ride the element property API), and the 7.2(b)
+cookie-banner reverse-entry leg (bounded Shift+Tab walk; the one-press
+reading measured and refuted)).
 
 ## Findings disposition (this sweep)
 

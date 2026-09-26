@@ -485,6 +485,20 @@ export const Accessibility: Story = {
         ${button('Цель для клавиатуры', { variant: 'primary', size: 'hero' })}
         ${button('Compact: порог 44px', { variant: 'secondary', size: 'compact' })}
       </div>
+      <h2>href: CTA-ссылка</h2>
+      <div class="tkbtn-row">
+        <tk-button variant="primary" size="hero" href="https://example.com">
+          Открыть страницу
+        </tk-button>
+        <tk-button
+          variant="secondary"
+          size="hero"
+          href="https://example.com"
+          target="_blank"
+        >
+          Открыть в новой вкладке
+        </tk-button>
+      </div>
     
       <h2>Протокол скринридер-проверки (VoiceOver / NVDA)</h2>
       <p class="tkbtn-note">
@@ -513,6 +527,14 @@ export const Accessibility: Story = {
           <tr>
             <td>Enter / Space</td>
             <td>активация: срабатывает действие; в loading/disabled — тишина</td>
+          </tr>
+          <tr>
+            <td>Tab на кнопку-ссылку (href-ряд демо)</td>
+            <td>
+              «Открыть страницу, ссылка» и «Открыть в новой вкладке, ссылка» —
+              роль ССЫЛКА вместо кнопки (нативный <code>&lt;a&gt;</code>);
+              размер и вариант не объявляются
+            </td>
           </tr>
         </tbody>
       </table>

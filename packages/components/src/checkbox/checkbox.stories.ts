@@ -540,6 +540,15 @@ export const Accessibility: Story = {
             <td>Indeterminate</td>
             <td>«частично отмечен» (aria-checked=mixed)</td>
           </tr>
+          <tr>
+            <td>Чекбокс с ошибкой (второй ряд демо)</td>
+            <td>
+              «Согласен с условиями, пункт выбора, не отмечен» — текст ошибки
+              НЕ входит в имя; при остановке зачитывается описание
+              «Подтвердите согласие, чтобы продолжить» (aria-describedby),
+              поле помечено aria-invalid
+            </td>
+          </tr>
         </tbody>
       </table>
     </main>
