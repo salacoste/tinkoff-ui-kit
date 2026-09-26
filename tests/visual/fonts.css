@@ -16,6 +16,18 @@
  * docs copy is Russian, OQ-4) as the open fallback, including weight 700 for
  * the h1/h2 heading slots, whose 700 requests resolve to DaytonaSans' 600
  * face deterministically (closest-weight matching inside the family).
+ *
+ * The mono slot joins the pin 2026-09-26 (story 11.2 CI round): --tk-font-mono
+ * is SYSTEM-FIRST in the token layer (the 9.1 ruling — no licensed mono face,
+ * the token chain resolves per-OS), so its first consumer (the 11.2 docs code
+ * flip) made full-page doc baselines platform-divergent — the same wrapped-
+ * line-count deltas the pin exists to kill for body/heading. The harness pins
+ * the slot to locally-served JetBrains Mono (@fontsource/jetbrains-mono, OFL-
+ * 1.1, latin + cyrillic subsets; test-only dependency, NOT a token-layer font
+ * asset — the shipped tokens.css chain is untouched). Weight set 400/500:
+ * every mono surface today (pre blocks, inline code chips) inherits the body
+ * 400; 500 covers the medium chip variants. Terminal fallback stays generic
+ * `monospace` for any glyph JetBrains Mono misses.
  */
 @font-face {
   font-family: 'DaytonaSans';
@@ -89,15 +101,50 @@
   src: url('/inter/files/inter-cyrillic-700-normal.woff2') format('woff2');
 }
 
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: block;
+  src: url('/jetbrains-mono/files/jetbrains-mono-latin-500-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('/jetbrains-mono/files/jetbrains-mono-cyrillic-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: block;
+  src: url('/jetbrains-mono/files/jetbrains-mono-cyrillic-500-normal.woff2') format('woff2');
+}
+
 /*
  * Slot override. The token sheet declares the slots on `:root` (and its dark
  * layer on `:root[data-theme=dark]` — fonts are not themed, but match both
  * selector shapes so the override can never lose the cascade in either theme).
  * Injected stylesheets land after the app's, so equal specificity wins.
- * Inter stays in the stack as the loaded fallback.
+ * Inter stays in the stack as the loaded fallback; the mono override keeps the
+ * generic `monospace` terminal (system faces only ever render glyphs JetBrains
+ * Mono itself misses).
  */
 :root,
 :root[data-theme='dark'] {
   --tk-font-heading: DaytonaSans, Inter, sans-serif;
   --tk-font-body: DaytonaSans, Inter, sans-serif;
+  --tk-font-mono: 'JetBrains Mono', monospace;
 }

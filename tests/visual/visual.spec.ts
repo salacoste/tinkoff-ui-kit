@@ -111,37 +111,23 @@ async function waitForDecodedCanvas(page: Page): Promise<void> {
  * (macOS Menlo vs ubuntu DejaVu/Liberation). Every doc page whose pixels
  * contain mono code surfaces reflows on ubuntu: inline <code> chips change
  * advance widths → wrapped paragraphs gain/lose lines → the FULL-PAGE canvas
- * height shifts (observed +17…+28px; diff ratios 0.02–0.07 across exactly
- * the 36 flipped legs — the sanctioned 11.2 set, zero canaries touched).
- * Same un-pinnable wrap-count subclass as the tooltip entries above; the
- * structural pin would be a BUNDLED mono webfont (a token-layer decision
- * the 9.1 ruling declined). Flat 0.10 ≥ 1.4× of the 0.07 max.
+ * height shifts (observed +17…+28px across exactly the 36 flipped legs —
+ * the sanctioned 11.2 set, zero canaries touched). A flat 0.10 tolerance
+ * entry set for those legs (90c8e6a, run 36256418333) did NOT absorb it and
+ * the entries are RETIRED day-one: Playwright 1.63's compareImages fails a
+ * SIZE MISMATCH unconditionally (`if (pixelsMismatchError || sizesMismatch
+ * Error) return …errorMessage`) — even when the padded pixel count is within
+ * tolerance, which is why that run's errors print the size line with NO
+ * ratio line. No tolerance option can cover unequal image sizes. The class
+ * therefore got the structural fix instead: the mono slot joins the harness
+ * font pin (tests/visual/inject.ts + fonts.css — locally-served JetBrains
+ * Mono, a TEST-ONLY dep; the token layer stays system-first per 9.1), so
+ * mono glyph metrics are platform-independent and canvas heights are
+ * exactly equal everywhere. The 36 baselines were re-taken under the pin.
+ * (The tooltip entries above survive because that story's stage is a
+ * fixed-height canvas — same-size images, ratio path applies.)
  */
-/** Story ids whose pages render mono code surfaces (the 11.2 flip set). */
-const MONO_DOC_PAGE_IDS: readonly string[] = [
-  'getting-started--page',
-  'theming-guide--switching',
-  'theming-guide--overrides',
-  'theming-guide--dark-pairing',
-  'token-reference--colors',
-  'token-reference--typography',
-  'token-reference--surfaces',
-  'token-reference--motion',
-  'token-reference--registers',
-  'components-v2-combobox-search--page',
-  'components-v2-cookie-banner--page',
-  'components-v2-data-table--page',
-  'components-v2-filter-chips--page',
-  'components-v2-mega-nav--page',
-  'components-v2-pagination--page',
-  'components-v2-qr-block--page',
-  'components-v2-stepper--page',
-  'components-v2-store-badges--page',
-];
 const CI_VISUAL_TOLERANCE: Record<string, number> = {
-  ...Object.fromEntries(
-    MONO_DOC_PAGE_IDS.flatMap((id) => THEMES.map((theme) => [`${id} [${theme}]`, 0.1])),
-  ),
   'components-tooltip--placements [light]': 0.13,
   'components-tooltip--placements [dark]': 0.08,
 };

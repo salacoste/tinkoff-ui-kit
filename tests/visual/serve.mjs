@@ -5,6 +5,7 @@
 //   /            -> packages/docs/dist        (the Storybook 10 static build)
 //   /daytona/... -> packages/tokens/fonts    (the bundled licensed DaytonaSans files)
 //   /inter/...   -> node_modules/@fontsource/inter  (the open-fallback test font files)
+//   /jetbrains-mono/... -> node_modules/@fontsource/jetbrains-mono  (the pinned mono slot's test font)
 //
 // Started by playwright.config.ts `webServer` (never committed to long-running
 // use); Playwright polls webServer.url (/index.json) until it answers 2xx, then
@@ -27,6 +28,7 @@ if (!Number.isInteger(PORT) || PORT <= 0 || PORT > 65535) {
 const ROUTES = [
   { prefix: '/daytona', root: join(REPO_ROOT, 'packages', 'tokens', 'fonts') },
   { prefix: '/inter', root: join(REPO_ROOT, 'node_modules', '@fontsource', 'inter') },
+  { prefix: '/jetbrains-mono', root: join(REPO_ROOT, 'node_modules', '@fontsource', 'jetbrains-mono') },
   { prefix: '/', root: join(REPO_ROOT, 'packages', 'docs', 'dist') },
 ];
 
@@ -90,5 +92,5 @@ server.on('error', (error) => {
 });
 
 server.listen(PORT, '127.0.0.1', () => {
-  console.log(`visual harness server on http://127.0.0.1:${PORT} (docs dist + daytona fonts + @fontsource/inter)`);
+  console.log(`visual harness server on http://127.0.0.1:${PORT} (docs dist + daytona fonts + @fontsource/inter + @fontsource/jetbrains-mono)`);
 });
