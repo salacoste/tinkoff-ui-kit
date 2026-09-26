@@ -385,13 +385,20 @@ export const BusinessLanding: Story = {
       }, SUBMIT_RESET_MS);
     };
 
-    /** One bento seat: promo-card on the cream hooks + the stage (art + CTA). */
+    /** One bento seat (10.3 adoption): the promo-card's OWN bleed mode composes
+        the reference anatomy — art in the art slot (full-bleed bottom, clipped
+        corners), CTA in the actions slot (the floating pill overlay at the
+        probe-measured 32px). The 7.4 .tkb-stage workaround is retired
+        (deviation 2 closed). */
     const bentoCard = (product: BentoProduct) => html`
-      <tk-promo-card class="tkb-bento__card" heading=${product.heading} description=${product.description}>
-        <div class="tkb-stage" slot="actions">
-          <div class="tkb-stage__art" aria-hidden="true">${unsafeSVG(bentoArt(product.art))}</div>
-          <tk-button class="tkb-stage__cta" variant="secondary" size="card">Подробнее</tk-button>
-        </div>
+      <tk-promo-card
+        class="tkb-bento__card"
+        art-mode="bleed"
+        heading=${product.heading}
+        description=${product.description}
+      >
+        <span class="tkb-bento__art" slot="art" aria-hidden="true">${unsafeSVG(bentoArt(product.art))}</span>
+        <tk-button slot="actions" variant="secondary" size="card">Подробнее</tk-button>
       </tk-promo-card>
     `;
 
@@ -778,39 +785,28 @@ const canvasStyles = html`
       --tk-promo-card-text-muted: var(--tk-color-text-primary);
       min-width: 0;
     }
-    /* The bento stage: art-bottom + floating white pill. The pair re-scope is
-       the promo-card charcoal technique verbatim (promo-card.css.ts) applied
-       at the stage scope: the slotted secondary button paints its pill from
-       surface-base — pinned to white here so the FLOATING WHITE PILL stays
-       white in both themes (the dark theme's near-black surface-base would
-       fail 1.4.11 on the cream-raised card). */
-    .tkb-stage {
-      position: relative;
-      display: flex;
-      flex: 1;
-      flex-direction: column;
-      align-items: center;
-      --tk-color-surface-base: var(--tk-color-white);
-      --tk-color-text-primary: var(--tk-color-ink-300);
-    }
-    .tkb-stage__art {
+    /* Bento art (10.3 adoption): PROBE-GATED sizing against the captures
+       (.playwright-cli/verify/promo-card-10-3/NOTES.md probe C + the render
+       verify): the reference ZONE HEIGHT anchors the mapping — svg at
+       width 100% capped at the probe-measured 400px. Wide seats land on the
+       reference zone height (236–239px) within +0.4%; trio seats run 100%
+       and undershoot 9–19% — the closest possible at ≤100% width without
+       redrawing the art (kept verbatim). The old stage's 260px hypothesis
+       is retired with the stage. 400px is a probe-measured art WIDTH — a
+       length, not a color/z value (the FR-1 guard's documented length blind
+       spot), flagged here per the flag-don't-invent mold. The white-pill
+       re-scope pair now rides the component's bleed overlay
+       (promo-card.css.ts) — the stage-level pair died with the stage. */
+    .tkb-bento__art {
+      display: block;
       width: 100%;
-      max-width: 260px;
+      max-width: 400px;
+      margin-inline: auto;
     }
-    .tkb-stage__art svg {
+    .tkb-bento__art svg {
       display: block;
       width: 100%;
       height: auto;
-    }
-    /* The floating CTA: centered on the stage centerline, overlapping the
-       art's bottom edge (probe: pill center ~90-93% card height). The card's
-       own padding-32 absorbs the hang. size=card keeps the 48px box — the
-       ≥44px hit target the matrix row pins. */
-    .tkb-stage__cta {
-      position: absolute;
-      bottom: calc(-1 * var(--tk-space-16));
-      left: 50%;
-      transform: translateX(-50%);
     }
     .tkb-bento__footer {
       display: flex;

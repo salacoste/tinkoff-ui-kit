@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>probe c render-verify — bentoArt spans at candidate widths</title>
+<style>
+  :root {
+    --ink: #333333;
+    --yellow: #FFDD2D;
+    --white: #FFFFFF;
+    --card: #E9E0D1;   /* tint-cream-raised [233,224,209] */
+    --page: #F1EEE8;   /* page cream [241,238,232] */
+  }
+  body { margin: 0; background: var(--page); font-family: sans-serif; }
+  .row { display: flex; gap: 48px; padding: 24px; align-items: flex-end; }
+  .card {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    background: var(--card);
+    border-radius: 24px;
+    padding: 32px;
+  }
+  .wide { width: 496px; height: 408px; }
+  .trio { width: 304px; height: 432px; }
+  .trio-mid { width: 336px; height: 432px; }
+  .card h3, .card p { margin: 0; text-align: center; color: var(--ink); }
+  .artwrap {
+    margin: 32px -32px -32px;       /* the bleed: escapes padding, flush bottom */
+    margin-top: auto;               /* pin to card bottom like the real anatomy */
+    overflow: hidden;
+    border-radius: 0 0 24px 24px;
+  }
+  .artwrap .art { width: 100%; max-width: 400px; margin-inline: auto; }
+  .artwrap .art svg { display: block; width: 100%; height: auto; }
+  .lbl { color: var(--ink); font: 12px sans-serif; padding: 4px 24px; }
+</style>
+</head>
+<body>
+  <div class="row">
+    <div>
+      <div class="card wide" id="c0">
+        <h3>Счет для бизнеса</h3>
+        <p style="height:60px">desc</p>
+        <div class="artwrap" aria-hidden="true" id="a0"></div>
+      </div>
+      <div class="lbl">card0 wide 496 / svg max 400</div>
+    </div>
+    <div>
+      <div class="card wide" id="c1">
+        <h3>Регистрация ИП и ООО</h3>
+        <p style="height:60px">desc</p>
+        <div class="artwrap" aria-hidden="true" id="a1"></div>
+      </div>
+      <div class="lbl">card1 wide 496 / svg max 400</div>
+    </div>
+  </div>
+  <div class="row">
+    <div>
+      <div class="card trio" id="c2">
+        <h3>Кредиты</h3>
+        <p style="height:60px">desc</p>
+        <div class="artwrap" aria-hidden="true" id="a2"></div>
+      </div>
+      <div class="lbl">card2 trio 304 / svg 100%</div>
+    </div>
+    <div>
+      <div class="card trio-mid" id="c3">
+        <h3>Прием платежей</h3>
+        <p style="height:60px">desc</p>
+        <div class="artwrap" aria-hidden="true" id="a3"></div>
+      </div>
+      <div class="lbl">card3 trio-mid 336 / svg 100%</div>
+    </div>
+    <div>
+      <div class="card trio" id="c4">
+        <h3>Бухгалтерия</h3>
+        <p style="height:60px">desc</p>
+        <div class="artwrap" aria-hidden="true" id="a4"></div>
+      </div>
+      <div class="lbl">card4 trio 304 / svg 100%</div>
+    </div>
+  </div>
+<script>
+const ink = '#333333', yellow = '#FFDD2D', surface = '#FFFFFF';
+const base = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120" fill="none">';
+const shapes = {
+  account:
+    '<rect x="30" y="52" width="120" height="52" rx="10" fill="' + surface + '"/>' +
+    '<rect x="46" y="38" width="120" height="52" rx="10" fill="' + yellow + '"/>' +
+    '<rect x="62" y="24" width="120" height="52" rx="10" fill="' + ink + '"/>',
+  registration:
+    '<rect x="58" y="18" width="84" height="88" rx="8" fill="' + surface + '"/>' +
+    '<rect x="72" y="32" width="56" height="8" rx="4" fill="' + ink + '" fill-opacity="0.3"/>' +
+    '<rect x="72" y="48" width="56" height="8" rx="4" fill="' + ink + '" fill-opacity="0.3"/>' +
+    '<circle cx="100" cy="80" r="18" fill="' + yellow + '"/>' +
+    '<path d="M92 80l6 6 11-12" stroke="' + ink + '" stroke-width="4" fill="none" stroke-linecap="round"/>',
+  credit:
+    '<ellipse cx="100" cy="96" rx="64" ry="10" fill="' + ink + '" fill-opacity="0.12"/>' +
+    '<rect x="56" y="62" width="44" height="30" rx="8" fill="' + yellow + '"/>' +
+    '<rect x="76" y="44" width="44" height="30" rx="8" fill="' + yellow + '"/>' +
+    '<rect x="96" y="26" width="44" height="30" rx="8" fill="' + ink + '"/>',
+  payments:
+    '<rect x="30" y="30" width="70" height="60" rx="8" fill="' + surface + '"/>' +
+    '<rect x="30" y="30" width="70" height="14" rx="7" fill="' + ink + '"/>' +
+    '<rect x="112" y="46" width="58" height="40" rx="8" fill="' + yellow + '"/>' +
+    '<rect x="122" y="58" width="38" height="6" rx="3" fill="' + ink + '" fill-opacity="0.4"/>',
+  accounting:
+    '<rect x="42" y="70" width="24" height="30" rx="4" fill="' + yellow + '"/>' +
+    '<rect x="76" y="54" width="24" height="46" rx="4" fill="' + yellow + '"/>' +
+    '<rect x="110" y="38" width="24" height="62" rx="4" fill="' + ink + '"/>' +
+    '<circle cx="156" cy="76" r="16" fill="' + yellow + '"/>',
+};
+document.getElementById('a0').innerHTML = '<div class="art">' + base + shapes.account + '</svg></div>';
+document.getElementById('a1').innerHTML = '<div class="art">' + base + shapes.registration + '</svg></div>';
+document.getElementById('a2').innerHTML = '<div class="art">' + base + shapes.credit + '</svg></div>';
+document.getElementById('a3').innerHTML = '<div class="art">' + base + shapes.payments + '</svg></div>';
+document.getElementById('a4').innerHTML = '<div class="art">' + base + shapes.accounting + '</svg></div>';
+</script>
+</body>
+</html>

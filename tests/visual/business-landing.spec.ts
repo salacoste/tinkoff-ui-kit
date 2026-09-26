@@ -81,24 +81,33 @@ test('composed wiring: invalid submit → inline error → edit clears → mode 
   await expect(error).toHaveCount(0);
 });
 
-test('bento composition geometry: 2+3 asymmetric tracks, floating CTA overlaps art, ≥44px hit [light]', async ({
+test('bento composition geometry: 2+3 asymmetric tracks, bleed art zone full-width + flush bottom, pill overlays art at the probe 32px, ≥44px hit [light]', async ({
   page,
 }) => {
   await page.goto(buildStoryUrl(STORY_ID, 'light'));
   await waitForStorySettled(page);
 
+  // 10.3 adoption: the bento composes from tk-promo-card's own bleed mode —
+  // the art lives in the ART slot (the .tkb-stage workaround is dead). The
+  // geometry is measured on the CARD host, its shadow bleed zone, and the
+  // slotted CTA (light DOM) — the open shadow root reaches the zone.
   const geo = await page.evaluate(() => {
     const wide = getComputedStyle(document.querySelector('.tkb-bento__row--wide')!);
     const trio = getComputedStyle(document.querySelector('.tkb-bento__row--trio')!);
     const tracks = (value: string): number[] => value.split(' ').map((t) => Number.parseFloat(t));
-    const stage = document.querySelector<HTMLElement>('.tkb-bento__card .tkb-stage');
-    const art = stage?.querySelector<HTMLElement>('.tkb-stage__art')?.getBoundingClientRect();
-    const cta = stage?.querySelector<HTMLElement>('.tkb-stage__cta')?.getBoundingClientRect();
+    const card = document.querySelector<HTMLElement>('.tkb-bento__card')!;
+    const cardRect = card.getBoundingClientRect();
+    const zone = card.shadowRoot?.querySelector<HTMLElement>('.card__art')?.getBoundingClientRect();
+    const cta = card.querySelector<HTMLElement>('tk-button[slot="actions"]')?.getBoundingClientRect();
     return {
       wide: tracks(wide.gridTemplateColumns),
       trio: tracks(trio.gridTemplateColumns),
-      artBottom: art?.bottom ?? 0,
+      cardBottom: cardRect.bottom,
+      cardWidth: cardRect.width,
+      zoneBottom: zone?.bottom ?? 0,
+      zoneWidth: zone?.width ?? 0,
       ctaTop: cta?.top ?? 0,
+      ctaBottom: cta?.bottom ?? 0,
       ctaHeight: cta?.height ?? 0,
     };
   });
@@ -112,9 +121,17 @@ test('bento composition geometry: 2+3 asymmetric tracks, floating CTA overlaps a
   expect(geo.trio[1]).toBeGreaterThan(geo.trio[0]);
   expect(geo.trio[1]).toBeGreaterThan(geo.trio[2]);
 
-  // The floating CTA: pill top ABOVE the art's bottom edge (the overlap) and
-  // the card-size 48px box clears the 44px hit floor.
-  expect(geo.ctaTop, 'CTA overlaps the art bottom edge').toBeLessThan(geo.artBottom);
+  // The bleed zone: escapes the padding — full card width, flush to the
+  // card's bottom edge (the reference's full-bleed bottom art).
+  expect(geo.zoneWidth, 'art zone spans the card width').toBeCloseTo(geo.cardWidth, 0);
+  expect(geo.zoneBottom, 'art zone flush to the card bottom').toBeCloseTo(geo.cardBottom, 0);
+
+  // The floating pill: overlays the art (top above the zone's bottom edge),
+  // pinned at the PIXEL-PROBE offset (pill bottom = card bottom − 32 =
+  // space-32, Δ=0 — verify/promo-card-10-3/NOTES.md probe A/B), and the
+  // card-size 48px box clears the 44px hit floor.
+  expect(geo.ctaTop, 'CTA overlaps the bleed art zone').toBeLessThan(geo.zoneBottom);
+  expect(geo.cardBottom - geo.ctaBottom, 'pill bottom offset = space-32 (probe)').toBeCloseTo(32, 0);
   expect(geo.ctaHeight, 'CTA ≥44px hit target').toBeGreaterThanOrEqual(44);
 });
 

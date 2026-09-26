@@ -11,6 +11,12 @@ import { promoCardStyles } from './promo-card.css.js';
  * lazy enforcement (the slotchange technique on slotted imgs, direct and
  * nested), unknown-variant clamping, and the skeleton state — plus prop
  * rendering, slot overrides, and the clamps/nulls survival row.
+ *
+ * Story 10.3 adds the art-mode rows: the reflect/clamp mold on artMode,
+ * the CSS-ONLY byte-stability proof (the DOM never changes with the mode),
+ * the gated bleed rule set (zone geometry, actions overlay + re-scope
+ * pair, skeleton mirror, <768 chain), and the data-has-art toggle under
+ * bleed.
  */
 
 /** Await the element's next render (Lit's updateComplete). */
@@ -161,10 +167,11 @@ describe('tk-promo-card', () => {
     // The pill LABEL pairs: the button consumes --tk-color-text-primary (dark:
     // white) — re-scoped to the cta-text hook (default ink-300, 9.41:1 on white).
     expect(cta).toMatch(/--tk-color-text-primary:\s*var\(--tk-promo-card-cta-text, var\(--tk-color-ink-300\)\)/);
-    // Scoped to the actions zone ONLY — no other rule re-scopes the kit-wide
-    // semantics (consumer content elsewhere in the card is untouched).
-    expect(cssText.match(/--tk-color-surface-base:/g)).toHaveLength(1);
-    expect(cssText.match(/--tk-color-text-primary:/g)).toHaveLength(1);
+    // Scoped to ACTIONS ZONES only — charcoal and the 10.3 bleed overlay
+    // declare the IDENTICAL pair (2 rules, same values, no conflict); no
+    // other rule re-scopes the kit-wide semantics.
+    expect(cssText.match(/--tk-color-surface-base:/g)).toHaveLength(2);
+    expect(cssText.match(/--tk-color-text-primary:/g)).toHaveLength(2);
   });
 
   it('LAZY ENFORCEMENT: slotted art imgs get loading=lazy decoding=async (slotchange technique)', async () => {
@@ -232,6 +239,121 @@ describe('tk-promo-card', () => {
     await elementUpdated(el);
     expect(el.getAttribute('variant')).toBe('beige');
     el.remove();
+  });
+
+  it('ART MODE (10.3): reflects on change, defaults top, clamps like variant — invalid degrades with the attribute corrected', async () => {
+    const el = await mount();
+    expect(el.artMode).toBe('top');
+    // The reflected default mints from first update — the variant="gray"
+    // precedent (identical mold). Byte-stability rides on ZERO CSS matching
+    // 'top' + shadow-DOM identity (pinned in the CSS-ONLY test below).
+    expect(el.getAttribute('art-mode')).toBe('top');
+    el.artMode = 'bleed';
+    await elementUpdated(el);
+    expect(el.getAttribute('art-mode')).toBe('bleed');
+    el.artMode = 'diagonal' as TkPromoCard['artMode'];
+    await elementUpdated(el);
+    expect(el.artMode).toBe('top');
+    expect(el.getAttribute('art-mode')).toBe('top');
+    // The clamp converges: a later valid value renders normally.
+    el.artMode = 'bleed';
+    await elementUpdated(el);
+    expect(el.getAttribute('art-mode')).toBe('bleed');
+    el.remove();
+  });
+
+  it('ART MODE IS CSS-ONLY (byte-stability, 10.3): the shadow DOM is identical across modes — the template mints nothing', async () => {
+    const plain = await mount({ props: { heading: 'Идентичность' } });
+    const top = await mount({ props: { heading: 'Идентичность', artMode: 'top' } });
+    const bleed = await mount({ props: { heading: 'Идентичность', artMode: 'bleed' } });
+    expect(bleed.shadowRoot?.innerHTML).toBe(plain.shadowRoot?.innerHTML);
+    expect(top.shadowRoot?.innerHTML).toBe(plain.shadowRoot?.innerHTML);
+    for (const el of [plain, top, bleed]) {
+      // No shadow node carries an art-mode-dependent attribute or class —
+      // the mode reaches CSS only through the host's reflected attribute.
+      const minted = [...(el.shadowRoot?.querySelectorAll('*') ?? [])].flatMap((node) =>
+        [...node.attributes].filter((attr) => /art-mode/.test(`${attr.name}=${attr.value}`)),
+      );
+      expect(minted).toEqual([]);
+      el.remove();
+    }
+  });
+
+  it('BLEED + DATA-HAS-ART (10.3): the slotchange toggle still governs the zone with art-mode set', async () => {
+    const el = await mount({ props: { artMode: 'bleed', heading: 'Вылет' } });
+    expect(el.hasAttribute('data-has-art')).toBe(false);
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('slot', 'art');
+    el.appendChild(svg);
+    await elementUpdated(el);
+    expect(el.hasAttribute('data-has-art')).toBe(true);
+    svg.remove();
+    await elementUpdated(el);
+    expect(el.hasAttribute('data-has-art')).toBe(false);
+    el.remove();
+  });
+
+  it('BLEED CSS SET (10.3): zone order/bleed/clip, slotted art mold, actions overlay + re-scope pair, skeleton mirror, <768 chain — every rule gated on [art-mode=bleed]', () => {
+    const cssText = sheet();
+    // GATING INVARIANT: every art-mode occurrence is the gated bleed form —
+    // no unguarded bleed rule exists (byte-stability's structural pin).
+    expect(cssText.match(/art-mode/g) ?? []).toHaveLength((cssText.match(/\[art-mode='bleed'\]/g) ?? []).length);
+
+    // The overlay anchor.
+    expect(ruleBody(cssText, ":host\\(\\[art-mode='bleed'\\]\\) \\.card")).toMatch(/position:\s*relative/);
+
+    // ZONE: below the body (flex order — the DOM stays art-first), escaping
+    // the padding on the SAME hooks (negative), clipped to the card's bottom
+    // corners (radius chain, top corners 0).
+    const zone = ruleBody(cssText, ":host\\(\\[art-mode='bleed'\\]\\) \\.card__art");
+    expect(zone).toMatch(/order:\s*2/);
+    expect(zone).toMatch(/margin-inline:\s*calc\(-1 \* var\(--tk-promo-card-padding, var\(--tk-space-32\)\)\)/);
+    expect(zone).toMatch(/margin-block-end:\s*calc\(-1 \* var\(--tk-promo-card-padding, var\(--tk-space-32\)\)\)/);
+    expect(zone).toMatch(/overflow:\s*hidden/);
+    expect(zone).toMatch(/border-radius:\s*0 0 var\(--tk-promo-card-radius, var\(--tk-radius-xxl\)\)/);
+
+    // SLOTTED ART: the reference mold — block, full width, NATURAL height
+    // (object-fit stays unconsumed); the svg companion serves inline art.
+    const slotted =
+      cssText.match(
+        /:host\(\[art-mode='bleed'\]\) \.card__art ::slotted\(img\),\s*:host\(\[art-mode='bleed'\]\) \.card__art ::slotted\(svg\) \{([^}]*)\}/,
+      )?.[1] ?? '';
+    expect(slotted).toMatch(/display:\s*block/);
+    expect(slotted).toMatch(/width:\s*100%/);
+    expect(slotted).toMatch(/height:\s*auto/);
+    expect(slotted).not.toMatch(/object-fit/);
+
+    // ACTIONS OVERLAY: absolute, full-width, pinned bottom-center. The
+    // offset is the PIXEL PROBE (32px = space-32, Δ=0 — the spec's 12–16
+    // neighborhood overruled; verify NOTES judgment 1).
+    const overlay = ruleBody(cssText, ":host\\(\\[art-mode='bleed'\\]\\) \\.card__actions");
+    expect(overlay).toMatch(/position:\s*absolute/);
+    expect(overlay).toMatch(/inset-inline:\s*0/);
+    expect(overlay).toMatch(/bottom:\s*var\(--tk-space-32\)/);
+    expect(overlay).toMatch(/margin-top:\s*0/);
+    expect(overlay).toMatch(/padding-top:\s*0/);
+    // The re-scope pair rides the overlay (the charcoal technique verbatim —
+    // the pill stays white over art in BOTH themes).
+    expect(overlay).toMatch(/--tk-color-surface-base:\s*var\(--tk-promo-card-cta-fill, var\(--tk-color-white\)\)/);
+    expect(overlay).toMatch(/--tk-color-text-primary:\s*var\(--tk-promo-card-cta-text, var\(--tk-color-ink-300\)\)/);
+
+    // SKELETON MIRROR: the art placeholder bleeds the same way; aspect 4/3
+    // stays and .sk--cta keeps its in-flow pin (recorded approximation).
+    const skArt = ruleBody(cssText, ":host\\(\\[art-mode='bleed'\\]\\[skeleton\\]\\) \\.sk--art");
+    expect(skArt).toMatch(/order:\s*2/);
+    expect(skArt).toMatch(/margin-inline:\s*calc\(-1 \* var\(--tk-promo-card-padding, var\(--tk-space-32\)\)\)/);
+    expect(skArt).toMatch(/margin-block-end:\s*calc\(-1 \* var\(--tk-promo-card-padding, var\(--tk-space-32\)\)\)/);
+    expect(skArt).toMatch(/border-radius:\s*0 0 var\(--tk-promo-card-radius, var\(--tk-radius-xxl\)\)/);
+    expect(ruleBody(cssText, '\\.sk--art')).toMatch(/aspect-ratio:\s*4 \/ 3/);
+    expect(ruleBody(cssText, '\\.sk--cta')).toMatch(/margin-top:\s*auto/);
+
+    // <768 CHAIN: the bleed margins re-track the padding-mobile hook so the
+    // zone stays flush (a desktop padding override survives the breakpoint).
+    const mobile = mobileBlock(sheet());
+    expect(mobile).toMatch(
+      /:host\(\[art-mode='bleed'\]\) \.card__art,\s*:host\(\[art-mode='bleed'\]\[skeleton\]\) \.sk--art \{[^}]*margin-inline:\s*calc\(-1 \* var\(--tk-promo-card-padding-mobile, var\(--tk-space-24\)\)\)/,
+    );
+    expect(mobile).toMatch(/margin-block-end:\s*calc\(-1 \* var\(--tk-promo-card-padding-mobile, var\(--tk-space-24\)\)\)/);
   });
 
   it('NULLS survive: null heading/description render the shell without crashing', async () => {

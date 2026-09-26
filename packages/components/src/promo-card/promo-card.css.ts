@@ -59,6 +59,43 @@ import { css } from 'lit';
  * over :has(); :empty cannot work — the slot element is always a child).
  * No slotted art → the heading sits at the padding register directly.
  *
+ * ART MODE BLEED (Story 10.3) — the reference bento's full-bleed bottom
+ * art. CSS-ONLY on the existing anatomy: every rule gated behind
+ * `:host([art-mode='bleed'])` (attribute absent/`top` → byte-identical
+ * render; the template mints nothing). Probe evidence 2026-09-26,
+ * `.playwright-cli/verify/promo-card-10-3/NOTES.md`:
+ * - ZONE: flex `order: 2` renders the art BELOW the body (DOM stays
+ *   art-first — no template edit); escapes the padding via negative
+ *   margins tracking the SAME `--tk-promo-card-padding` chain (a consumer
+ *   override propagates; <768 re-tracks the -mobile chain); clipped to the
+ *   card's bottom corners (`--tk-promo-card-radius` chain, top corners 0,
+ *   overflow hidden); NATURAL height — reference zones vary 208–239px
+ *   across five cards (48–59% of card height), never pinned.
+ * - ACTIONS OVERLAY: the reference's floating pill — absolute, inset-inline
+ *   0, bottom-center. Pill bottom offset PROBED at exactly 32px (hires card
+ *   528×408: pill rows 332–375, offset 407−375 = 32 = Δ 0.0; the grid's
+ *   five cards agree 5/5) → `var(--tk-space-32)` — the spec's expected
+ *   space-12–16 neighborhood is OVERRULED by the probe (NOTES judgment 1).
+ * - CTA THEME SAFETY: the charcoal re-scope pair rides the overlay (the
+ *   dark layer remaps surface-base to #1A1A1A — the pill would sink into
+ *   the art; the exact 7.4 .tkb-stage finding). Charcoal + bleed declare
+ *   the IDENTICAL pair — no conflict, both selectors kept (NOTES judgment 5).
+ * - NO SCRIM: zero text-over-art pixels in any reference card (text bands
+ *   end above the zone; art top at 42–52% of card) — positional
+ *   separation, no overlay token (the epics' probe gate).
+ * - SLOTTED ART: the reference mold `display:block; width:100%;
+ *   height:auto` (natural height; `object-fit` stays unconsumed — no
+ *   cover-crop). The spec names `::slotted(img)`; the SVG companion
+ *   selector serves inline illustrations (the business showcase slots a
+ *   bare `<svg>` — an img-only rule would miss it; recorded).
+ * - SKELETON MIRROR: `.sk--art` gets the same order/bleed margins/bottom
+ *   radius; aspect 4/3 STAYS (placeholder estimate) and `.sk--cta` KEEPS
+ *   margin-top:auto — the placeholder approximates the overlay in flow
+ *   (recorded, not re-derived).
+ * - NO-ART DEGRADE: without slotted art the zone stays collapsed
+ *   (data-has-art unchanged) and the overlay pins over the tint — recorded
+ *   acceptable (the no-art row).
+ *
  * Known structural (non-token) values, flagged per the flag-don't-invent
  * rule: the 767px breakpoint (the navbar's mobile flip), the skeleton
  * block widths/aspect (60% heading, 90% lines, 4/3 art, 40% CTA — layout
@@ -214,12 +251,81 @@ export const promoCardStyles = css`
     border-radius: var(--tk-radius-full);
   }
 
+  /* --- Art mode bleed (Story 10.3) — see the header's ART MODE BLEED
+     section for the probe record. Every rule gated on [art-mode='bleed'];
+     placed AFTER the anatomy rules so equal-specificity bleed overrides
+     (margin-block-end over top mode's space-24) win by source order. --- */
+
+  /* The actions overlay anchors to the card. */
+  :host([art-mode='bleed']) .card {
+    position: relative;
+  }
+
+  /* The zone: BELOW the body (flex order — the DOM stays art-first),
+     escaping the padding on negative margins that track the SAME padding
+     hooks, clipped to the card's bottom corners. margin-block-end replaces
+     top mode's space-24 rhythm (negative — pulls flush to the card edge). */
+  :host([art-mode='bleed']) .card__art {
+    order: 2;
+    margin-inline: calc(-1 * var(--tk-promo-card-padding, var(--tk-space-32)));
+    margin-block-end: calc(-1 * var(--tk-promo-card-padding, var(--tk-space-32)));
+    overflow: hidden;
+    border-radius: 0 0 var(--tk-promo-card-radius, var(--tk-radius-xxl))
+      var(--tk-promo-card-radius, var(--tk-radius-xxl));
+  }
+
+  /* Slotted art: the reference mold — full width, NATURAL height
+     (object-fit unconsumed). The svg companion serves the showcase's
+     inline illustration (header note). */
+  :host([art-mode='bleed']) .card__art ::slotted(img),
+  :host([art-mode='bleed']) .card__art ::slotted(svg) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* The floating pill: absolute overlay (margin-top:auto is void out of
+     flow; padding-top:0 kills the top-mode rhythm). Bottom offset probed
+     at exactly 32px → space-32 (header record). The re-scope pair — the
+     charcoal technique verbatim — keeps the composed tk-button secondary
+     WHITE over art in both themes (charcoal + bleed: identical values). */
+  :host([art-mode='bleed']) .card__actions {
+    position: absolute;
+    inset-inline: 0;
+    bottom: var(--tk-space-32);
+    justify-content: center;
+    margin-top: 0;
+    padding-top: 0;
+    --tk-color-surface-base: var(--tk-promo-card-cta-fill, var(--tk-color-white));
+    --tk-color-text-primary: var(--tk-promo-card-cta-text, var(--tk-color-ink-300));
+  }
+
+  /* Skeleton mirror: the art placeholder bleeds the same way (aspect 4/3
+     stays — placeholder estimate); .sk--cta KEEPS margin-top:auto above —
+     the in-flow approximation of the overlay (recorded, not re-derived). */
+  :host([art-mode='bleed'][skeleton]) .sk--art {
+    order: 2;
+    margin-inline: calc(-1 * var(--tk-promo-card-padding, var(--tk-space-32)));
+    margin-block-end: calc(-1 * var(--tk-promo-card-padding, var(--tk-space-32)));
+    border-radius: 0 0 var(--tk-promo-card-radius, var(--tk-radius-xxl))
+      var(--tk-promo-card-radius, var(--tk-radius-xxl));
+  }
+
   /* --- The EXPERIENCE responsive matrix: <768px card padding drops one
-     spacing step (32 → 24) — the navbar's breakpoint value. --- */
+     spacing step (32 → 24) — the navbar's breakpoint value. The bleed
+     margins re-track the -mobile chain so the zone stays flush (a desktop
+     padding override survives the breakpoint — the padding-mobile hook's
+     own precedent). --- */
 
   @media (max-width: 767px) {
     .card {
       padding: var(--tk-promo-card-padding-mobile, var(--tk-space-24));
+    }
+
+    :host([art-mode='bleed']) .card__art,
+    :host([art-mode='bleed'][skeleton]) .sk--art {
+      margin-inline: calc(-1 * var(--tk-promo-card-padding-mobile, var(--tk-space-24)));
+      margin-block-end: calc(-1 * var(--tk-promo-card-padding-mobile, var(--tk-space-24)));
     }
   }
 `;

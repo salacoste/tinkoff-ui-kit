@@ -36,6 +36,16 @@ const artDemo = html`
   </div>
 `;
 
+/** Decorative bleed-mode art (10.3): wide inline svg, aria-hidden — the
+    consumer owns decorative marking; token-filled shapes (canvas styles). */
+const bleedArtDemo = html`
+  <svg class="tkpc-bleed-art" slot="art" viewBox="0 0 200 120" fill="none" aria-hidden="true" focusable="false">
+    <rect class="tkpc-ba-white" x="30" y="52" width="120" height="52" rx="10"></rect>
+    <rect class="tkpc-ba-yellow" x="46" y="38" width="120" height="52" rx="10"></rect>
+    <rect class="tkpc-ba-ink" x="62" y="24" width="120" height="52" rx="10"></rect>
+  </svg>
+`;
+
 const cardCanvas = (args: Partial<CardArgs> = {}, { art = true } = {}) => html`
   <tk-promo-card
     variant=${args.variant ?? 'gray'}
@@ -109,6 +119,18 @@ const canvasStyles = html`
       border-radius: var(--tk-radius-full);
       background: var(--tk-color-yellow-100);
     }
+    /* Bleed demo art (10.3): token-filled shapes — the story file stays
+       inside the zero-hardcoded guard's scan root. The component's bleed
+       ::slotted(svg) rule carries the sizing (block, 100%, natural height). */
+    .tkpc-bleed-art .tkpc-ba-white {
+      fill: var(--tk-color-white);
+    }
+    .tkpc-bleed-art .tkpc-ba-yellow {
+      fill: var(--tk-color-yellow-100);
+    }
+    .tkpc-bleed-art .tkpc-ba-ink {
+      fill: var(--tk-color-ink-300);
+    }
     .tkpc-canvas code {
       font-family: var(--tk-font-body);
     }
@@ -179,7 +201,11 @@ export const Variants: Story = {
         Пять тонов: серый / сине-серый / мята / беж / charcoal. На пастелях —
         тёмный текст (text-primary/text-secondary), на charcoal — белый.
         Неизвестный тон клампится к gray. Скелетон — статичные gray-200
-        блоки, повторяющие финальный макет.
+        блоки, повторяющие финальный макет. Режим арта
+        <code>art-mode="bleed"</code> (10.3): арт уходит в полный вылет
+        вниз за паддинг, срезается по нижним углам, пилюля CTA плывет
+        поверх арта (32px от низа — пиксель-проба); без арта зона свернута,
+        пилюля остается поверх тона.
       </p>
       <section>
         <h2>Все тона</h2>
@@ -203,6 +229,32 @@ export const Variants: Story = {
         <div class="tkpc-grid">
           ${cardCanvas({ heading: 'Без арта', description: 'Арт-слот пуст' }, { art: false })}
           ${cardCanvas({ heading: 'Только заголовок' }, { art: false })}
+        </div>
+      </section>
+      <section>
+        <h2>Режим арта bleed (art-mode)</h2>
+        <div class="tkpc-grid">
+          <tk-promo-card
+            art-mode="bleed"
+            variant="beige"
+            heading="Т-Бизнес"
+            description="Расчетный счет и налоги в одном окне"
+          >
+            ${bleedArtDemo}
+            <tk-button slot="actions" variant="secondary" size="card">Подробнее</tk-button>
+          </tk-promo-card>
+          <tk-promo-card
+            art-mode="bleed"
+            variant="charcoal"
+            heading="Платинум"
+            description="Премиальное обслуживание"
+          >
+            ${bleedArtDemo}
+            <tk-button slot="actions" variant="secondary" size="card">Подробнее</tk-button>
+          </tk-promo-card>
+          <tk-promo-card art-mode="bleed" variant="mint" heading="Без арта" description="Зона свернута — пилюля поверх тона (записанный деград)">
+            <tk-button slot="actions" variant="secondary" size="card">Подробнее</tk-button>
+          </tk-promo-card>
         </div>
       </section>
     </main>
@@ -271,10 +323,22 @@ export const Accessibility: Story = {
             <td>Скринридер</td>
             <td>Объявляет статью, h3-заголовок и кнопку по имени; состояний у карточки нет.</td>
           </tr>
+          <tr>
+            <td><code>art-mode="bleed"</code></td>
+            <td>
+              Режим меняет только раскладку: арт bleed декоративен и остается
+              aria-hidden на стороне потребителя, доступное имя пилюли —
+              собственное имя слотленной кнопки; порядок таба не меняется.
+            </td>
+          </tr>
         </tbody>
       </table>
       <div class="tkpc-grid">
         ${cardCanvas({ variant: 'bluegray', heading: 'Т-Инвестиции', description: 'Портфель под цель' })}
+        <tk-promo-card art-mode="bleed" variant="beige" heading="Т-Бизнес" description="Расчетный счет и налоги в одном окне">
+          ${bleedArtDemo}
+          <tk-button slot="actions" variant="secondary" size="card">Подробнее</tk-button>
+        </tk-promo-card>
       </div>
     
       <h2>Протокол скринридер-проверки (VoiceOver / NVDA)</h2>
