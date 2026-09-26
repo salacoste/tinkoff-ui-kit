@@ -104,8 +104,44 @@ async function waitForDecodedCanvas(page: Page): Promise<void> {
  * fix. The cap-hitting content STAYS (it killed the auto-width edge-shift
  * subclass and exercises the wrap path); values sized to the measured
  * ratios with headroom: light 0.13 ≥ 1.3× of 0.10, dark 0.08 = 2× of 0.04.
+ *
+ * SECOND CLASS (2026-09-26, story 11.2 — the mono flip's first CI proof,
+ * run 36254296012): --tk-font-mono is SYSTEM-FIRST by design (9.1 — no
+ * licensed mono face), so its glyphs resolve to different faces per platform
+ * (macOS Menlo vs ubuntu DejaVu/Liberation). Every doc page whose pixels
+ * contain mono code surfaces reflows on ubuntu: inline <code> chips change
+ * advance widths → wrapped paragraphs gain/lose lines → the FULL-PAGE canvas
+ * height shifts (observed +17…+28px; diff ratios 0.02–0.07 across exactly
+ * the 36 flipped legs — the sanctioned 11.2 set, zero canaries touched).
+ * Same un-pinnable wrap-count subclass as the tooltip entries above; the
+ * structural pin would be a BUNDLED mono webfont (a token-layer decision
+ * the 9.1 ruling declined). Flat 0.10 ≥ 1.4× of the 0.07 max.
  */
+/** Story ids whose pages render mono code surfaces (the 11.2 flip set). */
+const MONO_DOC_PAGE_IDS: readonly string[] = [
+  'getting-started--page',
+  'theming-guide--switching',
+  'theming-guide--overrides',
+  'theming-guide--dark-pairing',
+  'token-reference--colors',
+  'token-reference--typography',
+  'token-reference--surfaces',
+  'token-reference--motion',
+  'token-reference--registers',
+  'components-v2-combobox-search--page',
+  'components-v2-cookie-banner--page',
+  'components-v2-data-table--page',
+  'components-v2-filter-chips--page',
+  'components-v2-mega-nav--page',
+  'components-v2-pagination--page',
+  'components-v2-qr-block--page',
+  'components-v2-stepper--page',
+  'components-v2-store-badges--page',
+];
 const CI_VISUAL_TOLERANCE: Record<string, number> = {
+  ...Object.fromEntries(
+    MONO_DOC_PAGE_IDS.flatMap((id) => THEMES.map((theme) => [`${id} [${theme}]`, 0.1])),
+  ),
   'components-tooltip--placements [light]': 0.13,
   'components-tooltip--placements [dark]': 0.08,
 };
