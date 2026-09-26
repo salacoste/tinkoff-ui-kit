@@ -147,16 +147,127 @@ RULE).**
 
 ## Implementation Notes
 
-(post-execution)
+Executor round (worktree: c367fb8 + fix 602262e; lens-audited — all five
+mandated adjudications VERIFIED with independent evidence):
+1. **Measured sets (never assumed):** moved set from `git diff
+   v1.1.0..HEAD` = 30 files in packages/components/src (button, checkbox,
+   input, promo-card, qr-block, segmented-radio, stepper, tooltip
+   stories-only, 2 showcases) + docs 7 (11.2 mono flip) + tokens 6 + CEM 1
+   + **packages/react ZERO** (verified at wrapper source: createKitComponent
+   types off the element class, @lit/react routes new props as attributes —
+   no wrapper-code change). Navbar/mega-nav verified NOT moved (no rows).
+   Re-take register = **11 commits / 163 PNG-events** (authoritative
+   recount via git log --stat; c13ba12 20, 325631c 32, 15a5ac6 1, afb6089
+   6, 9813a65 8, de304e7 6, d1a210a 14, 7ee97e1 2, 6119d37 36, a0fb95c 2,
+   b185cc4 36) — suite snapshot count FLAT 392→392, the 11.1 «+12 legs»
+   are non-snapshot engine legs (visual total 1368→1380 via --list).
+2. **Ledger (13 rows):** the two epics-named re-checks closed against
+   their 9.1 probes — stepper brown ADOPTED (AA 5.413 white-on-brown,
+   4.674 brown-on-cream REQUIRED, 4.136 raised recorded-failing) and bento
+   radius REFUTED-estimate (arc-staircase r=23.8px, IQR 23.5–24.7 → the 24
+   band is pixel-exact). Tooltip = pointer row (9.1 placements content,
+   stories-only). The superseded business-landing deviation 14 recorded at
+   LEDGER level (L3) with a deferred-work pointer — frozen NOTES evidence
+   untouched. Byte-identical re-takes marked AS such (stepper--api ×2 at
+   9.1, invest hero pair at 10.4) — lens blob-hash-proved both pairs.
+3. **Yellow audit:** methodology verbatim; full-tree 66 hits / 29 files;
+   diff-scoped = exactly 1 source yellow line (promo-card 10.3 bleed
+   demo-art fill — C-class, text-free, SVG read by the lens: 3 rects,
+   aria-hidden, 0 text nodes); 0 raw hexes added; 0 violations, 0 fixes.
+4. **Impeccable:** detector exit 0 over 207 files; can-fail probe
+   reproduced (bounce-easing → exit 2, named); deep sweep 7 classes clean;
+   0 blockers.
+5. **Batch package ЧАСТЬ v1.2.0:** 414 PNG FLAT vs v1.1.0 (392 suite + 22
+   per-component in 11 per-component dirs); unit 943 = 17+708+70+148
+   (re-run by the lens); visual 1380 in 21 files (static --list); the
+   full register with forensic one-liners + per-epic inventory + ~1h
+   review order. REVIEW PACKAGE only.
+6. **RELEASE §9.1–9.7 (RU):** §9.4 recipe renders PromoCard
+   artMode="bleed" via pillkit-react — export chain re-verified
+   end-to-end against the generated barrel + element source (artMode
+   union + willUpdate clamp, art/actions slots); self-sufficiency note
+   (dedupe lines at README.md:76 + getting-started.stories.ts:217).
+   §9.5: stepper badge pairing = the visible Changed line; 9.2/11.1/11.2
+   collapsed under Internal (orchestrator guidance applied). §9.6 carries
+   the JetBrains Mono TEST-ONLY paragraph. §9.7 proofs EXECUTED
+   (tag -l = v1.0.0/v1.1.0; three package.json 1.1.0; CHANGELOG 0 matches
+   for 1.2.0) — re-executed independently by the lens.
+7. **HANDOFF:** epics-v3 row 8/8 (943/1380/414) + maintainer queue (a)
+   batch-confirm → (b) release §9.1–9.5 (tag v1.2.0) → (c) SR-RUNSHEET-
+   v1.2.0 execution (pointed, not rewritten) → (d) opportunistic (iOS
+   momentum, cookie 16px).
+8. **Process notes:** the executor self-corrected the register 161→163
+   mid-flight (authoritative recount) but missed the fourth site
+   (RELEASE §9.1) — lens-caught, fixed at 602262e; the ledger's ×2-verdict
+   sentence was rephrased pre-emptively to defer to the gate round (no
+   pre-fact claims). Visual ×2 on private port 6063 (machine-global 6007
+   untouched, lsof-checked before AND after; temp config deleted
+   pre-commit).
 
 ## Spec Change Log
 
-(post-execution)
+Frozen block untouched. Recorded changes beyond the frozen text:
+1. **Fix round (602262e, lens FIX-THEN-SHIP):** register 163 at the
+   fourth site; moved-set header 36→30 files; per-component dir phrasing
+   exact (11 + the suite dir); SM-C2 wave list names all 11 commits.
+2. **Register count corrected in-flight** (161→163) — executor
+   self-caught via authoritative recount; the lens per-commit recount
+   confirmed 163 EXACT.
 
 ## Review Triage Log
 
-(post-review)
+Quick review (qr-lens-11-3, 2026-09-26): **FIX-THEN-SHIP — 0 BLOCKER /
+2 WARN / 2 NOTE; fix round executed (602262e); post-fix state SHIP.** All
+five mandated adjudications VERIFIED with the lens's OWN evidence:
+1. [ADJ-1] ledger truth — moved set re-derived (30/7/6/1/0); 13 rows
+   cover it exactly; re-check facts traced to tokens-9-1 NOTES:39-41 +
+   probe-output.txt:118 + deferred-work 7.3/7.4(f); register recounted
+   per-commit = 163 EXACT; blob-hashes: stepper--api pair and invest pair
+   IDENTICAL at their commits (zero-pixel API additions proven).
+2. [ADJ-2] yellow — grep re-run: 66/29 exact; diff-scope = 1 source line,
+   C-class holds (SVG re-read); 0 raw hexes added.
+3. [ADJ-3] impeccable — detector re-run exit 0/207; /tmp can-fail probe
+   exit 2 (bounce-easing named); config = one ignoreValues, empty
+   ignoreRules/ignoreFiles.
+4. [ADJ-4] counts — 414 = 392+22 flat at both refs (window 0 added/0
+   deleted, 86 M = 84 suite + 2 invest); unit re-run 943/943 split exact;
+   static --list = 1380 in 21 files.
+5. [ADJ-5] scope + claims — six files +642/−2 docs-only; §9.4 vs real
+   API verified (artMode clamp at promo-card.ts:118-119); §9.5 grouping
+   correct; §9.7 proofs re-executed; RELEASE/HANDOFF RU; unpushed worktree
+   + tag list intact.
+- [WARN-1] RELEASE.md:471 stale «161» (the executor's self-correction
+  missed the fourth site) → fixed 602262e.
+- [WARN-2] ledger.md:7 «36 files» vs measured 30 → fixed 602262e.
+- [N1] «22 per-component (12 dirs)» phrasing — 22 in 11 per-component
+  dirs (12th = the suite dir) → made exact at the single site it
+  appeared.
+- [N2] SM-C2 wave list named 10 of 11 register commits → 15a5ac6 named
+  inline.
+Lens non-visual gates re-run: lint 0, typecheck 0, test 943/943. Lens
+killed after verdict delivery (standing rule).
 
 ## Verification
 
-(post-gates)
+- Executor round (worktree c367fb8 + 602262e): all six deliverables +
+  fixes; local chain GREEN (build → test 943 → lint → typecheck → gen →
+  gen:tokens); post-commit gen-drift exit 0; visual compare ×2 on private
+  port 6063 = **1380/1380 both passes** (8.7m/8.5m); port 6007 clean
+  before/after; tree clean at both commits.
+- Lens round (qr-lens-11-3): verdict FIX-THEN-SHIP; all ADJs verified
+  independently (see Triage); fix round executed; lens killed post-verdict.
+- Merge round (orchestrator, main tree): fix verified in place; ff-merge
+  e693d40..602262e (6 files +642/−2, docs-only); fast gates GREEN
+  (build → test 943 → lint → typecheck → gen → gen:tokens + gen-drift
+  clean); visual INHERITED by material proof — `git diff --exit-code
+  e693d40..602262e -- packages/ tests/` clean (served tree bit-identical
+  to the CI-green e693d40; the executor's worktree ×2 stands for this
+  tree) — the 8.4 docs-only mold.
+- **CI VERDICT on 602262e: GREEN — run 36271532249 (21:01:58Z → 21:23:17Z,
+  21.3m).** The docs-only diff (6 files +642/−2 under .playwright-cli/verify/,
+  _bmad-output/, RELEASE.md, HANDOFF.md) rides the same chain; the visual
+  step is green on the inherited proof (bit-identical served tree). Story
+  11.3's green code head = 602262e; NO tag exists.
+- Docs round: spec post-sections + CLAUDE.md cycle bullet; docs-head CI
+  verdict recorded below.
+- **CI VERDICT on the docs head: <docs-run-placeholder>.**

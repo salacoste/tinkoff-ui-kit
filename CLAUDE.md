@@ -214,9 +214,21 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   it (Playwright 1.63 compareImages hard-fails size mismatch before
   maxDiffPixelRatio) → structural fix: `--tk-font-mono` joins the harness
   font pin (JetBrains Mono via @fontsource, test-only dep — token layer
-  stays system-first per 9.1), 36 baselines re-taken under the pin). Next:
-  11.3 (verification ledger + v1.2.0 release prep — tag is
-  maintainer-only).
+  stays system-first per 9.1), 36 baselines re-taken under the pin).
+  **Story 11.3 DONE** (602262e — epics-v3 closed 8/8: fidelity ledger
+  v1.2.0 (13 rows; both epics-named re-checks closed vs 9.1 probes —
+  stepper brown ADOPTED, bento-radius ≈32 REFUTED confirmed) + yellow
+  audit 0 violations + impeccable 0 blockers + batch package ЧАСТЬ v1.2.0
+  (414 PNG flat, register 11 commits/163 events, byte-identical pairs
+  blob-hash-proven) + RELEASE §9.1–9.7 (fresh-clone PromoCard artMode
+  recipe, dedupe self-sufficient, §9.7 proofs executed ×2) + HANDOFF
+  epics-v3 close + maintainer queue (a)–(d). Lens FIX-THEN-SHIP → fix
+  602262e (4 token-level corrections); visual inherited at merge via
+  bit-identical served tree (8.4 mold). **v1.2.0 prep COMPLETE — tag is
+  MAINTAINER-ONLY: batch-confirm → RELEASE §9.1–9.5 (tag) →
+  SR-RUNSHEET-v1.2.0 → opportunistic spot-checks.** Next: epics-v4 draft
+  (admin/authorized-zone family post-v1.2.0) + port-6007 micro-story
+  (deferred-work).
 - **Kit totals: 943 unit + 1380 visual/axe tests, 27 components, 27 React wrappers, v1 design
   assumptions all closed (6 v2 dark first-pass [ASSUMPTION]s open BY DESIGN until 8.2), CI green —
   CORRECTED 2026-09-25: Actions had been RED since 5.5/6962326 (typecheck step ran before build;
