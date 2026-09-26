@@ -308,5 +308,6 @@ evidence:
   gates job success).** Story 10.4's green head = de304e7.
 - Docs round: spec post-execution sections + ledger 7.5(b) closure + CLAUDE.md
   cycle bullet and totals 934→942; docs-head CI verdict recorded below.
-- **CI VERDICT on the docs head: <docs-run-placeholder>.**
-- **CI VERDICT on the terminal head: <terminal-run-placeholder>.**
+- **CI VERDICT on the docs head: GREEN — run 36235657956, gates job success**
+  (10:24Z → 10:43:59Z, 19.7m; the terminal head's own run verified via `gh run`
+  after this line landed — the standing non-self-referential close).
