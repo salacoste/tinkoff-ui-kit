@@ -400,4 +400,6 @@ mandated adjudications returned VERIFIED with the lens's OWN evidence:
   map is tooltip-only again. Story 11.2's green head = b185cc4.
 - Docs round: spec post-sections + deferred-work entries + CLAUDE.md cycle
   bullet and totals 942→943; docs-head CI verdict recorded below.
-- **CI VERDICT on the docs head: <docs-run-placeholder>.**
+- **CI VERDICT on the docs head (eb5a5ba): GREEN — run 36261862359
+  (18:14:58Z → 18:35:25Z, 20.4m).** The terminal head's own run is verified
+  via `gh` after landing (the non-self-referential close mold, story 11.1).
