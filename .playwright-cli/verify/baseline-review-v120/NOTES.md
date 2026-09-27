@@ -198,7 +198,8 @@ y344–463 (120×120), disc x593–687 / y356–452, bands 13/12 horizontal
 32 intact. Blast radius as predicted: skeleton (`.sk--art`) and bleed
 legs untouched — no collateral failures. **Run B verdict: 1380
 passed, exit 0 (8.3m) — full-suite comparison green.** Gate review
-copies 10–13 refreshed, byte-verified.
+copies 10–13 refreshed, byte-verified. Push `f78cdcc` — run 36315112858,
+verdict `success` by `gh run view` — GREEN.
 
 ## 8. Re-presented leg 11, flag on the «Платинум» zoom — STALE WINDOW,
 ## fix (c) CONFIRMED by the maintainer
