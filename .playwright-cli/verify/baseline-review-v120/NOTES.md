@@ -158,4 +158,44 @@ y831 clears the pill top y882 by 51px; under-pill = yellow step/beige
 fill. No white-on-white anywhere in the bleed band. **Run B verdict:
 1380 passed, exit 0 (8.3m) — full-suite comparison green.** Gate
 review copies refreshed for legs 10/11 (variants) and 12/13
-(accessibility).
+(accessibility). Push `69df436` — run 36313925212, verdict `success`
+by `gh run view` — GREEN.
+
+## 7. «Разные отступы» (flagged on the re-presented promocard--variants
+## [dark], Group 3 leg 11) — SANCTION (c) EXECUTED
+
+**The crop zoomed the «Т-Инвестиции» card of the «Все тона» grid.**
+Every card-level register measured token-exact in BOTH themes (col2:
+card x447–832; tile x576–703 left/right margins 129/129 — Δ0.25;
+disc 16/16 in tile; card top→art 32 = padding; art→heading 24;
+desc→pill 24; pill bottom→card bottom 32; row gap 20; all five discs
+identical 96×96 at pitch 407 — rows in line). The vision's «tile
+shifted left / disc left-biased / bottom row misaligned» impressions
+were annotation-arrow distortion — none survived pixels.
+
+**The one REAL asymmetry — what the maintainer's two arrows marked:**
+the demo art slab was 128×96 around a 96×96 disc — side bands 16px,
+top/bottom bands **0** (the disc filled the slab's full height; the
+`aspect-ratio: 4/3` canvas style stretched width to 128 over a
+stretch-height of 96). Visible in both themes (white columns on
+pastel / near-black columns on dark tint) — reads as uneven margins
+around the circle. Root: STORY-CANVAS demo construction
+(`.tkpc-art` in promo-card.stories.ts), not component CSS. The
+reference has no such slab at all (3.6 illustration = centered art,
+no backing tile) — the slab is a kit-side stand-in.
+
+**Maintainer sanction (c), 2026-09-27:** keep the slab, EQUALIZE the
+ring — `.tkpc-art` drops `aspect-ratio: 4/3`, gains
+`box-sizing: border-box` + `padding: var(--tk-space-12)`; disc 96×96
+unchanged → a 120×120 slab with a 12px ring on all four sides.
+
+Re-taken (delete + harness-written): components-promocard--
+{playground,theming,variants,accessibility} {light,dark} ×8. Run A:
+8 legs failed (write-guard, expected), 12 promocard-grep legs passed.
+Verified in the new baselines (both themes, col2): slab x580–699 /
+y344–463 (120×120), disc x593–687 / y356–452, bands 13/12 horizontal
+(1px antialias), 12/12 vertical — EQUAL; slab centered (Δ0), padding
+32 intact. Blast radius as predicted: skeleton (`.sk--art`) and bleed
+legs untouched — no collateral failures. **Run B verdict: 1380
+passed, exit 0 (8.3m) — full-suite comparison green.** Gate review
+copies 10–13 refreshed, byte-verified.

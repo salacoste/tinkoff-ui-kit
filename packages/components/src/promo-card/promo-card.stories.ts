@@ -109,11 +109,16 @@ const canvasStyles = html`
     .tkpc-canvas figure {
       margin: 0;
     }
+    /* Equal ring around the disc (gate v1.2.0, flag «разные отступы»):
+       the old aspect-ratio 4/3 slab stretched to the disc height (96)
+       with width 128 — side bands 16px, top/bottom 0. Padding instead
+       of aspect → a 120×120 slab, 12px ring on all four sides. */
     .tkpc-art {
-      aspect-ratio: 4 / 3;
+      box-sizing: border-box;
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: var(--tk-space-12);
       border-radius: var(--tk-radius-lg);
       background: var(--tk-color-surface-base);
     }
