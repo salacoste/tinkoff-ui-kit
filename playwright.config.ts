@@ -79,6 +79,10 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
     timeout: 30_000,
   },
+  // Tree-identity gate (port-6007 contamination class): aborts the run before
+  // any leg when the answering server belongs to another checkout. The
+  // webServer above boots BEFORE global setup, so the endpoint is up.
+  globalSetup: './tests/visual/global-setup.ts',
   projects: [
     // Chromium only in v1 (spec); viewport/DSF/motion come from `use` above.
     // Launch args pin FONT RASTERIZATION (Story 1.8): macOS CoreText and Linux

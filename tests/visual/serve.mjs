@@ -10,9 +10,17 @@
 // Started by playwright.config.ts `webServer` (never committed to long-running
 // use); Playwright polls webServer.url (/index.json) until it answers 2xx, then
 // runs the suite against it, then kills the process.
-import { createReadStream, existsSync, statSync } from 'node:fs';
+//
+// Tree identity (the port-6007 machine-global contamination class, spec 6.3 /
+// deferred-work): `reuseExistingServer` lets a second checkout silently ride
+// the FIRST tree's already-listening server. This server therefore (a) answers
+// `GET /__tree__` with its pid + repo root, which tests/visual/global-setup.ts
+// compares against THIS checkout's root before any leg runs, and (b) keeps a
+// lockfile (pid + root) so an EADDRINUSE boot names the tree holding the port.
+import { createReadStream, existsSync, readFileSync, statSync, unlinkSync, writeFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { dirname, extname, join, normalize, resolve, sep } from 'node:path';
+import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -23,6 +31,43 @@ if (!Number.isInteger(PORT) || PORT <= 0 || PORT > 65535) {
   );
   process.exit(1);
 }
+
+// --- Port lockfile (diagnostics for the machine-global-port class) ----------
+// The lock lives in the OS temp dir keyed by port; it names THIS server's pid
+// + repo root so a blocked boot (EADDRINUSE) can say WHICH tree holds the
+// port. Replaced when stale (holder dead) — acquisition ordering is: bind the
+// port first, then write the lock (a lock without its port is meaningless, so
+// it is always replaced by whoever actually holds the port).
+const LOCK_PATH = join(tmpdir(), `pillkit-visual-${PORT}.lock`);
+const isAlive = (pid) => {
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch {
+    return false;
+  }
+};
+const writeLock = () => {
+  try {
+    writeFileSync(LOCK_PATH, `${JSON.stringify({ pid: process.pid, root: REPO_ROOT })}\n`, {
+      flag: 'w',
+    });
+  } catch {
+    // A missing lock only degrades the EADDRINUSE diagnostic, never the suite.
+  }
+};
+const readLock = () => {
+  try {
+    return JSON.parse(readFileSync(LOCK_PATH, 'utf8'));
+  } catch {
+    return null;
+  }
+};
+const releaseLock = () => {
+  // Only unlink our own lock — a replacement holder may have rewritten it.
+  const held = readLock();
+  if (held?.pid === process.pid) unlinkSync(LOCK_PATH);
+};
 
 /** Mount table — most specific prefixes first, catch-all '/' last. */
 const ROUTES = [
@@ -57,6 +102,13 @@ const server = createServer((req, res) => {
     res.end('visual harness server: malformed percent-encoding in request path');
     return;
   }
+  // Tree identity for tests/visual/global-setup.ts (see the file header):
+  // answered from process state, before any filesystem mount is consulted.
+  if (pathname === '/__tree__') {
+    res.writeHead(200, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
+    res.end(JSON.stringify({ pid: process.pid, root: REPO_ROOT, port: PORT }));
+    return;
+  }
   for (const { prefix, root } of ROUTES) {
     if (prefix !== '/' && pathname !== prefix && !pathname.startsWith(`${prefix}/`)) continue;
     let relative = normalize(prefix === '/' ? pathname : pathname.slice(prefix.length));
@@ -82,8 +134,12 @@ const server = createServer((req, res) => {
 
 server.on('error', (error) => {
   if (error.code === 'EADDRINUSE') {
+    const held = readLock();
+    const holder = held?.root
+      ? ` — held by tree ${held.root} (pid ${held.pid}, ${isAlive(held.pid) ? 'alive' : 'dead'})`
+      : '';
     console.error(
-      `visual harness server: port ${PORT} is already in use — free it, or change the port in playwright.config.ts (PORT) AND the webServer command/url.`,
+      `visual harness server: port ${PORT} is already in use${holder}. Free it (\`lsof -ti:${PORT} | xargs kill\`), or change the port in playwright.config.ts (PORT) AND the webServer command/url.`,
     );
   } else {
     console.error(`visual harness server: ${error.message}`);
@@ -92,5 +148,14 @@ server.on('error', (error) => {
 });
 
 server.listen(PORT, '127.0.0.1', () => {
+  writeLock();
+  for (const signal of ['SIGINT', 'SIGTERM', 'SIGHUP']) {
+    process.on(signal, () => {
+      server.close(() => process.exit(0));
+      // If close hangs on an open keep-alive socket, still exit promptly.
+      setTimeout(() => process.exit(0), 2_000).unref();
+    });
+  }
+  process.on('exit', releaseLock);
   console.log(`visual harness server on http://127.0.0.1:${PORT} (docs dist + daytona fonts + @fontsource/inter + @fontsource/jetbrains-mono)`);
 });
