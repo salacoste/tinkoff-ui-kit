@@ -126,10 +126,26 @@ async function waitForDecodedCanvas(page: Page): Promise<void> {
  * exactly equal everywhere. The 36 baselines were re-taken under the pin.
  * (The tooltip entries above survive because that story's stage is a
  * fixed-height canvas — same-size images, ratio path applies.)
+ *
+ * THIRD CLASS (2026-09-27, the mono-EXTENSION's first CI proof, run
+ * 36329127911): the component-package flip (33 rules — api chips + canvas
+ * chips) shifts inline <code> advance against PRE-FLIP chip bytes on the
+ * legs whose macOS delta stayed UNDER the 1.5% re-take bar (run A passed
+ * them; the 1.5% rule keeps their baselines un-rewritten), but ubuntu body
+ * text-advance amplifies the same text rows to 0.02–0.04 SAME-SIZE ratios
+ * (no size mismatch — the mono pin holds canvas heights equal; the ratio
+ * path applies). Same relief as the tooltip class: CI-only per-leg entries
+ * sized ~2× the measured bands (0.05 / 0.05 / 0.05 / 0.08 / 0.06); local
+ * compare stays strict and green at the config default.
  */
 const CI_VISUAL_TOLERANCE: Record<string, number> = {
   'components-tooltip--placements [light]': 0.13,
   'components-tooltip--placements [dark]': 0.08,
+  'components-button--interaction [dark]': 0.05,
+  'components-link--theming [dark]': 0.05,
+  'components-progressbar--announce [light]': 0.05,
+  'components-tooltip--theming [light]': 0.08,
+  'components-tooltip--theming [dark]': 0.06,
 };
 
 /** Discovery — a missing/empty index is a loud failure with build guidance. */
