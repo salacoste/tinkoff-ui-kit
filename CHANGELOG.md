@@ -7,10 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
+## [1.2.0] - 2026-09-27
 
-- tk-button: href/target/rel anchor mode — the pill renders an anchor when href is set;
-  no-href renders byte-identical (additive minor, story 10.4)
+### Added — v1.2.0 surface (epics-v3)
+
+- Token layer: `tint-brown` #8D6040 (theme-invariant, the charcoal mold; AA gates pinned in
+  tests/contrast.test.ts) and the `--tk-font-mono` font slot (system-first chain) (9.1)
+- tk-input + tk-segmented-radio: `srOnly` label mode — visually hidden label keeps the full
+  accessible-name chain (1px-clip utility) (10.1)
+- tk-checkbox: `error` channel — the tk-input error line verbatim (consumer copy, described-by
+  wired, error-on-field pairing in both themes) (10.2)
+- tk-stepper: `subtitle` slot; tk-qr-block: `page-copy` slot — presence-mold slots; showcase copy
+  is reference-verbatim, render-verified (10.1/10.2)
+- tk-promo-card: `artMode="bleed"` — CSS-only full-bleed bottom art zone + floating-pill actions
+  overlay (pill offset probe-measured at --tk-space-32) (10.3)
+- tk-button: `href`/`target`/`rel` anchor mode — `<a class="button">` when href is set; no-href
+  render byte-identical; rel = noopener noreferrer iff target=_blank (10.4)
+
+### Changed
+
+- tk-stepper badge pairing switched to the reference reading: brown `tint-brown` fill + WHITE
+  numeral (AA 5.413:1; hooks --tk-stepper-badge-fill/-number unchanged) — the v1.1.0 cream-raised
+  mapping retired by the maintainer's ADOPT decision (9.1)
+
+### Internal
+
+- 9.2 generator truth (aa-annotations derive from DESIGN.md, AD-4 matrix single-sourced),
+  11.1 a11y engine legs for the new modes (+12; group-VI ledger 42/42; SR-RUNSHEET-v1.2.0),
+  11.2 docs code surfaces flipped to --tk-font-mono with the harness font pin (JetBrains Mono,
+  test-only) — no consumer-facing surface beyond the lines above
 
 ## [1.1.0] - 2026-09-25
 
