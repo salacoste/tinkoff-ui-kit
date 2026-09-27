@@ -156,7 +156,91 @@ redacted; ledger rows cite pack files, not values from the session).
    are components/react/tokens at 1.2.0 (root 0.1.0 and docs 0.0.0 stay
    out of the bump). Re-verdict: **APPROVED**. Status → approved,
    lenses_ran ['quick'], iteration 2.
+3. 2026-09-28 — EXECUTION, no deviations from the frozen scope: all eight
+   tasks executed as written (Verification below). Sequencing held: 14.1's
+   CI verdict (run 36347702653 success) landed first; spec commit 80a3604
+   pushed at the open gate (run 36352389403).
 
 ## Verification
 
-(filled at execution)
+Task 1 — fidelity ledger: **DONE**.
+`.playwright-cli/verify/fidelity-verification-v1-3-0/ledger.md` — 6 rows:
+badge (neutral/attention + hooks; the #E5372B → red-300 AA-mapping
+deviation + ≈5.17:1/6.179:1 kit facts), tabs underline (ink-bar mapping
+via `--tk-tabs-indicator`, live spec legs cited), progress-bar height
+hook (geometry vision-estimated ±, hook = kit-side mechanism), the two
+pattern pages with the HONEST composition classification + in-page deltas
+repeated (gray-fill button, filter-chips count, «…» popovers, bare-bar
+naming, avatars-as-slots), and ONE aggregate pointer row for the 12.1
+renames (10 × 100%-similarity git-mv, nothing re-measured). Scope note
+records the docs-side text moves as NOT rows; UNCHANGED section points at
+the v2 + v1.2.0 ledgers; findings L1–L4 (mono-interlude = capture-platform
+event; byte-identical api re-takes as proof; no-dark-reference honesty;
+react/tokens ZERO diff).
+
+Task 2 — yellow-discipline audit: **DONE**.
+`yellow-audit.md` — methodology verbatim; full-tree 72/32 (vs 66/29 at
+v1.2.0); diff-scoped added lines = exactly 6 consuming rules, all
+classified C14–C17 (2 × the pack's own progress-fill class, 1 × logo
+tile, 1 × override demo — ink-paired or text-free); raw-hex added = 0;
+**0 violations, 0 fixes**. The console-pages special-interest leg:
+verdicts per surface, both pattern pages PASS the pack's own discipline
+(yellow NEVER fills a button in the authorized zone — now
+reference-grounded).
+
+Task 3 — impeccable pass: **DONE**. `impeccable-run.md` — detector over
+209 files (207 + the two new pattern-page sources): **exit 0, zero
+findings**; can-fail probe exit 2 reproduced; deep-sweep classes all
+clean (0 TODO, 3 sanctioned console.log unchanged + 0 added, 6
+prose-continuation false positives, 0 stale prose numbers in living
+surfaces, 48/48 evidence pointers resolve — 4 regex-level brace-notation
+misses verified present, 27/27 css.ts headers).
+
+Task 4 — batch PREP: **DONE**. `baseline-review-package.md` ЧАСТЬ v1.3.0 —
+inventory MEASURED at this head (430 PNG = 408 suite + 22 per-component,
++16 new / 0 deleted; 951 unit; 1438 tests / 21 files); the register:
+5 commits / 197 PNG-events with forensic one-liners (1af5c23 interlude
+mono 151; b5c2daf 10 renames bytes-unchanged; 0f769c3 6+2; afa645e 10+4
++2 byte-identical; 4044a3b 14); per-epic inventory table; ~1h review
+order. Nothing confirmed — the gate is the maintainer's.
+
+Task 5 — SR-RUNSHEET-v1.3.0.md: **DONE**.
+`.playwright-cli/verify/a11y-sweep/SR-RUNSHEET-v1.3.0.md` — the v1.2.0
+file structure; 6 URL blocks (tabs console-underline, badge
+console-tones, progressbar thin-bars, console-chrome demo, data-surfaces
+payments + progress-favorites); expected announcements pulled VERBATIM
+from the protocol tables 14.1 wrote; 12 «Результат» rows EMPTY;
+closing criterion names §10.4.
+
+Task 6 — RELEASE.md §10: **DONE**. §10.1–10.7 on the §9 mold: pre-flight
+gates (CI verdicts by run id; batch ЧАСТЬ v1.3.0; runsheet); §10.2
+version steps (three package.json 1.2.0 → 1.3.0 — MAINTAINER steps);
+§10.3 tag commands (MAINTAINER the sole executor, NO execution stamp —
+unlike §9.3); §10.4 fresh-clone recipe rendering tk-badge attention via
+the React wrapper (neutral pill + attention count + the
+ancestor-retinted hooks pair; recipe = §9.4 verbatim + both environment
+traps carried); §10.5 changelog draft (story list measured from the
+closed specs 12.1–14.2 + interlude); §10.6 fonts/legal + the new PII
+discipline note; §10.7 proof-of-nothing-executed (tag -l, package.json
+versions, CHANGELOG grep, no npm).
+
+Task 7 — HANDOFF close: **DONE**. Header → v1.3.0-prep final; §2 gains
+the epics-v4 state row (7/7 + interlude, measured totals); §4 gains the
+maintainer queue v1.3.0 (a) batch-confirm → (b) release §10.1–10.5 →
+(c) SR-RUNSHEET-v1.3.0 → (d) opportunistic: iOS momentum-scroll +
+avatar-menu/kebab open-state capture (13.1 follow-up); §6 file map +5
+rows; §7 next-work pointer rewritten; the living gates line 1380 → 1438.
+
+Task 8 — ledger (this Change Log + Verification): **DONE**.
+
+Gates (2026-09-28, local, at the 14.2 head): build/test/lint/typecheck/
+gen/gen:tokens ALL GREEN; units **951** (tokens 17 + components 713 +
+react 70 + root 151); gen-drift exit 0. Visual suite: this story's diff
+is docs/verification-only (HANDOFF/RELEASE/baseline-package/runsheet/
+fidelity trio — `git status` confirms zero packages/ or tests/ files),
+so the served tree is bit-identical to the 80a3604 head whose CI window
+includes 14.1's full compare **1438 passed** (the 11.3 docs-only
+precedent). CI: run 36347702653 (4044a3b) = success — 14.1 CI-green;
+spec push 80a3604 → run 36352389403, verdict recorded in RELEASE §10.1
+by id once it exists. STOPPED at the prep by design: no tag, no version
+edits, no CHANGELOG edits, no npm — proofs in §10.7.

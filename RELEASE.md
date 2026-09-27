@@ -682,4 +682,226 @@ layout-сдвига); консоль чистая. Урок §8.4 подтвер
   react}/package.json` = `"version": "1.1.0"` (все три); `grep "1\.2\.0"
   CHANGELOG.md` = 0 совпадений (exit 1). Это гейт мейнтейнера.
 
+# Релиз v1.3.0 (эпики-v4) — подготовлено Story 14.2 (2026-09-28)
+
+**Всё до тега подготовлено и проверено автономным прогоном 14.2; шаги ниже
+исполняет ТОЛЬКО мейнтейнер.** v1.3.0 = окно эпиков-v4 (12.1, 12.2, 13.1,
+13.2, 13.3, 14.1, 14.2 + межоконный interlude): доки-рестракчер по
+повершруппам, капчу-паки v3 (bank + admin), консольное семейство (tabs
+`indicator="underline"`, badge neutral/attention + хуки
+`--tk-badge-fill`/`--tk-badge-text`, progress-bar хук высоты) + две
+страницы паттернов (Console chrome / Data surfaces) + Group VII свип +
+доки-комплишн (поиск 30 записей). Interlude: mono-extension (33 правила
+код-чипов компонентных пакей + демо card→hero) и port-6007 tree-identity
+гард. Итог (ИЗМЕРЕНО на голове 14.2): 27 компонентов, **951 юнит + 1438
+visual/axe тестов**, **430 базлайн-PNG** (414 → 430: +16 новых —
+консольное семейство и страницы паттернов). Модель та же: **только GitHub,
+тег `v1.3.0` на `main`; npm — никогда**; `private: true` навсегда;
+npm-команды не запускались, тег НЕ ставился (14.2 завершилась с
+`git tag -l` = v1.0.0 v1.1.0 v1.2.0 — проверяемо, §10.7).
+
+## 10.1. Гейты до релиза (pre-flight v1.3.0)
+
+1. **CI зелёный на HEAD `main`** — вердикт только по `gh run` (правило
+   CLAUDE.md: никогда не выводить из локальных гейтов). Окно v1.3.0
+   держало CI зелёным: 12.x-окно (runs на 3ff938e/c9fa58e/4f4a40c/e274712),
+   13.2 (afa645e-предшественники: c22f3eb run 36343418534, 13.3 afa645e
+   run 36346034697), 14.1 4044a3b run 36347702653, spec-14.2 80a3604 run
+   36352389403 — каждый вердикт записан в соответствующем спеке.
+2. Локально на HEAD: `pnpm install && pnpm build && pnpm test && pnpm lint &&
+   pnpm typecheck && pnpm gen && pnpm gen:tokens` — всё зелёное, `git status`
+   чистый.
+3. **Gen-drift после коммита:** `pnpm gen && pnpm gen:tokens && git diff
+   --exit-code -- packages/ tests/` — пустой (генераторы воспроизводимы).
+4. **Визуальная сюита ×2:** `pnpm test:visual` дважды — 1438/1438 оба
+   прогона (порт 6007 машинно-глобален: перед прогонами `lsof -ti:6007`
+   пуст; tree-identity гард 7c112e6 сам прервёт чужое дерево).
+5. **БАТЧ-ПОДТВЕРЖДЕНИЕ v1.3.0-базлайнов** — ЧАСТЬ v1.3.0 пакета
+   `_bmad-output/implementation-artifacts/baseline-review-package.md`
+   (реестр окна: 5 коммитов / 197 PNG-событий + 16 новых, forensic-
+   однострочники; наибольшая волна — interlude mono 151). Фиделити-контекст:
+   `.playwright-cli/verify/fidelity-verification-v1-3-0/` (ledger 6 строк,
+   жёлтый аудит с консольной дисциплиной, impeccable 209 файлов).
+   Неподтверждённые — перезаписать по правилу delete+update (§3 v1-части).
+6. **SR-спот-чеки v1.3.0** — исполнить
+   `.playwright-cli/verify/a11y-sweep/SR-RUNSHEET-v1.3.0.md` (файл написан
+   историей 14.2: 12 пустых строк-«Результат» по шести поверхностям × обе
+   темы; NVDA осознанно отложена — решение 2026-09-23 в §0). Может ехать
+   ПОСЛЕ тега (как v2/v1.2.0) — но протоколы уже в историях и страницах
+   паттернов.
+
+## 10.2. Версия и CHANGELOG (прецедент §2/§8.2/§9.2)
+
+1. Во всех трёх `packages/{tokens,components,react}/package.json` выставить
+   `"version": "1.3.0"` (манифесты остаются `private: true`; корневой
+   0.1.0 и docs 0.0.0 вне релизного контракта — прецедент 8.4/9.2).
+2. В `CHANGELOG.md`: заменить `[Unreleased]` на `[1.3.0] - <дата релиза>`,
+   добавить пустой `[Unreleased]` сверху. Текст — из драфта §10.5 ниже.
+3. Закоммитить («chore(release): v1.3.0 — version + changelog»); дождаться
+   зелёного CI на ЭТОМ коммите.
+
+## 10.3. Тег (мейнтейнер — единственный исполнитель)
+
+```sh
+# на чистом main, после §10.1–10.2 (тег указывает на релизный коммит с зелёным CI):
+git tag v1.3.0
+git push origin main --tags
+```
+
+Никаких исполненных штампов в этом разделе НЕТ (в отличие от §9.3) —
+история 14.2 завершилась до тега by design. Откат — тот же механизм,
+что §7.
+
+## 10.4. Верификация релиза — свежий потребитель рендерит tk-badge в режиме attention
+
+По молду §5/SM-6/§8.4/§9.4, но проверяем v1.3.0-поверхность (клон —
+релизный тег): консольные тона бейджа (13.3) — attention-счётчик
+red-300/white (AA 6.179:1) + neutral-пилюля + пары хуков
+`--tk-badge-fill`/`--tk-badge-text`, перекрашивающие бейдж СКВОЗЬ границу
+шэдоу-рута с предка. Экспорт и пропсы сверены с реальным API
+(`packages/react/src/generated/badge.ts` → `Badge`; проп `variant:
+'incentive' | 'stat' | 'neutral' | 'attention'`; `count?: number` —
+число-данные, рендерит «99+»-кап; `label?: string` — фолбэк слота).
+
+```sh
+d=$(mktemp -d) && cd "$d"
+git clone --depth 1 --branch v1.3.0 https://github.com/salacoste/tinkoff-ui-kit
+mkdir my-app && cd my-app
+pnpm init
+cat > pnpm-workspace.yaml <<'EOF'
+packages:
+  - .
+  - ../tinkoff-ui-kit/packages/*
+EOF
+cd ../tinkoff-ui-kit && pnpm install && pnpm build && cd ../my-app
+pnpm add -w pillkit-components pillkit-react pillkit-tokens --workspace
+pnpm add -w react@19.3.0 react-dom@19.3.0
+pnpm add -w -D vite
+cat > vite.config.ts <<'EOF'
+import { defineConfig } from 'vite';
+export default defineConfig({ resolve: { dedupe: ['react', 'react-dom'] } });
+EOF
+cat > index.html <<'EOF'
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <title>v1.3.0 check</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/main.tsx"></script>
+  </body>
+</html>
+EOF
+cat > main.tsx <<'EOF'
+import 'pillkit-tokens/tokens.css';
+import 'pillkit-components';
+import { createRoot } from 'react-dom/client';
+import { Badge } from 'pillkit-react';
+
+const el = document.createElement('div');
+el.setAttribute('data-theme', 'light');
+document.getElementById('root')!.append(el);
+createRoot(el).render(
+  <main style={{ display: 'flex', gap: 16, alignItems: 'center', padding: 24 }}>
+    <Badge variant="neutral" label="Ожидает подписи" />
+    <Badge variant="attention" count={3} />
+    <span style={{ ['--tk-badge-fill' as string]: 'var(--tk-color-yellow-100)',
+                   ['--tk-badge-text' as string]: 'var(--tk-color-text-on-primary)' }}>
+      <Badge variant="attention" count={7} />
+    </span>
+  </main>,
+);
+EOF
+pnpm exec vite
+```
+
+**Замечание о самодостаточности — то же, что §9.4:** рецепт несёт те же
+три строки `resolve.dedupe` (README «Быстрый старт» +
+getting-started-страница). Две ловушки окружения из §9.4 действуют и
+здесь: блок `devEngines.packageManager` из `pnpm init` удалить; установку
+не собирать через пайпы с `tail`.
+
+Проверить: (1) neutral-пилюля — светло-серая заливка с тёмно-серым
+текстом; (2) attention-счётчик — красная заливка с БЕЛОЙ цифрой «3»;
+(3) обёрнутый в span с хуками счётчик «7» — ЖЁЛТАЯ заливка с чернильной
+цифрой (пара переопределена с ПРЕДКА, сквозь границу шэдоу-рута — сам
+Badge не тронут); (4) `<html data-theme="dark">` — все три пары остаются
+читаемыми (attention остаётся красной парой); (5) консоль чистая. Этот
+прогон — релизный гейт v1.3.0.
+
+## 10.5. Драфт changelog v1.3.0 (EN — перенести в CHANGELOG.md на §10.2)
+
+```
+### Added — v1.3.0 surface (epics-v4: the authorized-zone / admin family)
+- tk-badge: `neutral` and `attention` console variants (AA pairs gray-100/gray-600 ≈5.17:1
+  and red-300/white 6.179:1 — the raw reference red maps onto the red scale per the frozen
+  AA-pairing ruling) + the `--tk-badge-fill`/`--tk-badge-text` hook pair (per-instance
+  retint, inherits through the shadow boundary — a pair on an ANCESTOR re-tints nested
+  tab counters with zero tabs code) (13.3)
+- tk-progress-bar: `--tk-progress-bar-height` geometry hook (default 4px unchanged;
+  console thin bars = one property on an ancestor) (13.3)
+- tk-tabs: `indicator="underline"` console mode — 2px ink bar on aria-selected via the
+  `--tk-tabs-indicator` hook, pill default untouched; announcements unchanged (13.2)
+- Docs: two v2 console pattern pages — Console chrome (header + underline tabs + static
+  4-column mega panel) and Data surfaces (toolbar, counted tabs, status table, labeled
+  thin bars, favorites tile grid) — composition surfaces grounded on the 13.1 admin pack
+  (13.2/13.3); docs search index 19 → 30 entries (v2 family + pattern pages, 14.1);
+  per-vertical showcase groups Bank/Business/Invest (12.1); DESIGN.md authorized-zone
+  console language section (13.2)
+- Reference packs: captures-v3 per-vertical convention — bank vertical (12.2) + the
+  PII-redacted admin console pack, 8 surfaces (13.1)
+
+### Internal
+- a11y-sweep engine Group VII: +9 legs for the console family (108 total; stops asserted
+  exactly by the walk); SR-protocol rows in three Accessibility stories + protocol tables
+  on both pattern pages; SR-RUNSHEET-v1.3.0 (14.1/14.2)
+- Interlude: 33 component-package code rules join --tk-font-mono (mono-extension) +
+  theming-guide demos card→hero; port-6007 tree-identity guard for the visual harness
+  (serve.mjs /__tree__ + globalSetup gate + lockfile)
+- Verification: fidelity ledger v1.3.0 (6 rows, composition classification for pattern
+  pages), yellow-discipline audit with the console rule (yellow never fills buttons in
+  the authorized zone — 0 violations), impeccable 209 files exit 0 (14.2)
+```
+
+## 10.6. Шрифты и право (НЕИЗМЕННО — напоминание)
+
+- **DaytonaSans/DaytonaPragma — отдельно лицензированные бинарники**
+  (© Monotype Imaging / © ParaType), НЕ MIT: права потребителя определяет
+  ТОЛЬКО `packages/tokens/fonts/LICENSE-FONTS.md`. Договоры лицензируют
+  МЕЙНТЕЙНЕРА и НЕ передаются с пакетом. Модель распределения не менялась
+  с v1.0.0 (решение 2026-09-23, §0).
+- **JetBrains Mono — ТЕСТ-ТОЛЬКО (без изменений с v1.2.0):** корневая
+  devDependency харнесса (пин детерминистских метрик моно при захвате
+  базлайнов); не поставляемый ассет, ни один пакет кита его не декларирует;
+  токенный слой остаётся систем-first (решение 9.1).
+- Вендорные transitions.dev-рецепты — провенанс-заголовки, статус §0.3;
+  новых компонентов на них в окне v1.3.0 не добавилось.
+- Товарный знак: свип 5.7 в силе; строки окна v1.3.0 прошли те же grep'ы
+  в 14.2 (жёлтый аудит + impeccable включали сырой-hex и prose-свипы) —
+  ноль попаданий Т-Банк/Tinkoff/tbank вне фактологических URL и
+  дисклеймера. PII-дисциплина нового уровня: админ-пак закоммичен ТОЛЬКО
+  в полностью редактированном виде (решение мейнтейнера 2026-09-27;
+  верификация редакции — `verify/admin-13-1/NOTES.md`).
+
+## 10.7. Что 14.2 уже проверила (не нужно повторять) + ПРУФ НЕИСПОЛНЕНИЯ
+
+- Гейты на голове 14.2: build/test/lint/typecheck/gen/gen:tokens зелёные;
+  юниты **951/951** (17+713+70+151); `playwright --list` = **1438 тестов
+  в 21 файле**; полный compare-прогон сюиты на голове 14.1 = 1438/1438
+  (спека 14.1 Verification; дифф 14.2 — docs/verification-only, собранное
+  дерево байт-идентично).
+- Жёлтый аудит окна (6 строк moved-множества + консольная дисциплина
+  страниц паттернов): ноль нарушений; impeccable детектор kit-wide
+  (**209 файлов**): exit 0, ноль блокеров; can-fail-проба exit 2
+  воспроизведена.
+- Фиделити-ledger v1.3.0 (6 строк) с валидными указателями —
+  `.playwright-cli/verify/fidelity-verification-v1-3-0/ledger.md`.
+- **РОВНО НИЧЕГО из §10.2–10.3 НЕ ИСПОЛНЕНО — ПРУФЫ ИСПОЛНЕНЫ 2026-09-28:**
+  `git tag -l` = `v1.0.0 v1.1.0 v1.2.0` (без v1.3.0);
+  `packages/{tokens,components,react}/package.json` = `"version": "1.2.0"`
+  (все три); `grep "1\.3\.0" CHANGELOG.md` = 0 совпадений (exit 1); npm-команды
+  не запускались. Это гейт мейнтейнера.
+
 

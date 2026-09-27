@@ -521,3 +521,117 @@ cookie-banner +158; PNG-плоскость сюиты не росла). Этот
 После подтверждения: гейт релиза v1.2.0 — RELEASE.md «Релиз v1.2.0» §9.1–9.5
 (тег ставит ТОЛЬКО мейнтейнер; эта история ничего не исполняла).
 
+# ЧАСТЬ v1.3.0 — пакет для гейта v1.3.0 (Story 14.2, 2026-09-28)
+
+**Для мейнтейнера.** Окно v1.3.0 (тег v1.2.0..HEAD, эпики-v4: 12.1–14.2 +
+межоконный interlude) — **ИНВЕНТАРЬ ИЗМЕРЕН на голове 14.2** (`git
+ls-tree`/`ls`/`pnpm test`/`playwright --list`): сюита **408 PNG + 22
+per-component PNG в 11 per-component-директориях (12-я директория — сама
+сюита) = 430 всего** (414 → 430: **+16 НОВЫХ, 0 удалено**), **951 юнит**
+(tokens 17 + components 713 + react 70 + root 151), **1438 visual/axe
+тестов в 21 файле** (1380 → 1438 = +58: Group VII 9 ног 14.1 + живые
+спек-ноги 13.2/13.3 + стори-ноги консольного семейства). Этот присест
+подтверждает ТОЛЬКО перезаписи/добавления окна v1.3.0; правила те же
+(§3 v1): подтверждение/перезапись — только человеком, по side-by-side за
+один присест; **гейт этой историей НЕ исполнялся.**
+
+Фиделити-контекст присеста:
+`.playwright-cli/verify/fidelity-verification-v1-3-0/` (ledger 6 строк по
+moved-множеству v1.2.0..HEAD + жёлтый аудит с консольной дисциплиной +
+impeccable 209 файлов). Референс окна — `.playwright-cli/captures-v3/`
+(bank-вертикаль 12.2 + admin-пак 13.1). **packages/react + packages/tokens
+за окно — ZERO diff** (пропсы 13.x едут через CEM-атрибуты).
+
+## v1.3.0-§1. Реестр перезаписей/добавлений окна (5 коммитов, 197 PNG-событий)
+
+Формат: коммит — счёт — forensic-однострочник (проверяется
+`git show --stat/-M <h> -- 'tests/visual/*snapshots*'`).
+
+### Interlude — mono-extension (1af5c23, 09-27): 151 ПЕРЕЗАПИСЬ (наибольшая волна окна)
+
+- **Forensic:** «33 component-package code rules flipped --tk-font-body →
+  --tk-font-mono (api-reference `.tkap code`, 27 `*-canvas code`, 5
+  showcase docs/notes) + theming-guide демо card→hero (button-tier option
+  (b)); run A scoped класс ровно на 151 ногу / ноль канареек, все PNG
+  удалены явно перед update; run C полный 1380 green; CI-хвост (e1916a6):
+  5 ubuntu same-size полос 0.02–0.04 — по 5 CI_VISUAL_TOLERANCE-записей
+  (standing tooltip-молда), базлайны НЕ перезаписаны по правилу 1.5%».
+- **Действие:** подтвердить по `.playwright-cli/verify/mono-extension/`
+  (чипы кода на моно-стеке; hero 56/56 в обоих демо-рядах theming-guide).
+
+### 12.1 renames (b5c2daf): 10 ПЕРЕИМЕНОВАНИЙ — байты не тронуты
+
+- **Forensic:** «showcase-стории переехали в повершруппы Bank/Business/
+  Invest — `git mv` 10 PNG на 100% similarity (визуальный ноль; только
+  story-id префиксы: showcase-* → bank-*/business-*/invest-*)».
+- **Действие:** листать не глядя — это те же подтверждённые v2/v1.2.0
+  пиксели под новыми именами.
+
+### 13.2 (0f769c3): 6 НОВЫХ + 2 ПЕРЕЗАПИСИ
+
+- **Что нового:** tabs--console-underline ×2 (андерлайн-бар 2px, ink),
+  console-chrome--page ×2 + --demo ×2 (страница паттерна).
+- **Перезаписи:** tabs--api ×2 (CEM-таблица выросла — indicator-атрибут).
+- **Forensic:** «underline indicator: pill-псевдо display:none, 2px ::after
+  на aria-selected, --tk-tabs-indicator хук, без transition (бар-анимация
+  пиннед); живые спек-ноги tabs.spec.ts (pill не красится / бар
+  active-only / transitionDuration 0s / ArrowRight snap)».
+- **Действие:** подтвердить против `captures-v3/admin/` (мега-меню:
+  активный таб = жирный + тёмный андерлайн).
+
+### 13.3 (afa645e): 10 НОВЫХ + 4 ПЕРЕЗАПИСИ (+2 byte-identical вне git)
+
+- **Что нового:** badge--console-tones ×2 (neutral-пилюля + attention-счёт
+  + tabs-фигура), progressbar--thin-bars ×2 (h6/h8/h10), data-surfaces--page
+  ×2 + --payments-demo ×2 + --progress-favorites-demo ×2.
+- **Перезаписи:** badge--api ×2 (CEM: variants union), console-chrome--page
+  ×2 (radius-фикс round'а: mega-панель → radius-xl 24, полоса пака).
+- **Forensic:** «нейтральный gray-100/gray-600 ≈5.17:1, attention
+  red-300/white 6.179:1 (сырой #E5372B пака 4.3:1 ПРОВАЛИВАЕТ body-xs —
+  AA-маппинг-рулинг); progressbar--api ×2 вернулся BYTE-IDENTICAL
+  (API-таблица не рендерит cssProperties — capture = пруф нулевой
+  API-поверхности у height-хука); bare-бары пака без имени — axe требует
+  label (записанная дельта)».
+- **Действие:** подтвердить против `captures-v3/admin/`
+  (table-toolbar: серая пилюля h28; limits: тонкие бары; payments-hub:
+  красный счётчик).
+
+### 14.1 (4044a3b): 14 ПЕРЕЗАПИСЕЙ
+
+- **Forensic:** «SR-протокольные таблицы в accessibility-историях
+  {tabs,badge,progressbar} ×2 + обе страницы паттернов (console-chrome,
+  data-surfaces) ×2 + getting-started ×2 (27-компонентный claim) +
+  theming-guide--overrides ×2 (badge-пара фигура) — все 14 =
+  docs-контент-волна; консольные канонические истории НЕ тронуты
+  (пиксели не менялись — пруф полного compare 1438)».
+- **Действие:** подтвердить постранично (контентные волны).
+
+## v1.3.0-§2. Инвентарь окна по историям
+
+| Группа | Базлайны окна | Side-by-side / доказательство | Коммит(ы) |
+|---|---|---|---|
+| interlude mono | 151 перезапись + 5 CI-tolerance | `verify/mono-extension/NOTES.md` | 1af5c23, e1916a6 |
+| 12.1 renames | 10 (байты те же) | `git show -M b5c2daf` (100% similarity) | b5c2daf |
+| 12.2/13.1 паки | НОЛЬ PNG (капчи — не рендеры кита) | `captures-v3/{bank/,admin/}` INDEX | 907752e, e274712 |
+| 13.2 tabs+page | 6 новых + 2 перезаписи | `captures-v3/admin/probe-notes.md` + живые ноги tabs.spec.ts | 0f769c3 |
+| 13.3 badge/progress/страница | 10 новых + 4 перезаписи (+2 byte-identical) | спецификации 13.3 Verification + `verify/admin-13-1/` | afa645e |
+| 14.1 свип+доки | 14 перезаписей | `verify/a11y-sweep/group-VII.md` (54/6×9) + спецификация 14.1 | 4044a3b |
+| 14.2 (эта) | перезаписей НЕТ — docs-only окно | `verify/fidelity-verification-v1-3-0/` (троица) | рабочее дерево |
+
+## v1.3.0-§3. Порядок присеста (~1 час)
+
+1. **Interlude mono** (~15 мин) — самая большая группа: чипы кода на всех
+   API-страницах моно; theming-guide hero-демо. Быстрый eyeball по
+   группам: cards → forms → nav → v2 pages.
+2. **13.2 консольное семейство** (~10 мин) — console-underline против
+   мега-меню пака (жирный+андерлайн); console-chrome page/demo.
+3. **13.3** (~15 мин) — badge console-tones (серая пилюля/красный счёт),
+   thin-bars (h6 жёлтый/h8 чернильный/h10 синий), data-surfaces ×6.
+4. **14.1 контентная волна** (~10 мин) — протокольные таблицы в
+   accessibility-историях, страницы паттернов, theming-фигура.
+5. **12.1 renames** (~2 мин) — беглый eyeball, байты подтверждены ранее.
+
+Эталоны — `.playwright-cli/captures-v3/` (bank + admin INDEX.md). После
+подтверждения: гейт релиза v1.3.0 — RELEASE.md «Релиз v1.3.0» §10.1–10.7
+(тег ставит ТОЛЬКО мейнтейнер; эта история ничего не исполняла).
+
