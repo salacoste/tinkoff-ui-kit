@@ -238,3 +238,12 @@ with the maintainer.
 final HEAD — **1380 passed (8.3m), exit 0**. §9.1 now fully green
 except §9.1.6 (maintainer's manual SR spot-checks, may ride after the
 tag per the v1.1.0 precedent).
+
+**§9.1 closed (2026-09-27):** docs-commit CI chain GREEN — `f406a67`
+run 36316267015 `success`, `b8b876a` run 36317206090 `success` (both by
+`gh run view`); local gates §9.1.2 green end-to-end (install/build/lint/
+typecheck/gen/gen:tokens/test — root suite 148/148) and §9.1.3 gen-drift
+EMPTY on HEAD. Every §9.1 item now green except §9.1.6 (maintainer's
+manual SR spot-checks — rides after the tag per the v1.1.0 precedent).
+Next: §9.2 (version+CHANGELOG) awaits the maintainer's sanction; §9.3
+tag is maintainer-only.
