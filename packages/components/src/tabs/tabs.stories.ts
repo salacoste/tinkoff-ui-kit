@@ -9,7 +9,8 @@ import type { TkTab } from './tabs.js';
 /**
  * tk-tabs stories (spec 3.3): playground (the reference debit/credit/deposit
  * switcher with projected panels), every state (default / with badges /
- * disabled tab / all-disabled / single tab), the frozen controlled/
+ * disabled tab / all-disabled / single tab), the console underline indicator
+ * (13.2, the admin pack), the frozen controlled/
  * uncontrolled contract live, theming demo, and the a11y notes with the
  * keyboard-only checklist.
  *
@@ -28,6 +29,14 @@ const CARDS: TkTab[] = [
   { value: 'debit', label: 'Дебетовая карта' },
   { value: 'credit', label: 'Кредитная карта' },
   { value: 'deposit', label: 'Вклад' },
+];
+
+/** The console secondary tab row (admin pack admin-main-fullpage, 13.2). */
+const CONSOLE_TABS: TkTab[] = [
+  { value: 'main', label: 'Главная' },
+  { value: 'payments', label: 'Платежи' },
+  { value: 'statement', label: 'Выписка' },
+  { value: 'details', label: 'Реквизиты' },
 ];
 
 type TabsArgs = {
@@ -278,6 +287,54 @@ export const Variants: Story = {
         <figure>
           ${tabsCanvas({ defaultValue: 'solo' }, [{ value: 'solo', label: 'Единственный' }])}
           <figcaption>одиночный таб: стрелки инертны (циклиться некуда)</figcaption>
+        </figure>
+      </div>
+    </main>
+  `,
+};
+
+/**
+ * Console underline indicator (spec 13.2): the authorized-zone secondary tab
+ * bar per the admin pack — monochrome, active = bold + 2px ink underline at
+ * the bar's bottom edge; the pill never paints. Presentation-only: the
+ * semantics, keyboard and the bold-active redundancy are the pill's verbatim.
+ */
+export const ConsoleUnderline: Story = {
+  name: 'Консольный андерлайн',
+  render: () => html`
+    ${canvasStyles}
+    <main class="tkt-canvas">
+      <h1>Консольный андерлайн</h1>
+      <p class="tkt-note">
+        Вторичная навигация авторизованной зоны (админ-пак 13.1,
+        «Главная» консоли): монохром — пилюля не рисуется ни в одной теме,
+        активный таб — жирный текст + 2px чернильный андлайн у нижней кромки
+        дорожки. Семантика и клавиатура идентичны пилюле — индикатор чисто
+        презентационный, состояние несёт и вес текста (правило
+        избыточности). Хук <code>--tk-tabs-indicator</code> перекрашивает
+        чернила; тёмная тема ремапит text-primary сама.
+      </p>
+      <div class="tkt-row">
+        <figure>
+          <tk-tabs indicator="underline" .tabs=${CONSOLE_TABS} .defaultValue=${'main'}>
+            <div slot="tab-0">
+              <p class="tkt-panel-text">
+                Сводка консоли: счета, действия и лента операций по датам.
+              </p>
+            </div>
+            <div slot="tab-1">
+              <p class="tkt-panel-text">
+                Хаб платежей: плитки избранного и карточки способов оплаты.
+              </p>
+            </div>
+            <div slot="tab-2">
+              <p class="tkt-panel-text">Выписка по счёту за период с фильтрами.</p>
+            </div>
+            <div slot="tab-3">
+              <p class="tkt-panel-text">Реквизиты компании и счета для контрагентов.</p>
+            </div>
+          </tk-tabs>
+          <figcaption>консольный ряд: Главная / Платежи / Выписка / Реквизиты</figcaption>
         </figure>
       </div>
     </main>

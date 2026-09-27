@@ -434,6 +434,43 @@ describe('tk-tabs', () => {
     expect(tabButtons(el)[0]?.querySelector('tk-badge')).toBe(badges[0] ?? null);
   });
 
+  // --- Console underline indicator (13.2) ------------------------------------------
+
+  it('indicator defaults to pill, reflects underline to the host attribute, and clamps unknown values back to pill', async () => {
+    const el = await mount({ props: { tabs: THREE } });
+    expect(el.indicator).toBe('pill');
+    // reflect paints the DEFAULT too (Lit reflects on every committed value,
+    // the initial included) — harmless: the sheet matches 'underline' only.
+    expect(el.getAttribute('indicator')).toBe('pill');
+
+    el.indicator = 'underline';
+    await elementUpdated(el);
+    expect(el.getAttribute('indicator')).toBe('underline'); // reflect: the sheet scopes on it
+
+    // Attribute boot: the markup path (indicator="underline") lands the same state.
+    const booted = await mount({ props: { tabs: THREE }, attributes: { indicator: 'underline' } });
+    expect(booted.getAttribute('indicator')).toBe('underline');
+
+    (el as { indicator: string }).indicator = 'banana'; // degenerate consumer input
+    await elementUpdated(el);
+    expect(el.indicator).toBe('pill'); // CONVENTIONS §2 degrade-to-default
+    expect(el.getAttribute('indicator')).toBe('pill');
+  });
+
+  it('UNDERLINE sheet rules: pill pseudo suppressed, 2px ink bar on the active tab only, zero transitions (the pin governs the pseudo)', () => {
+    const cssText = tabsStyles.cssText.replace(/\/\*[\s\S]*?\*\//g, '');
+    const suppressed = cssText.match(
+      /:host\(\[indicator='underline'\]\) \.tab::before\s*\{([^}]*)\}/,
+    )?.[1];
+    expect(suppressed).toMatch(/display:\s*none/);
+    const underline = cssText.match(
+      /:host\(\[indicator='underline'\]\) \.tab\[aria-selected='true'\]::after\s*\{([^}]*)\}/,
+    )?.[1];
+    expect(underline).toMatch(/height:\s*2px/);
+    expect(underline).toMatch(/--tk-tabs-indicator/);
+    expect(underline).not.toMatch(/\btransition\b/); // the bar SNAPS — pin extends to the pseudo
+  });
+
   // --- Matrix row 7: panel swap animates CONTENT ONLY (structural pin) -------------
 
   it('NO-BAR-ANIMATION pin: track and tabs carry no animation; only panel content animates', () => {

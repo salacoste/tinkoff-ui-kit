@@ -79,28 +79,33 @@ is a composition/preset over the core, and what reference material each one grou
 
 ### Story 13.2: Authorized-zone navigation chrome
 
-As an admin-panel author, I want the navigation chrome family (sidebar-nav and the
-user/avatar menu — plus breadcrumbs if 13.1 keeps them) shipped through the full
-v1 pipeline,
-So that authorized screens compose their frame from the kit (the biggest gap-map
-items: nothing in the kit renders a sidebar or an avatar menu today).
-- Reference capture → pixel-probe → DESIGN.md pattern → Lit component + CEM + react
-  wrapper; both themes; keyboard/SR protocols + a11y legs; baselines in the cycle's
+As an admin-panel author, I want the console navigation chrome — the `tabs` underline
+indicator plus the top-header/tab-bar/mega-menu composition patterns — shipped through
+the full v1 pipeline,
+So that authorized screens compose their frame from the kit. *(Post-ratification
+wording, spec 13.1 Change Log 2 vs pixels: the console has NO left sidebar —
+`tk-sidebar-nav` dropped; the avatar-menu OPEN state and the generic kebab popover
+lack captures — optional follow-up maintainer capture; breadcrumbs absent from the
+pack. Deliverables: `tabs indicator="underline"` (code), header + mega-menu as
+composition patterns (navbar NOT mutated), DESIGN.md console language section.)*
+- Reference pack `captures-v3/admin/` → DESIGN.md pattern → code/hooks + docs
+  pattern page + showcase; both themes; a11y floor intact; baselines in the cycle's
   round.
 
 ### Story 13.3: Admin data surfaces
 
-As an admin-panel author, I want the data-dense family — toolbar composition
-(filter-chips + combobox-search + pagination), status/empty-state renderings on
-data-table, and a side drawer if the gap-map demands it,
+As an admin-panel author, I want the data-surface family — status badges
+(`badge` neutral + attention variants with `--tk-badge-*` hooks), a
+`progress-bar` height hook, and the toolbar/status-table/page-header composition
+patterns,
 So that the admin workhorse screens (list + filter + detail) compose without
-consumer-side glue.
-- Expected mostly compositions/presets over existing components; empty-state is the
-  likely NEW component;
-- the cross-surface stacking debt (deferred-work, spec-2-2) gets its trigger CHECK
-  here: admin compositions (toasts over modal over drawer) are the first real
-  consumer of exact top-layer ordering — fold the ordered top-layer strategy into
-  this story only if the reference composition demands it.
+consumer-side glue. *(Post-ratification wording: empty-state deferred — ungrounded,
+no capture; side drawer dropped — no capture evidence; the payments hub/limits/
+accounts captures ground the patterns; mostly compositions over existing
+components.)*
+- The cross-surface stacking debt (deferred-work, spec-2-2) keeps its trigger CHECK
+  here: fold the ordered top-layer strategy in only if a reference composition
+  demands it.
 
 ## Epic 14: v1.3.0 verification + release
 

@@ -87,6 +87,7 @@ export type TkTabsChangeEvent = CustomEvent<TkTabsChangeDetail>;
  *
  * @tag tk-tabs
  * @attr {string} default-value - Initial value for the uncontrolled mode; ignored after the first update.
+ * @attr {pill|underline} indicator - Active-state indicator (default `pill`); `underline` = the console monochrome bar (13.2).
  * @fires value-change - `{ value: string }` with the unwrapped newly active tab value; composed, bubbles.
  * @slot tab-{index} - Panel content for tab N (tab-0, tab-1, …); the active tab's panel is visible.
  */
@@ -110,6 +111,23 @@ export class TkTabs extends LitElement {
   /** The v1 data shape — array of { value, label, disabled?, badge? }; property-only (object data never reflects). */
   @property({ type: Array, attribute: false })
   tabs: TkTab[] = [];
+
+  /** Indicator treatment union (CONVENTIONS §2: literal unions, never forking booleans). */
+  static readonly indicators = ['pill', 'underline'] as const;
+
+  /**
+   * Active-state indicator — presentation ONLY (semantics, keyboard and the
+   * bold-active redundancy are identical either way). `pill` is the frozen
+   * 3.3 reference treatment (white pill + default shadow in the invisible
+   * track); `underline` is the authorized-zone console tab bar (13.2, the
+   * admin pack `captures-v3/admin/admin-main-fullpage`): monochrome — the
+   * pill never paints, the active tab carries a 2px ink underline at the
+   * bar's bottom edge. Attribute-REFLECTED (the sheet scopes statically on
+   * :host([indicator='underline'])); unknown values clamp to `pill`
+   * (CONVENTIONS §2 degrade-to-default).
+   */
+  @property({ type: String, attribute: 'indicator', reflect: true })
+  indicator: (typeof TkTabs.indicators)[number] = 'pill';
 
   /** Live uncontrolled state (the truth whenever `value` is not provided). */
   #uncontrolledValue = '';
@@ -162,6 +180,12 @@ export class TkTabs extends LitElement {
   protected override willUpdate(changed: PropertyValues<this>): void {
     if (changed.has('defaultValue') && !this.hasUpdated) {
       this.#uncontrolledValue = this.defaultValue ?? '';
+    }
+    if (
+      changed.has('indicator') &&
+      !(TkTabs.indicators as readonly string[]).includes(this.indicator as string)
+    ) {
+      this.indicator = 'pill';
     }
     if (changed.has('value')) {
       if (this.value != null && typeof this.value !== 'string') {

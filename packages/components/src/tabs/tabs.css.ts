@@ -63,13 +63,17 @@ import { css } from 'lit';
  *   is 1:1 invisible on the tint; override BOTH text hooks together)
  * - `--tk-tabs-text-active` active text       (default text-primary)
  * - `--tk-tabs-radius`      pill radius       (default radius-full)
+ * - `--tk-tabs-indicator`   underline ink     (default text-primary; the
+ *   13.2 console `indicator="underline"` bar only)
  *
  * Known structural (non-token) values, flagged per the flag-don't-invent rule:
  * - the 44px track height (capture-measured; the tab button box = the ≥44px
  *   interactive target, EXPERIENCE A11y floor);
  * - the 2px pill block inset (44px box − 40px probed visual pill);
  * - the 4px swap translate (--tk-space-4 reused as the motion step);
- * - the 1px pill hairline (the button-secondary hairline weight).
+ * - the 1px pill hairline (the button-secondary hairline weight);
+ * - the 2px underline bar (13.2 console indicator; admin pack
+ *   capture-measured weight).
  *
  * OVERFLOW EXPECTATION: the track never scrolls; tabs shrink (flex 0 1 auto)
  * and the constrained labels ellipsize (the accessible names keep the full
@@ -180,6 +184,28 @@ export const tabsStyles = css`
     background: var(--tk-tabs-pill-fill, var(--tk-color-surface-base));
     box-shadow: var(--tk-shadow-default);
     border: 1px solid var(--tk-color-border-default);
+  }
+
+  /* --- CONSOLE UNDERLINE INDICATOR (13.2; admin pack captures-v3/admin)
+     -----------------------------------------------------------------------
+     The authorized-zone console tab bar (indicator="underline"): monochrome —
+     the pill pseudo NEVER paints; the active tab's bold text (the redundancy
+     rule above, unchanged) gains a 2px ink bar at the bar's bottom edge. The
+     bar SNAPS between tabs exactly like the pill (the bar-animation pin
+     governs this pseudo too: no transition ever), and the ink follows
+     text-primary so dark theme remaps it. The a11y floor is untouched —
+     state never rides the bar alone: the 500-weight active text stays. */
+  :host([indicator='underline']) .tab::before {
+    display: none;
+  }
+
+  :host([indicator='underline']) .tab[aria-selected='true']::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    height: 2px;
+    background: var(--tk-tabs-indicator, var(--tk-color-text-primary));
   }
 
   /* Long labels truncate visually (ellipsis); the accessible name keeps the

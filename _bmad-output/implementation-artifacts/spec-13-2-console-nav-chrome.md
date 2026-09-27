@@ -126,7 +126,58 @@ it); empty-state (deferred — ungrounded).
    the Intent problem statement + Task 2 AC still said "TEXT variant" —
    corrected to the sole-treatment + `indicator` option phrasing
    (sanctioned lens correction under Change Log 2's authority).
+4. 2026-09-27 — EXECUTION. Task 3 deviation, recorded: the "showcase
+   story" landed as the `Демо` story OF the pattern page
+   (`packages/docs/src/v2/console-chrome.stories.ts`), not a
+   `components/src/showcase/` entry — the composition has no component
+   code (navbar untouched), the docs page IS the adoption surface, and
+   the visual harness baselines it like any story; 13.3's payments-list
+   showcase covers the full-screen composition case.
 
 ## Verification
 
-(filled at execution)
+Task 1 — DESIGN.md console language section: **DONE**. Block
+`**Authorized-zone console language (v2, admin — Story 13.2).**` added
+inside `## Components` (before Reference anchors) + the Components-table
+Tabs row amended with the underline indicator; all Task-1 AC values
+present (monochrome; yellow = selection outline/progress/logo ONLY;
+buttons #ECEEF0 r10 h36–40; cards white r24 on #F5F6F8, sub-cards
+#F0F0F2; links blue; credits green #3BC46D; tabs underline-active) with
+`captures-v3/admin/` cited; AA caveat for #3BC46D recorded per the file's
+delta discipline. `pnpm gen:tokens && pnpm gen` run after the edit (iron
+rule) — clean.
+
+Task 2 — tabs underline indicator: **DONE**. `indicator` option
+('pill' default | 'underline', reflected attribute, willUpdate clamp) in
+`tabs.ts`; sheet block in `tabs.css.ts` (pill pseudo display:none, 2px
+bar on aria-selected ::after, `--tk-tabs-indicator` hook, no transition —
+the bar-animation pin governs the pseudo); CEM regenerated (+33 lines,
+committed with the change); 2 unit tests (attribute reflect incl. the
+Lit-paints-default-reflection fix + degenerate clamp; sheet-rule pins);
+RU story «Консольный андерлайн»; live visual spec in
+`tests/visual/tabs.spec.ts` (pill never paints, 2px bar active-only,
+transitionDuration 0s, ArrowRight snap probe). Baselines: 2 NEW
+(console-underline light+dark) + `api` light+dark REGENERATED (explicit
+rm + update — intentional: the CEM/JSdoc change repaints the API story;
+delete+update rule followed, no overwrite of a failing diff).
+
+Task 3 — composition pattern: **DONE** (deviation in Change Log 4).
+`packages/docs/src/v2/console-chrome.stories.ts`: «Обзор» (language
+summary, when/when-not, mega-menu nearest-relative + deltas, a11y,
+codeBlock) + «Демо» (header from existing atoms: logo tile
+yellow-100/text-on-primary, product links, «Все сервисы» trigger, icon
+cluster, avatar slot — plain spans, tokens only; static mega panel 4
+columns; tk-tabs indicator="underline"). Token check: every var verified
+against the tokens package (--tk-color-accent did NOT exist — replaced
+with yellow-100/text-on-primary, the button-primary pair). Baselines for
+the two docs stories: captured in this round (scoped --update-snapshots
+run; PNGs land unconfirmed-by-default per the standing gate).
+
+Task 4 — ledger + epics-v4: **DONE**. This Change Log + Verification;
+epics-v4 Story 13.2/13.3 rows rewritten to post-ratification wording
+(sidebar-nav dropped, avatar-menu open-state → optional follow-up
+capture, empty-state/drawer dropped in 13.3, deliverables restated).
+
+Full `pnpm test` after gen: components+react+tokens+root GREEN (counts
+in the commit CI run); scoped visual run GREEN. Push gated on the
+in-flight c22f3eb run per the never-push-while-in-flight rule.

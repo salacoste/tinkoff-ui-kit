@@ -472,7 +472,7 @@ Visual specs for the 19 v1 components (behaviors live in EXPERIENCE.md):
 | SegmentedRadio | Pill track, `{rounded.full}`; selected segment solid fill + dot indicator |
 | ThumbnailPicker | Square tiles `{rounded.md}`, selected gets 2px ink border ring |
 | ProgressBar | 4px track `{colors.border-default}` (light value = gray-200's hex; dark = white-alpha tonal step — Story 5.4), fill blue-100, `{rounded.full}` |
-| Tabs | Text tabs; active = white pill + `default` shadow inside invisible track |
+| Tabs | Text tabs; active = white pill + `default` shadow inside invisible track; console `indicator="underline"`: pill never paints, bold + 2px ink bar (13.2 admin) |
 | Navbar | 72px, white, logo slot left, nav links with yellow active underline, utilities right |
 | Footer | Uppercase gray group headers (`caps-s`), 6–7 link columns, ink-300 pill quick-links, bold phone block |
 | PromoCard | Tint bg, `{rounded.xxl}`, art slot top, title/desc, white pill CTA bottom-center; auto text-pairing per tint |
@@ -516,6 +516,26 @@ page≈muted-lightness relationship, dark `#222222` = 13.2); raised `#2B2823` La
 INSIDE the window, pair step Δ3.0 L*. Business bento
 cards: flat (no shadow), `{rounded.xl}`, floating white 111×44 pill CTA over 3D art; yellow
 appears only inside illustrations.
+
+**Authorized-zone console language (v2, admin — Story 13.2).** The authorized-zone console
+(`captures-v3/admin/`, 8 PII-redacted captures, 2026-09-27 — pixels are ground truth, geometry
+model-estimated ±) navigates WITHOUT a left sidebar (13.1 verdict against pixels): a
+monochrome top header (logo tile, inline product links, «Все сервисы» underline trigger, icon
+cluster, avatar+org block) + a secondary text tab row + a full-width mega-menu panel (white,
+r24–32, soft popover-family shadow, 4 text columns ~365px, bold group headings 26–28, plain
+links 20–22 at ~62px rhythm, monochrome — zero yellow fills inside; nearest kit relative: the
+MegaNav sub-nav row, with the 4-column/underline-trigger/monochrome deltas recorded there).
+The marketing navbar stays untouched — two navigation registers, never mixed on one surface.
+Console color discipline: **yellow only as the 2px selection outline, the progress fill, and
+the logo tile — never a button fill**; buttons `#ECEEF0` r10 h36–40 (extraction anchors — kit
+consumers compose `button` secondary: white + hairline; the gray-fill delta is recorded for
+13.3); cards white r24 on page `#F5F6F8`, sub-cards `#F0F0F2`; links blue-100;
+credits/incoming values green `#3BC46D` (extraction anchor — AA text usage takes green-300
+`#168821` per the delta discipline above); tabs underline-active: bold + 2px ink bar (`tabs`
+`indicator="underline"`, hook `--tk-tabs-indicator`); console progress fill = yellow-100 (the
+v1 blue-100 default stands — console surfaces override via `--tk-progress-bar-fill`). Console
+typography: the product-UI register. The composition recipe lives at
+`packages/docs/src/v2/console-chrome.stories.ts` («Components v2/Console chrome»).
 
 **Reference anchors.** Fidelity baseline capture: `.playwright-cli/tbank-home-full.png`
 (repo root, homepage, 2026-09-21). Extraction provenance (live computed styles, 1112 root

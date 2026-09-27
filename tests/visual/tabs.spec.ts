@@ -440,3 +440,68 @@ test('panel swap RESTARTS on activation: animationstart fires once per newly-vis
   ]);
   await context.close();
 });
+
+test('console underline indicator (13.2): pill never paints, 2px ink bar on the ACTIVE tab only, bar carries no transition', async ({
+  page,
+}) => {
+  await page.goto(buildStoryUrl('components-tabs--console-underline', 'light'));
+  await waitForStorySettled(page);
+  const el = page.locator('main tk-tabs').first();
+  await expect(el).toBeAttached();
+
+  const computed = await el.evaluate((node) => {
+    const host = node as HTMLElement;
+    const buttons = Array.from(
+      host.shadowRoot?.querySelectorAll<HTMLButtonElement>('[role="tab"]') ?? [],
+    );
+    const active = buttons.find((button) => button.getAttribute('aria-selected') === 'true');
+    const inactive = buttons.find((button) => button.getAttribute('aria-selected') === 'false');
+    const read = (button: HTMLButtonElement | undefined, pseudo: '::before' | '::after') => {
+      if (!button) return null;
+      const style = getComputedStyle(button, pseudo);
+      return {
+        display: style.display,
+        content: style.content,
+        height: style.height,
+        background: style.backgroundColor,
+        transitionDuration: style.transitionDuration,
+        fontWeight: getComputedStyle(button).fontWeight,
+      };
+    };
+    return {
+      attr: host.getAttribute('indicator'),
+      activePill: read(active, '::before'),
+      activeBar: read(active, '::after'),
+      inactiveBar: read(inactive, '::after'),
+    };
+  });
+
+  // The pill pseudo NEVER paints in underline mode; the active tab carries
+  // the 2px ink bar (bold text = the redundancy, unchanged); the inactive
+  // tabs carry no bar; NOTHING on the bar transitions (the pin's pseudo half).
+  expect(computed.attr).toBe('underline');
+  expect(computed.activePill?.display).toBe('none');
+  expect(computed.activeBar?.content).not.toBe('none');
+  expect(computed.activeBar?.height).toBe('2px');
+  expect(computed.activeBar?.background).not.toBe('rgba(0, 0, 0, 0)');
+  // No transition is declared on the pseudo — resolved duration stays 0s
+  // (transition-property itself resolves 'all' by UA default; duration is
+  // the truthful no-motion signal).
+  expect(computed.activeBar?.transitionDuration).toBe('0s');
+  expect(computed.activeBar?.fontWeight).toBe('500');
+  expect(computed.inactiveBar?.content).toBe('none');
+
+  // Semantics are the pill's verbatim — one automatic-activation probe.
+  await el.evaluate((node) => {
+    node.shadowRoot?.querySelector<HTMLButtonElement>('[role="tab"]')?.focus();
+  });
+  await page.keyboard.press('ArrowRight');
+  expect(
+    await el.evaluate((node) => {
+      const button = (node as HTMLElement).shadowRoot?.querySelector<HTMLButtonElement>(
+        '[role="tab"][aria-selected="true"]',
+      );
+      return getComputedStyle(button as HTMLButtonElement, '::after').height;
+    }),
+  ).toBe('2px'); // the bar SNAPPED to the newly-active tab
+});
