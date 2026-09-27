@@ -58,7 +58,7 @@ async function waitForStorySettled(page: Page): Promise<void> {
 
 interface SweepTarget {
   component: string;
-  group: 'I' | 'II' | 'III' | 'V' | 'VI';
+  group: 'I' | 'II' | 'III' | 'V' | 'VI' | 'VII';
   story: string;
   /** EXACT distinct KIT Tab stops (measured; order is not pinned) — a story
    * adding/removing an interactive surface must update this deliberately. */
@@ -129,6 +129,16 @@ const SWEEP: readonly SweepTarget[] = [
   //     unasserted (the existing rule).
   { component: 'tk-button', group: 'VI', story: 'components-button--variants-and-sizes', stops: 11, minKitSurfaces: 11 },
   { component: 'tk-promo-card', group: 'VI', story: 'components-promocard--variants', stops: 10, minKitSurfaces: 10 },
+  // --- Group VII: the 13.x console family (story 14.1 — the 11.1
+  //     second-row-per-component precedent again; MEASURED 2026-09-27 on
+  //     the built docs bundle). The v2 pattern pages (Console chrome /
+  //     Data surfaces) stay OFF the registry by the 8.1 line: the sweep
+  //     walks component canonical stories; docs pages ride axe via the
+  //     visual suite (every baselined story, both themes) + the
+  //     SR-protocol tables inside the pages (14.1).
+  { component: 'tk-tabs', group: 'VII', story: 'components-tabs--console-underline', stops: 1, minKitSurfaces: 4 },
+  { component: 'tk-badge', group: 'VII', story: 'components-badge--console-tones', stops: 1, minKitSurfaces: 3 },
+  { component: 'tk-progress-bar', group: 'VII', story: 'components-progressbar--thin-bars', stops: 0, minKitSurfaces: 0 },
 ];
 
 /** The live focus-ring token color, resolved from the themed document root. */

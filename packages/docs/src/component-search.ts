@@ -18,15 +18,18 @@ import { property, state } from 'lit/decorators.js';
  * «Ничего не найдено. Попробуйте название компонента.»
  */
 
-/** One searchable component entry — the 19 kit pages (names, not values). */
+/** One searchable docs page — the 19 v1 component pages + the 11 v2 pages
+ *  (8 element pages + 3 pattern pages; the v2 family joined at 14.1). */
 interface SearchEntry {
   /** Sidebar/EN name — matches what the consumer sees in Storybook. */
   title: string;
-  /** Element tag — the API name. */
-  tag: string;
+  /** Element tag — the API name. OPTIONAL: pattern pages (Mega nav is the
+   *  tk-navbar extension, so it KEEPS a tag; Console chrome / Data surfaces
+   *  compose atoms and own no element) render no tag chip line. */
+  tag?: string;
   /** Russian display name — what the RU docs copy calls it. */
   ru: string;
-  /** Story id of the component's playground story. */
+  /** Story id of the page's entry story (playground / Обзор). */
   id: string;
 }
 
@@ -50,12 +53,26 @@ const COMPONENTS: readonly SearchEntry[] = [
   { title: 'ThumbnailPicker', tag: 'tk-thumbnail-picker', ru: 'Выбор плиткой', id: 'components-thumbnailpicker--playground' },
   { title: 'Toast', tag: 'tk-toast', ru: 'Тост', id: 'components-toast--playground' },
   { title: 'Tooltip', tag: 'tk-tooltip', ru: 'Подсказка', id: 'components-tooltip--playground' },
+  // --- the v2 family (14.1): 8 element pages + 3 pattern pages. Mega nav
+  //     KEEPS a tag (it is the tk-navbar two-row extension story); the two
+  //     13.x pattern pages own no element — no tag chip line renders.
+  { title: 'Combobox search', tag: 'tk-combobox-search', ru: 'Поиск с подсказками', id: 'components-v2-combobox-search--page' },
+  { title: 'Cookie banner', tag: 'tk-cookie-banner', ru: 'Баннер cookie', id: 'components-v2-cookie-banner--page' },
+  { title: 'Data table', tag: 'tk-data-table', ru: 'Таблица данных', id: 'components-v2-data-table--page' },
+  { title: 'Filter chips', tag: 'tk-filter-chips', ru: 'Фильтр-чипы', id: 'components-v2-filter-chips--page' },
+  { title: 'Mega nav', tag: 'tk-navbar', ru: 'Мега-навигация', id: 'components-v2-mega-nav--page' },
+  { title: 'Pagination', tag: 'tk-pagination', ru: 'Пагинация', id: 'components-v2-pagination--page' },
+  { title: 'QR block', tag: 'tk-qr-block', ru: 'QR-блок', id: 'components-v2-qr-block--page' },
+  { title: 'Stepper', tag: 'tk-stepper', ru: 'Шаги', id: 'components-v2-stepper--page' },
+  { title: 'Store badges', tag: 'tk-store-badges', ru: 'Бейджи магазинов', id: 'components-v2-store-badges--page' },
+  { title: 'Console chrome', ru: 'Хром консоли', id: 'components-v2-console-chrome--page' },
+  { title: 'Data surfaces', ru: 'Поверхности данных', id: 'components-v2-data-surfaces--page' },
 ];
 
 /** Case-insensitive, ё-Insensitive containment. */
 function matches(entry: SearchEntry, normalizedQuery: string): boolean {
   if (!normalizedQuery) return true;
-  const haystack = `${entry.title} ${entry.tag} ${entry.ru}`
+  const haystack = `${entry.title} ${entry.tag ?? ''} ${entry.ru}`
     .toLowerCase()
     .replaceAll('ё', 'е');
   return haystack.includes(normalizedQuery);
@@ -179,7 +196,7 @@ export class DocsComponentSearch extends LitElement {
                       <li>
                         <a href="?path=/story/${entry.id}" target="_top">
                           ${entry.ru}
-                          <code>${entry.tag}</code>
+                          ${entry.tag ? html`<code>${entry.tag}</code>` : null}
                         </a>
                       </li>
                     `,

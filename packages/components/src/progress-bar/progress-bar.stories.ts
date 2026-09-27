@@ -520,6 +520,10 @@ export const Accessibility: Story = {
             <td>indeterminate</td>
             <td>«занятая» (aria-busy), значение не объявляется</td>
           </tr>
+          <tr>
+            <td>Тонкие бары (хук высоты, 13.3)</td>
+            <td>объявления НЕ меняются: хук — только геометрия трека; имя по-прежнему обязано приходить из <code>label</code> (беар-бары пака валят axe aria-progressbar-name — дельта продиктована доступностью)</td>
+          </tr>
         </tbody>
       </table>
     </main>

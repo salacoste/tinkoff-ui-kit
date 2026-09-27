@@ -127,7 +127,12 @@ mode-targeted legs riding Storybook's `&args=` URL channel (ASCII-only
 grammar boundary pinned empirically — multibyte values are silently
 dropped; RU payloads ride the element property API), and the 7.2(b)
 cookie-banner reverse-entry leg (bounded Shift+Tab walk; the one-press
-reading measured and refuted)).
+reading measured and refuted)), and `group-VII.md` (14.1 — the 13.x
+console family: the Group VII registry rows (tabs console-underline /
+badge console-tones / progress-bar thin-bars, second-row precedent again;
+stops measured by the engine's exact-count assertions), the v2 pattern
+pages recorded OFF the registry by the 8.1 line — their coverage rides
+the visual-suite axe legs + the SR-protocol tables inside the pages).
 
 ## Findings disposition (this sweep)
 

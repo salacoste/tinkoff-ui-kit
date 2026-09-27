@@ -4,6 +4,7 @@ import { html } from 'lit';
 import '../../components/src/button/button.js';
 import '../../components/src/input/input.js';
 import '../../components/src/promo-card/promo-card.js';
+import '../../components/src/badge/badge.js';
 
 /**
  * Theming guide (spec 5.5): switching, per-token overrides, dark-mode pairing
@@ -291,6 +292,37 @@ export const Overrides: Story = {
   --tk-promo-card-cta-fill: var(--tk-color-yellow-100);
   --tk-promo-card-cta-text: var(--tk-color-ink-300);
 }</code></pre>
+
+      <h3>Пара бейджа — <code>--tk-badge-fill</code> / <code>--tk-badge-text</code></h3>
+      <p>
+        Та же парная грамматика на консольных тонах (13.3): хуки наследуются
+        СКВОЗЬ границу шэдоу-рута — пара, объявленная на предке, перекрашивает
+        и вложенный бейдж-счётчик таба, без кода в самом табе.
+      </p>
+      <div class="tktg-demo">
+        <div class="tktg-demo-row">
+          <tk-badge variant="attention" label="Требует внимания"></tk-badge>
+          <span style="--tk-badge-fill: var(--tk-color-yellow-100); --tk-badge-text: var(--tk-color-text-on-primary);">
+            <tk-badge variant="attention" label="Требует внимания"></tk-badge>
+          </span>
+        </div>
+        <p class="tktg-caption">
+          Слева умолчание пары <code>attention</code> (красная шкала, AA
+          6.18:1), справа пара уведена на жёлтую — значения пар см. в
+          DESIGN.md (Colors).
+        </p>
+      </div>
+      <pre><code>.console-surface {
+  --tk-badge-fill: var(--tk-color-yellow-100);
+  --tk-badge-text: var(--tk-color-text-on-primary);
+}</code></pre>
+
+      <p class="tktg-note">
+        Каналы бывают и ГЕОМЕТРИЧЕСКИМИ: высота трека прогресса —
+        <code>--tk-progress-bar-height</code> (13.3; умолчание 4px не
+        меняется) — тонкие консольные бары задаются одним свойством на
+        предке.
+      </p>
       <p class="tktg-note">
         Полный перечень каналов каждого компонента — в jsdoc его стилевого
         модуля (<code>&lt;name&gt;.css.ts</code>) и на его странице API.
