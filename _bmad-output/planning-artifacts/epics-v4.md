@@ -3,13 +3,15 @@ stepsCompleted:
   - v4-epics-drafted (2026-09-27, post-v1.2.0 planning round — awaiting maintainer
     ratification; grounded in the maintainer's standing directions: admin family in
     scope 2026-09-25, subprojects direction 2026-09-26/27)
+  - v4-epics-ratified (maintainer salacoste, 2026-09-27: «ok lets continue» in reply to
+    the draft presentation — scope as drafted, 7 stories; execution starts at Epic 12)
 inputDocuments:
   - _bmad-output/implementation-artifacts/deferred-work.md (the single ledger — near-clean after v1.2.0; this cycle owns the still-open entries it names)
   - _bmad-output/planning-artifacts/epics-v3.md (the mold; v3 COMPLETE, released as tag v1.2.0 → 7d3b3db)
   - RELEASE.md (§9 flow re-used verbatim as the release mold; §8.4 consumer recipe)
   - .playwright-cli/captures-v3/business/INDEX.md (the per-vertical capture-pack mold — business first)
   - .playwright-cli/verify/a11y-sweep/SR-RUNSHEET-v1.2.0.md (the maintainer-session mold re-used for authorized-surface captures)
-runMode: awaiting ratification (post-v1.2.0 planning round, maintainer present)
+runMode: ratified — executing (Epic 12 first)
 ---
 
 # tinkoff-ui-kit — Epic Breakdown v4 (v1.3.0: subproject structure + admin family)
