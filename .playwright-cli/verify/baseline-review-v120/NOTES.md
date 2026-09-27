@@ -231,3 +231,10 @@ Release pre-flight residue (RELEASE.md §9.1): CI verdict for `f78cdcc`
 ONE more full `pnpm test:visual` on final HEAD (§9.1.4 requires ×2;
 one full green run executed after f78cdcc). §9.1.6 SR spot-checks stay
 with the maintainer.
+
+**Residue resolved (2026-09-27):** `f78cdcc` CI verdict `success` by
+`gh run view` (run 36315112858) — GREEN (recorded in §7; gate commits
+`6751320`+`f406a67` pushed). §9.1.4 ×2 closed: second full suite run on
+final HEAD — **1380 passed (8.3m), exit 0**. §9.1 now fully green
+except §9.1.6 (maintainer's manual SR spot-checks, may ride after the
+tag per the v1.1.0 precedent).
