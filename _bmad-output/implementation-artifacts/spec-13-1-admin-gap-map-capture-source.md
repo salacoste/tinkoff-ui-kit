@@ -94,10 +94,60 @@ round works with what exists. Hand the files over in any way convenient
 
 1. 2026-09-27 — initial spec; gap-map fact-checked; capture source DECIDED
    (maintainer session) via AskUserQuestion.
+2. 2026-09-27 — **capture delivery processed (8 screenshots) + roster
+   RATIFIED against pixels.** Pack: `captures-v3/admin/` (8 PNGs + INDEX +
+   probe-notes per the pack mold; probe method = vision-model analysis of
+   the delivered PNGs — no playwright-cli session, no computed styles).
+   Flips vs the frozen gap-map:
+   - **`tk-sidebar-nav` DROPPED** — the console has NO left nav rail;
+     navigation = top header (product links + «Все сервисы» mega-menu) +
+     secondary text tabs (active = bold + dark underline). The left ~340px
+     column on «Главная» is a «Ваши счета» CONTENT widget. → 13.2 re-scopes
+     to console top-nav + tab bar + mega-menu composition (v2 `mega-nav` is
+     the nearest kit relative; console variant: 4 text columns, underline
+     trigger, monochrome).
+   - **Breadcrumbs DROPPED** — console navigates by tabs + back text link;
+     zero instances in the delivery.
+   - **Drawer RESOLVED ABSENT** — no instance; not in v1.3.0.
+   - **Empty-state stays UNGROUNDED** — no instance captured; deferred
+     (needs a follow-up capture or stays out).
+   - **Avatar-menu SPLIT** — trigger confirmed (56px rounded-square avatar +
+     org label in header), open state NOT captured; menu-popover triggers
+     are pervasive («…» circles, «⋮» kebabs). 13.2 either takes one more
+     maintainer capture (dropdown open) or composes on existing popover
+     primitives.
+   - **Status-tables + toolbar COMPOSITION CONFIRMED** — gray status pill
+     h28 (not colored), count badges (gray in-chip / red `#E5372B` /
+     yellow-ring), segmented filter pills h44 with active = 2px `#FFDD2D`
+     outline, summary row with checkbox r8.
+   - **New evidence beyond the gap-map**: page-header pattern (H1 +
+     right-aligned sub-tabs + 1px divider + «…» overflow), progressbar-in
+     -cards (yellow + neutral-dark variants), favorites tile grid with
+     per-tile overflow dots, ghost action tile, T-ID auth dialog (centered
+     card r24 + code cells r12 + links) — auth family noted for backlog.
+   - **Console design language** (feeds DESIGN.md): monochrome chrome —
+     yellow = selection outline / progress fill only, NEVER a button fill;
+     buttons `#ECEEF0` r10 h36–40; cards white r24 on `#F5F6F8`, sub-cards
+     `#F0F0F2`; links blue; credits green `#3BC46D`.
+   **PII (execution-discovered):** the delivered captures contain maintainer
+   personal/financial data (ИП names, 20-digit account numbers, balances,
+   transaction amounts, card last-4) — the run-sheet's crop/skip rule was
+   not applied at capture time, and the repo is PUBLIC. Maintainer decision
+   (AskUserQuestion, 2026-09-27): **FULL REDACTION** — opaque ImageMagick
+   fills over every sensitive region BEFORE commit; geometry/chrome
+   preserved; unredacted originals stay only in the maintainer's local chat
+   cache; values never transcribed into any repo file (probe-notes carries
+   classes, not values).
 
 ## Verification
 
 Executed 2026-09-27: gap-map fact-check greps (navbar/avatar, data-table
 status, drawer, menu-popover) run against the repo; roster + capture-source
-decision recorded; run-sheet issued (Implementation Notes above). Awaiting
-capture delivery for roster ratification (task 2).
+decision recorded; run-sheet issued (Implementation Notes above). Capture
+delivery processed the same day: 8/8 surfaces identified + analyzed (vision
+model), pack written at `captures-v3/admin/` (8 PNGs + INDEX + probe-notes),
+roster ratified (Change Log 2 flips above — the frozen table is superseded
+where flipped), PII redaction applied pre-commit per the maintainer decision
+(redaction log in the pack probe-notes; verification pass recorded in the
+round NOTES). Task 2 AC met; task 3 (13.2/13.3 specs cite the pack) is the
+sequencing gate for Epic 13's next stories.
