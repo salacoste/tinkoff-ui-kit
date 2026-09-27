@@ -32,12 +32,23 @@ demo/default-tier choice. Options for the maintainer (NOT executed — pixel
 changes are gate-governed): (a) keep as is; (b) flip docs demos to
 `size="hero"` (a docs-layer change re-opening the demo-bearing baselines);
 (c) revisit the default tier (component API discussion, epics-v4).
+Secondary-button text confirmed by ×5 zoom read: «Подробнее». Docs-demo size
+census (packages/docs/src): `card` ×4, `compact` ×2, `hero` ×0. **The
+reference-grounded surfaces already sit on the 56 tier: the showcase
+landings use `size="hero"` (business-landing.stories.ts:444 hero CTA;
+showcase census hero ×6 / card ×2)** — fidelity is intact; the 48-vs-56
+impression comes from docs-layer demos only.
 
 ## 2. Live cookie banner (7.2(c)) — see deferred-work entry
 
 Bottom-RIGHT 16/16 compact card 212×126 (width = the 7.2-measured 212px
-exactly), ghost-gray accept pill #F2F4F7 68×32, blue uppercase link. Kit
-ships bottom-left + yellow pill. Full facts in
+exactly), ghost-gray accept pill #F2F4F7 68×32 r8, blue uppercase link.
+Kit ships bottom-left; its accept pill default is already the same family
+(32px, surface-field ghost, text-primary — the yellow 235×32 in the
+playground baseline is the story's own compact trigger button, not the
+accept). Narrowed deltas: corner (left vs right), link treatment
+(kit underline vs live blue-uppercase-none), pill radius (full vs r8),
+gray shade. Full facts in
 `_bmad-output/implementation-artifacts/deferred-work.md` (spec-7-2 entry,
 (c)) and `.playwright-cli/captures-v3/business/`.
 
@@ -47,3 +58,13 @@ Group 1 confirmed by the maintainer («согласен с аргументом 
 Group 2 in progress: legs 10–13 reviewed OK by the maintainer, 13 flagged
 (resolved here as a non-difference within the image; comparison matrix
 above), 14–45 pending the maintainer's return. Groups 3–6 not yet presented.
+
+## 4. Package integrity check (2026-09-27, autonomous)
+
+All 82 baseline-derived review copies across the 6 groups byte-match their
+`snapshots` sources (0 stale, 0 missing); the remaining 14 files are
+EVIDENCE crops / clip pairs by design. The sitting reviews provably current
+baselines.
+
+Session CI: `029f7a1` GREEN (run 36299445122), `32eae17` GREEN (run
+36300926328) — both by `gh run view` verdicts.
