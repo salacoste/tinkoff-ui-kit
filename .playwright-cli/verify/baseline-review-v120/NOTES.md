@@ -199,3 +199,34 @@ y344–463 (120×120), disc x593–687 / y356–452, bands 13/12 horizontal
 legs untouched — no collateral failures. **Run B verdict: 1380
 passed, exit 0 (8.3m) — full-suite comparison green.** Gate review
 copies 10–13 refreshed, byte-verified.
+
+## 8. Re-presented leg 11, flag on the «Платинум» zoom — STALE WINDOW,
+## fix (c) CONFIRMED by the maintainer
+
+**The crop zoomed the charcoal «Платинум» card** (variants dark,
+«Все тона» row 2 col2) reading «pressed to one side, margins on the
+other» — a precise description of the PRE-fix slab (128×96: 0 bands
+top/bottom, 16 sides). Re-measured in the CURRENT baseline and the
+byte-identical review copy (md5 `89c99905…` match): slab 120×120 @
+x580–699 / y706–825, disc 96×96 @ x592–687 / y718–813 — ring
+**12/12/12/12 in BOTH themes**; the disc chord at y742 (83px = chord
+math for 23px above center) confirms Δ0 centring. Root: macOS Preview
+did not reload the refreshed copy — the maintainer zoomed a cached
+pre-fix render. A fresh 2× nearest-neighbour zoom crop of the current
+file (`ZOOM-platinum-ring-current.png`) was presented; maintainer
+confirmed: «меня все устраивает, ок». **No pixel changes.** Group 3
+promocard visual legs 10–13 closed as confirmed.
+
+## 9. Gate outcome — CLOSED by the maintainer (2026-09-27)
+
+Group 3 legs 14–21 confirmed in-flow (per-leg «ok»; 19–21 covered by
+the maintainer's manual sweep). Groups 4–6 reviewed by the maintainer
+manually — «я вручную отсмотрел остальные документы - все ок» (scope
+re-confirmed via direct question: the WHOLE pack incl. 04/05/06).
+Result block written into `baseline-review-package.md` ЧАСТЬ v1.2.0.
+
+Release pre-flight residue (RELEASE.md §9.1): CI verdict for `f78cdcc`
+(run 36315112858, in flight at write time — to be appended to §7) and
+ONE more full `pnpm test:visual` on final HEAD (§9.1.4 requires ×2;
+one full green run executed after f78cdcc). §9.1.6 SR spot-checks stay
+with the maintainer.
