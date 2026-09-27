@@ -262,6 +262,19 @@ run 36319189468 verdict `success` by `gh run view` — GREEN. §9.3 tag
 `v1.2.0` is MAINTAINER-ONLY and was NOT placed at write time (only
 v1.0.0/v1.1.0 exist).
 
+**§9.3 EXECUTED under explicit maintainer delegation (2026-09-27):**
+sanction «я тебе доверяю, ставь корректный тег». Annotated tag `v1.2.0`
+→ the release commit `7d3b3db` (the SHA §9.4 verified; package content
+identical to then-HEAD `680e04a` — the delta is this NOTES file only).
+Precedent-checked first: v1.0.0/v1.1.0 are annotated tags whose messages
+carry summary + counts + the green CI run id (v1.1.0 mold). Tag message
+amended ONCE, immediately after placement and before any consumer could
+attach: unit count 942 (stale, spec-11-1 pre-11.2) → **943 = the §9.7
+proof value (17+708+70+148)**. Final tag object `2855ec2`, remote-
+verified by `git ls-remote --tags`: tag → `2855ec2`, `^{}` → `7d3b3db`.
+The tag push did NOT trigger CI (workflow triggers on `branches: [main]`
+only — no concurrency conflict).
+
 ## 11. §9.4 fresh-consumer verification — PASS (2026-09-27)
 
 Protocol adapted while the tag is unplaced: cloned `main` and verified
@@ -310,3 +323,36 @@ No kit change.
 Verdict: **§9.4 PASS in both themes against `7d3b3db` via the real
 distribution mechanism (workspace links at 1.2.0).** Teardown done
 (vite stopped, browser closed).
+
+## 12. Post-tag checks (2026-09-27, maintainer: «далее проверяй все
+## что необходимо согласно плана»)
+
+**§9.4 letter-of-protocol — clone AT the tag:** fresh
+`git clone --depth 1 --branch v1.2.0` → `CLONED_AT=
+7d3b3db7349aa7b216c3a40b33317e2072a281b5` (the tag target exactly);
+all three shipped package.json = `1.2.0`; CHANGELOG carries `[1.2.0]`;
+`packages/tokens/fonts/LICENSE-FONTS.md` present in the cloned tree.
+(The full render pass was already executed at the same SHA — §11;
+GitHub transit was slow, one clone attempt stalled on a buffered pipe
+and was redone.)
+
+**§9.6 fonts/legal — re-verified on the release tree:** root devDep
+`@fontsource/jetbrains-mono@5.3.0` at package.json:28, mounted by
+tests/visual/serve.mjs at `/jetbrains-mono` (test-only pin); ZERO
+references in any shipped package manifest; ZERO in the built
+tokens.css; `--tk-font-mono` is the system-first chain (`ui-monospace,
+SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace`);
+LICENSE-FONTS.md present. Trademark window diff (`v1.1.0..v1.2.0`,
+added lines only): 3 hits, all adjudicated class — the CEM tk-button
+description mirrors the pre-existing button.ts header comment (extended
+by the 10.4 anchor paragraph), one reference-verbatim showcase line in
+the PRIVATE docs package, one internal planning-artifact path. No new
+branding on shipped surfaces.
+
+**Release §9 execution state:** §9.1 green (§9), §9.2 executed
+(`7d3b3db`, §10), §9.3 tag placed under delegation (§10), §9.4 PASS
+pre-tag at the SHA (§11) + clone-at-tag (§12), §9.5 draft consumed into
+CHANGELOG at §9.2, §9.6 re-verified (§12). Remaining: §9.1.6
+SR-RUNSHEET-v1.2.0 — the maintainer's manual protocol (rides after the
+tag per the v1.1.0 precedent); opportunistic spot-checks —
+maintainer's queue.
