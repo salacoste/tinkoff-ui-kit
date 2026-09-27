@@ -105,7 +105,7 @@ const canvasStyles = html`
       border-bottom: 1px solid var(--tk-color-border-default);
     }
     .tkf-canvas code {
-      font-family: var(--tk-font-body);
+      font-family: var(--tk-font-mono);
     }
     .tkf-canvas section {
       display: flex;

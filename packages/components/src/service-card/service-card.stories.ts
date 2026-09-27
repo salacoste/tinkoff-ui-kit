@@ -97,7 +97,7 @@ const canvasStyles = html`
       background: var(--tk-color-tint-bluegray);
     }
     .tksc-canvas code {
-      font-family: var(--tk-font-body);
+      font-family: var(--tk-font-mono);
     }
     .tksc-canvas td,
     .tksc-canvas th {

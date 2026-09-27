@@ -937,7 +937,7 @@ const canvasStyles = html`
       color: var(--tk-color-text-secondary);
     }
     .tkb-docs code {
-      font-family: var(--tk-font-body);
+      font-family: var(--tk-font-mono);
     }
 
     /* --- 768-1023: one column-step collapse --------------------------------- */

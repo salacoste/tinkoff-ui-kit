@@ -109,7 +109,7 @@ const canvasStyles = html`
       background: var(--tk-color-yellow-100);
     }
     .tkfc-canvas code {
-      font-family: var(--tk-font-body);
+      font-family: var(--tk-font-mono);
     }
     .tkfc-canvas td,
     .tkfc-canvas th {

@@ -192,8 +192,8 @@ export const Switching: Story = {
       </p>
       <div class="tktg-demo">
         <div class="tktg-demo-row">
-          <tk-button variant="primary" size="card">Продолжить</tk-button>
-          <tk-button variant="secondary" size="card">Подробнее</tk-button>
+          <tk-button variant="primary" size="hero">Продолжить</tk-button>
+          <tk-button variant="secondary" size="hero">Подробнее</tk-button>
         </div>
         <p class="tktg-caption">
           Светлая и тёмная темы одной и той же разметки; снимки обеих закреплены
@@ -347,8 +347,8 @@ export const DarkPairing: Story = {
       </ul>
       ${charcoalDemo(html`
         <div class="tktg-demo-row">
-          <tk-button variant="primary" size="card">Продолжить</tk-button>
-          <tk-button variant="inverse" size="card">Открыть счёт</tk-button>
+          <tk-button variant="primary" size="hero">Продолжить</tk-button>
+          <tk-button variant="inverse" size="hero">Открыть счёт</tk-button>
         </div>
         <p class="tktg-caption">
           Жёлтый с чернильным текстом и inverse-пилюля на чернильном фоне —

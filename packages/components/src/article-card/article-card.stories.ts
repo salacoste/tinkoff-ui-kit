@@ -83,7 +83,7 @@ const canvasStyles = html`
       margin: 0;
     }
     .tkac-canvas code {
-      font-family: var(--tk-font-body);
+      font-family: var(--tk-font-mono);
     }
     .tkac-canvas td,
     .tkac-canvas th {

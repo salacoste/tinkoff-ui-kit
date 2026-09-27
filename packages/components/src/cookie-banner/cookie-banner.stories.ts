@@ -104,7 +104,7 @@ const canvasStyles = html`
       border-bottom: 1px solid var(--tk-color-border-default);
     }
     .tkcb-canvas code {
-      font-family: var(--tk-font-body);
+      font-family: var(--tk-font-mono);
     }
     .tkcb-canvas .tkcb-log {
       box-sizing: border-box;

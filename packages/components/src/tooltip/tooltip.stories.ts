@@ -85,7 +85,7 @@ const canvasStyles = html`
       border-bottom: 1px solid var(--tk-color-border-default);
     }
     .tku-canvas code {
-      font-family: var(--tk-font-body);
+      font-family: var(--tk-font-mono);
     }
     .tku-canvas section {
       display: flex;

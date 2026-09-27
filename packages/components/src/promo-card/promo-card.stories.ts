@@ -141,7 +141,7 @@ const canvasStyles = html`
       fill: var(--tk-color-ink-300);
     }
     .tkpc-canvas code {
-      font-family: var(--tk-font-body);
+      font-family: var(--tk-font-mono);
     }
     .tkpc-canvas td,
     .tkpc-canvas th {

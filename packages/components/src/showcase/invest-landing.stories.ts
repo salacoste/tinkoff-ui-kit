@@ -474,7 +474,7 @@ const canvasStyles = html`
       color: var(--tk-color-text-secondary);
     }
     .tki-docs code {
-      font-family: var(--tk-font-body);
+      font-family: var(--tk-font-mono);
     }
 
     /* --- UX-DR14: <768 — the hero stacks, the art scales, the cluster

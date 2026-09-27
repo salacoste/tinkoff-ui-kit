@@ -146,7 +146,7 @@ const apiStyles = html`
       color: var(--tk-color-text-secondary);
     }
     .tkap code {
-      font-family: var(--tk-font-body);
+      font-family: var(--tk-font-mono);
       color: var(--tk-color-text-primary);
     }
     .tkap td code {

@@ -616,7 +616,7 @@ const canvasStyles = html`
       color: var(--tk-color-text-secondary);
     }
     .tkh-docs code {
-      font-family: var(--tk-font-body);
+      font-family: var(--tk-font-mono);
     }
 
     /* --- UX-DR14: 768–1023 — one column-step collapse, full navbar ------------ */

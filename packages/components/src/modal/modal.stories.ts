@@ -99,7 +99,7 @@ const canvasStyles = html`
       border-bottom: 1px solid var(--tk-color-border-default);
     }
     .tkm-canvas code {
-      font-family: var(--tk-font-body);
+      font-family: var(--tk-font-mono);
     }
     .tkm-canvas .tkm-log {
       box-sizing: border-box;

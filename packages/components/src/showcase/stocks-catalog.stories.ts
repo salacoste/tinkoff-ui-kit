@@ -544,7 +544,7 @@ const canvasStyles = html`
       border-bottom: 1px solid var(--tk-color-border-default);
     }
     .tks-notes code {
-      font-family: var(--tk-font-body);
+      font-family: var(--tk-font-mono);
     }
     /* The story-composed brand mark (logo slot content — the navbar story's
        own composition, tks-prefixed for this canvas). */
