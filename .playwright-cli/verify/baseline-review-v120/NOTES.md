@@ -247,3 +247,66 @@ EMPTY on HEAD. Every §9.1 item now green except §9.1.6 (maintainer's
 manual SR spot-checks — rides after the tag per the v1.1.0 precedent).
 Next: §9.2 (version+CHANGELOG) awaits the maintainer's sanction; §9.3
 tag is maintainer-only.
+
+## 10. §9.2 EXECUTED under sanction — v1.2.0 release commit (2026-09-27)
+
+Maintainer sanction: «9.2 - ok» + «делай». Version `1.1.0` → `1.2.0` in
+the three shipped package.json (tokens/components/react); `private:true`
+untouched everywhere; root `0.1.0` and docs `0.0.0` untouched. CHANGELOG
+`## [1.2.0] - 2026-09-27` written from the §9.5 draft verbatim (Added /
+Changed / Internal); the single prior Unreleased href entry subsumed —
+no duplicates; `[Unreleased]` kept as an empty section.
+
+Commit `7d3b3db` `chore(release): v1.2.0 — version + changelog` pushed;
+run 36319189468 verdict `success` by `gh run view` — GREEN. §9.3 tag
+`v1.2.0` is MAINTAINER-ONLY and was NOT placed at write time (only
+v1.0.0/v1.1.0 exist).
+
+## 11. §9.4 fresh-consumer verification — PASS (2026-09-27)
+
+Protocol adapted while the tag is unplaced: cloned `main` and verified
+`CLONED_AT=7d3b3db7349aa7b216c3a40b33317e2072a281b5` (the release
+commit = future tag target). Workdir `/tmp/v120-consumer.VSSq`: kit
+clone + `my-app` (pnpm workspace links, `pillkit-{components,react,
+tokens}@1.2.0` resolved through `pnpm-workspace.yaml`; react/react-dom
+19.3.0; vite 8.3.1 dev). Setup traps recorded: `pnpm init` writes a
+`devEngines.packageManager` `^`-range that pnpm then rejects (removed);
+`cmd | tail` pipes mask `set -e` failures — the masked install failure
+surfaced later as a missing `node_modules/.bin/vite`.
+
+`main.tsx` per §9.4 verbatim: bleed promo-card «Т-Мобайл» + 3-step svg +
+secondary card pill «Подробнее». Console clean (React DevTools info,
+Lit dev warning, favicon 404 only).
+
+**Light — all checks pixel/exact-rect PASS** (`page-…13-08-13-923Z.png`):
+eval rects — card `(40, 40, 384.4, 324.3)`, svg canvas
+`(40, 133.7, 384.4, 230.6)`: left/right/bottom FLUSH EXACT (svg bottom
+364.3 = card bottom 364.3; widths equal) — bleed zone reaches the card
+edges; pill `(158.9, 284.3, 146.6, 48)` → bottom offset **32.0px
+exact**, center 232.2 = card center 232.2, inside the art zone; heading/
+description above the art (svg top y133.7); pill body `255,255,255`
+pure (scanline: ink step → yellow step → #E7E8EA edge → white body).
+Vision's «art not full-bleed / inset 34px» measured the staggered viewBox
+STEPS of the stand-in art (same composition as the kit stories), not the
+canvas — disproven by the rects above.
+
+**Dark — PASS after correcting the flip address**
+(`page-…13-44-24-944Z.png`): the first flip set `data-theme` on the
+wrapper DIV — a no-op, and correctly so: the built `tokens.css` dark
+layer is `:host([data-theme=dark]),:root[data-theme=dark]` (html or the
+host element, not arbitrary ancestors); the theming guide documents
+exactly this («Тема переключается атрибутом на `<html>`») and the §9.4
+protocol itself says `<html>`. Flipped on `<html>`: card surface
+`36,36,36`, heading glyphs `220,220,220`, pill STAYS `255,255,255`
+(charcoal-CTA technique holds), card bbox identical `384×324+40+40` —
+no layout shift between themes.
+
+Cosmetic note (protocol's stand-in art, NOT a kit defect): its WHITE
+back step sits in the pill's flight band → the pill's left edge fuses
+softly white-on-white; the kit's own stories use the sanctioned rotation
+(`69df436`, yellow under the pill). Consumer art is consumer-supplied.
+No kit change.
+
+Verdict: **§9.4 PASS in both themes against `7d3b3db` via the real
+distribution mechanism (workspace links at 1.2.0).** Teardown done
+(vite stopped, browser closed).
