@@ -177,13 +177,54 @@ describe('tk-badge', () => {
     expect(css).toContain('min-height: 22px');
     expect(css).toContain(":host([variant='incentive']) .badge {");
     const incentiveBlock = css.slice(css.indexOf(":host([variant='incentive']) .badge {"));
-    expect(incentiveBlock).toContain('background: var(--tk-color-green-100)');
-    expect(incentiveBlock).toContain('color: var(--tk-color-text-on-primary)');
+    expect(incentiveBlock).toContain('background: var(--tk-badge-fill, var(--tk-color-green-100))');
+    expect(incentiveBlock).toContain('color: var(--tk-badge-text, var(--tk-color-text-on-primary))');
     const statBlock = css.slice(css.indexOf(":host([variant='stat']) .badge {"));
-    expect(statBlock).toContain('background: var(--tk-color-ink-300)');
-    expect(statBlock).toContain('color: var(--tk-color-white)');
+    expect(statBlock).toContain('background: var(--tk-badge-fill, var(--tk-color-ink-300))');
+    expect(statBlock).toContain('color: var(--tk-badge-text, var(--tk-color-white))');
     // No interactive affordance exists in the sheet.
     expect(css).not.toContain('cursor');
     expect(css).not.toContain(':hover');
+  });
+
+  // --- Console variants (13.3, admin pack) -----------------------------------
+
+  it('neutral + attention variants: reflect to the host and join the union (the gray pill + the AA red)', async () => {
+    const neutral = await mount({ variant: 'neutral', label: 'Ожидает подписи' });
+    expect(neutral.variant).toBe('neutral');
+    expect(neutral.getAttribute('variant')).toBe('neutral');
+    expect(labelCell(neutral)?.textContent).toContain('Ожидает подписи');
+
+    const attention = await mount({ variant: 'attention', count: 3 });
+    expect(attention.getAttribute('variant')).toBe('attention');
+    expect(countCell(attention)?.textContent).toBe('3');
+    // The clamp now guards a 4-value union — the default is unchanged.
+    (attention as { variant: string }).variant = 'banana';
+    await elementUpdated(attention);
+    expect(attention.variant).toBe('incentive');
+  });
+
+  it('the --tk-badge-* hooks family is minted: every variant rule consumes the shared fill/text pair with its own default (structural)', () => {
+    const cssText = TkBadge.styles
+      .map((style) => (style as { cssText?: string }).cssText ?? '')
+      .join('\n')
+      .replace(/\/\*[\s\S]*?\*\//g, '');
+    for (const variant of ['incentive', 'stat', 'neutral', 'attention']) {
+      const block = cssText.slice(cssText.indexOf(`:host([variant='${variant}']) .badge {`));
+      expect(block, `the ${variant} rule exists`).toMatch(
+        new RegExp(`:host\\(\\[variant='${variant}'\\]\\) \\.badge \\{`),
+      );
+      expect(block).toContain('var(--tk-badge-fill,');
+      expect(block).toContain('var(--tk-badge-text,');
+    }
+    // The console pairs (pack-grounded): gray-100/gray-600 ≈5.17:1 ✓ and
+    // red-300/white 6.179:1 ✓ (the raw #E5372B fails AA at body-xs — mapped
+    // onto the red scale, the delta-discipline precedent).
+    const neutralBlock = cssText.slice(cssText.indexOf(":host([variant='neutral']) .badge {"));
+    expect(neutralBlock).toContain('background: var(--tk-badge-fill, var(--tk-color-gray-100))');
+    expect(neutralBlock).toContain('color: var(--tk-badge-text, var(--tk-color-gray-600))');
+    const attentionBlock = cssText.slice(cssText.indexOf(":host([variant='attention']) .badge {"));
+    expect(attentionBlock).toContain('background: var(--tk-badge-fill, var(--tk-color-red-300))');
+    expect(attentionBlock).toContain('color: var(--tk-badge-text, var(--tk-color-white))');
   });
 });

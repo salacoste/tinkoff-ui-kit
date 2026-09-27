@@ -339,6 +339,24 @@ const INK: readonly Rgba[] = [
 ];
 /** Story 9.1: tint-brown #8D6040 — the stepper badge fill, theme-invariant per the charcoal mold (DESIGN.md Colors). */
 const BROWN: readonly Rgba[] = [[141, 96, 64, 1]];
+/**
+ * Story 13.3: the console badge pairs — `neutral` gray-100 fill + gray-600
+ * text, `attention` red-300 fill — theme-invariant per the badge-pair ruling
+ * (raw scale tokens carry no dark remaps, the same class as green-100/ink-300).
+ * Deliberately NOT a FORCE_INVARIANT family: gray-100 is byte-identical to
+ * surface-muted (#F5F5F6, which MUST remap to the dark tonal step) and
+ * gray-600 is byte-identical to text-secondary (#616871, which MUST remap to
+ * white-alpha) — allowing them globally would mask both real bug classes.
+ * Scoped to the badge hosts by path signature instead (the inverse-button
+ * precedent), so a stray unchanged gray anywhere else still fails.
+ */
+const CONSOLE_BADGE_FILLS: readonly Rgba[] = [
+  [245, 245, 246, 1], // gray-100 (badge neutral)
+  [196, 11, 8, 1], // red-300 (badge attention)
+];
+const CONSOLE_BADGE_TEXT: readonly Rgba[] = [[97, 104, 113, 1]]; // gray-600 (badge neutral)
+const consoleBadgeInvariant = (path: string): boolean =>
+  path.includes('tk-badge[variant=neutral]') || path.includes('tk-badge[variant=attention]');
 const WHITE: Rgba = [255, 255, 255, 1];
 /** Functional-scale INDICATOR fills (progress fill, status chips): text-less elements may keep them across the flip (the R2 redundancy ruling — aria carries the state). */
 const INDICATOR_FILLS: readonly Rgba[] = [
@@ -466,6 +484,7 @@ function compareStory(
       const legal =
         isTransparent(lightBg) ||
         inFamily(lightBg, FORCE_INVARIANT) ||
+        (consoleBadgeInvariant(path) && inFamily(lightBg, CONSOLE_BADGE_FILLS)) ||
         (inFamily(lightBg, INDICATOR_FILLS) && !hasText) ||
         (sameColor(lightBg, WHITE) && ancestorInvariantBg(index));
       if (!legal) {
@@ -541,7 +560,9 @@ function compareStory(
     const darkColor = parseColor(darkRecord.color);
     if (sameColor(lightColor, darkColor) && !isTransparent(lightColor)) {
       const legal =
-        inFamily(lightColor, [...INK, ...GREEN, ...YELLOW]) || sameColor(lightColor, WHITE);
+        inFamily(lightColor, [...INK, ...GREEN, ...YELLOW]) ||
+        sameColor(lightColor, WHITE) ||
+        (consoleBadgeInvariant(path) && inFamily(lightColor, CONSOLE_BADGE_TEXT));
       if (!legal && !lightRecord.placeholder) {
         failures.push(
           `${component}: ${path} text color ${lightRecord.color} UNCHANGED in dark — only white/ink/green-on-invariant text may survive the flip (link/error/secondary/muted must remap).`,

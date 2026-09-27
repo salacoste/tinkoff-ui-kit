@@ -187,6 +187,17 @@ describe('tk-progress-bar', () => {
     expect(sheet).toContain('var(--tk-motion-duration-slow)');
   });
 
+  it('the HEIGHT hook ships: .track consumes --tk-progress-bar-height with the 4px DESIGN default (13.3)', () => {
+    const cssText = TkProgressBar.styles
+      .map((style) => (style as { cssText?: string }).cssText ?? '')
+      .join('\n')
+      .replace(/\/\*[\s\S]*?\*\//g, '');
+    const track = cssText.match(/\.track\s*\{([^}]*)\}/)?.[1] ?? '';
+    expect(track, 'the .track rule exists').not.toBe('');
+    // The admin pack's card bars run h6–10 thin; 4px stays the default.
+    expect(track).toContain('height: var(--tk-progress-bar-height, 4px)');
+  });
+
   it('switching determinate → indeterminate drops valuenow and the inline width', async () => {
     const el = await mount({ props: { value: 60, label: 'П' } });
     expect(track(el).getAttribute('aria-valuenow')).toBe('60');

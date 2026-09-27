@@ -4,18 +4,22 @@ import { html } from 'lit';
 import { apiReferenceDoc } from '../api-reference.js';
 
 import './badge.js';
+import '../tabs/tabs.js';
+import type { TkTab } from '../tabs/tabs.js';
 
 /**
  * tk-badge stories (spec 3.2): default playground, variants, count capping,
- * slot-vs-prop, theming demo, and the a11y notes. Composed into the docs
- * surface by packages/docs/.storybook/main.ts.
+ * slot-vs-prop, theming demo, and the a11y notes. The 13.3 console story
+ * adds the neutral/attention variants and the gray tab-count digit via the
+ * freshly minted --tk-badge-* hooks (zero tabs code — custom properties
+ * inherit through the shadow boundary onto the existing TkTab.badge chip).
  *
  * Story-canvas styling consumes var(--tk-*) tokens only (FR-1) — this file
  * sits inside the zero-hardcoded guard's scan root.
  */
 
 type BadgeArgs = {
-  variant: 'incentive' | 'stat';
+  variant: 'incentive' | 'stat' | 'neutral' | 'attention';
   count: number | undefined;
   label: string;
 };
@@ -110,9 +114,9 @@ const meta: Meta<BadgeArgs> = {
   argTypes: {
     variant: {
       control: 'radio',
-      options: ['incentive', 'stat'],
+      options: ['incentive', 'stat', 'neutral', 'attention'],
       description:
-        'Пара заливка/текст: incentive — зелёная с чернильным текстом (AA-пара 2.1), stat — чернильная с белым. Обе не зависят от темы.',
+        'Пара заливка/текст: incentive — зелёная с чернильным текстом (AA-пара 2.1), stat — чернильная с белым, neutral — серая gray-100/gray-600 (консоль), attention — red-300 с белым (AA-маппинг пака). Все не зависят от темы.',
     },
     count: {
       control: 'number',
@@ -159,12 +163,79 @@ export const Variants: Story = {
         текстом text-on-primary: белый на green-100 даёт 2.66:1 (провал AA),
         чернильный — 4.74:1; пара заморожена в Story 2.1 и не зависит от
         темы. <code>stat</code> — чернильная ink-300 с белым текстом (12.6:1),
-        пара button-inverse.
+        пара button-inverse. <code>neutral</code> и <code>attention</code> —
+        консольные тона 13.3 (см. «Консольные тона»).
       </p>
       <div class="tkbadge-row">
         <figure>${badge({ variant: 'incentive' }, '+20%')}<figcaption>incentive</figcaption></figure>
         <figure>${badge({ variant: 'stat' }, 'Топ-1')}<figcaption>stat</figcaption></figure>
+        <figure>
+          ${badge({ variant: 'neutral' }, 'Ожидает подписи')}<figcaption>neutral</figcaption>
+        </figure>
+        <figure>${badge({ variant: 'attention', count: 3 })}<figcaption>attention</figcaption></figure>
       </div>
+    </main>
+  `,
+};
+
+/**
+ * Console tones (spec 13.3, admin pack): neutral = the h28 light status pill
+ * + the gray tab-count digit; attention = the AA-mapped red (raw #E5372B of
+ * the pack fails AA at body-xs → red-300). The tab counts ride the EXISTING
+ * TkTab.badge slot — re-tinted through the --tk-badge-* hooks set on the
+ * tk-tabs ancestor (custom properties inherit into the nested chip's shadow
+ * tree; zero tabs code changed).
+ */
+export const ConsoleTones: Story = {
+  name: 'Консольные тона',
+  render: () => html`
+    ${canvasStyles}
+    <style>
+      .tkbadge-console-tabs {
+        --tk-badge-fill: var(--tk-color-gray-100);
+        --tk-badge-text: var(--tk-color-gray-600);
+      }
+    </style>
+    <main class="tkbadge-canvas">
+      <h1>Консольные тона</h1>
+      <p class="tkbadge-note">
+        Админ-пак 13.1: статус-пилюля таблиц — светлая заливка с серым
+        текстом (<code>neutral</code>: gray-100/gray-600 ≈5.17:1), красный
+        счётчик на идущем платеже (<code>attention</code>: красный пака не
+        проходит AA на body-xs — белый на нём 4.3:1, поэтому маппинг на
+        red-300, 6.18:1, как у дельт таблиц). Серая цифра счётчика в табах —
+        существующий слот <code>TkTab.badge</code>: хуки
+        <code>--tk-badge-fill/--tk-badge-text</code> наследуются в теневой
+        чип сквозь границу табов, ни строчки кода табов не тронуто.
+      </p>
+      <div class="tkbadge-row">
+        <figure>
+          ${badge({ variant: 'neutral' }, 'Ожидает подписи')}
+          <figcaption>статус строки таблицы (admin-table-toolbar)</figcaption>
+        </figure>
+        <figure>
+          ${badge({ variant: 'attention', count: 3 })}
+          <figcaption>счётчик идущего платежа (admin-payments-hub)</figcaption>
+        </figure>
+      </div>
+      <figure>
+        <tk-tabs
+          class="tkbadge-console-tabs"
+          .tabs=${[
+            { value: 'all', label: 'Все', badge: 48 },
+            { value: 'sign', label: 'На подпись', badge: 5 },
+            { value: 'done', label: 'Исполнены' },
+          ] as TkTab[]}
+          .defaultValue=${'all'}
+        >
+          <div slot="tab-0"><p>Все документы периода.</p></div>
+          <div slot="tab-1"><p>Ждут подписи.</p></div>
+          <div slot="tab-2"><p>Исполненные.</p></div>
+        </tk-tabs>
+        <figcaption>
+          серые цифры счётчиков: хуки --tk-badge-* на предке tk-tabs
+        </figcaption>
+      </figure>
     </main>
   `,
 };

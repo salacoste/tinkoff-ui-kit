@@ -19,6 +19,24 @@ import { css } from 'lit';
  *   text-on-primary — the yellow-keeps-ink invariant, reused for the same
  *   class of saturated brand fill; do not copy onto other fills blindly.
  * - stat: ink-300 fill + white text — 12.635:1, the button-inverse pair.
+ * - neutral (13.3, admin pack): gray-100 fill + gray-600 text ≈5.17:1 ✓ —
+ *   the console's light status pill («Ожидает подписи», h28 in the pack)
+ *   and the gray tab-count digit. The pack's pill is taller than the
+ *   marketing badge; geometry stays the kit's (the pill grows with
+ *   content, min-height 22px) — a recorded delta, not a code axis.
+ * - attention (13.3, admin pack): red-300 fill + white text 6.179:1 ✓ —
+ *   the pack's raw `#E5372B` count pill maps onto the red scale per the
+ *   AA-override discipline (white on #E5372B = 4.3:1 FAILS at body-xs;
+ *   ink on it = 3:1 fails worse) — the delta-discipline precedent, no
+ *   new red token.
+ *
+ * `--tk-badge-*` HOOKS (13.3, CONVENTIONS §6 — minted here; the family had
+ * ZERO custom properties before): every variant consumes the SAME pair —
+ * `--tk-badge-fill` / `--tk-badge-text` — each with its own pairing as the
+ * fallback. This is how the EXISTING TkTab.badge count slot goes gray with
+ * zero tabs code: custom properties INHERIT through shadow boundaries, so
+ * `tk-tabs { --tk-badge-fill: …; --tk-badge-text: … }` re-tints the nested
+ * count chip.
  *
  * Known structural (non-token) values, flagged per the flag-don't-invent
  * rule — the token sheet carries no counterpart:
@@ -65,16 +83,28 @@ export const badgeStyles = css`
     display: none;
   }
 
-  /* --- Variants: flat saturated fills, text pairs per the header notes. -- */
+  /* --- Variants: flat saturated fills, text pairs per the header notes.
+     Each consumes the shared --tk-badge-fill/--tk-badge-text hooks with its
+     own AA pair as the fallback (per-INSTANCE override; see header). --- */
 
   :host([variant='incentive']) .badge {
-    background: var(--tk-color-green-100);
+    background: var(--tk-badge-fill, var(--tk-color-green-100));
     /* INK-on-saturated-brand-fill (the 2.1 AA pairing) — see the header. */
-    color: var(--tk-color-text-on-primary);
+    color: var(--tk-badge-text, var(--tk-color-text-on-primary));
   }
 
   :host([variant='stat']) .badge {
-    background: var(--tk-color-ink-300);
-    color: var(--tk-color-white);
+    background: var(--tk-badge-fill, var(--tk-color-ink-300));
+    color: var(--tk-badge-text, var(--tk-color-white));
+  }
+
+  :host([variant='neutral']) .badge {
+    background: var(--tk-badge-fill, var(--tk-color-gray-100));
+    color: var(--tk-badge-text, var(--tk-color-gray-600));
+  }
+
+  :host([variant='attention']) .badge {
+    background: var(--tk-badge-fill, var(--tk-color-red-300));
+    color: var(--tk-badge-text, var(--tk-color-white));
   }
 `;

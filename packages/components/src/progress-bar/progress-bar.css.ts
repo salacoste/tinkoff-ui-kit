@@ -26,6 +26,8 @@ import { css } from 'lit';
  * each consumed WITH its token default as the fallback:
  * - `--tk-progress-bar-track`  track fill     (default border-default — light value = gray-200's hex)
  * - `--tk-progress-bar-fill`   progress fill  (default blue-100)
+ * - `--tk-progress-bar-height` track height   (default 4px — the 13.3 hook: the
+ *   admin pack's card bars run h6–10 thin; 4px stays the DESIGN default)
  * - `--tk-progress-bar-radius` track/fill radius (default radius-full)
  * - `--tk-progress-bar-text`   label/zero-copy color (default text-secondary — see below)
  * - `--tk-progress-bar-value-text` % cell color (default text-primary; the per-tint
@@ -34,8 +36,9 @@ import { css } from 'lit';
  *
  * Known structural (non-token) values, flagged per the flag-don't-invent
  * rule — the token sheet carries no counterpart:
- * - the 4px track height (DESIGN.md `components.progressBar` literal — the
- *   pill radius at 4px gives the fully-rounded ends);
+ * - the 4px track height DEFAULT (DESIGN.md `components.progressBar`
+ *   literal — the pill radius at 4px gives the fully-rounded ends; exposed
+ *   through `--tk-progress-bar-height` since 13.3, the default unchanged);
  * - the 33% indeterminate fill width and its translateX(−100%→300%) sweep
  *   (loop geometry, not theming — the spec's static-fallback shape);
  * - the sr-only announcement metrics (1px clip box — the standard
@@ -109,7 +112,9 @@ export const progressBarStyles = css`
   .track {
     box-sizing: border-box;
     width: 100%;
-    height: 4px;
+    /* 4px is the DESIGN default; the 13.3 height hook exposes it — the admin
+       pack's card bars run h6–10 thin (admin-limits-*). */
+    height: var(--tk-progress-bar-height, 4px);
     border-radius: var(--tk-progress-bar-radius, var(--tk-radius-full));
     background: var(--tk-progress-bar-track, var(--tk-color-border-default));
     overflow: hidden;

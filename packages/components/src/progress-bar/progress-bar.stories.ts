@@ -232,6 +232,62 @@ export const WithLabelAndValue: Story = {
   `,
 };
 
+/**
+ * Thin bars (spec 13.3, admin pack admin-limits-*): the console's card
+ * meters run h6–10 fully-rounded — the height hook exposes the track, the
+ * fills ride the EXISTING --tk-progress-bar-fill (yellow = the console's
+ * only yellow FILL besides the logo; neutral-dark; the default blue).
+ */
+export const ThinBars: Story = {
+  name: 'Тонкие бары',
+  render: () => html`
+    ${canvasStyles}
+    <main class="tkp-canvas">
+      <h1>Тонкие бары</h1>
+      <p class="tkp-note">
+        Хук <code>--tk-progress-bar-height</code> (13.3) поднимает трек с 4px
+        по умолчанию до тонких консольных метров пака <code>admin-limits</code>
+        (h6–10, полностью скруглённые). Заливки — существующий хук
+        <code>--tk-progress-bar-fill</code>: жёлтая — единственная жёлтая
+        ЗАЛИВКА консоли кроме логотипа; нейтрально-тёмная и синяя — по умолчанию.
+        Штатная семантика progressbar сохранена на любой высоте.
+      </p>
+      <section>
+        <figure>
+          <div class="tkp-field">
+            <tk-progress-bar
+              label="Лимит Spending-карты"
+              value="72"
+              style="--tk-progress-bar-height: 6px; --tk-progress-bar-fill: var(--tk-color-yellow-100);"
+            ></tk-progress-bar>
+          </div>
+          <figcaption>h6, жёлтая заливка — Spending-карта пака</figcaption>
+        </figure>
+        <figure>
+          <div class="tkp-field">
+            <tk-progress-bar
+              label="Кредитный лимит"
+              value="45"
+              style="--tk-progress-bar-height: 8px; --tk-progress-bar-fill: var(--tk-color-ink-300);"
+            ></tk-progress-bar>
+          </div>
+          <figcaption>h8, нейтрально-тёмная заливка</figcaption>
+        </figure>
+        <figure>
+          <div class="tkp-field">
+            <tk-progress-bar
+              label="Оборот по счёту"
+              value="30"
+              style="--tk-progress-bar-height: 10px;"
+            ></tk-progress-bar>
+          </div>
+          <figcaption>h10, синяя заливка по умолчанию</figcaption>
+        </figure>
+      </section>
+    </main>
+  `,
+};
+
 export const Indeterminate: Story = {
   name: 'Indeterminate',
   render: () => html`

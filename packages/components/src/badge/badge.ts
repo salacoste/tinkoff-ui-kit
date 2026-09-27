@@ -21,31 +21,35 @@ import { badgeStyles } from './badge.css.js';
  *   beats the `label` prop (the checkbox/progress-bar slot-presence rule).
  *
  * VARIANTS: `incentive` (green-100 fill + ink text — the AA pairing frozen
- * at 2.1: white on green-100 is 2.66:1 and fails, ink is 4.74:1) and `stat`
- * (ink-300 fill + white text, 12.6:1). Both pairs are THEME-INVARIANT —
- * the raw scale tokens carry no dark remaps, mirroring the yellow-keeps-ink
- * rule (see badge.css.ts).
+ * at 2.1: white on green-100 is 2.66:1 and fails, ink is 4.74:1), `stat`
+ * (ink-300 fill + white text, 12.6:1), `neutral` (gray-100 fill + gray-600
+ * text, ≈5.17:1 — the console status pill and the gray tab-count digit,
+ * admin pack 13.3) and `attention` (red-300 fill + white text, 6.179:1 —
+ * the pack's raw `#E5372B` maps onto the red scale per the AA-override
+ * discipline: white on #E5372B is 4.3:1 and FAILS at body-xs). All pairs
+ * are THEME-INVARIANT — the raw scale tokens carry no dark remaps,
+ * mirroring the yellow-keeps-ink rule (see badge.css.ts).
  *
  * STATELESS (the simple-component mold): nothing dispatches — the event-map
  * no-entry case (tk-button precedent). SSR-compat (AD-10): rendered via
  * Lit templates only.
  *
  * @tag tk-badge
- * @attr {incentive|stat} variant - Fill/text pairing (default `incentive`).
+ * @attr {incentive|stat|neutral|attention} variant - Fill/text pairing (default `incentive`).
  * @attr {number} count - Dynamic count mode: renders the count capped at «99+»; wins over slot/label while set.
  * @attr {string} label - Label fallback when the default slot carries no real content.
  * @slot - Label (primary content); wins over the `label` prop, loses to `count`.
  */
 export class TkBadge extends LitElement {
   /** Variant union (CONVENTIONS §2: literal unions, never forking booleans). */
-  static readonly variants = ['incentive', 'stat'] as const;
+  static readonly variants = ['incentive', 'stat', 'neutral', 'attention'] as const;
 
   /** Count cap — everything above renders «99+» (the reference's dynamic counters). */
   static readonly COUNT_CAP = 99;
 
   /** Fill/text pairing. */
   @property({ reflect: true })
-  variant: 'incentive' | 'stat' = 'incentive';
+  variant: 'incentive' | 'stat' | 'neutral' | 'attention' = 'incentive';
 
   /**
    * Dynamic count (number DATA — never reflects, CONVENTIONS §2). While a

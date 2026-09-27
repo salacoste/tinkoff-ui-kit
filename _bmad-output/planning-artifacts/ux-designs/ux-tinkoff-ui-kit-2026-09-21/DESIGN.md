@@ -465,13 +465,13 @@ Visual specs for the 19 v1 components (behaviors live in EXPERIENCE.md):
 |---|---|
 | Button | Pill; primary yellow (ink text) / secondary white + `default` shadow / inverse ink-300 (white text); heights 56 (hero) / 48 (card) / 32 (compact); press darkens one step |
 | TextLink | `{colors.blue-100}`, underline on hover; inline-legal variant in `{typography.body-xs}` gray |
-| Badge/Chip | Pill chip; incentive variant green-100 bg + ink text; stat variant ink-300 bg + white text |
+| Badge/Chip | Pill chip; incentive variant green-100 bg + ink text; stat variant ink-300 bg + white text; console `neutral` gray-100/gray-600 + `attention` red-300/white (13.3 admin; `--tk-badge-*` hooks) |
 | Input | `{colors.surface-field}` fill, `{colors.focus-ring}` 2px focus outline, `{rounded.md}`, 52px, placeholder gray-500; inline badge slot right-anchored |
 | Select | Same field language + chevron; menu uses `dropdown` shadow, `{rounded.sm}` items |
 | Checkbox | 20px box, `{rounded.xs}`, ink-300 check on yellow-100 fill when checked |
 | SegmentedRadio | Pill track, `{rounded.full}`; selected segment solid fill + dot indicator |
 | ThumbnailPicker | Square tiles `{rounded.md}`, selected gets 2px ink border ring |
-| ProgressBar | 4px track `{colors.border-default}` (light value = gray-200's hex; dark = white-alpha tonal step — Story 5.4), fill blue-100, `{rounded.full}` |
+| ProgressBar | 4px track `{colors.border-default}` (light value = gray-200's hex; dark = white-alpha tonal step — Story 5.4), fill blue-100, `{rounded.full}`; height hook `--tk-progress-bar-height` (13.3 admin, h6–10 card bars) |
 | Tabs | Text tabs; active = white pill + `default` shadow inside invisible track; console `indicator="underline"`: pill never paints, bold + 2px ink bar (13.2 admin) |
 | Navbar | 72px, white, logo slot left, nav links with yellow active underline, utilities right |
 | Footer | Uppercase gray group headers (`caps-s`), 6–7 link columns, ink-300 pill quick-links, bold phone block |
@@ -533,7 +533,13 @@ consumers compose `button` secondary: white + hairline; the gray-fill delta is r
 credits/incoming values green `#3BC46D` (extraction anchor — AA text usage takes green-300
 `#168821` per the delta discipline above); tabs underline-active: bold + 2px ink bar (`tabs`
 `indicator="underline"`, hook `--tk-tabs-indicator`); console progress fill = yellow-100 (the
-v1 blue-100 default stands — console surfaces override via `--tk-progress-bar-fill`). Console
+v1 blue-100 default stands — console surfaces override via `--tk-progress-bar-fill`); console
+status tones (13.3): `badge` `neutral` = gray-100/gray-600 ≈5.17:1 carries the h28 status pill
+and the gray tab-count digit — the `--tk-badge-fill`/`--tk-badge-text` hooks (minted 13.3, the
+family had none) INHERIT onto the existing TkTab.badge chip with zero tabs code — and
+`attention` = red-300/white 6.179:1 (the pack's raw `#E5372B` fails AA at body-xs — mapped
+per the delta discipline); console bar heights h6–10 ride `--tk-progress-bar-height` (the 4px
+DESIGN default unchanged). Console
 typography: the product-UI register. The composition recipe lives at
 `packages/docs/src/v2/console-chrome.stories.ts` («Components v2/Console chrome»).
 

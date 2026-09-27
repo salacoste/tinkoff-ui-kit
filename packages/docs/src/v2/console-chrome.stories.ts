@@ -146,7 +146,7 @@ const consoleChromeStyles = html`
       padding: var(--tk-space-40) var(--tk-space-40);
       background: var(--tk-color-surface-base);
       border: 1px solid var(--tk-color-border-default);
-      border-radius: var(--tk-radius-lg);
+      border-radius: var(--tk-radius-xl);
       box-shadow: var(--tk-shadow-default);
       display: grid;
       grid-template-columns: repeat(4, 1fr);

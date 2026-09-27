@@ -138,7 +138,76 @@ avatar-menu / kebab menu-popover open states (follow-up capture per 13.1);
    on #E5372B fail; map onto the red scale or record the deviation);
    (b) toolbar stand-in pre-named deterministically: button `secondary` +
    gray-fill delta (no gray-fill variant exists). Status → approved.
+4. 2026-09-27 — EXECUTION deviations, recorded: (a) the pattern pages +
+   the payments-list showcase landed as stories of ONE docs page
+   (`packages/docs/src/v2/data-surfaces.stories.ts`: Обзор + «Платежи» +
+   «Прогресс и избранное») — the 13.2 pattern-page mold, same rationale
+   (composition has no component code; the docs page is the adoption
+   surface; the visual harness baselines every story); (b) the status
+   table composes a SEMANTIC primitive table, not `tk-data-table` — its
+   cells are string-only (invest register, row-as-link) and cannot host
+   the badge cell; (c) the favorites/limits progress bars render LABELED
+   (bare pack bars fail the axe `aria-progressbar-name` gate on docs
+   pages — the component's own «consumers name it through label» rule;
+   delta recorded in the story prose); (d) dark-sweep spec taught the two
+   new theme-invariant badge pairs via a PATH-SCOPED rule
+   (`consoleBadgeInvariant`) — gray-100/gray-600 are byte-identical to
+   surface-muted/text-secondary, whose dark REMAPS are real bug classes a
+   global allowlist entry would mask.
 
 ## Verification
 
-(filled at execution)
+Task 1 — badge neutral + attention: **DONE**. Variants in the union
+(`incentive|stat|neutral|attention`, reflected + clamped, default
+unchanged); pairs: neutral gray-100/gray-600 ≈5.17:1 ✓, attention
+red-300/white 6.179:1 ✓ (the pack's raw #E5372B white-pair 4.3:1 FAILS
+body-xs — mapped onto the red scale per the frozen AA-pairing ruling, no
+new token; deviation recorded in badge.css.ts header + DESIGN.md).
+`--tk-badge-fill`/`--tk-badge-text` minted — every variant consumes the
+shared pair with its own default; the gray tab-count digit works through
+the EXISTING TkTab.badge slot (hooks inherit through the shadow boundary
+— zero tabs code). Tests: +2 unit (variant reflect/clamp/union + the
+hooks-family structural pin; the pre-existing pairing pin updated to the
+hook-bearing declarations). RU story «Консольные тона» (status pill +
+attention count + tabs figure). Baselines: console-tones NEW ×2 themes;
+api ×2 REGENERATED (delete+update — the CEM jsdoc/union change repaints
+the API story). Dark sweep: extended with the scoped 13.3 pairs — GREEN.
+
+Task 2 — progress-bar height hook: **DONE**.
+`--tk-progress-bar-height` consumed as `height: var(--tk-progress-bar-height, 4px)`
+(default unchanged); determinate/indeterminate/degenerate untouched (the
+hook is geometry-only). Tests: +1 structural unit pin. RU story «Тонкие
+бары» (h6 yellow / h8 ink-300 / h10 default-blue, admin-limits-grounded;
+fills via the EXISTING --tk-progress-bar-fill). Baselines: thin-bars NEW
+×2; progressbar api ×2 re-captured delete+update — BYTE-IDENTICAL (the
+API table renders attributes/members/events/slots, not cssProperties;
+the height hook lives in cssProperties docs only — the capture doubles
+as proof the hook changed no rendered API surface).
+
+Task 3 — data-surface patterns: **DONE** (deviation (a) above).
+`packages/docs/src/v2/data-surfaces.stories.ts`: Обзор (five pattern
+sections, each citing its pack PNG + the deltas: button secondary +
+gray-fill, «Запомнить» checkbox, filter-chips count, avatar plain slots,
+tk-data-table register, «…» popover deferred); «Платежи» showcase (page
+header + toolbar [3× secondary compact + combobox-search + filter-chips
++ checkbox] + tabs with gray counts + semantic status table: avatars as
+plain slots, neutral/stat status badges, amounts right, summary row with
+checkbox); «Прогресс и избранное» (labeled thin bars + 5×2 r16 tile grid
++ blue ghost tile via tk-link). Tokens only (guard GREEN); axe GREEN
+after the labeling fix. Baselines ×6 NEW (3 stories × 2 themes).
+
+Task 4 — ledger: **DONE** (this Change Log + Verification). Out-of-scope
+items restated with owners: on-tab red (extension, ungrounded),
+filter-chips count slot (follow-up if a pack surface demands), toggle
+atom (delta), empty-state (deferred, ungrounded), drawer (absent),
+avatar-menu/kebab open states (follow-up maintainer capture), blue-link
+rows (`tk-link` covers).
+
+Also this round: 13.2 follow-up fix — the console-chrome mega panel
+radius corrected to `--tk-radius-xl` (24px, the pack band) from
+radius-lg; its baselines re-captured (visual+axe GREEN).
+
+`pnpm gen` after each css.ts change (CEM diff = badge variants/hooks +
+height hook, committed WITH the change); full `pnpm test` GREEN (151
+root / 713 components / 70 react / 17 tokens); full visual compare run
+1428 passed + the badge dark-sweep leg, fixed and re-verified GREEN.
