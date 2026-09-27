@@ -198,7 +198,8 @@ const STORE_BADGES: TkStoreBadge[] = [
 ];
 
 const meta: Meta = {
-  title: 'Showcase/Invest landing',
+  // Vertical: invest — reference packs: .playwright-cli/captures-v3/INDEX.md (→ captures-v2 invest-mobile/invest-stocks)
+  title: 'Invest/Landing',
   parameters: { layout: 'fullscreen' },
 };
 

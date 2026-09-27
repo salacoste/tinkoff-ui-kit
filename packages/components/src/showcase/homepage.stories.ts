@@ -173,7 +173,8 @@ const gridCard = (
 `;
 
 const meta: Meta = {
-  title: 'Showcase/Homepage',
+  // Vertical: bank — reference pack: .playwright-cli/captures-v3/bank/INDEX.md
+  title: 'Bank/Homepage',
   parameters: { layout: 'fullscreen' },
 };
 

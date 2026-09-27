@@ -329,7 +329,8 @@ const modeLabel = (mode: string): string =>
   MODE_OPTIONS.find((option) => option.value === mode)?.label ?? 'Открыть счет';
 
 const meta: Meta = {
-  title: 'Showcase/Business landing',
+  // Vertical: business — reference pack: .playwright-cli/captures-v3/business/INDEX.md
+  title: 'Business/Landing',
   parameters: { layout: 'fullscreen' },
 };
 

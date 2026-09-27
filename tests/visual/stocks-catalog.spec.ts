@@ -27,7 +27,7 @@ import { buildStoryUrl, THEMES } from './stories';
  * rule (build docs first — pnpm test:visual does).
  */
 
-const STORY_ID = 'showcase-stocks-catalog--stocks-catalog';
+const STORY_ID = 'invest-stocks-catalog--stocks-catalog';
 
 /** Settle wait — same contract as visual.spec.ts (children or error display). */
 async function waitForStorySettled(page: Page): Promise<void> {

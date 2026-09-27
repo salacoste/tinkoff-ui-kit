@@ -161,7 +161,8 @@ const completionPercent = (state: FormState): number =>
   Math.round((completedCount(state) / TOTAL_FIELDS) * 100);
 
 const meta: Meta = {
-  title: 'Showcase/Application form',
+  // Vertical: bank — reference pack: .playwright-cli/captures-v3/bank/INDEX.md
+  title: 'Bank/Application form',
   parameters: { layout: 'fullscreen' },
 };
 

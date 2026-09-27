@@ -201,16 +201,16 @@ export const Page: Story = {
       <p>
         Двухрядная шапка открывает каталог инструментов — сценарий
         <a
-          href="?path=/story/showcase-stocks-catalog--stocks-catalog"
+          href="?path=/story/invest-stocks-catalog--stocks-catalog"
           target="_top"
-          >Showcase/Stocks catalog</a
+          >Invest/Stocks catalog</a
         >
         (шапка с <code>subLinks</code> разделов инвестиций). Бизнес-лендинг
         использует ряд 1 без поднавигации —
         <a
-          href="?path=/story/showcase-business-landing--business-landing"
+          href="?path=/story/business-landing--business-landing"
           target="_top"
-          >Showcase/Business landing</a
+          >Business/Landing</a
         >.
       </p>
     </div>

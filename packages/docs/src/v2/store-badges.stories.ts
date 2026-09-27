@@ -160,9 +160,9 @@ export const Page: Story = {
       <p>
         Кластер загрузок мобильного приложения — сценарий
         <a
-          href="?path=/story/showcase-invest-landing--invest-landing"
+          href="?path=/story/invest-landing--invest-landing"
           target="_top"
-          >Showcase/Invest landing</a
+          >Invest/Landing</a
         >
         (бейджи под QR-блоком и шагами установки).
       </p>

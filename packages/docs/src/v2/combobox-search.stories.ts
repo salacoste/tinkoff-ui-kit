@@ -188,9 +188,9 @@ export const Page: Story = {
       <p>
         Верхний кластер каталога — рядом с чипами фильтров в сценарии
         <a
-          href="?path=/story/showcase-stocks-catalog--stocks-catalog"
+          href="?path=/story/invest-stocks-catalog--stocks-catalog"
           target="_top"
-          >Showcase/Stocks catalog</a
+          >Invest/Stocks catalog</a
         >.
       </p>
     </div>

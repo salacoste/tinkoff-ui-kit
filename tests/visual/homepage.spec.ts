@@ -9,7 +9,7 @@ import { buildStoryUrl, THEMES } from './stories';
  * generated suite cannot: visual.spec.ts runs its per-theme axe at the FIXED
  * desktop viewport (playwright.config.ts `use.viewport`), so a composed page
  * has never been audited AT the UX-DR14 breakpoints. This spec pins, against
- * the BUILT story `showcase-homepage--homepage`:
+ * the BUILT story `bank-homepage--homepage`:
  *
  * - VIEWPORT-SCOPED AXE: 3 breakpoints (1280 / 900 / 360) × 2 themes, zero
  *   WCAG violations each — the harness's own per-theme runs stay
@@ -34,7 +34,7 @@ import { buildStoryUrl, THEMES } from './stories';
  */
 
 /** The composed homepage story (packages/components/src/showcase/homepage.stories.ts). */
-const STORY_ID = 'showcase-homepage--homepage';
+const STORY_ID = 'bank-homepage--homepage';
 
 /** WCAG rule tags — identical filter to the generated suite. */
 const AXE_WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] as const;

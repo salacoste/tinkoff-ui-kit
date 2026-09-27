@@ -157,9 +157,9 @@ export const Page: Story = {
       <p>
         Нижний кластер каталога — сценарий
         <a
-          href="?path=/story/showcase-stocks-catalog--stocks-catalog"
+          href="?path=/story/invest-stocks-catalog--stocks-catalog"
           target="_top"
-          >Showcase/Stocks catalog</a
+          >Invest/Stocks catalog</a
         >: таблица + пагинация с «Показать еще», связка живая.
       </p>
     </div>

@@ -217,9 +217,9 @@ export const Page: Story = {
       <p>
         Центр каталога инструментов — сценарий
         <a
-          href="?path=/story/showcase-stocks-catalog--stocks-catalog"
+          href="?path=/story/invest-stocks-catalog--stocks-catalog"
           target="_top"
-          >Showcase/Stocks catalog</a
+          >Invest/Stocks catalog</a
         >: поиск + чипы + таблица + пагинация на одной странице.
       </p>
     </div>

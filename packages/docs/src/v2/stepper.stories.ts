@@ -186,15 +186,15 @@ export const Page: Story = {
       <p>
         Шаги открытия счёта — на кремовой странице
         <a
-          href="?path=/story/showcase-business-landing--business-landing"
+          href="?path=/story/business-landing--business-landing"
           target="_top"
-          >Showcase/Business landing</a
+          >Business/Landing</a
         >
         и как шаги установки приложения — в
         <a
-          href="?path=/story/showcase-invest-landing--invest-landing"
+          href="?path=/story/invest-landing--invest-landing"
           target="_top"
-          >Showcase/Invest landing</a
+          >Invest/Landing</a
         >.
       </p>
     </div>

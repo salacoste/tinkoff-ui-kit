@@ -43,7 +43,7 @@ import { buildStoryUrl, THEMES } from './stories';
  * rule (build docs first — pnpm test:visual does).
  */
 
-const STORY_ID = 'showcase-invest-landing--invest-landing';
+const STORY_ID = 'invest-landing--invest-landing';
 
 /** WCAG rule tags — identical filter to the generated suite. */
 const AXE_WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] as const;

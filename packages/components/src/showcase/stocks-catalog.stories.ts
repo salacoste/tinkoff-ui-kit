@@ -264,7 +264,8 @@ const pageRows = (state: CatalogState): TkDataTableRow[] => {
 };
 
 const meta: Meta = {
-  title: 'Showcase/Stocks catalog',
+  // Vertical: invest — reference packs: .playwright-cli/captures-v3/INDEX.md (→ captures-v2 invest-mobile/invest-stocks)
+  title: 'Invest/Stocks catalog',
   parameters: { layout: 'fullscreen' },
 };
 

@@ -27,7 +27,7 @@ import { buildStoryUrl, THEMES } from './stories';
  * Same pinned webServer/capture config as the visual suite; same stale-dist
  * rule (build docs first — pnpm test:visual does).
  */
-const STORY_ID = 'showcase-business-landing--business-landing';
+const STORY_ID = 'business-landing--business-landing';
 
 /** Settle wait — same contract as visual.spec.ts (children or error display). */
 async function waitForStorySettled(page: Page): Promise<void> {
