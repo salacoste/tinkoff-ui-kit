@@ -102,3 +102,60 @@ diff; business landing is bleed-mode (art width 100% — centering no-op).
 Skeleton unaffected (`.sk--art` block is full-width). Gate review copies
 for legs 10/11 refreshed from the re-taken baselines. **Run B verdict:
 1380 passed, exit 0 (8.4m) — full-suite comparison green.**
+
+CI remediation: push `021740f` run 36311372470 came back RED — gen-drift
+(the CEM manifest `custom-elements.json` embeds the promoCardStyles
+source string; the CSS commit lacked the regenerated artifact).
+`pnpm gen` + unit suite 148/148 + regen committed as `810228b`
+(run 36311469726, verdict `success` by `gh run view` — GREEN).
+
+## 6. «Кнопка наезжает на графику» (flagged on promocard--variants
+## [dark], Group 3 leg 11) — SANCTION (b)+(c) EXECUTED
+
+**Component geometry was REFERENCE-EXACT; the defect was in the demo
+art.** Dark-baseline forensics (card «Т-Бизнес», bleed row): pill
+143×48 @ x162–305, y2248–2296; card x40–427 → pill center 233.5 = card
+center 233.5 (Δ 0); pill bottom offset 2328−2296 = **32px = the probe
+value** (10.3: Δ 0.0, 6/6 reference cards). Pill floating OVER art is
+the reference bleed anatomy itself (evidence crops 00/01, approved).
+
+The flag's true content: the bleed demo SVG's WHITE step
+(`.tkpc-ba-white`, `--tk-color-white`) painted exactly in the pill's
+flight band — white rect x98–330 y2197–2297 ⊃ pill bbox entirely —
+both pure white → the pill's boundary fused with the slab (white-on-
+white), plus a 143×22 strip of the yellow step hidden. Stark in dark
+(the slab glares), softer in light (same fusion — why leg 10 passed).
+The reference never shows this: its art is a contrasting illustration;
+the pill always reads separate.
+
+**Maintainer sanction (b)+(c), 2026-09-27:** fix the DEMO art only
+(no component CSS) + record. Fill rotation in `bleedArtDemo`
+(promo-card.stories.ts): yellow → back/bottom step (contrasting band
+under the pill), ink → middle, white → front/top step (bottom edge
+63% of the zone — clear of the pill band which starts at 65%);
+rect geometry untouched.
+
+**Re-take grew to FOUR baselines — the tolerance discovery.** Run A
+failed variants ×2 (expected, write-guard) AND accessibility ×2
+(unexpected). Investigation: the accessibility story DOES render an
+art card (`cardCanvas` «Т-Инвестиции» — line 341), so the §5 claim
+«accessibility unaffected / no art cards» was WRONG. Its centering
+diff after `021740f` ≈ 24.6k px = **1.47% — just under the config's
+global `maxDiffPixelRatio: 0.015`** (playwright.config.ts:70), which
+is why run B of §5 stayed green while the baseline kept a
+left-anchored tile (sub-tolerance drift). A HEAD-state probe (stories
+stashed, docs rebuilt, legs run isolated) confirmed: 4 passed at HEAD.
+The bleed rotation added ~88k px → 6.77% total → the legs correctly
+failed and were re-taken, baking in BOTH the rotation and the
+previously-tolerated centering drift.
+
+Re-taken (delete + harness-written): components-promocard--
+{variants,accessibility} {light,dark} ×4. Verified in the new
+baselines (both themes): yellow step 353×152 @ (739,761); art disc
+96×96 @ x287 — CENTERED (card x40–629, center 334.5); pill 144×46 @
+(873,882) a SEPARATE white component — the white step's bottom edge
+y831 clears the pill top y882 by 51px; under-pill = yellow step/beige
+fill. No white-on-white anywhere in the bleed band. **Run B verdict:
+1380 passed, exit 0 (8.3m) — full-suite comparison green.** Gate
+review copies refreshed for legs 10/11 (variants) and 12/13
+(accessibility).

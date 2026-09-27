@@ -37,12 +37,16 @@ const artDemo = html`
 `;
 
 /** Decorative bleed-mode art (10.3): wide inline svg, aria-hidden — the
-    consumer owns decorative marking; token-filled shapes (canvas styles). */
+    consumer owns decorative marking; token-filled shapes (canvas styles).
+    Fill ROTATION (gate v1.2.0, flag «кнопка наезжает на графику»): the
+    floating CTA band starts at 65% of the zone — the back/bottom step must
+    stay CONTRASTING (yellow) so the white pill reads as separate; the white
+    step sits front/top (bottom edge 63% of the zone, clear of the band). */
 const bleedArtDemo = html`
   <svg class="tkpc-bleed-art" slot="art" viewBox="0 0 200 120" fill="none" aria-hidden="true" focusable="false">
-    <rect class="tkpc-ba-white" x="30" y="52" width="120" height="52" rx="10"></rect>
-    <rect class="tkpc-ba-yellow" x="46" y="38" width="120" height="52" rx="10"></rect>
-    <rect class="tkpc-ba-ink" x="62" y="24" width="120" height="52" rx="10"></rect>
+    <rect class="tkpc-ba-yellow" x="30" y="52" width="120" height="52" rx="10"></rect>
+    <rect class="tkpc-ba-ink" x="46" y="38" width="120" height="52" rx="10"></rect>
+    <rect class="tkpc-ba-white" x="62" y="24" width="120" height="52" rx="10"></rect>
   </svg>
 `;
 
