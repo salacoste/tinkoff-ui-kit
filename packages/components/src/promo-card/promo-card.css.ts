@@ -168,8 +168,12 @@ export const promoCardStyles = css`
     display: none;
   }
 
+  /* The zone CENTERS its art to match the centered heading/CTA register —
+     the reference never shows a left-anchored tile (3.6: illustration
+     ~78% width, centered; 10.3: full-width bleed). Gate v1.2.0 sanction. */
   :host([data-has-art]) .card__art {
     display: flex;
+    justify-content: center;
     margin-bottom: var(--tk-space-24);
   }
 

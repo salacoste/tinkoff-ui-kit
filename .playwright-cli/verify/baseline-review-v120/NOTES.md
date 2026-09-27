@@ -68,3 +68,37 @@ baselines.
 
 Session CI: `029f7a1` GREEN (run 36299445122), `32eae17` GREEN (run
 36300926328) — both by `gh run view` verdicts.
+
+## 5. «Нет центрирования в карточках» (flagged on promocard--variants
+## [light], Group 3 leg 10) — SANCTION (a) EXECUTED
+
+**Within the flagged cards: text and pill were ALREADY pixel-center.**
+Card «Вклады» (387 wide, center x=193.5 crop): heading x139–248 → center
+193.5; pill x122–265 → center 193.5; art tile (128×128 white panel +
+yellow disc) x32–160 → center 96 — LEFT-anchored at the 32px padding,
+97.5px off card center. The impression = mixed alignment (left art vs
+center text/CTA), not missing centering.
+
+**Root cause:** `.card__art` (top mode) was `display: flex` with no
+`justify-content` → flex-start. The centered text/CTA register is
+reference-derived (spec 3.6: the kit's then-left text was flagged in
+review pass 1 and FIXED to center; reference pill re-measured this
+session: 182×44 at center 168 = exact card center). The reference has NO
+left-anchored small tile anywhere: the 3.6 reference illustration is
+262/336 (~78%) centered; the 10.3 bento art is full-width flush bottom
+(the kit's bleed mode follows it — bleed rows unchanged by the fix).
+
+**Maintainer sanction (a), 2026-09-27:** center the art to match the
+register — `justify-content: center` added to
+`:host([data-has-art]) .card__art` (promo-card.css.ts). Re-taken
+baselines (delete + harness-written): components-promocard--
+{playground,theming,variants} {light,dark} ×6. Run A wrote the six
+(the harness fails a missing-snapshot leg after writing — its
+accidental-creation guard); art verified centered in the new baseline
+(tile x129–256, center 192.5 ≈ card 193.5, 1px antialias rounding).
+Run B = full-suite comparison (verdict below). Accessibility/api
+promocard legs did not diff (no art cards); homepage showcase did not
+diff; business landing is bleed-mode (art width 100% — centering no-op).
+Skeleton unaffected (`.sk--art` block is full-width). Gate review copies
+for legs 10/11 refreshed from the re-taken baselines. **Run B verdict:
+1380 passed, exit 0 (8.4m) — full-suite comparison green.**
