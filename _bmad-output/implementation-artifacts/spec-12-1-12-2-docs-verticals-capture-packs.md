@@ -168,6 +168,16 @@ any forgotten rename by failing first at compare (missing snapshot ≠ green).
    are NOT re-taken; the committed PNGs keep the old link text as tolerated
    drift (a CI ubuntu band, if it ever appears, takes the standing per-leg
    tolerance mold — the mono-tail precedent).
+3. 2026-09-27 — **lens triage (qr-lens-12-1-12-2, delivered post-merge):**
+   its MAJOR-1 (the 10 v2 cross-links) is entry 2 above — self-caught during
+   execution, closed by `b5c2daf` + run D. Its MAJOR-2 (`.playwright-cli/
+   captures-v3/` missing from the .gitignore whitelist): no data was lost —
+   the pack landed via `git add -f` (`907752e`), per the standing rule — but
+   the mold gap was real (captures/ + captures-v2/ carry negation lines, v3
+   did not; the pending admin pack would be invisible to `git status`).
+   Fixed one line: `!.playwright-cli/captures-v3/` joins the whitelist
+   (verified: hypothetical admin-capture path no longer ignored; on-disk
+   inventory == tracked set, zero strays surfaced).
 
 ## Verification
 
