@@ -390,3 +390,18 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
 - Don't commit `.claude/settings.local.json`; `.omc/`, `.claude/state/`, `.claude/sessions/` are gitignored runtime state
 - `_bmad-output/` drafts are fine to commit once stable
 - UI edits trigger impeccable hook feedback — findings are blockers for design work
+
+- **2026-09-28 STORY 15.2 EXECUTED (code-head `67f42f9`):** ТЖ has a token table —
+  ONE generator mechanism, TWO inputs (AD-3 v5): root `scripts/token-gen/core.mjs`
+  (pure) + config'd CLIs per kit; **bank artifacts byte-identical** (only its CLI
+  refactored). 96 light `--tj-*` + 11 dark overrides DUAL-EMITTED (attribute +
+  `prefers-color-scheme` auto leg, `:not([data-tj-theme="light"])` no-flash) +
+  reduced-motion collapse. dark-ink `#FFFFFF` / dark-divider-strong `#D0D0D2` authored
+  from the dark-home pixel census. AA truth machine-pinned (contrast test: 14
+  sanctioned 3-dec + 3 restricted FAIL-way + exact-set 16/11 + alias equality
+  link=gold-ink/engage=ink-reference-meta); consumed-tokens ТЖ block + cross-family
+  FR-17 `var()` isolation guard (lens MINOR fix, injection-probed). `gen:tokens:tj` +
+  `check:tokens-drift:tj` root scripts. Quick-review lens: SHIP, 0 MAJOR (1 MINOR
+  fixed, 2 NITs accepted). My spec's pin arithmetic was corrected pre-execution via
+  Change Log (5.099/5.308/5.876; impossible ink-200/cta-fill 21.000 → cta-ink/cta-fill
+  12.635; badge 4.536) — machine truth wins over spec prose.

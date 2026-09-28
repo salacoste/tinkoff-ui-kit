@@ -13,9 +13,9 @@ colors:
   # Editorial ink scale (extracted, light)
   ink-100: '#000000'        # headline ink — pure black (vs the bank kit's #333 primary)
   ink-200: '#333333'        # CTA fill + strong UI ink
-  ink-300: '#6E6E6E'        # AUTHORED AA step for essential meta (5.10:1 on card) — improvement layer
-  ink-reference-meta: '#A6A6A6'   # reference meta ink — RESTRICTED (2.44:1 on card, decorative/supplementary only)
-  ink-reference-time: '#808080'   # reference time-meta — RESTRICTED (3.95:1 on card, timestamps)
+  ink-300: '#6E6E6E'        # AUTHORED AA step for essential meta (5.099:1 on card) — improvement layer; dark collapses onto dark-meta
+  ink-reference-meta: '#A6A6A6'   # reference meta ink — RESTRICTED (2.434:1 on card, decorative/supplementary only); dark remaps to dark-meta
+  ink-reference-time: '#808080'   # reference time-meta — RESTRICTED (3.949:1 on card; 3.982 on dark-card — UNBOUND in dark, timestamps)
   # Surfaces (extracted, light)
   page: '#F0F0F0'
   card: '#FFFFFF'
@@ -23,8 +23,8 @@ colors:
   divider: '#E5E5E5'
   divider-strong: '#A6A6A6'
   # Gold — the editorial link accent (extracted)
-  gold: '#C79637'           # reference value; 2.68:1 on card — CANNOT be an AA text color in light
-  gold-ink: '#8A6519'       # AUTHORED AA override for light-theme text links (5.31:1 on card)
+  gold: '#C79637'           # reference value; 2.676:1 on card — CANNOT be an AA text color in light
+  gold-ink: '#8A6519'       # AUTHORED AA override for light-theme text links (5.308:1 on card); light-only, the link alias carries the dark flip
   # Scoped accents (extracted; scoped carriers only — see Colors body)
   badge-purple: '#8054FF'   # «Учебник» 30×30 circular badge ONLY — non-text carrier
   # CTA (extracted)
@@ -32,42 +32,44 @@ colors:
   cta-ink: '#FFFFFF'
   # Dark theme (extracted — the reference's own dark values, unlike the bank kit's authored dark)
   dark-page: '#12151C'
+  dark-ink: '#FFFFFF'        # headline/strong ink inverts to pure white — dark-home pixel census: #FFFFFF ×15051 in title bands (wordmark/hero/featured) vs meta #D0D0D2 ×2370; dark-article unprobed, 17.2 re-verifies. Feeds ink-100.
   dark-card: '#20232A'
   dark-divider: '#3E4146'
-  dark-meta: '#D0D0D2'      # 10.21:1 on dark-card ✓ — carries meta duty in dark
-  dark-engage: '#717277'    # like/engagement ink — RESTRICTED (3.28:1 on dark-card)
+  dark-divider-strong: '#D0D0D2'  # two-grade dark battery (#3E4146 ×27 · #D0D0D2 ×10) mirrors the light divider/divider-strong pair. Feeds divider-strong.
+  dark-meta: '#D0D0D2'      # 10.211:1 on dark-card ✓ — carries meta duty in dark (feeds BOTH ink-300 and ink-reference-meta overrides)
+  dark-engage: '#717277'    # like/engagement ink — RESTRICTED (3.277:1 on dark-card). Feeds the engage alias.
   dark-cta-fill: '#F5F5F9'  # CTA inverts to a near-white pill
   dark-cta-ink: '#000000'
-  dark-link: '{colors.gold}' # gold clears AA on dark surfaces (5.86:1 on dark-card) — reference value stays
+  dark-link: '{colors.gold}' # gold clears AA on dark surfaces (5.876:1 on dark-card) — reference value stays; feeds the link alias
 # AA-bearing notes grammar per the bank-kit mold (story 9.2 machine truth);
-# ratios below are UX-phase computations — the ТЖ token story mechanizes the
-# 3-decimal pins in its contrast test exactly as 1.2/6.1 did. status: verified
-# entries here carry story: 'ux-tj' until the token story re-anchors them.
+# ratios below are MACHINE computations, 3-decimal, trued 2026-09-28 — the ТЖ
+# token story (15.2) mechanizes these exact pins in its contrast test exactly
+# as 1.2/6.1 did. status: verified entries are re-anchored to story: '15.2'.
 aa-annotations:
   ink-reference-meta:
     kind: restricted
     status: verified
-    story: 'ux-tj'
-    text: 'reference meta `#A6A6A6` = 2.44:1 on card — supplementary/decorative meta only; essential meta uses the authored ink-300 `#6E6E6E` (5.10:1). Mirrors the bank kit text-muted restricted ruling.'
+    story: '15.2'
+    text: 'reference meta `#A6A6A6` = 2.434:1 on card — supplementary/decorative meta only; essential meta uses the authored ink-300 `#6E6E6E` (5.099:1). Mirrors the bank kit text-muted restricted ruling.'
   ink-reference-time:
     kind: restricted
     status: verified
-    story: 'ux-tj'
-    text: 'reference time-meta `#808080` = 3.95:1 on card — timestamps and read-time only, never names/titles.'
+    story: '15.2'
+    text: 'reference time-meta `#808080` = 3.949:1 on card (3.982 on dark-card, unbound) — timestamps and read-time only, never names/titles.'
   gold-ink:
     kind: override
     status: verified
-    story: 'ux-tj'
-    text: 'authored `#8A6519` (5.31:1 on card) replaces the extracted `#C79637` (2.68:1 — fails even the 3:1 large-text bar) for light-theme editorial text links; `#C79637` stays the anchor + decorative carrier (rules, ornaments). Dark keeps the reference value — `#C79637` = 5.86:1 on dark-card.'
-  dark-engage:
+    story: '15.2'
+    text: 'authored `#8A6519` (5.308:1 on card) replaces the extracted `#C79637` (2.676:1 — fails even the 3:1 large-text bar) for light-theme editorial text links; `#C79637` stays the anchor + decorative carrier (rules, ornaments). Dark keeps the reference value — `#C79637` = 5.876:1 on dark-card.'
+  engage:
     kind: restricted
     status: verified
-    story: 'ux-tj'
-    text: 'dark engagement ink `#717277` = 3.28:1 on dark-card — counts/secondary affordances only.'
+    story: '15.2'
+    text: 'engagement ink: dark `#717277` = 3.277:1 on dark-card — counts/secondary affordances only; the light engage alias rides ink-reference-meta (2.434:1, restricted).'
   badge-purple:
     kind: restricted
     status: verified
-    story: 'ux-tj'
+    story: '15.2'
     text: 'purple `#8054FF` exists ONLY as the 30×30 circular badge fill (non-text carrier, white glyph); never a text or link color.'
 shadows:
   # PIXEL-PROBED 2026-09-28: cards are FLAT (box-shadow none across 95-card
@@ -174,16 +176,16 @@ components:
     color: '{colors.ink-100}'
   news-card:
     background: '{colors.card}'
-    radius: '{rounded.card-sm}'
+    radius: '{rounded.card}'
     title-typography: '{typography.news-title}'
     title-color: '{colors.ink-100}'
     dark-background: '{colors.dark-card}'
   rubric-header:
     background: '{colors.card}'
-    radius: '{rounded.card-md}'
+    radius: '{rounded.panel}'
     h1-typography: '{typography.rubric-h1}'
   tag-chip:
-    radius: '{rounded.full}'
+    radius: '{rounded.chip}'
     background: 'rgba(255,255,255,.18)'
     color: '#FFFFFF'
     typography: '{typography.nav-label}'
@@ -216,8 +218,9 @@ generator instance (FR-18); it never mixes into the bank kit's table.
   clearest divergence from the bank kit.
 - **Gold, sparingly.** `#C79637` is the editorial link accent (384 uses on the home DOM census)
   and ornamental rules; it is NOT an AA text color in light (see Colors).
-- **Quiet geometry.** r5 CTAs (not pills!), hairline dividers, flat cards with barely-there
-  shadows. Where the bank kit is pill-shaped and yellow, ТЖ is rectangular and ink-colored.
+- **Quiet geometry.** r5 CTAs (not pills!), hairline dividers, FLAT cards — no shadow lifts
+  anywhere (the 95-card pixel census: `box-shadow: none`; surfaces separate by color, not
+  elevation). Where the bank kit is pill-shaped and yellow, ТЖ is rectangular and ink-colored.
 - **Native dark.** The reference darkens via `prefers-color-scheme` alone — a cool-dark set
   (`#12151C` page / `#20232A` cards) with an inverted near-white CTA pill. The kit adds an
   explicit override channel (improvement layer; EXPERIENCE.md contract).
@@ -233,19 +236,20 @@ DOM: light `#FFF×144 / #FFDD2D×11 / #8054FF×3 / #06101E×9`, colors `#000×49
 
 | Pair | Ratio | Ruling |
 |---|---|---|
-| ink-100 #000 on card #FFF / page #F0F0F0 | 21.0 / 18.4 | ✓ |
-| cta-ink #FFF on cta-fill #333 | 12.63 | ✓ |
-| ink-300 #6E6E6E (authored) on card | 5.10 | ✓ — essential meta |
-| ink-reference-meta #A6A6A6 on card | 2.44 | ✗ RESTRICTED (decorative/supplementary) |
-| ink-reference-time #808080 on card | 3.95 | ✗ RESTRICTED (timestamps/read-time) |
-| gold #C79637 on card | 2.68 | ✗ as text; gold-ink #8A6519 = 5.31 ✓ |
-| gold #C79637 on dark-card #20232A | 5.86 | ✓ — dark links keep the reference value |
-| dark-meta #D0D0D2 on dark-card / dark-page | 10.21 / 11.86 | ✓ |
-| dark-cta-ink #000 on dark-cta-fill #F5F5F9 | 19.31 | ✓ |
-| dark-engage #717277 on dark-card | 3.28 | ✗ RESTRICTED (counts) |
+| ink-100 #000 on card #FFF / page #F0F0F0 | 21.000 / 18.427 | ✓ |
+| cta-ink #FFF on cta-fill #333 | 12.635 | ✓ |
+| ink-300 #6E6E6E (authored) on card | 5.099 | ✓ — essential meta |
+| ink-reference-meta #A6A6A6 on card | 2.434 | ✗ RESTRICTED (decorative/supplementary) |
+| ink-reference-time #808080 on card / dark-card | 3.949 / 3.982 | ✗ RESTRICTED (timestamps/read-time) |
+| gold #C79637 on card | 2.676 | ✗ as text; gold-ink #8A6519 = 5.308 ✓ |
+| gold #C79637 on dark-card #20232A | 5.876 | ✓ — dark links keep the reference value |
+| dark-meta #D0D0D2 on dark-card / dark-page | 10.211 / 11.859 | ✓ |
+| dark-cta-ink #000 on dark-cta-fill #F5F5F9 | 19.311 | ✓ |
+| dark-engage #717277 on dark-card | 3.277 | ✗ RESTRICTED (counts) |
+| dark-ink #FFFFFF on dark-card / dark-page | 15.727 / 18.265 | ✓ |
 
 **Scoped accents:** `badge-purple #8054FF` — the «Учебник» 30×30 circular badge only (white
-glyph on purple = 3.68:1 — non-text carrier, glyph is supplementary to the adjacent label).
+glyph on purple = 4.536:1 — non-text carrier, glyph is supplementary to the adjacent label).
 Yellow `#FFDD2D` / navy `#06101E` are deliberately ABSENT from this table: they are the main
 kit's ad-module language (FR-21 boundary).
 

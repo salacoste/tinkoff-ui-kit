@@ -2,12 +2,12 @@
 title: 'Story 15.2 — ТЖ token layer: generator second input + native-dark contract + AA pins'
 type: 'feature'
 created: '2026-09-28'
-status: 'open'
-baseline_commit: ''
-review: ''
-review_source: ''
-lenses_ran: []
-review_loop_iteration: 0
+status: 'approved'
+baseline_commit: '67f42f9'
+review: 'quick'
+review_source: 'qr-lens-15-2'
+lenses_ran: ['qr-lens-15-2']
+review_loop_iteration: 1
 context:
   - '{project-root}/_bmad-output/planning-artifacts/epics-v5.md (Story 15.2)'
   - '{project-root}/_bmad-output/planning-artifacts/ux-designs/ux-tj-kit-2026-09-28/DESIGN.md (THE token source — radii/shadows sections carry the 2026-09-28 measured amendment)'
@@ -197,6 +197,93 @@ fork: the selector grammar parameterizes over the theme attribute.
 
 ## Implementation Notes
 
+- **Architecture landed as specified (AD-3 v5):** root `scripts/token-gen/core.mjs`
+  (1157 lines, PURE — sole import `yaml`) + thin config'd CLIs in both
+  `packages/tokens/scripts/generate.mjs` (222+/1082−, config-only) and
+  `packages/tj-tokens/scripts/generate.mjs`. **Bank byte-identity proven twice**
+  (executor + orchestrator): `git diff --exit-code -- packages/tokens/src
+  packages/tokens/TOKENS.md` = 0; the only bank-touched file is the refactored
+  CLI; `generate.d.mts` unchanged.
+- **ТЖ layer:** 96 light tokens (colors 16 incl. link/engage aliases,
+  typography 44 incl. `--tj-font-ui`/`--tj-font-reading` slots, radius 11,
+  spacing 16, shadows 1, motion 8) + 4 reduced-motion duration collapses + 11
+  dark overrides DUAL-EMITTED (`[data-tj-theme="dark"]` AND
+  `@media (prefers-color-scheme: dark)` on `:not([data-tj-theme="light"])`,
+  declaration blocks test-compared token-for-token). Scaffold marker replaced
+  wholesale. 5 invariants, 0 deferred — all 10 dark-* sources consumed.
+- **Order held:** DESIGN.md dark-completeness amendment (Change Log 2) landed
+  BEFORE generation; values flow DESIGN.md → tokens.css → TOKENS.md → tokens.ts
+  (four-way agreement lens-verified).
+- **Tests:** `tj-tokens-drift` 7 (incl. in-memory destructive probes: unconsumed
+  dark-foo, malformed value, orphaned override → aborts NAME the key; live
+  artifact-tamper probe run then restored), `tj-contrast` 5 (14 sanctioned pins
+  from the Change Log-1 machine values + 3 restricted FAIL-way pins
+  annotation-locked to tokens.css; exact-set 16/11; alias equality
+  link=gold-ink / engage=ink-reference-meta), `consumed-tokens` ТЖ block
+  (derived component-hook exemption, inert at 0 dirs; green-empty sweep),
+  `tj-tokens/index.test` rewritten (4).
+- **Review round:** qr-lens-15-2 verdict SHIP, 0 MAJOR, no false claims (every
+  executor statement verified against the tree; lens re-computed all 17 pinned
+  ratios with an independent WCAG implementation — all match to 3 decimals).
+  MINOR (cross-family `var()` consumption unswept — a bank component
+  copy-pasted into tj retaining `--tk-*` vars passed every gate) FIXED by the
+  orchestrator: new `cross-family token isolation` describe (3 tests +
+  live injection trip-probe: seeded `var(--tk-color-surface)` into
+  tj-react/src → guard RED naming file+token → restored → green). 2 NITs
+  accepted as-is: drift-script path breadth (inherited bank mold, fails-closed)
+  and tj `generate.d.mts` `TOKEN_NOTE_LITERALS` symmetry (no consumer until
+  fonts, 15.3).
+- **Gates (post-patch, full chain):** `pnpm test` green — root 15 files/175
+  tests (172+3 cross-family), packages incl. tj-tokens 4; `lint` 0;
+  `typecheck` 0; `build` 0 (8 projects). NO `test:visual` locally (CI owns it).
+- **CI:** no workflow edit (ci.yml legs run pnpm test/lint/typecheck/build
+  without naming token files; UI_ROOTS enumerated the tj family at 15.1) —
+  lens-verified.
+- **Root manifests:** `gen:tokens:tj` + `check:tokens-drift:tj` (bank script
+  shape); `yaml@^2.9.1` devDep (lens-verified already present in lockfile via
+  vite — no new package introduced).
+
 ## Spec Change Log
 
+1. **2026-09-28 (orchestrator, post-approval): AA pins trued to machine arithmetic —
+   test authoring follows the machine values.** The frozen Always-list pinned three
+   3-decimals that drift from the bank-contrast-test math (5.096→**5.099**
+   ink-300/card, 5.310→**5.308** gold-ink/card, 5.860→**5.876** gold/dark-card),
+   and listed `ink-200/cta-fill 21.000` — arithmetically impossible (#333 on #333 =
+   1.000; 21.000 exists only as ink-100/card #000/#FFF, already pinned). The
+   intended CTA text pair is `cta-ink/cta-fill = 12.635` (= DESIGN.md's own 12.63
+   row). Flagged by the executor at the step-1 stop; verified by the orchestrator
+   against an independent machine computation. Tests pin: 21.000, 18.427
+   (ink-100/page), 12.635, 5.099, 5.308, 5.876, 10.211 (dark-meta/dark-card),
+   19.311 (dark-cta), 15.727/18.265 (dark-ink dark legs), 3.982
+   (ink-reference-time on dark-card — the executor proposal's 3.277 there was
+   dark-engage's ratio, not #808080's), 4.536 (badge glyph/purple — body prose's
+   3.68 was a UX-phase string). DESIGN.md body table + frontmatter comments +
+   aa-annotations texts trued to the same 3-decimals in the same amendment.
+2. **2026-09-28 (orchestrator): dark-completeness amendment landed in DESIGN.md**
+   (per the frozen Always-list "amend FIRST" directive): NEW `dark-ink: '#FFFFFF'`
+   + `dark-divider-strong: '#D0D0D2'` (evidence comments cite the dark-home pixel
+   census); `dark-meta` consumer note (feeds ink-300 AND ink-reference-meta);
+   components-block stale refs fixed (`{rounded.card-sm}`→`{rounded.card}`,
+   `{rounded.card-md}`→`{rounded.panel}`, tag-chip `{rounded.full}`→`{rounded.chip}`);
+   brand prose "barely-there shadows"→FLAT verdict; `aa-annotations` re-anchored
+   `ux-tj`→`15.2` ×5 and `dark-engage:`→`engage:` (light-token naming grammar).
+
 ## Review Triage Log
+
+**qr-lens-15-2 (quick review, iteration 1): verdict SHIP — 0 MAJOR, 1 MINOR, 2 NIT,
+no false claims.** Every executor statement verified against the tree (no 15.1-style
+phantoms); lens re-computed all 17 pinned ratios with an independent WCAG
+implementation (all match to 3 decimals) and re-ran the full gate chain live.
+
+| Finding | Severity | Disposition |
+|---|---|---|
+| Cross-family `var()` consumption unswept — a bank component ported into tj retaining `--tk-*` vars (or vice versa) passed every gate and silently computes to nothing (FR-17 keeps the other sheet unloaded) | MINOR | **FIXED (orchestrator patch round):** new `cross-family token isolation` describe in `tests/consumed-tokens.test.ts` (3 tests: bank roots zero `--tj-*`, tj roots zero `--tk-*`, detector self-check; docs exempt — composes both). Trip-probed live: seeded `var(--tk-color-surface)` into tj-react/src → RED naming file+token → restored → green. Root suite 172→175. |
+| `check:tokens-drift:tj` diff path spans hand-authored files (index.ts etc.) — an unrelated edit trips a "drift" check under a misleading name | NIT | **Accepted as-is:** inherited bank-mold shape; conservative (fails closed), no false-green risk. Revisit only if the bank mold is ever narrowed. |
+| tj `generate.d.mts` omits the `TOKEN_NOTE_LITERALS` declaration the bank twin exports | NIT | **Accepted as-is:** no consumer (tj note literals intentionally empty until fonts); symmetry flips at 15.3 if fonts need it. |
+
+Executor deviations upheld: (1) both drift checks exit 1 pre-commit by design —
+artifacts/CLIs are new vs HEAD; green on the baseline commit (lens re-derived the
+reasoning). (2) CI needs no edit — legs run pnpm test/lint/typecheck/build without
+naming token files; UI_ROOTS enumerated the tj family at 15.1 (lens-verified).
+(3) `_bmad-output` M-diffs are the orchestrator's amendments only (lens-verified).
