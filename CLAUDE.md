@@ -405,3 +405,17 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   fixed, 2 NITs accepted). My spec's pin arithmetic was corrected pre-execution via
   Change Log (5.099/5.308/5.876; impossible ink-200/cta-fill 21.000 → cta-ink/cta-fill
   12.635; badge 4.536) — machine truth wins over spec prose.
+
+- **2026-09-28 STORY 15.3 EXECUTED (code-head `61442c0`):** OQ-8 closed on the
+  ruled path — NO font bytes bundled (no Graphik/Charter licenses delivered; the
+  Daytona mold stays a documented conditional flip). Harness pins both
+  `--tj-font-*` slots to served open faces (ui→Inter, reading→PT Serif 400/700
+  at /pt-serif; @fontsource/pt-serif OFL-1.1) — determinism regardless of local
+  installs; specificity lens-verified across all three theme states. Zero-fonts
+  invariant mechanized (tests/tj-fonts-policy.test.ts ×4: no bytes, frozen stacks
+  byte-exact, pins present, inject asserts). local-fonts extended (mode A canonical
+  stubs / mode B aliases; honest license pointers). First story with an EMPTY patch
+  round (lens SHIP, 3 NITs all accepted). 16.1 pre-work DONE on the live reference
+  (probe9): article-H1 = Graphik 700/45/50 CONFIRMED; nav-label corrected to 17/700
+  (vision 16/400 was a wrapper artifact); Charter lead/body exact — DESIGN.md
+  amendment + regen land as the 16.1 pre-work commit.
