@@ -70,11 +70,11 @@ aa-annotations:
     story: 'ux-tj'
     text: 'purple `#8054FF` exists ONLY as the 30×30 circular badge fill (non-text carrier, white glyph); never a text or link color.'
 shadows:
-  # VISION-ESTIMATED (very soft card lift) — pixel-probe MANDATORY at the first
-  # ТЖ component story; the 9.1 radius lesson applies to shadows too.
-  card: '0 2px 8px rgba(0,0,0,.06)'
-  card-hover: '0 6px 16px rgba(0,0,0,.08)'
-  floating: '0 8px 24px rgba(0,0,0,.12)'
+  # PIXEL-PROBED 2026-09-28: cards are FLAT (box-shadow none across 95-card
+  # censuses — surfaces separate by color, not elevation); the reference's
+  # only measured shadow is the search-suggest overlay panel. The vision
+  # card-lift estimates are DELETED (forensics: verify/tj-tokens/NOTES.md).
+  overlay: '0 2px 8px rgba(0,0,0,.1)'
 motion:
   # UNPROBED on the ТЖ reference (no transition captures taken). Starting
   # contract = the bank kit's motion scale (same curve/duration grammar);
@@ -115,15 +115,21 @@ typography:
   nav-label: { fontSize: 16px, fontWeight: '400', fontFamily: '{typography.font-ui}', note: 'sidebar rubric labels [verify-at-story] weight' }
   body-link: { fontSize: 15px, fontWeight: '400', fontFamily: '{typography.font-ui}', note: 'in-body links are 15px grotesque inside the 21px serif flow — reference quirk, kept' }
 rounded:
-  # ALL RADIi VISION-ESTIMATED — pixel-probe MANDATORY at the first ТЖ story
-  # (the 9.1 lesson: «≈32» was a vision artifact; true value 24). CTA r5 and
-  # badge r50% are computed-probed facts.
+  # PIXEL-PROBED 2026-09-28 on the live reference (forensics:
+  # .playwright-cli/verify/tj-tokens/NOTES.md — home/flows/article//pro/
+  # censuses). The vision trio card 20/24/32 was an artifact (9.1 repeat):
+  # cards measure 25, panels/hero 30. icon-tile measured 7px on the 30x30
+  # rail tiles (span._icon_ [30x30] r7, home rail — probe8 addendum).
+  input: 4px
+  control-xs: 8px
   cta: 5px
+  cta-promo: 10px
+  control-sm: 15px
+  chip: 20px
+  card: 25px
+  panel: 30px
+  icon-tile: 7px
   badge: 50%
-  card-sm: 20px
-  card-md: 24px
-  card-lg: 32px
-  icon-tile: 12px
   full: 9999px
 spacing:
   '4': 4px
@@ -184,7 +190,7 @@ components:
     note: 'on-purple translucent chips — /pro/ hero nav'
   sidebar-rail:
     width: '{spacing.rail-sidebar}'
-    icon-tile: 40px
+    icon-tile: 30px
     icon-tile-radius: '{rounded.icon-tile}'
   header-bar:
     height: '{spacing.header-h}'
