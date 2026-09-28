@@ -2,7 +2,7 @@
 title: "Product Brief: tinkoff-ui-kit"
 status: final
 created: 2026-09-21
-updated: 2026-09-24
+updated: 2026-09-28
 ---
 
 # Product Brief: tinkoff-ui-kit
@@ -120,8 +120,29 @@ the user-confirmed priority; external metrics like stars/downloads are explicitl
   kit's Daytona) and product-UI register (h1 36px, dense dsText-table typography) as token-layer
   extensions
 
+**In (v5 — designated 2026-09-28; recon: `.playwright-cli/captures-v3/tj/`):**
+- **The ТЖ (Тиньков Журнал, t-j.ru) vertical as a SEPARATE EXPORTABLE SUB-KIT** — maintainer
+  directive 2026-09-28, verbatim: «Тиньков Журнал (ТЖ) делаем отдельным под ui kit, чтобы он
+  выделялся и мог быть экспортирован как отдельная сущность, а не целый большой проект с
+  другими поддоменами!» — same monorepo and release train, but a consumer can take ТЖ alone
+  without the main kit (and vice versa)
+- **Own design language, disjoint from the bank kit:** pages #F0F0F0 / dark #12151C, white /
+  #20232A cards, pure-black headline ink, #333 CTA r5 h30 (dark: near-white pill), gold #C79637
+  link accent, #A6A6A6 meta ink, hairline dividers, native prefers-color-scheme dark mode;
+  two-family typography — Graphik (UI) + Charter serif (article reading register)
+- **Editorial component roster** (recon-grounded): article reading surface (H1, Charter lead/
+  body, in-body heads, pull-quote, byline + engagement bar), rubric header + news card,
+  /pro/ purple hero + tag-chip nav + course cards, /community/ composer + post cards, site
+  chrome (header with «МЕДИА Т-БАНКА» wordmark, rubric sidebar rail, «Написать» CTA) — exact
+  roster at PRD/epics
+- **The ad-module boundary:** yellow/navy native-ad modules are the ONE visual meeting point —
+  they may reuse the main kit's promo-card family as an OPTIONAL composition; the ТЖ kit proper
+  has zero runtime dependency on the main kit
+
 **Out (explicit):**
 - Brand redesign — the visual language stays the reference's; we copy and improve, never reinvent
+- Editorial application logic — comment threads, posting, auth, live feeds: ТЖ components render
+  and emit, they carry no data layer (same principle as the main kit's forms)
 - Native mobile patterns (iOS/Android) — web only
 - Data visualization: charts, diagrams, dashboards (re-confirmed by v2 recon — the designated
   pages carry typographic tables, not charts; if a future domain shows real charts, this

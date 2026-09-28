@@ -346,6 +346,62 @@ Every v2 component ships through the v1 component gate verbatim (impeccable zero
 both themes, stories complete, generated React wrapper, provisional baselines + side-by-side vs
 the v2 captures archived in the repo).
 
+### 4.9 v5 — ТЖ Sub-Kit (Тиньков Журнал, t-j.ru) *(designated 2026-09-28; recon: `.playwright-cli/captures-v3/tj/`)*
+
+The ТЖ vertical as a **separate exportable sub-kit** (maintainer directive, verbatim in the
+brief's v5 scope block). It rides the same substrate as the main kit (Lit core + CEM manifest +
+generated React adapters, pnpm workspace, same conventions and quality pipeline) but is a
+separate product entity: own tokens, own fonts, own component roster, own docs presence.
+
+**Functional Requirements:**
+
+#### FR-17: Separate exportable package family
+
+ТЖ ships as its own package family in this monorepo (naming and prefixes at architecture —
+OQ-9) with **zero runtime dependency on the main kit's packages**. A consumer can take ТЖ
+alone; a main-kit consumer is unaffected. The one sanctioned integration point is optional and
+documented: native-ad modules may compose the main kit's promo-card family (opt-in, never
+required).
+
+#### FR-18: Own token system and pipeline
+
+ТЖ tokens are generated from their own DESIGN.md frontmatter (a separate generator input, never
+mixed into the bank kit's table), namespaced apart from `--tk-*` (exact prefix at architecture).
+Recon-derived anchors (captures-v3/tj): page `#F0F0F0` / dark `#12151C`; cards `#FFFFFF` /
+`#20232A`; headline ink pure black; meta `#A6A6A6` / `#D0D0D2`; dividers `#E5E5E5` / `#3E4146`;
+gold `#C79637` link accent; CTA «Написать» `#333` r5 h30 (dark: near-white pill `#F5F5F9`).
+Dark mode is native `prefers-color-scheme` on the reference — the kit supports BOTH the media
+query and an explicit override (improvement layer; contract at UX phase).
+
+#### FR-19: Editorial component roster
+
+Article reading surface (H1 45/700/50, Charter lead 27/body 21, in-body H2 38/700/45, pull-quote
+35/400/50, byline + time meta + engagement bar), rubric header (cover image + squircle overlap +
+subtitle) and news card (title 24/700/30, squircle rubric mark + avatar byline), /pro/ purple
+hero + translucent tag-chip nav + course cards (featured display 55/700), /community/ composer
+card + post-card grid, site chrome (header with «МЕДИА Т-БАНКА» wordmark treatment, nav chips,
+«Написать» CTA; rubric sidebar rail w290 with icon tiles). Exact roster and batching at epics.
+
+#### FR-20: ТЖ fonts — two-family contracts
+
+UI = **Graphik**, article body = **Charter** (serif). Both proprietary on the reference build —
+the OQ-2 policy applies verbatim: token stacks carry the exact family names first (licensed
+consumers auto-pickup), open cyrillic-capable fallbacks chosen at UX (OQ-8), bundling only if
+the maintainer delivers licenses (the Daytona precedent).
+
+#### FR-21: Ad-module language boundary
+
+The editorial-vs-ad split is normative (recon finding): the ТЖ kit proper carries ONLY the
+editorial language (Graphik/black-white-gray-gold); yellow/navy native-ad visuals belong to the
+main kit's promo family and enter a ТЖ composition solely via FR-17's optional integration.
+
+#### FR-22: ТЖ fidelity gate
+
+Every ТЖ component ships through the v1 component gate verbatim (the FR-16 treatment):
+impeccable zero blockers, axe in BOTH themes (native-dark contract included), complete stories,
+generated React wrapper, provisional baselines + side-by-side vs `captures-v3/tj/` archived in
+the repo.
+
 ## 5. Non-Goals (Explicit)
 
 - Redesigning the visual language — copy first, improve second; never invent new brand identity.
@@ -446,6 +502,16 @@ revisit after v1 adoption.
    architecture.
 7. **OQ-7 — SSR/tree-shaking requirements.** Consumer-project constraints to settle at
    architecture.
+8. **OQ-8 — ТЖ font fallbacks (v5).** Graphik (UI) and Charter (article body) are proprietary
+   on the reference build. Pick the open cyrillic-capable fallback pair (grotesque + serif) at
+   the ТЖ UX phase; bundling follows the OQ-2 precedent ONLY if the maintainer delivers
+   licenses. Phase-relevant for FR-20.
+9. **OQ-9 — ТЖ package names and prefixes (v5).** The sub-kit's package-family name
+   (pillkit-tj-* candidate), element prefix (tj- candidate), and token prefix (--tj-* candidate)
+   — decided at the v5 architecture pass (mirrors how OQ-3 was settled).
+10. **OQ-10 — ТЖ release train (v5).** Default: the ТЖ packages ride the same monorepo git-tag
+    train with their own CHANGELOG section. Independent tags only if the maintainer rules
+    otherwise at ТЖ release prep.
 
 ## 9. Assumptions Index
 
