@@ -43,7 +43,9 @@ reference is weak, per the project's copy-and-improve principle.
 time-meta, read-time) → lead (serif 27) → body (serif 21, w760) with in-body H2 (38/700) and
 pull-quotes (grotesque 35) → engagement bar. Contracts: reading column is a `max-width`
 container, never a hard grid column; RU hyphenation ON (reference behavior, `lang=ru`
-consumers); in-body links are 15px groteske (reference quirk — kept). Engagement bar:
+consumers); in-body links inherit the reading register (Charter 21px, ink =
+the extracted interactive pair — probe10 retired the 15px-grotesque misread;
+the underline paints transparent at rest and reveals on hover, 100ms). Engagement bar:
 like = toggle button with pressed state, emit-only (no counts stored); comment/share/bookmark
 = buttons announcing identity; the bar is sticky-capable but never traps focus. Baseline
 observed: reference engagement sits below the fold; improvement: the bar re-appears on
@@ -112,10 +114,12 @@ shapes mirror the card anatomy.
 ## Interaction Primitives
 
 Keyboard: everything reachable in natural tab order; no roving tabindex anywhere in the ТЖ
-roster (no tablist-pattern components — the tag chips are links). Focus ring: 2px offset 2px
-in an ink-based ring (gold ring candidate — AA against both surfaces must be proven at the
-token story; blue fallback per the bank kit's unified-ring precedent if gold fails as a
-non-text 3:1 UI component). Hover transitions 150ms; press feedback on the CTA at 75ms.
+roster (no tablist-pattern components — the tag chips are links). Focus ring: 2px offset 2px in the reference's OWN focus token
+(--outline-focus → `--tj-color-focus-ring` #8A8AE5 light / #828BBB dark — probe10;
+the gold candidate is dead: 2.676:1 on card fails non-text 3:1; the ring is
+RESTRICTED to card compositions — 3.067 card / 2.691 bare page). Measured ТЖ
+interactive motion (probe10): link-underline + CTA-background = 100ms ease-in-out
+(duration-micro/curve-standard); unprobed states keep the bank grammar (press 75ms).
 Overlay usage: the rail's burger drawer reuses the overlay-controller contract (the bank
 kit's AD-12 machinery — reimplemented in the ТЖ package or imported at architecture's
 discretion; BEHAVIOR is identical either way: focus trap, Esc, scroll lock).
