@@ -248,3 +248,72 @@ typography registers are mappings onto existing tokens, not branches (AD-3); v2 
 baselines = the v2 capture pack through the existing harness (AD-8, provisional rule
 unchanged); FR-16's gate is the component-story gate verbatim (AD-7). No spine invariants
 move; this section is the delta record (full reasoning in the run memlog, 2026-09-24).
+
+## v5 Delta (2026-09-28 — the ТЖ sub-kit: a PARALLEL PACKAGE FAMILY; three ADs extended, none broken)
+
+The ТЖ scope (PRD §4.9, FR-17..22; maintainer directive verbatim in the brief) adds a second
+kit to the same substrate. The paradigm does not fork: **core-and-adapters is instantiated
+twice, as two parallel families in the one workspace.**
+
+```
+packages/
+  tokens  components  react        ← the bank family (--tk-*, tk-, pillkit-*)
+  tj-tokens  tj-components  tj-react  ← the ТЖ family (--tj-*, tj-, pillkit-tj-*)
+  docs                              ← composes BOTH families (workspace-internal, never shipped)
+```
+
+**The decision (the maintainer's directive made structural):** «отдельным ПОД ui kit» — same
+repo, same release train, but a consumer can take the ТЖ family alone. The three shippable ТЖ
+packages carry ZERO runtime dependency on the bank family (and vice versa); the docs package
+is workspace-internal tooling and may compose both. The separate-repo alternative was rejected
+by the directive's own wording («под ui kit», not «отдельным репозиторием»); it remains a
+documented future option if ТЖ outgrows the train — moving then is cheap precisely because
+the families share no edges.
+
+**Per-AD verdicts:**
+
+- **AD-1 — HOLDS per family.** tj-components authors Lit elements and its own CEM manifest;
+  tj-react is generated from THAT manifest through the same @lit/react machinery (the
+  generate-wrappers script is parameterized, not forked). One event-map registry per family.
+- **AD-2 — HOLDS.** Shadow DOM; theming via custom properties only; the ТЖ namespace is
+  `--tj-*`. No ТЖ component reads `--tk-*` and no bank component reads `--tj-*` — enforced by
+  the consumed-tokens guard, scoped per family.
+- **AD-3 — EXTENDED (one mechanism, two inputs).** The single-pipeline RULE becomes: one
+  generator mechanism, ONE INPUT PER KIT. The bank DESIGN.md feeds `--tk-*`; the ТЖ DESIGN.md
+  (`ux-designs/ux-tj-kit-2026-09-28/DESIGN.md`) feeds `--tj-*` in tj-tokens. No file feeds
+  both tables; no token value crosses families. The ТЖ dark layer is `[data-tj-theme=dark]` +
+  the `auto` contract (EXPERIENCE.md) — attribute-driven, same no-flash pattern as the bank's.
+- **AD-4 — EXTENDED (parallel lanes, one docs consumer).** Allowed imports gain:
+  `tj-components→tj-tokens`, `tj-react→tj-components`, `docs→{tj-react, tj-components,
+  tj-tokens}`. The FORBIDDEN edge is any `tj-*→{tokens,components,react}` (FR-17). The ad-module
+  integration (FR-21) is CONSUMER-side composition demonstrated in docs — never a package edge.
+- **AD-5 — HOLDS; conventions are seeded, not shared.** tj-components carries its own
+  CONVENTIONS.md seeded from the bank's frozen §4/§9 grammar (same prop/event naming,
+  controlled/uncontrolled, slot heuristics). The ТЖ roster is display/link-heavy; the first
+  stateful ТЖ component re-runs the freeze ritual on its own package's terms.
+- **AD-6/AD-9/AD-10 — HOLD unchanged** (TS strict, ESM, Vite lib; motion from ТЖ tokens only;
+  SSR stays deferred).
+- **AD-7 — EXTENDED to both trees.** CI gates (build/test/lint/typecheck/gen-drift/impeccable)
+  cover the ТЖ packages; the visual harness gains the ТЖ stories in the SAME suite run — the
+  port-6007 serialization rule is unchanged (no second parallel server, ever).
+- **AD-8 — HOLDS.** ТЖ baselines live in the same snapshot tree; side-by-sides anchor to
+  `captures-v3/tj/`; the 1.5% threshold and the below-threshold-no-rewrite rule apply verbatim.
+- **AD-11 — the authority splits by scope:** the bank EXPERIENCE.md for the bank family,
+  `ux-tj-kit-2026-09-28/EXPERIENCE.md` for ТЖ. Shared floors (a11y, reduced-motion) inherit.
+- **AD-12 — DRAWER RULING.** The ТЖ roster's only overlay-class surface is the rail's burger
+  drawer. It gets a small ТЖ-owned overlay helper (mount + focus trap + scroll lock) inside
+  tj-components — a deliberate, documented duplication of the bank controller's contract
+  (importing pillkit-components would break FR-17). REVISIT trigger: a second ТЖ overlay
+  surface (modal/popover/toast class) → extract a shared `pillkit-overlays` package consumed
+  by both families as a peer.
+
+**OQ-9 RESOLVED here:** package family `pillkit-tj-{tokens,components,react}` (private:true
+like all packages — naming is for clarity, npm stays dead), element prefix `tj-`, token prefix
+`--tj-*`, theme attribute `data-tj-theme`. **OQ-10 default recorded:** the ТЖ packages join
+the monorepo git-tag release train at the first ТЖ release-prep story (version bump rides the
+same tag; own CHANGELOG section). **OQ-8 stays open into the ТЖ token story** (fallback font
+pair ruling + optional bundling per delivered licenses).
+
+Scaffold consequence (epics will sequence): workspace + lint boundaries + generator
+parameterization land FIRST (they are the family's story 1); component stories follow the
+bank build loop verbatim.
