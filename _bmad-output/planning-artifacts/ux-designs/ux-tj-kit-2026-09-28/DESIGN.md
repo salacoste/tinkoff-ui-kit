@@ -98,7 +98,7 @@ typography:
   font-reading: 'Charter, "Bitstream Charter", "PT Serif", Georgia, serif'
   # Display/heading register (Graphik) — per-surface h1 scale from computed probes
   display-featured: { fontSize: 55px, fontWeight: '700', lineHeight: '1.1', fontFamily: '{typography.font-ui}', note: '/pro/ featured course cards — the largest type on the site' }
-  article-h1: { fontSize: 45px, fontWeight: '700', lineHeight: '50px', fontFamily: '{typography.font-ui}', note: 'reading column w764; [verify-at-story] H1 family — heads recorded grotesque, H1 itself unprobed' }
+  article-h1: { fontSize: 45px, fontWeight: '700', lineHeight: '50px', fontFamily: '{typography.font-ui}', note: 'reading column w764; family RESOLVED probe9 (2026-09-28, live article): computed Graphik 700/45px/50px, fonts.check true — the site ships Graphik as a VARIABLE face (loaded 400+600, covering 700)' }
   rubric-h1: { fontSize: 38px, fontWeight: '700', lineHeight: '45px', fontFamily: '{typography.font-ui}', note: 'rubric + community h1' }
   article-h2: { fontSize: 38px, fontWeight: '700', lineHeight: '45px', fontFamily: '{typography.font-ui}' }
   pro-h1: { fontSize: 32px, fontWeight: '700', fontFamily: '{typography.font-ui}', note: 'inside the purple hero card' }
@@ -114,7 +114,7 @@ typography:
   # UI text
   time-meta: { fontSize: 15px, fontWeight: '400', fontFamily: '{typography.font-ui}' }
   cta-label: { fontSize: 15px, fontWeight: '400', lineHeight: '20px', fontFamily: '{typography.font-ui}' }
-  nav-label: { fontSize: 16px, fontWeight: '400', fontFamily: '{typography.font-ui}', note: 'sidebar rubric labels [verify-at-story] weight' }
+  nav-label: { fontSize: 17px, fontWeight: '700', fontFamily: '{typography.font-ui}', note: 'sidebar rubric labels — probe9 census: navItem ×11/11 at 17px/700 Graphik (vision 16/400 was a wrapper artifact: the pill anchors set no family and compute Times; the inner spans carry Graphik)' }
   body-link: { fontSize: 15px, fontWeight: '400', fontFamily: '{typography.font-ui}', note: 'in-body links are 15px grotesque inside the 21px serif flow — reference quirk, kept' }
 rounded:
   # PIXEL-PROBED 2026-09-28 on the live reference (forensics:
@@ -271,10 +271,11 @@ Register map per surface (computed): home hero card 21/700/25 · section H2 21/7
 featured display 55/700 · article H1 45/700/50 · article H2 38/700/45 · lead 27/400/35 serif ·
 body 21/400/30 serif · pull-quote 35/400/50 grotesque · time-meta 15/400 · CTA label 15/400/20.
 
-Open items: `[verify-at-story]` article-H1 family (heads recorded grotesque; the H1 node itself
-was not family-probed — probe before freezing the article story), nav-label weight, in-body
-link quirk (15px grotesque links inside 21px serif flow — recorded as reference behavior,
-kept).
+Resolved 2026-09-28 (probe9, live article page — forensics in
+`.playwright-cli/verify/tj-tokens/NOTES.md`): article-H1 family = Graphik (computed
+on the H1 node itself, fonts.check true); nav-label = 17px/700 (×11/11 census; the
+16/400 vision read was a wrapper artifact). Remaining recorded reference behavior,
+kept: in-body link quirk (15px grotesque links inside 21px serif flow).
 
 ## Layout & Spacing
 

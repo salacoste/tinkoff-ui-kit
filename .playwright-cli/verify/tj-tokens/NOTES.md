@@ -74,3 +74,35 @@ The rounded-key drop of `icon-tile` was premature — the rail's icon carriers
 are `span._icon_` **30×30, border-radius 7px** (transparent bg; filtered out
 of the earlier censuses by the text-content guard). DESIGN.md restored
 `icon-tile: 7px` and corrected `sidebar-rail.icon-tile` 40px→30px (measured).
+
+## Addendum (probe9, 2026-09-28 late): 16.1 verify-at-story items — article page
+
+Session: same tinkoff-ui playwright-cli session, read-only. Page:
+`/news/metro-ukaz-putin/` (the reconnoitered article). Scripts: /tmp/tj-h1-probe{,2}.js
+(transient — logic recorded here).
+
+1. **article-H1 family RESOLVED = Graphik** (the heads-grotesque assumption held):
+   computed `Graphik, "Apple Color Emoji", "Noto Color Emoji", sans-serif`,
+   700 / 45px / 50px on `h1._articleTitle_1vffn_42`; `document.fonts.check('700 45px
+   Graphik')` true — the site's Graphik is a VARIABLE face (loaded set: 400 + 600,
+   covering 700 requests).
+2. **nav-label CORRECTED: 17px / 700 Graphik** (vision said 16/400 — artifact):
+   census `[class*=navItem]` ×11/11 all 17px/700 («Новости», «Дневники трат»,
+   «Инвестиции» rail). The header pills `_pill_rh58a_3` show computed "Times" 16/400 —
+   WRAPPER artifact (the anchor sets no family; the inner span carries Graphik) — not
+   a token fact.
+3. Reading register CONFIRMED exact: lead `_lead_lrct0_3` Charter 27/400/35 ✓;
+   body `_paragraph_1w7nq_3` Charter 21/400/30 ×8 ✓. Charter loads as 400 ONLY on the
+   live site (no bold serif — matches our 400-only reading register).
+4. In-article sub-styles census (context for 16.1 prose work): Graphik 17/400/25 ×4
+   (embed captions), Graphik 15/400/20 (time-meta), Graphik 15/700/20 (byline),
+   Graphik 10/400/13 (fine print).
+5. Live loaded-faces census: Graphik 400/600(var), Charter 400, Ruble Sans 400/500/600
+   (₽ symbol font), Tinkoff Sans Condensed 300, YS Text Variable (ad modules), Noto
+   Color Emoji. Ruble Sans = potential future fine-detail for money glyphs — noted,
+   NOT a token (no ТЖ surface needs it yet).
+
+DESIGN.md amendment PENDING (orchestrator, lands with the 16.1 pre-work regen AFTER
+15.3 closes — editing now would drift the generated artifacts under the executor):
+`article-h1` note → resolved-probed; `nav-label` → 17px/700. Then
+`pnpm gen:tokens:tj` + gates.

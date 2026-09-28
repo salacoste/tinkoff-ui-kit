@@ -42,7 +42,7 @@ Per-slot tokens from the `typography` block: `--tj-text-<slot>-size` / `-weight`
 | `--tj-text-display-featured-size` | `55px` | /pro/ featured course cards — the largest type on the site |
 | `--tj-text-display-featured-weight` | `700` |  |
 | `--tj-text-display-featured-leading` | `1.1` |  |
-| `--tj-text-article-h1-size` | `45px` | reading column w764; [verify-at-story] H1 family — heads recorded grotesque, H1 itself unprobed |
+| `--tj-text-article-h1-size` | `45px` | reading column w764; family RESOLVED probe9 (2026-09-28, live article): computed Graphik 700/45px/50px, fonts.check true — the site ships Graphik as a VARIABLE face (loaded 400+600, covering 700) |
 | `--tj-text-article-h1-weight` | `700` |  |
 | `--tj-text-article-h1-leading` | `50px` |  |
 | `--tj-text-rubric-h1-size` | `38px` | rubric + community h1 |
@@ -77,8 +77,8 @@ Per-slot tokens from the `typography` block: `--tj-text-<slot>-size` / `-weight`
 | `--tj-text-cta-label-size` | `15px` |  |
 | `--tj-text-cta-label-weight` | `400` |  |
 | `--tj-text-cta-label-leading` | `20px` |  |
-| `--tj-text-nav-label-size` | `16px` | sidebar rubric labels [verify-at-story] weight |
-| `--tj-text-nav-label-weight` | `400` |  |
+| `--tj-text-nav-label-size` | `17px` | sidebar rubric labels — probe9 census: navItem ×11/11 at 17px/700 Graphik (vision 16/400 was a wrapper artifact: the pill anchors set no family and compute Times; the inner spans carry Graphik) |
+| `--tj-text-nav-label-weight` | `700` |  |
 | `--tj-text-body-link-size` | `15px` | in-body links are 15px grotesque inside the 21px serif flow — reference quirk, kept |
 | `--tj-text-body-link-weight` | `400` |  |
 
