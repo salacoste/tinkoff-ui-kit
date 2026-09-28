@@ -1,19 +1,221 @@
 /**
- * pillkit-tj-tokens — scaffold placeholder (story 15.1, the 1.1 mold).
+ * pillkit-tj-tokens — token layers (generated): light on `:host, :root`,
+ * dark semantic overrides on `[data-tj-theme="dark"]` PLUS the native
+ * `prefers-color-scheme: dark` auto leg (Story 15.2).
  *
- * The real token layers are GENERATED at story 15.2 from the ТЖ DESIGN.md
- * (ux-designs/ux-tj-kit-2026-09-28/DESIGN.md): light on `:host, :root`,
- * native-dark overrides on `[data-tj-theme="dark"]`, plus the `auto`
- * contract. DO NOT hand-author tokens here — the generator is the single
- * source (AD-3 v5: one mechanism, one input per kit).
+ * DO NOT EDIT BY HAND — regenerate with `pnpm gen:tokens:tj`.
+ * Source of truth: _bmad-output/planning-artifacts/ux-designs/ux-tj-kit-2026-09-28/DESIGN.md
+ * (frontmatter blocks: colors / typography / rounded / spacing / shadows / motion).
  *
- * The `--tj-scaffold-placeholder` marker is the scaffold's proof-of-life:
- * the `./tokens.css` export target (dist/index.css) exists and carries the
- * ТЖ namespace from day one.
+ * The `:host` selector keeps every custom property usable inside shadow
+ * roots; kit components consume tokens exclusively via var(--tj-*) (FR-1 —
+ * zero hard-coded values outside this package).
  */
 
-/* Scaffold marker — replaced entirely by the generated table at 15.2. */
+/* Colors — DESIGN.md `colors` direct semantic keys (the ТЖ table IS semantic) plus the `link`/`engage` aliases; the `dark-*` entries feed the dark layer below. */
 :host,
 :root {
-  --tj-scaffold-placeholder: initial;
+  --tj-color-ink-100: #000000;
+  --tj-color-ink-200: #333333;
+  --tj-color-ink-300: #6E6E6E;
+  /* Restricted: reference meta `#A6A6A6` = 2.434:1 on card — supplementary/decorative meta only; essential meta uses the authored ink-300 `#6E6E6E` (5.099:1). Mirrors the bank kit text-muted restricted ruling. */
+  --tj-color-ink-reference-meta: #A6A6A6;
+  /* Restricted: reference time-meta `#808080` = 3.949:1 on card (3.982 on dark-card, unbound) — timestamps and read-time only, never names/titles. */
+  --tj-color-ink-reference-time: #808080;
+  --tj-color-page: #F0F0F0;
+  --tj-color-card: #FFFFFF;
+  --tj-color-divider: #E5E5E5;
+  --tj-color-divider-strong: #A6A6A6;
+  --tj-color-gold: #C79637;
+  /* AA override — authored `#8A6519` (5.308:1 on card) replaces the extracted `#C79637` (2.676:1 — fails even the 3:1 large-text bar) for light-theme editorial text links; `#C79637` stays the anchor + decorative carrier (rules, ornaments). Dark keeps the reference value — `#C79637` = 5.876:1 on dark-card. */
+  --tj-color-gold-ink: #8A6519;
+  /* Restricted: purple `#8054FF` exists ONLY as the 30×30 circular badge fill (non-text carrier, white glyph); never a text or link color. */
+  --tj-color-badge-purple: #8054FF;
+  --tj-color-cta-fill: #333333;
+  --tj-color-cta-ink: #FFFFFF;
+  --tj-color-link: #8A6519;
+  /* Restricted: engagement ink: dark `#717277` = 3.277:1 on dark-card — counts/secondary affordances only; the light engage alias rides ink-reference-meta (2.434:1, restricted). */
+  --tj-color-engage: #A6A6A6;
 }
+
+/* Typography — DESIGN.md `typography`: per-slot size/weight/leading with `{typography.<slot>}` family references; the family slots themselves are declared below (one declaration site per family). */
+:host,
+:root {
+  --tj-text-display-featured-size: 55px;
+  --tj-text-display-featured-weight: 700;
+  --tj-text-display-featured-leading: 1.1;
+  --tj-text-article-h1-size: 45px;
+  --tj-text-article-h1-weight: 700;
+  --tj-text-article-h1-leading: 50px;
+  --tj-text-rubric-h1-size: 38px;
+  --tj-text-rubric-h1-weight: 700;
+  --tj-text-rubric-h1-leading: 45px;
+  --tj-text-article-h2-size: 38px;
+  --tj-text-article-h2-weight: 700;
+  --tj-text-article-h2-leading: 45px;
+  --tj-text-pro-h1-size: 32px;
+  --tj-text-pro-h1-weight: 700;
+  --tj-text-hero-title-size: 21px;
+  --tj-text-hero-title-weight: 700;
+  --tj-text-hero-title-leading: 25px;
+  --tj-text-section-h2-size: 21px;
+  --tj-text-section-h2-weight: 700;
+  --tj-text-news-title-size: 24px;
+  --tj-text-news-title-weight: 700;
+  --tj-text-news-title-leading: 30px;
+  --tj-text-card-title-size: 17px;
+  --tj-text-card-title-weight: 400;
+  --tj-text-article-lead-size: 27px;
+  --tj-text-article-lead-weight: 400;
+  --tj-text-article-lead-leading: 35px;
+  --tj-text-article-body-size: 21px;
+  --tj-text-article-body-weight: 400;
+  --tj-text-article-body-leading: 30px;
+  --tj-text-pull-quote-size: 35px;
+  --tj-text-pull-quote-weight: 400;
+  --tj-text-pull-quote-leading: 50px;
+  --tj-text-time-meta-size: 15px;
+  --tj-text-time-meta-weight: 400;
+  --tj-text-cta-label-size: 15px;
+  --tj-text-cta-label-weight: 400;
+  --tj-text-cta-label-leading: 20px;
+  --tj-text-nav-label-size: 16px;
+  --tj-text-nav-label-weight: 400;
+  --tj-text-body-link-size: 15px;
+  --tj-text-body-link-weight: 400;
+
+  /* Family slots (FR-20 two-family contract) — ui = Graphik (grotesque,
+     UI + all headings), reading = Charter (serif, the article reading
+     register). Stacks carry the reference family names first (licensed
+     consumers auto-pickup, the OQ-2 policy) with open cyrillic-capable
+     fallbacks behind. No font files are bundled here — 15.3 owns fonts;
+     these render as DESIGN.md strings. An override replaces the whole
+     value: re-include the fallback stack. */
+  --tj-font-ui: Graphik, Inter, -apple-system, system-ui, "Segoe UI", "Helvetica Neue", sans-serif;
+  --tj-font-reading: Charter, "Bitstream Charter", "PT Serif", Georgia, serif;
+}
+
+/* Radius — DESIGN.md `rounded` (pixel-probed 2026-09-28: cards 25 / panels 30 — the vision trio deleted; icon-tile 7 on the 30×30 rail tiles; badge 50%). Quiet geometry: r5 CTAs, not pills. */
+:host,
+:root {
+  --tj-radius-input: 4px;
+  --tj-radius-control-xs: 8px;
+  --tj-radius-cta: 5px;
+  --tj-radius-cta-promo: 10px;
+  --tj-radius-control-sm: 15px;
+  --tj-radius-chip: 20px;
+  --tj-radius-card: 25px;
+  --tj-radius-panel: 30px;
+  --tj-radius-icon-tile: 7px;
+  --tj-radius-badge: 50%;
+  --tj-radius-full: 9999px;
+}
+
+/* Spacing — DESIGN.md `spacing`. */
+:host,
+:root {
+  --tj-space-4: 4px;
+  --tj-space-8: 8px;
+  --tj-space-12: 12px;
+  --tj-space-16: 16px;
+  --tj-space-20: 20px;
+  --tj-space-24: 24px;
+  --tj-space-32: 32px;
+  --tj-space-40: 40px;
+  --tj-space-48: 48px;
+  --tj-space-64: 64px;
+  --tj-space-column-reading: 764px;
+  --tj-space-column-reading-body: 760px;
+  --tj-space-rail-sidebar: 290px;
+  --tj-space-column-main: 770px;
+  --tj-space-header-h: 72px;
+  --tj-space-container: 1200px;
+}
+
+/* Shadows — DESIGN.md `shadows`: FLAT language (the 95-card census measured `none`; surfaces separate by color, not elevation) — the single `overlay` shadow, kept as-is in dark. */
+:host,
+:root {
+  --tj-shadow-overlay: 0 2px 8px rgba(0,0,0,.1);
+}
+
+/* Motion — DESIGN.md `motion` (starting contract = the bank grammar; the ТЖ reference exposed no transitions — per-component verification at each FR-22 gate). AD-9: durations and curves come exclusively from these tokens. */
+:host,
+:root {
+  --tj-motion-curve-expressive-standard: cubic-bezier(0.4,0.1,0.2,1);
+  --tj-motion-curve-expressive-entrance: cubic-bezier(0.35,1.3,0.25,1);
+  --tj-motion-curve-expressive-exit: cubic-bezier(0.4,0,1,1);
+  --tj-motion-curve-productive-standard: cubic-bezier(0.2,0,0.4,0.9);
+  --tj-motion-duration-fastest: 75ms;
+  --tj-motion-duration-fast: 150ms;
+  --tj-motion-duration-moderate: 300ms;
+  --tj-motion-duration-slow: 500ms;
+}
+
+/* Reduced motion — EXPERIENCE.md: durations collapse to 0ms kit-wide (theme-independent:
+ * the same duration names are re-declared, so the dark layer inherits this too);
+ * components pair it with opacity-only fallbacks. */
+@media (prefers-reduced-motion: reduce) {
+:host,
+:root {
+  --tj-motion-duration-fastest: 0ms;
+  --tj-motion-duration-fast: 0ms;
+  --tj-motion-duration-moderate: 0ms;
+  --tj-motion-duration-slow: 0ms;
+}
+}
+
+/* Dark theme (Story 15.2) — the reference's OWN dark values (prefers-color-scheme extraction, not authored), re-declared semantically. Apply via `data-tj-theme="dark"` or let the native auto leg below follow the OS. */
+:host([data-tj-theme="dark"]),
+:root[data-tj-theme="dark"] {
+  --tj-color-page: #12151C;
+  --tj-color-card: #20232A;
+  --tj-color-divider: #3E4146;
+  --tj-color-divider-strong: #D0D0D2;
+  /* Extraction — dark-ink #FFFFFF: the dark-home pixel census grounds pure-white headline ink (#FFFFFF ×15051 in title bands vs meta #D0D0D2 ×2370); 15.727:1 on dark-card. Dark-article unprobed — 17.2 re-verifies. */
+  --tj-color-ink-100: #FFFFFF;
+  /* Collapse — the authored light-only AA step (5.099:1) has no dark twin; dark-meta #D0D0D2 (10.211:1 on dark-card) already clears AA. */
+  --tj-color-ink-300: #D0D0D2;
+  /* Remap — #A6A6A6 vanishes in dark (census ~76px, artwork-adjacent); dark-meta #D0D0D2 carries the duty. The LIGHT restricted ruling (2.434:1) is untouched — the annotation is a light-theme statement. */
+  --tj-color-ink-reference-meta: #D0D0D2;
+  --tj-color-cta-fill: #F5F5F9;
+  --tj-color-cta-ink: #000000;
+  /* The gold asymmetry mechanized — light link = gold-ink (authored #8A6519, 5.308:1), dark link = dark-link = the reference gold #C79637 (5.876:1 on dark-card). */
+  --tj-color-link: #C79637;
+  /* Restricted — dark-engage #717277 = 3.277:1 on dark-card: counts/secondary affordances only. The light engage alias rides ink-reference-meta (2.434:1, also restricted). */
+  --tj-color-engage: #717277;
+}
+
+/* Native dark (auto) — EXPERIENCE.md contract: the same overrides under `prefers-color-scheme: dark`, suppressed only by `data-tj-theme="light"` (no-flash: forced light holds under a dark OS). */
+@media (prefers-color-scheme: dark) {
+:host(:not([data-tj-theme="light"])),
+:root:not([data-tj-theme="light"]) {
+  --tj-color-page: #12151C;
+  --tj-color-card: #20232A;
+  --tj-color-divider: #3E4146;
+  --tj-color-divider-strong: #D0D0D2;
+  /* Extraction — dark-ink #FFFFFF: the dark-home pixel census grounds pure-white headline ink (#FFFFFF ×15051 in title bands vs meta #D0D0D2 ×2370); 15.727:1 on dark-card. Dark-article unprobed — 17.2 re-verifies. */
+  --tj-color-ink-100: #FFFFFF;
+  /* Collapse — the authored light-only AA step (5.099:1) has no dark twin; dark-meta #D0D0D2 (10.211:1 on dark-card) already clears AA. */
+  --tj-color-ink-300: #D0D0D2;
+  /* Remap — #A6A6A6 vanishes in dark (census ~76px, artwork-adjacent); dark-meta #D0D0D2 carries the duty. The LIGHT restricted ruling (2.434:1) is untouched — the annotation is a light-theme statement. */
+  --tj-color-ink-reference-meta: #D0D0D2;
+  --tj-color-cta-fill: #F5F5F9;
+  --tj-color-cta-ink: #000000;
+  /* The gold asymmetry mechanized — light link = gold-ink (authored #8A6519, 5.308:1), dark link = dark-link = the reference gold #C79637 (5.876:1 on dark-card). */
+  --tj-color-link: #C79637;
+  /* Restricted — dark-engage #717277 = 3.277:1 on dark-card: counts/secondary affordances only. The light engage alias rides ink-reference-meta (2.434:1, also restricted). */
+  --tj-color-engage: #717277;
+}
+}
+
+/*
+ * Theme invariants — intentionally absent from the dark rules above:
+ * --tj-color-gold, --tj-color-gold-ink, --tj-color-badge-purple,
+ * --tj-color-ink-200 and --tj-color-ink-reference-time keep their light
+ * values (gold stays the anchor/decorative carrier — dark-link sources it;
+ * gold-ink is the light-only AA step, the link alias carries the dark flip;
+ * the badge stays purple in dark; ink-200's flip rides cta-fill; the
+ * time-meta is unbound in dark — 17.2 decides). Typography / radius /
+ * spacing / motion / shadows are theme-invariant too — single source in
+ * the :host, :root rules.
+ */

@@ -3,9 +3,9 @@ import { html } from 'lit';
 
 // The docs package composes BOTH families (AD-4 v5): this side-effect import
 // is the allowed docs→tj-tokens lane, exercised from the scaffold so the
-// workspace edge is proven by the build, not by prose. At 15.1 the sheet
-// carries only the --tj-scaffold-placeholder marker; the generated table
-// lands at 15.2.
+// workspace edge is proven by the build, not by prose. Since 15.2 the sheet
+// is the generated table: 96 light --tj-* tokens plus the 11-override dark
+// layer (dual emission — attribute + prefers-color-scheme auto leg).
 import 'pillkit-tj-tokens/tokens.css';
 
 /**
@@ -121,10 +121,17 @@ export const Page: Story = {
         </li>
       </ul>
 
-      <h2>Статус (история 15.1 — скаффолд)</h2>
+      <h2>Статус (история 15.2 — токены)</h2>
       <ul>
         <li>Пакеты заскаффолжены, границы импортов и CI работают — эта страница и есть доказательство видимости семейства в docs.</li>
-        <li>15.2 — таблица токенов <code>--tj-*</code> (генератор, пробы радиусов/теней, AA-пины).</li>
+        <li>
+          15.2 — таблица токенов <code>--tj-*</code> сгенерирована (второй вход
+          генератора, AD-3 v5): 96 светлых токенов + 11 семантических
+          тёмных оверрайдов с нативной тёмной ногой
+          (<code>prefers-color-scheme</code>, без вспышки при
+          <code>data-tj-theme="light"</code>); радиусы/тени измерены, AA-пины
+          закреплены тестами.
+        </li>
         <li>15.3 — шрифтовый контракт (Graphik + Charter, честные фолбэки).</li>
         <li>Эпик 16 — компоненты <code>tj-*</code> (16.1 фризирует API-грамматику по CONVENTIONS.md пакета).</li>
         <li>17.3 — настоящая документация ТЖ на месте этого стаба.</li>
@@ -132,9 +139,12 @@ export const Page: Story = {
 
       <p class="tjgs-note">
         Это заглушка секции: контент и оформление придут со story 17.3.
-        Рабочая таблица токенов пока не существует — импорт
-        <code>pillkit-tj-tokens/tokens.css</code> выше несёт только маркер
-        <code>--tj-scaffold-placeholder</code>.
+        Рабочая таблица токенов теперь существует — импорт
+        <code>pillkit-tj-tokens/tokens.css</code> выше несёт светлый слой
+        (96 токенов) и тёмный слой (11 оверрайдов, двойная эмиссия:
+        атрибут <code>data-tj-theme="dark"</code> и нативная нога
+        <code>prefers-color-scheme: dark</code>); канонический список —
+        <code>packages/tj-tokens/src/TOKENS.md</code>.
       </p>
     </div>
   `,

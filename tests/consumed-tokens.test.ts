@@ -279,3 +279,192 @@ describe('consumed --tk-* tokens exist in the token sheet (spec 1.7 review)', ()
     expect(consumedIn('// mention var(--tk-not-real) in a comment only')).toEqual([]);
   });
 });
+
+// ---------------------------------------------------------------------------
+// ТЖ scoping (story 15.2) — the same guard for the --tj-* namespace, derived
+// from packages/tj-tokens/src/tokens.css. Scan roots are the ТЖ family
+// (tj-components, tj-react) plus docs (the ТЖ docs section). The component-hook
+// exemption keys off packages/tj-components/src directories — EMPTY until the
+// first ТЖ component lands (15.3+), so until then every fallback consumption
+// must name a declared token; the exemption grows with real components,
+// derived, never hand-listed (the bank mold). The sweep is GREEN-EMPTY today
+// by design: no ТЖ consumers exist yet, and this guard exists so the FIRST
+// `var(--tj-*)` typo cannot pass silently.
+// ---------------------------------------------------------------------------
+
+const TJ_SCAN_ROOTS: Readonly<Record<string, readonly string[]>> = {
+  'packages/tj-components': ['src'],
+  'packages/tj-react': ['src'],
+  'packages/docs': ['src', '.storybook'],
+};
+
+const CONSUMED_BARE_TOKEN_TJ = /var\((--tj-[a-z0-9-]+)\s*\)/g;
+const CONSUMED_FALLBACK_TOKEN_TJ = /var\((--tj-[a-z0-9-]+)\s*,/g;
+const DECLARED_TOKEN_TJ = /^[ \t]*(--tj-[a-z0-9-]+)\s*:/gm;
+
+const declaredTjTokens = new Set<string>();
+for (const match of stripComments(
+  readFileSync(join(REPO_ROOT, 'packages/tj-tokens/src/tokens.css'), 'utf8'),
+).matchAll(DECLARED_TOKEN_TJ)) {
+  declaredTjTokens.add(match[1]);
+}
+
+/** Real ТЖ component directory names — empty until 15.3 lands the first component; derived, never hand-listed. */
+const tjComponentDirs = new Set(
+  readdirSync(join(REPO_ROOT, 'packages/tj-components/src')).filter((entry) => {
+    try {
+      return statSync(join(REPO_ROOT, 'packages/tj-components/src', entry)).isDirectory();
+    } catch {
+      return false;
+    }
+  }),
+);
+
+function isTjComponentHook(name: string): boolean {
+  const rest = name.replace(/^--tj-/, '');
+  for (const dir of tjComponentDirs) {
+    if (rest === dir || rest.startsWith(`${dir}-`)) return true;
+  }
+  return false;
+}
+
+function tjFallbackViolation(name: string): string | null {
+  if (declaredTjTokens.has(name)) return null;
+  if (isTjComponentHook(name)) return null;
+  return `'${name}' — fallback consumption of a name that is neither a tj tokens.css token nor a <component>-slot hook of a real ТЖ component — likely a typo in a core token name or an unknown component prefix`;
+}
+
+describe('consumed --tj-* tokens exist in the ТЖ token sheet (story 15.2)', () => {
+  it('the ТЖ token sheet is non-empty (vacuous-scan guard)', () => {
+    expect(declaredTjTokens.size).toBeGreaterThan(50);
+  });
+
+  it('the generated layer anchors exist in the sheet (story 15.2 fixture pin)', () => {
+    // The 15.2 declarations the first ТЖ consumers (15.3+) will reach for:
+    // the two family slots, the link asymmetry alias, the circular badge
+    // radius, and the dark-overridable surfaces. Pinned so a generator
+    // regression that drops one fails with the NAME, never as later-story
+    // undeclared-consumption noise.
+    const names = [
+      '--tj-color-link',
+      '--tj-color-engage',
+      '--tj-color-card',
+      '--tj-color-page',
+      '--tj-font-ui',
+      '--tj-font-reading',
+      '--tj-radius-badge',
+    ] as const;
+    for (const name of names) {
+      expect(declaredTjTokens, `story 15.2 declaration '${name}' must exist in tj tokens.css`).toContain(name);
+    }
+  });
+
+  it('the ТЖ component-hook exemption stays inert until real components land (15.3+)', () => {
+    // No component directories exist at 15.2 — every fallback name must be a
+    // declared token, and a synthesized hook-shaped name is flagged. When 15.3
+    // adds the first component dir, flip this the way the bank 2.3/4.1
+    // assertions flipped.
+    expect(tjComponentDirs.size).toBe(0);
+    expect(tjFallbackViolation('--tj-card-fil')).not.toBeNull();
+    expect(tjFallbackViolation('--tj-color-card')).toBeNull();
+  });
+
+  it('every var(--tj-*) consumed in tj-components/tj-react/docs is declared (green-empty until 15.3)', () => {
+    const violations: string[] = [];
+    for (const [packageDir, roots] of Object.entries(TJ_SCAN_ROOTS)) {
+      for (const root of roots) {
+        for (const filePath of walkSources(join(REPO_ROOT, packageDir, root))) {
+          const text = stripComments(readFileSync(filePath, 'utf8'));
+          for (const match of text.matchAll(CONSUMED_BARE_TOKEN_TJ)) {
+            if (!declaredTjTokens.has(match[1])) {
+              violations.push(
+                `${filePath}: consumes undeclared '${match[1]}' (bare) — must exist in packages/tj-tokens/src/tokens.css`,
+              );
+            }
+          }
+          for (const match of text.matchAll(CONSUMED_FALLBACK_TOKEN_TJ)) {
+            const violation = tjFallbackViolation(match[1]);
+            if (violation) {
+              violations.push(`${filePath}: ${violation}`);
+            }
+          }
+        }
+      }
+    }
+    expect(
+      violations,
+      'a typo here silently computes to nothing (or to an undocumented default) — the bank kit shipped this bug class once.',
+    ).toEqual([]);
+  });
+
+  it('the ТЖ detector is live (negative self-check)', () => {
+    const consumedIn = (source: string) =>
+      [...stripComments(source).matchAll(CONSUMED_BARE_TOKEN_TJ)].map((m) => m[1]);
+    expect(consumedIn('a { color: var(--tj-color-link); }')).toEqual(['--tj-color-link']);
+    expect(declaredTjTokens.has('--tj-color-link')).toBe(true);
+    // Cross-family isolation: --tk-* names never validate against the ТЖ sheet
+    // and vice versa (the prefixes are disjoint namespaces).
+    expect(declaredTokens.has('--tj-color-link')).toBe(false);
+    expect(declaredTjTokens.has('--tk-color-link')).toBe(false);
+    expect(consumedIn('// mention var(--tj-not-real) in a comment only')).toEqual([]);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Cross-family consumption (FR-17 runtime shadow — 15.2 review finding): the
+// per-family sweeps above validate a `var(--tk-*)`/`var(--tj-*)` reference only
+// against ITS OWN sheet, so a bank source reaching for `var(--tj-*)` (or a ТЖ
+// component copy-pasted from the bank retaining `--tk-*` vars) passed every
+// gate — and silently computes to nothing, because FR-17 guarantees the other
+// family's sheet is never loaded. ANY cross-family var() reference in family
+// sources is therefore a defect here, declared or not. Docs is exempt (AD-4:
+// it composes BOTH families by design).
+// ---------------------------------------------------------------------------
+
+const CROSS_FAMILY_TJ_REFERENCE = /var\(\s*--tj-[a-z0-9-]+/g;
+const CROSS_FAMILY_TK_REFERENCE = /var\(\s*--tk-[a-z0-9-]+/g;
+
+function crossFamilyViolations(
+  scanRoots: Readonly<Record<string, readonly string[]>>,
+  pattern: RegExp,
+  foreignPrefix: '--tj-' | '--tk-',
+): string[] {
+  const violations: string[] = [];
+  for (const [packageDir, roots] of Object.entries(scanRoots)) {
+    if (packageDir === 'packages/docs') continue; // composes both families (AD-4)
+    for (const root of roots) {
+      for (const filePath of walkSources(join(REPO_ROOT, packageDir, root))) {
+        const text = stripComments(readFileSync(filePath, 'utf8'));
+        for (const match of text.matchAll(pattern)) {
+          violations.push(
+            `${filePath}: cross-family ${foreignPrefix}* reference '${match[0].replace(/^var\(\s*/, '')}' — FR-17 keeps the other family's sheet unloaded, so this var() silently computes to nothing`,
+          );
+        }
+      }
+    }
+  }
+  return violations;
+}
+
+describe('cross-family token isolation — no var() across the FR-17 line (story 15.2)', () => {
+  it('bank sources reference only --tk-* (zero --tj-* vars)', () => {
+    expect(
+      crossFamilyViolations(SCAN_ROOTS, CROSS_FAMILY_TJ_REFERENCE, '--tj-'),
+      'FR-17: a bank component consuming --tj-* renders with an unset custom property.',
+    ).toEqual([]);
+  });
+
+  it('ТЖ sources reference only --tj-* (zero --tk-* vars — guards the 16.x bank→ТЖ component port)', () => {
+    expect(
+      crossFamilyViolations(TJ_SCAN_ROOTS, CROSS_FAMILY_TK_REFERENCE, '--tk-'),
+      'FR-17: a ТЖ component consuming --tk-* renders with an unset custom property (the expected failure mode of a copy-pasted bank component).',
+    ).toEqual([]);
+  });
+
+  it('the cross-family detector is live (negative self-check)', () => {
+    const sample = 'a { color: var( --tj-color-card , var(--tk-color-card)); }';
+    expect([...stripComments(sample).matchAll(CROSS_FAMILY_TJ_REFERENCE)].length).toBe(1);
+    expect([...stripComments(sample).matchAll(CROSS_FAMILY_TK_REFERENCE)].length).toBe(1);
+    expect([...stripComments('var(--tk-color-card) + var(--tj-color-card)').matchAll(CROSS_FAMILY_TJ_REFERENCE)].length).toBe(1);
+  });
+});

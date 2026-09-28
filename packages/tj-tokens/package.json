@@ -34,6 +34,7 @@
   ],
   "scripts": {
     "build": "vite build && tsc -p tsconfig.json",
+    "gen:tokens": "node scripts/generate.mjs",
     "test": "vitest run"
   },
   "engines": {
