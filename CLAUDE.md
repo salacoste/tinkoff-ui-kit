@@ -285,6 +285,21 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   language split**: ad modules may reuse main-kit promo components, editorial chrome is the ТЖ
   kit proper. Package decision (pillkit-tj package vs separate repo) = epics-v5 ARCHITECTURE
   phase; BMAD chain starts on the maintainer's word.
+- **2026-09-28 EPICS-v5 PLANNING CHAIN COMPLETE (sanction «ok lets continue»):** brief v5 scope
+  block + PRD §4.9 FR-17..22 + OQ-8..10 (`fddb792`, CI 36453062964 success); UX phase — the ТЖ
+  authority at `ux-designs/ux-tj-kit-2026-09-28/{DESIGN,EXPERIENCE}.md` (`8b700fa`): own token
+  source in the generator grammar (ink-first palette, gold AA asymmetry light-override/dark-keep,
+  restricted reference inks, native-dark = reference's own values, two-family Graphik+Charter,
+  radii/shadows MANDATORY pixel-probe per the 9.1 lesson, motion inherited); architecture v5
+  Delta (`d8fed03`): PARALLEL PACKAGE FAMILY `pillkit-tj-{tokens,components,react}` + shared
+  docs consumer, AD-3 one-mechanism-two-inputs, AD-4 parallel lanes + FORBIDDEN tj→bank edge,
+  AD-12 drawer ruling, OQ-9 resolved (`--tj-*`, `tj-`, `data-tj-theme`), OQ-10 same release
+  train; **epics-v5.md (`daf3c6e`): 3 epics / 14 story-units, critic-reviewed in-file** — E15
+  scaffold (15.1 boundary+CI, 15.2 tokens+probes+AA pins, 15.3 OQ-8 fonts), E16 roster (16.1
+  reading primitives FREEZE, 16.2 rubric+news, 16.3 tag-chips+/pro/, 16.4 community, 16.5
+  chrome+drawer, 16.6 composition+ad-slot+walkthrough), E17 verification+release (TAG =
+  maintainer). Build loop OPENED: spec-15-1 written (parallel family scaffold, FR-17
+  mechanized in both lint layers).
 - Fonts: DaytonaSans/DaytonaPragma in `packages/tokens/fonts/` under LICENSE-FONTS.md (separately
   licensed, NOT MIT; consumer rights ONLY per that file)
 - **Lit on this stack requires `experimentalDecorators: true`** — do not "fix" this
