@@ -217,3 +217,26 @@
   --tj-font-ui: Inter, sans-serif;
   --tj-font-reading: 'PT Serif', serif;
 }
+
+/*
+ * Generic-`monospace` element pin (story 16.1, first CI compare round).
+ * Story-canvas chrome in component stories marks code tokens with the raw
+ * `monospace` keyword (attribute names in checklist tables, href samples in
+ * hint notes — 16.1 tj stories). The keyword resolves to a different face
+ * per OS (macOS Menlo vs CI-Linux DejaVu Sans Mono): different advance
+ * widths reflow the wrapping lines (+5..15px canvas heights — a size
+ * mismatch the comparator fails unconditionally, before any tolerance
+ * applies) and different glyph rasters antialias apart on same-height
+ * canvases. Bank docs surfaces consume --tk-font-mono (pinned above since
+ * 11.2), so this rule changes nothing they render; it pins the generic
+ * keyword itself. Kit components never read it (shadow styles consume
+ * tokens only) — this is harness determinism for story chrome, mirroring
+ * the 11.2 mono-slot pin rationale. ID specificity beats every story
+ * canvas class rule without !important.
+ */
+#storybook-root code,
+#storybook-root pre,
+#storybook-root kbd,
+#storybook-root samp {
+  font-family: 'JetBrains Mono', monospace;
+}

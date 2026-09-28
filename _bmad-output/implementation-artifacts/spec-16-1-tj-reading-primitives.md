@@ -254,3 +254,21 @@ the capture); H2 40/24 + pull-quote 32 sit inside the reference bands
 baseline-review package (5.6 mold: provisional until human confirm). The
 vision pass's «no serif on the reference» aside contradicts probe9 forensics
 (Charter body is measured, DESIGN.md is normative) — recorded, no action.
+
+**First CI compare round (run 36492243387 — RED, 12 visual legs):** all
+failures localized to tj story canvases carrying `<code>` chrome (checklist
+tables, hint notes) styled with the raw `monospace` keyword — the ONLY
+unpinned font surface in the render tree. mac (Menlo) vs CI-Linux (DejaVu
+Sans Mono): different advance widths reflowed wrapping lines (+5..15px body
+heights — a size mismatch the comparator fails before any tolerance applies)
+and different glyph rasters antialiased apart on same-height canvases
+(playground: identical layout, AA-level storm). Pixel forensics on the run
+artifacts: species overlap region byte-stable, delta pure bottom height;
+zero non-tj legs affected — bank surfaces consume `--tk-font-mono` (pinned
+since 11.2, whose inject.ts comment documents the exact same reflow class).
+Fix: `tests/visual/fonts.css` pins `#storybook-root code/pre/kbd/samp` to
+JetBrains Mono (ID specificity, no !important; harness determinism for story
+chrome — the 11.2 precedent; ТЖ cannot mint a mono token at 16.1 and tj
+packages may not read `--tk-*`). Re-mint (mint4): 1516 passed, 22 of 24 tj
+PNGs rewritten (anatomy ×2 byte-identical — no code elements), ZERO
+non-ТЖ baselines touched.
