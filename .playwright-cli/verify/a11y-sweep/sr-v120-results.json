@@ -1,0 +1,312 @@
+{
+ "1-input-sr-only/light": [
+  {
+   "desc": "«Фамилия…» + бейдж ПОСЛЕ подписи",
+   "pass": true,
+   "detail": "[{\"name\":\"Фамилия, имя и отчество * +30%\",\"type\":\"text\"},{\"name\":\"Телефон\",\"type\":\"text\"},{\"name\":\"Телефон +30%\",\"type\":\"text\"}]"
+  },
+  {
+   "desc": "sr-only поле → «Телефон»",
+   "pass": true,
+   "detail": "[\"Телефон\",\"Телефон +30%\"]"
+  },
+  {
+   "desc": "sr-only + бейдж → подпись, затем бейдж",
+   "pass": true,
+   "detail": "[\"Телефон\",\"Телефон +30%\"]"
+  }
+ ],
+ "1-input-sr-only/dark": [
+  {
+   "desc": "«Фамилия…» + бейдж ПОСЛЕ подписи",
+   "pass": true,
+   "detail": "[{\"name\":\"Фамилия, имя и отчество * +30%\",\"type\":\"text\"},{\"name\":\"Телефон\",\"type\":\"text\"},{\"name\":\"Телефон +30%\",\"type\":\"text\"}]"
+  },
+  {
+   "desc": "sr-only поле → «Телефон»",
+   "pass": true,
+   "detail": "[\"Телефон\",\"Телефон +30%\"]"
+  },
+  {
+   "desc": "sr-only + бейдж → подпись, затем бейдж",
+   "pass": true,
+   "detail": "[\"Телефон\",\"Телефон +30%\"]"
+  }
+ ],
+ "2-segmentedradio-sr-only/light": [
+  {
+   "desc": "группа «Гражданство РФ?»",
+   "pass": true,
+   "detail": "[\"Гражданство РФ?\",\"Тип операции\"]"
+  },
+  {
+   "desc": "sr-only группа «Тип операции», НЕ «Выбор»",
+   "pass": true,
+   "detail": "[\"Гражданство РФ?\",\"Тип операции\"]"
+  },
+  {
+   "desc": "нативные радио: 2/группа, ровно одна выбрана, roving tabindex",
+   "pass": true,
+   "detail": "[{\"total\":2,\"checked\":1,\"tabbable\":1},{\"total\":2,\"checked\":1,\"tabbable\":1}]"
+  }
+ ],
+ "2-segmentedradio-sr-only/keyboard": {
+  "before": [
+   "true",
+   "false",
+   "true",
+   "false"
+  ],
+  "after": [
+   "false",
+   "true",
+   "true",
+   "false"
+  ],
+  "moved": true,
+  "focused": true
+ },
+ "2-segmentedradio-sr-only/dark": [
+  {
+   "desc": "группа «Гражданство РФ?»",
+   "pass": true,
+   "detail": "[\"Гражданство РФ?\",\"Тип операции\"]"
+  },
+  {
+   "desc": "sr-only группа «Тип операции», НЕ «Выбор»",
+   "pass": true,
+   "detail": "[\"Гражданство РФ?\",\"Тип операции\"]"
+  },
+  {
+   "desc": "нативные радио: 2/группа, ровно одна выбрана, roving tabindex",
+   "pass": true,
+   "detail": "[{\"total\":2,\"checked\":1,\"tabbable\":1},{\"total\":2,\"checked\":1,\"tabbable\":1}]"
+  }
+ ],
+ "3-checkbox-error/light": [
+  {
+   "desc": "демо-чекбоксы с именами из label",
+   "pass": true,
+   "detail": "[\"Соглашаюсь получать рекламу про кешбэк, повышенный процент и выгодные предложения\",\"Согласен с условиями\"]"
+  },
+  {
+   "desc": "ошибка НЕ в имени",
+   "pass": true,
+   "detail": "[\"Соглашаюсь получать рекламу про кешбэк, повышенный процент и выгодные предложения\",\"Согласен с условиями\"]"
+  },
+  {
+   "desc": "aria-invalid + описание зачитывается",
+   "pass": true,
+   "detail": "invalid=true desc=\"Подтвердите согласие, чтобы продолжить\" name=\"Согласен с условиями\""
+  },
+  {
+   "desc": "indeterminate → aria-checked=mixed",
+   "pass": true,
+   "detail": "[\"mixed\",\"false\"]"
+  }
+ ],
+ "3-checkbox-error/dark": [
+  {
+   "desc": "демо-чекбоксы с именами из label",
+   "pass": true,
+   "detail": "[\"Соглашаюсь получать рекламу про кешбэк, повышенный процент и выгодные предложения\",\"Согласен с условиями\"]"
+  },
+  {
+   "desc": "ошибка НЕ в имени",
+   "pass": true,
+   "detail": "[\"Соглашаюсь получать рекламу про кешбэк, повышенный процент и выгодные предложения\",\"Согласен с условиями\"]"
+  },
+  {
+   "desc": "aria-invalid + описание зачитывается",
+   "pass": true,
+   "detail": "invalid=true desc=\"Подтвердите согласие, чтобы продолжить\" name=\"Согласен с условиями\""
+  },
+  {
+   "desc": "indeterminate → aria-checked=mixed",
+   "pass": true,
+   "detail": "[\"mixed\",\"false\"]"
+  }
+ ],
+ "4-stepper-subtitle/light": [
+  {
+   "desc": "«Откройте счет для бизнеса», заголовок 2",
+   "pass": true,
+   "detail": "[\"Чек-лист: только с клавиатуры\",\"Протокол скринридер-проверки (VoiceOver / NVDA)\",\"Откройте счет для бизнеса\"]"
+  },
+  {
+   "desc": "список, 3 элемента",
+   "pass": true,
+   "detail": "[2,3,3,3]"
+  },
+  {
+   "desc": "шаги — заголовки 3 (имя без цифры, нумерацию даёт список)",
+   "pass": true,
+   "detail": "[\"Заполните заявку\",\"Дождитесь решения\",\"Начните работать\",\"Заполните заявку\",\"Дождитесь решения\",\"Начните работать\"]"
+  },
+  {
+   "desc": "цифровой бейдж aria-hidden",
+   "pass": true,
+   "detail": "badges=0 hidden=0"
+  }
+ ],
+ "4-stepper-subtitle/dark": [
+  {
+   "desc": "«Откройте счет для бизнеса», заголовок 2",
+   "pass": true,
+   "detail": "[\"Чек-лист: только с клавиатуры\",\"Протокол скринридер-проверки (VoiceOver / NVDA)\",\"Откройте счет для бизнеса\"]"
+  },
+  {
+   "desc": "список, 3 элемента",
+   "pass": true,
+   "detail": "[2,3,3,3]"
+  },
+  {
+   "desc": "шаги — заголовки 3 (имя без цифры, нумерацию даёт список)",
+   "pass": true,
+   "detail": "[\"Заполните заявку\",\"Дождитесь решения\",\"Начните работать\",\"Заполните заявку\",\"Дождитесь решения\",\"Начните работать\"]"
+  },
+  {
+   "desc": "цифровой бейдж aria-hidden",
+   "pass": true,
+   "detail": "badges=0 hidden=0"
+  }
+ ],
+ "5-qrblock-page-copy/light": [
+  {
+   "desc": "«Вариант 2. Отсканируйте QR-код», заголовок 2",
+   "pass": true,
+   "detail": "[\"Чек-лист: только с клавиатуры\",\"Протокол скринридер-проверки (VoiceOver / NVDA)\",\"Вариант 2. Отсканируйте QR-код\",\"Вариант 2. Отсканируйте QR-код\"]"
+  },
+  {
+   "desc": "«Android 9.0 и выше, вкладка, выбрана, 1 из 2»",
+   "pass": true,
+   "detail": "name=\"Android 9.0 и выше\" selected=true of=2"
+  },
+  {
+   "desc": "«QR-код для Android 9.0 и выше, изображение»",
+   "pass": true,
+   "detail": "[\"QR-код для Android 9.0 и выше\",\"QR-код для Android ниже 9.0\",\"QR-код для Android 9.0 и выше\",\"QR-код для Android ниже 9.0\"]"
+  },
+  {
+   "desc": "page-copy — обычный абзац ДО панели вкладок",
+   "pass": true,
+   "detail": "p=\"Переходите по ссылкам только с этой стра…\" order=p-before-tablist"
+  }
+ ],
+ "5-qrblock-page-copy/dark": [
+  {
+   "desc": "«Вариант 2. Отсканируйте QR-код», заголовок 2",
+   "pass": true,
+   "detail": "[\"Чек-лист: только с клавиатуры\",\"Протокол скринридер-проверки (VoiceOver / NVDA)\",\"Вариант 2. Отсканируйте QR-код\",\"Вариант 2. Отсканируйте QR-код\"]"
+  },
+  {
+   "desc": "«Android 9.0 и выше, вкладка, выбрана, 1 из 2»",
+   "pass": true,
+   "detail": "name=\"Android 9.0 и выше\" selected=true of=2"
+  },
+  {
+   "desc": "«QR-код для Android 9.0 и выше, изображение»",
+   "pass": true,
+   "detail": "[\"QR-код для Android 9.0 и выше\",\"QR-код для Android ниже 9.0\",\"QR-код для Android 9.0 и выше\",\"QR-код для Android ниже 9.0\"]"
+  },
+  {
+   "desc": "page-copy — обычный абзац ДО панели вкладок",
+   "pass": true,
+   "detail": "p=\"Переходите по ссылкам только с этой стра…\" order=p-before-tablist"
+  }
+ ],
+ "6-promocard-bleed/light": [
+  {
+   "desc": "карты НЕ интерактивны: заголовок 3",
+   "pass": true,
+   "detail": "[\"Т-Инвестиции\",\"Т-Бизнес\"]"
+  },
+  {
+   "desc": "host-карты вне табуляции (tabIndex -1)",
+   "pass": true,
+   "detail": "[-1,-1]"
+  },
+  {
+   "desc": "единственная остановка — CTA «Подробнее, кнопка»",
+   "pass": true,
+   "detail": "[\"Подробнее\",\"Подробнее\"]"
+  },
+  {
+   "desc": "арт не объявляется (aria-hidden или безымянный generic)",
+   "pass": true,
+   "detail": "[{\"hidden\":null,\"name\":\"\",\"tag\":\"DIV\"},{\"hidden\":\"true\",\"name\":\"\",\"tag\":\"svg\"}]"
+  }
+ ],
+ "6-promocard-bleed/dark": [
+  {
+   "desc": "карты НЕ интерактивны: заголовок 3",
+   "pass": true,
+   "detail": "[\"Т-Инвестиции\",\"Т-Бизнес\"]"
+  },
+  {
+   "desc": "host-карты вне табуляции (tabIndex -1)",
+   "pass": true,
+   "detail": "[-1,-1]"
+  },
+  {
+   "desc": "единственная остановка — CTA «Подробнее, кнопка»",
+   "pass": true,
+   "detail": "[\"Подробнее\",\"Подробнее\"]"
+  },
+  {
+   "desc": "арт не объявляется (aria-hidden или безымянный generic)",
+   "pass": true,
+   "detail": "[{\"hidden\":null,\"name\":\"\",\"tag\":\"DIV\"},{\"hidden\":\"true\",\"name\":\"\",\"tag\":\"svg\"}]"
+  }
+ ],
+ "7-button-href/light": [
+  {
+   "desc": "кнопки объявляются «…, кнопка» (имя+роль)",
+   "pass": true,
+   "detail": "[\"Set string\",\"Set string\",\"Set string\",\"Цель для клавиатуры\",\"Compact: порог 44px\"]"
+  },
+  {
+   "desc": "href-ряд: роль ССЫЛКА (нативный <a href> в шэдоу-руте tk-button)",
+   "pass": true,
+   "detail": "[{\"name\":\"Открыть страницу\",\"href\":\"https://example.com\",\"target\":null,\"rel\":null},{\"name\":\"Открыть в новой вкладке\",\"href\":\"https://example.com\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\"}]"
+  },
+  {
+   "desc": "target=_blank → rel noopener noreferrer",
+   "pass": true,
+   "detail": "rel=\"noopener noreferrer\""
+  },
+  {
+   "desc": "без href остаётся <button>",
+   "pass": true,
+   "detail": "buttons=5 anchors-with-button-class=2"
+  }
+ ],
+ "7-button-href/keyboard": {
+  "enterSkipped": "external href — native anchor navigation is UA semantics",
+  "found": true,
+  "focused": true,
+  "href": "https://example.com"
+ },
+ "7-button-href/dark": [
+  {
+   "desc": "кнопки объявляются «…, кнопка» (имя+роль)",
+   "pass": true,
+   "detail": "[\"Set string\",\"Set string\",\"Set string\",\"Цель для клавиатуры\",\"Compact: порог 44px\"]"
+  },
+  {
+   "desc": "href-ряд: роль ССЫЛКА (нативный <a href> в шэдоу-руте tk-button)",
+   "pass": true,
+   "detail": "[{\"name\":\"Открыть страницу\",\"href\":\"https://example.com\",\"target\":null,\"rel\":null},{\"name\":\"Открыть в новой вкладке\",\"href\":\"https://example.com\",\"target\":\"_blank\",\"rel\":\"noopener noreferrer\"}]"
+  },
+  {
+   "desc": "target=_blank → rel noopener noreferrer",
+   "pass": true,
+   "detail": "rel=\"noopener noreferrer\""
+  },
+  {
+   "desc": "без href остаётся <button>",
+   "pass": true,
+   "detail": "buttons=5 anchors-with-button-class=2"
+  }
+ ]
+}
