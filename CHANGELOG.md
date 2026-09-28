@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-09-28
+
+### Added — v1.3.0 surface (epics-v4: the authorized-zone / admin family)
+
+- tk-badge: `neutral` and `attention` console variants (AA pairs gray-100/gray-600 ≈5.17:1
+  and red-300/white 6.179:1 — the raw reference red maps onto the red scale per the frozen
+  AA-pairing ruling) + the `--tk-badge-fill`/`--tk-badge-text` hook pair (per-instance
+  retint, inherits through the shadow boundary — a pair on an ANCESTOR re-tints nested
+  tab counters with zero tabs code) (13.3)
+- tk-progress-bar: `--tk-progress-bar-height` geometry hook (default 4px unchanged;
+  console thin bars = one property on an ancestor) (13.3)
+- tk-tabs: `indicator="underline"` console mode — 2px ink bar on aria-selected via the
+  `--tk-tabs-indicator` hook, pill default untouched; announcements unchanged (13.2)
+- Docs: two v2 console pattern pages — Console chrome (header + underline tabs + static
+  4-column mega panel) and Data surfaces (toolbar, counted tabs, status table, labeled
+  thin bars, favorites tile grid) — composition surfaces grounded on the 13.1 admin pack
+  (13.2/13.3); docs search index 19 → 30 entries (v2 family + pattern pages, 14.1);
+  per-vertical showcase groups Bank/Business/Invest (12.1); DESIGN.md authorized-zone
+  console language section (13.2)
+- Reference packs: captures-v3 per-vertical convention — bank vertical (12.2) + the
+  PII-redacted admin console pack, 8 surfaces (13.1)
+
+### Internal
+
+- a11y-sweep engine Group VII: +9 legs for the console family (108 total; stops asserted
+  exactly by the walk); SR-protocol rows in three Accessibility stories + protocol tables
+  on both pattern pages; SR-RUNSHEET-v1.3.0 (14.1/14.2)
+- Interlude: 33 component-package code rules join --tk-font-mono (mono-extension) +
+  theming-guide demos card→hero; port-6007 tree-identity guard for the visual harness
+  (serve.mjs /__tree__ + globalSetup gate + lockfile)
+- Verification: fidelity ledger v1.3.0 (6 rows, composition classification for pattern
+  pages), yellow-discipline audit with the console rule (yellow never fills buttons in
+  the authorized zone — 0 violations), impeccable 209 files exit 0 (14.2)
+
 ## [1.2.0] - 2026-09-27
 
 ### Added — v1.2.0 surface (epics-v3)
