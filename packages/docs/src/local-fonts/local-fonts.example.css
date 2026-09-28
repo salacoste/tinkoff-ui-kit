@@ -1,5 +1,6 @@
 /* Шаблон. Скопируй в local-fonts.css (gitignored) и положи лицензионные woff2 рядом.
-   Два режима — выбери один:
+   Два режима — выбери один; внутри каждого — независимые блоки БАНК (--tk-font-*)
+   и ТЖ (--tj-font-*, story 15.3): можно включить любой или оба.
 
    РЕЖИМ A (проще): канонические family-имена → токен-слоты подхватят автоматически,
    ни одной правки токенов не нужно.
@@ -7,7 +8,8 @@
    РЕЖИМ B (свои имена, напр. DaytonaSans/DaytonaPragma): объяви @font-face со своим
    family-именем и переопредели слоты в конце файла (он грузится ПОСЛЕ tokens.css —
    выигрывает каскад). Псевдонимы легальны: имя — interoperability; лицензия нужна
-   на сами файлы. */
+   на сами файлы. Переопределение заменяет значение ЦЕЛИКОМ — фолбэк-цепочку
+   возвращай в новом значении (в шаблоне так и сделано). */
 
 /* ---------- РЕЖИМ A: раскомментируй как есть ----------
 @font-face {
@@ -24,6 +26,32 @@
   font-family: "Neue Haas Unica W1G";
   src: url("./NeueHaasUnicaW1G-Bold.woff2") format("woff2");
   font-weight: 600; font-style: normal; font-display: swap;
+}
+---------------------------------------------------------- */
+
+/* ---------- РЕЖИМ A — ТЖ (story 15.3): канонические имена Graphik/Charter —
+   слоты --tj-font-ui (Graphik-first) и --tj-font-reading (Charter-first)
+   подхватят сами, ноль правок токенов. Веса 400/700 — столько использует
+   ТЖ-шкала; имена файлов замени на свои. ----------
+@font-face {
+  font-family: "Graphik";
+  src: url("./Graphik-Regular.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Graphik";
+  src: url("./Graphik-Bold.woff2") format("woff2");
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Charter";
+  src: url("./Charter-Regular.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Charter";
+  src: url("./Charter-Bold.woff2") format("woff2");
+  font-weight: 700; font-style: normal; font-display: swap;
 }
 ---------------------------------------------------------- */
 
@@ -52,5 +80,37 @@
 :root {
   --tk-font-heading: DaytonaSans, Inter, -apple-system, system-ui, sans-serif;
   --tk-font-body: DaytonaSans, DaytonaPragma, Inter, -apple-system, system-ui, sans-serif;
+}
+---------------------------------------------------------- */
+
+/* ---------- РЕЖИМ B — ТЖ (story 15.3): свои имена + переопределение
+   --tj-font-*. Файл грузится ПОСЛЕ tokens.css — каскад на нашей стороне.
+   Переопределение заменяет значение ЦЕЛИКОМ: в значениях ниже фолбэк-цепочка
+   из замороженных стеков 15.2 возвращена с псевдонимом первым (уберёшь
+   фолбэки — лицензионный шрифт останется единственным в слоте). ----------
+@font-face {
+  font-family: "TjGraphik";
+  src: url("./Graphik-Regular.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "TjGraphik";
+  src: url("./Graphik-Bold.woff2") format("woff2");
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "TjCharter";
+  src: url("./Charter-Regular.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "TjCharter";
+  src: url("./Charter-Bold.woff2") format("woff2");
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+
+:root {
+  --tj-font-ui: TjGraphik, Inter, -apple-system, system-ui, "Segoe UI", "Helvetica Neue", sans-serif;
+  --tj-font-reading: TjCharter, "Bitstream Charter", "PT Serif", Georgia, serif;
 }
 ---------------------------------------------------------- */

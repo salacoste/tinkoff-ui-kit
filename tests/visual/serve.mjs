@@ -6,6 +6,7 @@
 //   /daytona/... -> packages/tokens/fonts    (the bundled licensed DaytonaSans files)
 //   /inter/...   -> node_modules/@fontsource/inter  (the open-fallback test font files)
 //   /jetbrains-mono/... -> node_modules/@fontsource/jetbrains-mono  (the pinned mono slot's test font)
+//   /pt-serif/... -> node_modules/@fontsource/pt-serif  (the ТЖ reading-slot pin's test font, story 15.3)
 //
 // Started by playwright.config.ts `webServer` (never committed to long-running
 // use); Playwright polls webServer.url (/index.json) until it answers 2xx, then
@@ -74,6 +75,7 @@ const ROUTES = [
   { prefix: '/daytona', root: join(REPO_ROOT, 'packages', 'tokens', 'fonts') },
   { prefix: '/inter', root: join(REPO_ROOT, 'node_modules', '@fontsource', 'inter') },
   { prefix: '/jetbrains-mono', root: join(REPO_ROOT, 'node_modules', '@fontsource', 'jetbrains-mono') },
+  { prefix: '/pt-serif', root: join(REPO_ROOT, 'node_modules', '@fontsource', 'pt-serif') },
   { prefix: '/', root: join(REPO_ROOT, 'packages', 'docs', 'dist') },
 ];
 
@@ -157,5 +159,5 @@ server.listen(PORT, '127.0.0.1', () => {
     });
   }
   process.on('exit', releaseLock);
-  console.log(`visual harness server on http://127.0.0.1:${PORT} (docs dist + daytona fonts + @fontsource/inter + @fontsource/jetbrains-mono)`);
+  console.log(`visual harness server on http://127.0.0.1:${PORT} (docs dist + daytona fonts + @fontsource/inter + @fontsource/jetbrains-mono + @fontsource/pt-serif)`);
 });

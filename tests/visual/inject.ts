@@ -16,6 +16,13 @@ import type { Page } from 'playwright';
  * full-page canvas HEIGHTS — a size mismatch Playwright's comparator fails
  * unconditionally, before any tolerance option applies (verified against the
  * 1.63 comparator source; see CI_VISUAL_TOLERANCE history in visual.spec.ts).
+ *
+ * Story 15.3 extends the pin to the ТЖ family: both --tj-font-* slots
+ * (Graphik-first ui / Charter-first reading, frozen at 15.2) are overridden in
+ * fonts.css to the served open faces — Inter for ui (already loaded) and PT
+ * Serif for reading (@fontsource/pt-serif, OFL-1.1, test-only dep) — so ТЖ
+ * renders stay deterministic even on machines with licensed Graphik/Charter
+ * installed (the OQ-8 ruling: no licenses delivered, nothing bundled).
  */
 
 const FONTS_CSS_PATH = join(dirname(fileURLToPath(import.meta.url)), 'fonts.css');
@@ -29,6 +36,9 @@ const INTER_WEIGHTS = [400, 500, 700] as const;
 /** JetBrains Mono — the mono-slot pin: weights the code surfaces render at. */
 const JETBRAINS_MONO_WEIGHTS = [400, 500] as const;
 
+/** PT Serif — the ТЖ reading-slot pin (story 15.3): the family's full normal set. */
+const PT_SERIF_WEIGHTS = [400, 700] as const;
+
 export async function pinDeterministicFonts(page: Page): Promise<void> {
   await page.addStyleTag({ path: FONTS_CSS_PATH });
   // fonts.load() explicitly fetches each face (they otherwise load lazily on
@@ -37,7 +47,7 @@ export async function pinDeterministicFonts(page: Page): Promise<void> {
   // face list when the font URL 404s, and the capture would silently raster a
   // system font — so verify each weight is actually available, loudly.
   await page.evaluate(
-    async ({ daytonaWeights, interWeights, monoWeights }) => {
+    async ({ daytonaWeights, interWeights, monoWeights, ptSerifWeights }) => {
       const load = (family: string, weights: readonly number[]) =>
         weights.map((weight) => document.fonts.load(`${weight} 16px ${family}`));
       const missing = (family: string, weights: readonly number[]) =>
@@ -46,6 +56,7 @@ export async function pinDeterministicFonts(page: Page): Promise<void> {
         ...load('DaytonaSans', daytonaWeights),
         ...load('Inter', interWeights),
         ...load('JetBrains Mono', monoWeights),
+        ...load('PT Serif', ptSerifWeights),
       ]);
       await document.fonts.ready;
       const missingDaytona = missing('DaytonaSans', daytonaWeights);
@@ -66,11 +77,18 @@ export async function pinDeterministicFonts(page: Page): Promise<void> {
           `JetBrains Mono weights ${missingMono.join(', ')} (mono-slot pin) did not load — fonts.load resolves with zero faces on a 404. Is tests/visual/serve.mjs serving @fontsource/jetbrains-mono at /jetbrains-mono? Refusing to capture: doc code surfaces would silently raster a per-OS system mono and reflow cross-platform.`,
         );
       }
+      const missingPtSerif = missing('PT Serif', ptSerifWeights);
+      if (missingPtSerif.length > 0) {
+        throw new Error(
+          `PT Serif weights ${missingPtSerif.join(', ')} (ТЖ reading-slot pin) did not load — fonts.load resolves with zero faces on a 404. Is tests/visual/serve.mjs serving @fontsource/pt-serif at /pt-serif? Refusing to capture: a --tj-font-reading consumer would silently raster a per-machine serif (licensed Charter included) and drift captures.`,
+        );
+      }
     },
     {
       daytonaWeights: [...DAYTONA_WEIGHTS],
       interWeights: [...INTER_WEIGHTS],
       monoWeights: [...JETBRAINS_MONO_WEIGHTS],
+      ptSerifWeights: [...PT_SERIF_WEIGHTS],
     },
   );
 }

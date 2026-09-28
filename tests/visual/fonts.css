@@ -148,3 +148,72 @@
   --tk-font-body: DaytonaSans, Inter, sans-serif;
   --tk-font-mono: 'JetBrains Mono', monospace;
 }
+
+/*
+ * ТЖ pin section (story 15.3 — OQ-8 closure), appended AFTER the bank rules:
+ * everything above this marker is the bank section, byte-identical to 15.2.
+ *
+ * The ТЖ token layer (packages/tj-tokens, frozen at 15.2) carries a
+ * two-family font contract as STACKS: --tj-font-ui is Graphik-first,
+ * --tj-font-reading is Charter-first. Graphik/Charter licenses were never
+ * delivered (the OQ-8 ruling: stacks-first ships, NO font bytes bundled), so
+ * the harness pins BOTH slots to locally-served OPEN faces instead — the same
+ * determinism rule the bank mold set: a machine with a licensed Graphik or
+ * Charter installed must still raster the pinned face in captures.
+ *
+ *   --tj-font-ui      -> Inter    (already served at /inter by serve.mjs)
+ *   --tj-font-reading -> PT Serif (@fontsource/pt-serif, OFL-1.1, test-only
+ *                        dep — mounted at /pt-serif mirroring /inter)
+ *
+ * PT Serif is the reading pin because it is the stack's OWN named open
+ * fallback — its raster class (transitional serif) matches the licensed
+ * Charter intent closer than Georgia would. The family ships normal weights
+ * 400/700 only (the full set); subsets latin + cyrillic, same as Inter (docs
+ * copy is Russian, OQ-4). Terminal fallbacks stay generic (`sans-serif` /
+ * `serif`) for any glyph the pinned face itself misses.
+ */
+@font-face {
+  font-family: 'PT Serif';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('/pt-serif/files/pt-serif-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'PT Serif';
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+  src: url('/pt-serif/files/pt-serif-latin-700-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'PT Serif';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('/pt-serif/files/pt-serif-cyrillic-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'PT Serif';
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+  src: url('/pt-serif/files/pt-serif-cyrillic-700-normal.woff2') format('woff2');
+}
+
+/*
+ * ТЖ slot override. The token sheet declares both slots on `:host, :root`
+ * (fonts are theme-independent — the dark legs re-declare colors only), but
+ * the selector list mirrors the token sheet's own theme-attribute shapes so
+ * the override can never lose the cascade under any data-tj-theme value.
+ * Injected stylesheets land after the app's, so equal specificity wins.
+ */
+:root,
+:root[data-tj-theme='dark'],
+:root[data-tj-theme='light'] {
+  --tj-font-ui: Inter, sans-serif;
+  --tj-font-reading: 'PT Serif', serif;
+}
