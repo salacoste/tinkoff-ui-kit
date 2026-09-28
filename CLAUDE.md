@@ -274,6 +274,17 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   PII redacted BEFORE delivery) + DRAFT menu-popover/avatar-menu gap-map in
   `_bmad-output/implementation-artifacts/` (NOT a spec; roster decision after captures). CI
   verdict of the round chain: `0cbe955` run **36417446515 success** (cumulative tree verdict).
+- **2026-09-28 ТЖ RECON (the #3 direction opened):** `captures-v3/tj/` pack `38301a0`
+  (CI success run **36434783152**, checked via `gh run view`) — 5 surfaces (home, article,
+  /flows/news/, /pro/, /community/) × viewport+fullpage + native-dark home viewport, computed-style
+  probe battery (read-only, session `tinkoff-ui`). Key finds: OWN token system disjoint from the
+  bank kit (pages #F0F0F0/#12151C, pure-black headline ink, #333 CTA r5 h30, gold #C79637 links,
+  meta #A6A6A6); **two-family type — Graphik UI + Charter SERIF article body (corrects the
+  single-sans claim)**; h1 scale 21/32/38/45/55 per surface; accents tightly scoped (purple
+  #8054FF = 30×30 badge only; yellow/navy = native-ad modules only) — the **editorial-vs-ad
+  language split**: ad modules may reuse main-kit promo components, editorial chrome is the ТЖ
+  kit proper. Package decision (pillkit-tj package vs separate repo) = epics-v5 ARCHITECTURE
+  phase; BMAD chain starts on the maintainer's word.
 - Fonts: DaytonaSans/DaytonaPragma in `packages/tokens/fonts/` under LICENSE-FONTS.md (separately
   licensed, NOT MIT; consumer rights ONLY per that file)
 - **Lit on this stack requires `experimentalDecorators: true`** — do not "fix" this
