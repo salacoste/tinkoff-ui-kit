@@ -102,6 +102,13 @@ const AA_PAIRS: readonly AaPair[] = [
   { theme: 'light', name: 'focus-ring on card (non-text)', fg: colorTokens['--tj-color-focus-ring'], bg: colorTokens['--tj-color-card'], min: AA_NON_TEXT, recorded: 3.067 },
   // Light — the scoped 30×30 badge: white glyph on purple, non-text UI (1.4.11 3:1).
   { theme: 'light', name: 'badge glyph (white) on badge-purple fill', fg: colorTokens['--tj-color-cta-ink'], bg: colorTokens['--tj-color-badge-purple'], min: AA_NON_TEXT, recorded: 4.536 },
+  // 16.2/16.3 — the tag-chip pair (THEME-INVARIANT: chips ride the purple fields
+  // in both themes; no dark override exists by design — pinned on the light table
+  // like badge-purple above). chip-fill is the AUTHORED AA override: the
+  // reference's own rgba(255,255,255,.18) composites to #9773FF = 3.380:1 with
+  // white — the fail is recorded in the token's tokens.css annotation.
+  { theme: 'light', name: 'chip-ink on chip-fill (authored AA override pill)', fg: colorTokens['--tj-color-chip-ink'], bg: colorTokens['--tj-color-chip-fill'], min: AA_TEXT, recorded: 5.813 },
+  { theme: 'light', name: 'chip-ink on badge-purple field (pro hero, chip at rest off-field contexts)', fg: colorTokens['--tj-color-chip-ink'], bg: colorTokens['--tj-color-badge-purple'], min: AA_TEXT, recorded: 4.536 },
   // Dark — the probe10 link species: the reference dark interactive ink
   // (--outline-interactive #93A2FF) on both dark surfaces.
   { theme: 'dark', name: 'link (dark-link-body #93A2FF) on dark card', fg: dark('--tj-color-link'), bg: dark('--tj-color-card'), min: AA_TEXT, recorded: 6.63 },
@@ -196,11 +203,13 @@ describe('ТЖ AA contrast (story 15.2)', () => {
     }
   });
 
-  it('exact color sets — 18 light semantics, 13 dark overrides (exhaustive, no drift)', () => {
+  it('exact color sets — 20 light semantics, 13 dark overrides (exhaustive, no drift)', () => {
     expect(Object.keys(colorTokens).sort()).toEqual(
       [
         '--tj-color-badge-purple',
         '--tj-color-card',
+        '--tj-color-chip-fill',
+        '--tj-color-chip-ink',
         '--tj-color-cta-fill',
         '--tj-color-cta-ink',
         '--tj-color-divider',

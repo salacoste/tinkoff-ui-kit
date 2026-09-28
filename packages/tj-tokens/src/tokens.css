@@ -31,8 +31,11 @@
   --tj-color-gold-ink: #8A6519;
   /* Measured (Story 16.1) — extracted `#1414CC` (reference --outline-interactive) = 10.491:1 on card / 9.206:1 on page — the in-body link ink; dark `#93A2FF` = 6.630:1 on dark-card / 7.700:1 on dark-page. The hover underline (70% alpha of the ink) is decorative — AA rides the ink. */
   --tj-color-link-body: #1414CC;
-  /* Restricted: purple `#8054FF` exists ONLY as the 30×30 circular badge fill (non-text carrier, white glyph); never a text or link color. */
+  /* Restricted: purple `#8054FF` stays scoped to its measured carriers (30×30 badge, /pro/ hero field r30, decorative squircles, /pro/ r10 CTA fills — purple-carrier scan, NOTES.md); never a text/link color on light surfaces. White ON the field rides the chip-ink pins. */
   --tj-color-badge-purple: #8054FF;
+  --tj-color-chip-ink: #FFFFFF;
+  /* AA override — authored `#6E48DB` (= 14% black composed over badge-purple — the lift-off-the-field architecture kept) replaces the extracted `rgba(255,255,255,.18)`: the reference composite `#9773FF` = 3.380:1 with white ink, failing AA for 17/700 chip labels. Authored pair: chip-ink `#FFFFFF` = 5.813:1 on chip-fill ✓ / 4.536:1 on badge-purple ✓. Chip-fill vs field boundary = 1.282:1 (decorative — the label text carries identification). Theme-invariant: chips ride purple fields in both themes. */
+  --tj-color-chip-fill: #6E48DB;
   --tj-color-cta-fill: #333333;
   --tj-color-cta-ink: #FFFFFF;
   /* Restricted: non-text 3:1: `#8A8AE5` = 3.067:1 on card ✓ / 2.691:1 on bare page ✗ — focus rings are card-surface compositions (the ТЖ chrome grammar); dark `#828BBB` = 4.763:1 on dark-card ✓. The reference defines the token but under-applies it (probe10); the kit applies 2px :focus-visible rings — improvement layer. */
@@ -80,6 +83,9 @@
   --tj-text-pull-quote-leading: 50px;
   --tj-text-time-meta-size: 15px;
   --tj-text-time-meta-weight: 400;
+  --tj-text-byline-size: 15px;
+  --tj-text-byline-weight: 700;
+  --tj-text-byline-leading: 20px;
   --tj-text-cta-label-size: 15px;
   --tj-text-cta-label-weight: 400;
   --tj-text-cta-label-leading: 20px;

@@ -34,7 +34,19 @@ colors:
   link-body: '#1414CC'        # reference --outline-interactive (light) — 10.491:1 on card / 9.206:1 on page
   dark-link-body: '#93A2FF'   # reference dark --outline-interactive — 6.630:1 on dark-card / 7.700:1 on dark-page
   # Scoped accents (extracted; scoped carriers only — see Colors body)
-  badge-purple: '#8054FF'   # «Учебник» 30×30 circular badge ONLY — non-text carrier
+  badge-purple: '#8054FF'   # the ONE extracted purple — scoped carriers ONLY (purple-carrier
+                           # scan, NOTES.md: 30×30 badge, /pro/ hero field 1260×600 r30,
+                           # decorative squircles, /pro/ r10 CTA fills); never a text/link
+                           # color on light surfaces — white-on-purple text pairs are the
+                           # theme-invariant field compositions (chip-ink pins below)
+  # Tag-chip surface pair (16.2/16.3 pre-work, machine-truthed 2026-09-29) — theme-invariant:
+  # chips ride the purple fields in BOTH themes (the bank 3.6 theme-invariant-surface mold)
+  chip-ink: '#FFFFFF'       # white on the purple fields — 4.536:1 on badge-purple (AA ✓),
+                           # 5.813:1 on chip-fill (AA ✓)
+  chip-fill: '#6E48DB'     # AUTHORED AA override (the gold-ink mold): = 14% black composed
+                           # over badge-purple — keeps the reference's lift-off-the-field
+                           # architecture. The reference's OWN rgba(255,255,255,.18) composes
+                           # to #9773FF = 3.380:1 with white — FAILS AA for 17/700 chip labels
   # CTA (extracted)
   cta-fill: '#333333'
   cta-ink: '#FFFFFF'
@@ -96,8 +108,13 @@ aa-annotations:
   badge-purple:
     kind: restricted
     status: verified
-    story: '15.2'
-    text: 'purple `#8054FF` exists ONLY as the 30×30 circular badge fill (non-text carrier, white glyph); never a text or link color.'
+    story: '16.2'
+    text: 'purple `#8054FF` stays scoped to its measured carriers (30×30 badge, /pro/ hero field r30, decorative squircles, /pro/ r10 CTA fills — purple-carrier scan, NOTES.md); never a text/link color on light surfaces. White ON the field rides the chip-ink pins.'
+  chip-fill:
+    kind: override
+    status: verified
+    story: '16.2'
+    text: 'authored `#6E48DB` (= 14% black composed over badge-purple — the lift-off-the-field architecture kept) replaces the extracted `rgba(255,255,255,.18)`: the reference composite `#9773FF` = 3.380:1 with white ink, failing AA for 17/700 chip labels. Authored pair: chip-ink `#FFFFFF` = 5.813:1 on chip-fill ✓ / 4.536:1 on badge-purple ✓. Chip-fill vs field boundary = 1.282:1 (decorative — the label text carries identification). Theme-invariant: chips ride purple fields in both themes.'
 shadows:
   # PIXEL-PROBED 2026-09-28: cards are FLAT (box-shadow none across 95-card
   # censuses — surfaces separate by color, not elevation); the reference's
@@ -144,6 +161,7 @@ typography:
   pull-quote: { fontSize: 35px, fontWeight: '400', lineHeight: '50px', fontFamily: '{typography.font-ui}', note: 'blockquote — groteske inside the reading column' }
   # UI text
   time-meta: { fontSize: 15px, fontWeight: '400', fontFamily: '{typography.font-ui}' }
+  byline: { fontSize: 15px, fontWeight: '700', lineHeight: '20px', fontFamily: '{typography.font-ui}', note: 'probe9 census (NOTES.md): Graphik 15/700/20 — article byline; the news-card author names ride the same species (feed-card byline rows)' }
   cta-label: { fontSize: 15px, fontWeight: '400', lineHeight: '20px', fontFamily: '{typography.font-ui}' }
   nav-label: { fontSize: 17px, fontWeight: '700', fontFamily: '{typography.font-ui}', note: 'sidebar rubric labels — probe9 census: navItem ×11/11 at 17px/700 Graphik (vision 16/400 was a wrapper artifact: the pill anchors set no family and compute Times; the inner spans carry Graphik)' }
   body-link: { fontSize: 21px, fontWeight: '400', fontFamily: '{typography.font-reading}', note: 'probe10 census ×8/8: in-body links INHERIT the reading register (Charter 21px, ink = the extracted link-body species); the 15px-grotesque vision read was a wrapper artifact — 15px Graphik links are search-suggest/footer/bubble surfaces, not article body' }
@@ -216,17 +234,22 @@ components:
     radius: '{rounded.card}'
     title-typography: '{typography.news-title}'
     title-color: '{colors.ink-100}'
+    byline-typography: '{typography.byline}'
     dark-background: '{colors.dark-card}'
+    note: 'feed cards measured 760×270 (NOTES.md census ×95); the WHOLE card is one anchor (row-as-link); counts render ink-300 in kit stories — the engage/reference-time inks are RESTRICTED and never story-rendered (FR-22)'
   rubric-header:
     background: '{colors.card}'
     radius: '{rounded.panel}'
     h1-typography: '{typography.rubric-h1}'
+    subtitle-typography: '{typography.card-title}'
+    note: 'subtitle species UNMEASURED — card-title 17/400 is the on-scale pick, flagged for the side-by-side vs tj-rubric-news captures (the 16.1 H2-band mold); the 100×100 squircle mark is a slotted decorative image (aria-hidden), overlap composition-owned'
   tag-chip:
     radius: '{rounded.chip}'
-    background: 'rgba(255,255,255,.18)'
-    color: '#FFFFFF'
+    background: '{colors.chip-fill}'
+    color: '{colors.chip-ink}'
     typography: '{typography.nav-label}'
-    note: 'on-purple translucent chips — /pro/ hero nav'
+    height: 40px
+    note: 'translucent-lift chips on the purple fields — measured 121–127×40 pill r20 (home/flows/pro censuses); theme-invariant surface (no dark branch); focus ring = chip-ink (white) — the generic focus-ring token fails 3:1 on purple'
   sidebar-rail:
     width: '{spacing.rail-sidebar}'
     icon-tile: 30px

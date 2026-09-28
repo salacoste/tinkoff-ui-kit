@@ -6,9 +6,9 @@ GENERATED FILE — DO NOT EDIT. Regenerate with `pnpm gen:tokens:tj`.
 - The `components:` frontmatter block is consumer spec prose — never rendered.
 - The `dark-*` color entries are the palette SOURCE for the dark layer (see "Dark layer") — never emitted as `--tj-color-dark-*` custom properties.
 - No z-scale: the ТЖ layer has no floating surfaces yet — a story needing one amends DESIGN.md first (the bank AD-12 scale stays the reference precedent).
-- AA-bearing color notes are GENERATED from the DESIGN.md `aa-annotations:` block (story 9.2 — the generator literals died; every note must anchor in the Colors body, anchor lost → generation aborts): 7 entries — 7 verified / 0 open `[ASSUMPTION]` flags. Resolved history: ink-reference-meta (Story 15.2); ink-reference-time (Story 15.2); gold-ink (Story 16.1); link-body (Story 16.1); focus-ring (Story 16.1); engage (Story 15.2); badge-purple (Story 15.2).
+- AA-bearing color notes are GENERATED from the DESIGN.md `aa-annotations:` block (story 9.2 — the generator literals died; every note must anchor in the Colors body, anchor lost → generation aborts): 8 entries — 8 verified / 0 open `[ASSUMPTION]` flags. Resolved history: ink-reference-meta (Story 15.2); ink-reference-time (Story 15.2); gold-ink (Story 16.1); link-body (Story 16.1); focus-ring (Story 16.1); engage (Story 15.2); badge-purple (Story 16.2); chip-fill (Story 16.2).
 
-Light layer: **100 tokens** on `:host, :root` (colors 18, typography 44, radius 11, spacing 16, shadows 1, motion 10) plus the dark layer: **13 semantic overrides** on `[data-tj-theme="dark"]` AND the native auto leg (`prefers-color-scheme: dark` on `:root:not([data-tj-theme="light"])`).
+Light layer: **105 tokens** on `:host, :root` (colors 20, typography 47, radius 11, spacing 16, shadows 1, motion 10) plus the dark layer: **13 semantic overrides** on `[data-tj-theme="dark"]` AND the native auto leg (`prefers-color-scheme: dark` on `:root:not([data-tj-theme="light"])`).
 
 ## Colors
 
@@ -28,7 +28,9 @@ Direct semantic keys from the `colors` block — the ТЖ table IS semantic (no 
 | `--tj-color-gold` | `#C79637` |  |
 | `--tj-color-gold-ink` | `#8A6519` | AA override — authored `#8A6519` (5.308:1 on card) replaces the extracted `#C79637` (2.676:1 — fails even the 3:1 large-text bar) for light-theme gold TEXT accents — award/byline chrome; `#C79637` stays the anchor + decorative carrier (rules, ornaments). Dark keeps the reference value — `#C79637` = 5.876:1 on dark-card. Probe10 re-roled the LINK species onto the extracted link-body pair; gold-ink no longer feeds the link alias. |
 | `--tj-color-link-body` | `#1414CC` | Measured (Story 16.1) — extracted `#1414CC` (reference --outline-interactive) = 10.491:1 on card / 9.206:1 on page — the in-body link ink; dark `#93A2FF` = 6.630:1 on dark-card / 7.700:1 on dark-page. The hover underline (70% alpha of the ink) is decorative — AA rides the ink. |
-| `--tj-color-badge-purple` | `#8054FF` | Restricted: purple `#8054FF` exists ONLY as the 30×30 circular badge fill (non-text carrier, white glyph); never a text or link color. |
+| `--tj-color-badge-purple` | `#8054FF` | Restricted: purple `#8054FF` stays scoped to its measured carriers (30×30 badge, /pro/ hero field r30, decorative squircles, /pro/ r10 CTA fills — purple-carrier scan, NOTES.md); never a text/link color on light surfaces. White ON the field rides the chip-ink pins. |
+| `--tj-color-chip-ink` | `#FFFFFF` |  |
+| `--tj-color-chip-fill` | `#6E48DB` | AA override — authored `#6E48DB` (= 14% black composed over badge-purple — the lift-off-the-field architecture kept) replaces the extracted `rgba(255,255,255,.18)`: the reference composite `#9773FF` = 3.380:1 with white ink, failing AA for 17/700 chip labels. Authored pair: chip-ink `#FFFFFF` = 5.813:1 on chip-fill ✓ / 4.536:1 on badge-purple ✓. Chip-fill vs field boundary = 1.282:1 (decorative — the label text carries identification). Theme-invariant: chips ride purple fields in both themes. |
 | `--tj-color-cta-fill` | `#333333` |  |
 | `--tj-color-cta-ink` | `#FFFFFF` |  |
 | `--tj-color-focus-ring` | `#8A8AE5` | Restricted: non-text 3:1: `#8A8AE5` = 3.067:1 on card ✓ / 2.691:1 on bare page ✗ — focus rings are card-surface compositions (the ТЖ chrome grammar); dark `#828BBB` = 4.763:1 on dark-card ✓. The reference defines the token but under-applies it (probe10); the kit applies 2px :focus-visible rings — improvement layer. |
@@ -76,6 +78,9 @@ Per-slot tokens from the `typography` block: `--tj-text-<slot>-size` / `-weight`
 | `--tj-text-pull-quote-leading` | `50px` |  |
 | `--tj-text-time-meta-size` | `15px` |  |
 | `--tj-text-time-meta-weight` | `400` |  |
+| `--tj-text-byline-size` | `15px` | probe9 census (NOTES.md): Graphik 15/700/20 — article byline; the news-card author names ride the same species (feed-card byline rows) |
+| `--tj-text-byline-weight` | `700` |  |
+| `--tj-text-byline-leading` | `20px` |  |
 | `--tj-text-cta-label-size` | `15px` |  |
 | `--tj-text-cta-label-weight` | `400` |  |
 | `--tj-text-cta-label-leading` | `20px` |  |
