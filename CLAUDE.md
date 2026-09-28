@@ -9,7 +9,7 @@ Study project: the reference site (tinkoff.ru) is the design source of truth; we
 (`@lit/react`); pnpm workspace `pillkit-{tokens,components,react,docs}`; TS 7 strict, Vite 8, Vitest,
 Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) live in `_bmad-output/planning-artifacts/`.
 
-## Project state (updated 2026-09-24 — v1.0.0 RELEASED; v2 build IN PROGRESS)
+## Project state (updated 2026-09-28 — v1.3.0 RELEASED + tag; maintainer queue (a)–(c) CLOSED)
 
 - **v1.0.0 SHIPPED as git tag `v1.0.0`** (maintainer gate session 2026-09-23/24). All maintainer
   gates closed: 274/274 baselines CONFIRMED (F1 re-taken), VoiceOver SR walk 19/19 (tabs
@@ -236,6 +236,26 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   run 6b07feb 09-23, the v1.0.0 tag commit has zero Actions runs). Fixed in ba0b622 (build →
   typecheck; full record in RELEASE.md §1). RULE: "CI green" = the Actions verdict via `gh run`,
   never inferred from local gates.**
+- **2026-09-28 FINAL (v1.3.0 cycle closed):** epics-v4 executed 7/7 (12.1 → 14.2) —
+  totals now **951 unit + 1438 visual/axe, 430 baseline PNG** (measured at 14.2);
+  maintainer queue (a)→(b)→(c) closed under the explicit live sanction
+  «a and then b and then c»: batch-confirm (delegated hybrid sitting, `0690981`),
+  release §10.1–10.5 (release commit `b8a7b3a`, CI success run 36391431890,
+  ANNOTATED tag `v1.3.0` → tag object `1dc18af0`, remote deref verified,
+  fresh-clone §10.4 gate PASSED — `verify/v130-fresh-clone/`), SR spot-checks
+  — BOTH runsheets executed as the MECHANIZABLE half (v1.3.0: 38/38, `ef22b75`;
+  v1.2.0: 52/52, `9083180`): computed name/role/state vs expected RU
+  announcements, both themes; live VoiceOver honestly NOT executed
+  (METHOD.md §SR — no fabricated checkmarks); digest tables №№29–41 in
+  `verify/sr-spot-check/PROTOCOL-DIGEST.md`. GitHub Release pages exist for
+  ALL four tags (v1.2.0/v1.3.0 created 2026-09-28, notes verbatim from
+  CHANGELOG). Remaining maintainer-side: opportunistic (d) only (iOS
+  momentum-scroll — needs a real device; avatar-menu/kebab open-state
+  capture — needs fresh maintainer-session material). CI verdicts of the
+  close-out chain: `ef22b75` run 36400544143 success; `a1e7fcf` run
+  36402884699 CANCELLED by the newer push (workflow concurrency — content
+  subsumed); `9083180` run **36405053534 success** (the cumulative tree
+  verdict, checked via `gh run view`).
 - Fonts: DaytonaSans/DaytonaPragma in `packages/tokens/fonts/` under LICENSE-FONTS.md (separately
   licensed, NOT MIT; consumer rights ONLY per that file)
 - **Lit on this stack requires `experimentalDecorators: true`** — do not "fix" this
