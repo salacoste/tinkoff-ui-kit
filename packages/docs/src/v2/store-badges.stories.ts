@@ -10,7 +10,7 @@ import '../../../components/src/store-badges/store-badges.js';
  * v2 docs page — tk-store-badges (spec 8.3): what/when/not-for, live
  * usage, theming, a11y incl. the SR protocol, composition pointers. API
  * table is the generated CEM render; the interactive suite lives at
- * Components/Store badges. Content RU, meta EN.
+ * Components/StoreBadges. Content RU, meta EN.
  */
 
 /** A neutral placeholder mark — deliberately NOT any store's art (named
@@ -26,7 +26,7 @@ const STORES = [
 ];
 
 const meta: Meta = {
-  title: 'Components v2/Store badges',
+  title: 'Guides/Store badges',
   parameters: { layout: 'fullscreen' },
 };
 

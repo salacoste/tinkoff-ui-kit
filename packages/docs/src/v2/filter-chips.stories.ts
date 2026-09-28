@@ -10,7 +10,7 @@ import '../../../components/src/filter-chips/filter-chips.js';
  * v2 docs page — tk-filter-chips (spec 8.3): what/when/not-for, live usage,
  * theming, a11y incl. the SR protocol, composition pointers. API table is
  * the generated CEM render; the interactive suite lives at
- * Components/Filter chips. Content RU, meta EN (baseline stability).
+ * Components/FilterChips. Content RU, meta EN (baseline stability).
  */
 
 const CATALOG_FILTERS = [
@@ -26,7 +26,7 @@ const CATALOG_FILTERS = [
 ];
 
 const meta: Meta = {
-  title: 'Components v2/Filter chips',
+  title: 'Guides/Filter chips',
   parameters: { layout: 'fullscreen' },
 };
 

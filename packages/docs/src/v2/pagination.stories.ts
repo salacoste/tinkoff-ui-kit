@@ -14,7 +14,7 @@ import '../../../components/src/pagination/pagination.js';
  */
 
 const meta: Meta = {
-  title: 'Components v2/Pagination',
+  title: 'Guides/Pagination',
   parameters: { layout: 'fullscreen' },
 };
 

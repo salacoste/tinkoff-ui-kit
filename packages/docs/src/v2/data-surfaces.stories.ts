@@ -74,7 +74,7 @@ const FAVORITES = [
 ];
 
 const meta: Meta = {
-  title: 'Components v2/Data surfaces',
+  title: 'Patterns/Data surfaces',
   parameters: { layout: 'fullscreen' },
 };
 

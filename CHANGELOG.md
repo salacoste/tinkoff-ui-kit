@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Internal
+- Docs navigation regroup (post-v1.3.0 interlude): the «Components v2» group — named after
+  the build window, not the content — splits semantically into `Guides/*` (9 component
+  overview pages) and `Patterns/*` (Console chrome, Data surfaces composition pages);
+  story display names and suite ids untouched, baselines moved prefix-only (28 byte-identical
+  git-mv + 2 re-taken: the cookie-banner page anchor text gained its exact suite casing);
+  docs search ids follow; cross-link texts corrected to the exact sidebar names
+
 ## [1.3.0] - 2026-09-28
 
 ### Added — v1.3.0 surface (epics-v4: the authorized-zone / admin family)

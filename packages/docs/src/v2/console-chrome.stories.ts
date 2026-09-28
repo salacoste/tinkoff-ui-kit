@@ -43,7 +43,7 @@ const MEGA_GROUPS = [
 ];
 
 const meta: Meta = {
-  title: 'Components v2/Console chrome',
+  title: 'Patterns/Console chrome',
   parameters: { layout: 'fullscreen' },
 };
 

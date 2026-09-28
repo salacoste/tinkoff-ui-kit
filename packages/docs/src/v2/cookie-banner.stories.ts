@@ -10,11 +10,11 @@ import '../../../components/src/cookie-banner/cookie-banner.js';
  * v2 docs page — tk-cookie-banner (spec 8.3): what/when/not-for, live
  * usage, theming, a11y incl. the SR protocol, composition pointers. API
  * table is the generated CEM render; the interactive suite lives at
- * Components/Cookie banner. Content RU, meta EN.
+ * Components/Cookie Banner. Content RU, meta EN.
  */
 
 const meta: Meta = {
-  title: 'Components v2/Cookie banner',
+  title: 'Guides/Cookie banner',
   parameters: { layout: 'fullscreen' },
 };
 
@@ -170,7 +170,7 @@ export const Page: Story = {
         состояния (открытие по кнопке, журнал событий, варианты) — на
         странице компонента
         <a href="?path=/story/components-cookiebanner--playground" target="_top"
-          >Components/Cookie banner</a
+          >Components/Cookie Banner</a
         >.
       </p>
     </div>

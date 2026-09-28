@@ -29,7 +29,7 @@ const STEPS = [
 ];
 
 const meta: Meta = {
-  title: 'Components v2/Stepper',
+  title: 'Guides/Stepper',
   parameters: { layout: 'fullscreen' },
 };
 

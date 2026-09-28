@@ -10,7 +10,7 @@ import '../../../components/src/combobox-search/combobox-search.js';
  * v2 docs page — tk-combobox-search (spec 8.3): what/when/not-for, live
  * usage, theming, a11y incl. the SR protocol, composition pointers. API
  * table is the generated CEM render; the interactive suite lives at
- * Components/Combobox search. Content RU, meta EN.
+ * Components/ComboboxSearch. Content RU, meta EN.
  */
 
 const INSTRUMENTS = [
@@ -25,7 +25,7 @@ const INSTRUMENTS = [
 ];
 
 const meta: Meta = {
-  title: 'Components v2/Combobox search',
+  title: 'Guides/Combobox search',
   parameters: { layout: 'fullscreen' },
 };
 

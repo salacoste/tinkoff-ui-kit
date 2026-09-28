@@ -19,7 +19,8 @@ import { property, state } from 'lit/decorators.js';
  */
 
 /** One searchable docs page — the 19 v1 component pages + the 11 v2 pages
- *  (8 element pages + 3 pattern pages; the v2 family joined at 14.1). */
+ *  (Guides/ overviews + Patterns/ composition pages; the v2 family joined
+ *  at 14.1). */
 interface SearchEntry {
   /** Sidebar/EN name — matches what the consumer sees in Storybook. */
   title: string;
@@ -53,20 +54,22 @@ const COMPONENTS: readonly SearchEntry[] = [
   { title: 'ThumbnailPicker', tag: 'tk-thumbnail-picker', ru: 'Выбор плиткой', id: 'components-thumbnailpicker--playground' },
   { title: 'Toast', tag: 'tk-toast', ru: 'Тост', id: 'components-toast--playground' },
   { title: 'Tooltip', tag: 'tk-tooltip', ru: 'Подсказка', id: 'components-tooltip--playground' },
-  // --- the v2 family (14.1): 8 element pages + 3 pattern pages. Mega nav
-  //     KEEPS a tag (it is the tk-navbar two-row extension story); the two
-  //     13.x pattern pages own no element — no tag chip line renders.
-  { title: 'Combobox search', tag: 'tk-combobox-search', ru: 'Поиск с подсказками', id: 'components-v2-combobox-search--page' },
-  { title: 'Cookie banner', tag: 'tk-cookie-banner', ru: 'Баннер cookie', id: 'components-v2-cookie-banner--page' },
-  { title: 'Data table', tag: 'tk-data-table', ru: 'Таблица данных', id: 'components-v2-data-table--page' },
-  { title: 'Filter chips', tag: 'tk-filter-chips', ru: 'Фильтр-чипы', id: 'components-v2-filter-chips--page' },
-  { title: 'Mega nav', tag: 'tk-navbar', ru: 'Мега-навигация', id: 'components-v2-mega-nav--page' },
-  { title: 'Pagination', tag: 'tk-pagination', ru: 'Пагинация', id: 'components-v2-pagination--page' },
-  { title: 'QR block', tag: 'tk-qr-block', ru: 'QR-блок', id: 'components-v2-qr-block--page' },
-  { title: 'Stepper', tag: 'tk-stepper', ru: 'Шаги', id: 'components-v2-stepper--page' },
-  { title: 'Store badges', tag: 'tk-store-badges', ru: 'Бейджи магазинов', id: 'components-v2-store-badges--page' },
-  { title: 'Console chrome', ru: 'Хром консоли', id: 'components-v2-console-chrome--page' },
-  { title: 'Data surfaces', ru: 'Поверхности данных', id: 'components-v2-data-surfaces--page' },
+  // --- the v2 family (14.1; regrouped from «Components v2» 2026-09-28):
+  //     Guides/ carries 9 overview pages (8 element pages + the Mega nav
+  //     extension, which KEEPS a tag — it is the tk-navbar two-row story);
+  //     Patterns/ carries the two 13.x composition pages that own no
+  //     element — no tag chip line renders for them.
+  { title: 'Combobox search', tag: 'tk-combobox-search', ru: 'Поиск с подсказками', id: 'guides-combobox-search--page' },
+  { title: 'Cookie banner', tag: 'tk-cookie-banner', ru: 'Баннер cookie', id: 'guides-cookie-banner--page' },
+  { title: 'Data table', tag: 'tk-data-table', ru: 'Таблица данных', id: 'guides-data-table--page' },
+  { title: 'Filter chips', tag: 'tk-filter-chips', ru: 'Фильтр-чипы', id: 'guides-filter-chips--page' },
+  { title: 'Mega nav', tag: 'tk-navbar', ru: 'Мега-навигация', id: 'guides-mega-nav--page' },
+  { title: 'Pagination', tag: 'tk-pagination', ru: 'Пагинация', id: 'guides-pagination--page' },
+  { title: 'QR block', tag: 'tk-qr-block', ru: 'QR-блок', id: 'guides-qr-block--page' },
+  { title: 'Stepper', tag: 'tk-stepper', ru: 'Шаги', id: 'guides-stepper--page' },
+  { title: 'Store badges', tag: 'tk-store-badges', ru: 'Бейджи магазинов', id: 'guides-store-badges--page' },
+  { title: 'Console chrome', ru: 'Хром консоли', id: 'patterns-console-chrome--page' },
+  { title: 'Data surfaces', ru: 'Поверхности данных', id: 'patterns-data-surfaces--page' },
 ];
 
 /** Case-insensitive, ё-Insensitive containment. */

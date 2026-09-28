@@ -32,7 +32,7 @@ const SUB_LINKS = [
 ];
 
 const meta: Meta = {
-  title: 'Components v2/Mega nav',
+  title: 'Guides/Mega nav',
   parameters: { layout: 'fullscreen' },
 };
 

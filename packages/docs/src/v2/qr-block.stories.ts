@@ -10,7 +10,7 @@ import '../../../components/src/qr-block/qr-block.js';
  * v2 docs page — tk-qr-block (spec 8.3): what/when/not-for, live usage,
  * theming, a11y incl. the SR protocol, composition pointers. API table is
  * the generated CEM render; the interactive suite lives at
- * Components/QR block. Content RU, meta EN.
+ * Components/QrBlock. Content RU, meta EN.
  */
 
 /** A deterministic neutral QR placeholder (the kit stories' own mold) —
@@ -40,7 +40,7 @@ const QR_TABS = [
 ];
 
 const meta: Meta = {
-  title: 'Components v2/QR block',
+  title: 'Guides/QR block',
   parameters: { layout: 'fullscreen' },
 };
 

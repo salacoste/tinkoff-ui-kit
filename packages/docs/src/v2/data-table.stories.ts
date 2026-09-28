@@ -10,7 +10,7 @@ import '../../../components/src/data-table/data-table.js';
  * v2 docs page — tk-data-table (spec 8.3): what/when/not-for, live usage,
  * theming, a11y incl. the SR protocol and the roving-keyboard contract,
  * composition pointers. API table is the generated CEM render; the
- * interactive suite lives at Components/Data table. Content RU, meta EN.
+ * interactive suite lives at Components/DataTable. Content RU, meta EN.
  */
 
 const COLUMNS = [
@@ -54,7 +54,7 @@ const ROWS = [
 ];
 
 const meta: Meta = {
-  title: 'Components v2/Data table',
+  title: 'Guides/Data table',
   parameters: { layout: 'fullscreen' },
 };
 
