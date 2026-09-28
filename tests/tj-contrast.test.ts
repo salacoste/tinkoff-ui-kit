@@ -89,14 +89,25 @@ const AA_PAIRS: readonly AaPair[] = [
   { theme: 'light', name: 'cta-ink on cta-fill (light pill)', fg: colorTokens['--tj-color-cta-ink'], bg: colorTokens['--tj-color-cta-fill'], min: AA_TEXT, recorded: 12.635 },
   // Light — the AUTHORED essential-meta AA step (vs the restricted reference meta below).
   { theme: 'light', name: 'ink-300 authored meta on card', fg: colorTokens['--tj-color-ink-300'], bg: colorTokens['--tj-color-card'], min: AA_TEXT, recorded: 5.099 },
-  // Light — the gold asymmetry's light leg: the authored #8A6519 link step
-  // (the reference gold #C79637 itself fails — 2.676:1, why gold-ink exists).
-  { theme: 'light', name: 'gold-ink authored link on card', fg: colorTokens['--tj-color-gold-ink'], bg: colorTokens['--tj-color-card'], min: AA_TEXT, recorded: 5.308 },
+  // Light — the authored #8A6519 gold-text step for award/byline chrome (probe10
+  // re-roled the LINK species onto link-body; the reference gold #C79637 itself
+  // fails — 2.676:1, why gold-ink exists).
+  { theme: 'light', name: 'gold-ink award-text accent on card', fg: colorTokens['--tj-color-gold-ink'], bg: colorTokens['--tj-color-card'], min: AA_TEXT, recorded: 5.308 },
+  // Light — the probe10 link species: the reference's OWN interactive ink
+  // (--outline-interactive) on both light surfaces.
+  { theme: 'light', name: 'link (link-body #1414CC) on card', fg: colorTokens['--tj-color-link'], bg: colorTokens['--tj-color-card'], min: AA_TEXT, recorded: 10.491 },
+  { theme: 'light', name: 'link (link-body #1414CC) on page', fg: colorTokens['--tj-color-link'], bg: colorTokens['--tj-color-page'], min: AA_TEXT, recorded: 9.206 },
+  // Light — the focus ring (reference --outline-focus): non-text UI on its
+  // sanctioned card surface (the bare-page leg is RESTRICTED below).
+  { theme: 'light', name: 'focus-ring on card (non-text)', fg: colorTokens['--tj-color-focus-ring'], bg: colorTokens['--tj-color-card'], min: AA_NON_TEXT, recorded: 3.067 },
   // Light — the scoped 30×30 badge: white glyph on purple, non-text UI (1.4.11 3:1).
   { theme: 'light', name: 'badge glyph (white) on badge-purple fill', fg: colorTokens['--tj-color-cta-ink'], bg: colorTokens['--tj-color-badge-purple'], min: AA_NON_TEXT, recorded: 4.536 },
-  // Dark — the gold asymmetry's dark leg: the link alias flips to the
-  // REFERENCE gold and it clears AA on dark surfaces (why gold stays invariant).
-  { theme: 'dark', name: 'link (reference gold) on dark card', fg: dark('--tj-color-link'), bg: dark('--tj-color-card'), min: AA_TEXT, recorded: 5.876 },
+  // Dark — the probe10 link species: the reference dark interactive ink
+  // (--outline-interactive #93A2FF) on both dark surfaces.
+  { theme: 'dark', name: 'link (dark-link-body #93A2FF) on dark card', fg: dark('--tj-color-link'), bg: dark('--tj-color-card'), min: AA_TEXT, recorded: 6.63 },
+  { theme: 'dark', name: 'link (dark-link-body #93A2FF) on dark page', fg: dark('--tj-color-link'), bg: dark('--tj-color-page'), min: AA_TEXT, recorded: 7.7 },
+  // Dark — the focus ring: non-text UI on dark surfaces.
+  { theme: 'dark', name: 'focus-ring (dark #828BBB) on dark card (non-text)', fg: dark('--tj-color-focus-ring'), bg: dark('--tj-color-card'), min: AA_NON_TEXT, recorded: 4.763 },
   // Dark — dark-meta carries BOTH meta semantics (the ink-300 collapse and the
   // reference-meta remap) on both dark surfaces.
   { theme: 'dark', name: 'ink-300 (collapsed onto dark-meta) on dark card', fg: dark('--tj-color-ink-300'), bg: dark('--tj-color-card'), min: AA_TEXT, recorded: 10.211 },
@@ -148,6 +159,14 @@ const RESTRICTED_PAIRS: readonly RestrictedPair[] = [
     bg: darkColorTokens['--tj-color-card'],
     recorded: 3.277,
   },
+  {
+    theme: 'light',
+    name: 'focus-ring on bare page — non-text 2.691:1 misses 3:1; rings ride card surfaces (probe10)',
+    token: '--tj-color-focus-ring',
+    fg: colorTokens['--tj-color-focus-ring'],
+    bg: colorTokens['--tj-color-page'],
+    recorded: 2.691,
+  },
 ];
 
 describe('ТЖ AA contrast (story 15.2)', () => {
@@ -177,7 +196,7 @@ describe('ТЖ AA contrast (story 15.2)', () => {
     }
   });
 
-  it('exact color sets — 16 light semantics, 11 dark overrides (exhaustive, no drift)', () => {
+  it('exact color sets — 18 light semantics, 13 dark overrides (exhaustive, no drift)', () => {
     expect(Object.keys(colorTokens).sort()).toEqual(
       [
         '--tj-color-badge-purple',
@@ -187,6 +206,7 @@ describe('ТЖ AA contrast (story 15.2)', () => {
         '--tj-color-divider',
         '--tj-color-divider-strong',
         '--tj-color-engage',
+        '--tj-color-focus-ring',
         '--tj-color-gold',
         '--tj-color-gold-ink',
         '--tj-color-ink-100',
@@ -195,6 +215,7 @@ describe('ТЖ AA contrast (story 15.2)', () => {
         '--tj-color-ink-reference-meta',
         '--tj-color-ink-reference-time',
         '--tj-color-link',
+        '--tj-color-link-body',
         '--tj-color-page',
       ].sort(),
     );
@@ -206,17 +227,19 @@ describe('ТЖ AA contrast (story 15.2)', () => {
         '--tj-color-divider',
         '--tj-color-divider-strong',
         '--tj-color-engage',
+        '--tj-color-focus-ring',
         '--tj-color-ink-100',
         '--tj-color-ink-300',
         '--tj-color-ink-reference-meta',
         '--tj-color-link',
+        '--tj-color-link-body',
         '--tj-color-page',
       ].sort(),
     );
   });
 
-  it('light aliases ride their scale values (link = gold-ink, engage = ink-reference-meta)', () => {
-    expect(colorTokens['--tj-color-link']).toBe(colorTokens['--tj-color-gold-ink']);
+  it('light aliases ride their scale values (link = link-body, engage = ink-reference-meta)', () => {
+    expect(colorTokens['--tj-color-link']).toBe(colorTokens['--tj-color-link-body']);
     expect(colorTokens['--tj-color-engage']).toBe(colorTokens['--tj-color-ink-reference-meta']);
   });
 

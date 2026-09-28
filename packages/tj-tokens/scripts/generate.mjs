@@ -64,12 +64,14 @@ const DESIGN_MD_PATH = '_bmad-output/planning-artifacts/ux-designs/ux-tj-kit-202
  * The two spec-authored light aliases (the bank `link`/`error` mold): the ТЖ
  * table has no scales to bridge, but `link` and `engage` must exist as semantic
  * names in BOTH themes so the dark layer can override them — `--tj-color-link`
- * light-sources gold-ink (the authored AA step) and dark-sources dark-link
- * (= the reference gold #C79637 — the gold asymmetry); `--tj-color-engage`
- * light-sources ink-reference-meta and dark-sources dark-engage.
+ * light-sources link-body and dark-sources dark-link (probe10, 16.1 pre-work:
+ * the reference's OWN link species is the extracted interactive pair #1414CC/
+ * #93A2FF — the 15.2 gold-ink pairing re-roled gold to the award accent);
+ * `--tj-color-engage` light-sources ink-reference-meta and dark-sources
+ * dark-engage.
  */
 const LIGHT_SEMANTIC_ALIASES = [
-  { name: '--tj-color-link', scale: 'gold-ink' },
+  { name: '--tj-color-link', scale: 'link-body' },
   { name: '--tj-color-engage', scale: 'ink-reference-meta' },
 ];
 
@@ -90,25 +92,32 @@ const DARK_OVERRIDES = [
   { name: '--tj-color-ink-reference-meta', source: 'dark-meta' },
   { name: '--tj-color-cta-fill', source: 'dark-cta-fill' },
   { name: '--tj-color-cta-ink', source: 'dark-cta-ink' },
-  { name: '--tj-color-link', source: 'dark-link' },
+  { name: '--tj-color-link', source: 'dark-link-body' },
   { name: '--tj-color-engage', source: 'dark-engage' },
+  // probe10 (16.1 pre-work): the link species + focus ring join the dark layer —
+  // dark-link-body/dark-focus-ring resolve from the palette below (the 15.2
+  // dark-link gold carrier is retired; the alias and the direct token now
+  // source the SAME key, one literal).
+  { name: '--tj-color-link-body', source: 'dark-link-body' },
+  { name: '--tj-color-focus-ring', source: 'dark-focus-ring' },
 ];
 
 /**
  * None — the dark-completeness pass consumed every `dark-*` key (page, card,
- * divider, divider-strong, ink, meta, engage, cta-fill, cta-ink, link). The
- * empty map stays explicit: a NEW `dark-*` key still aborts generation until
- * it gets a disposition (no silent drops — the bank invariant, second instance).
+ * divider, divider-strong, ink, meta, engage, cta-fill, cta-ink, link) and
+ * probe10 added link-body/focus-ring overrides for both. The empty map stays
+ * explicit: a NEW `dark-*` key still aborts generation until it gets a
+ * disposition (no silent drops — the bank invariant, second instance).
  */
 const DARK_DEFERRED = new Map([]);
 
 /**
  * Semantics deliberately NOT re-declared in dark — evidence per key (pixel
- * census / probe-notes, story 15.2 step 1):
- * - gold: the anchor + decorative carrier; dark-link references it and it
- *   clears AA on dark surfaces (5.876:1 on dark-card).
- * - gold-ink: the light-only authored AA step — the link alias carries the
- *   dark flip (the bank link-on-tint mold).
+ * census / probe-notes, story 15.2 step 1; link roles re-anchored probe10):
+ * - gold: the anchor + decorative/award carrier; it clears AA on dark surfaces
+ *   (5.876:1 on dark-card) where award text may use it directly.
+ * - gold-ink: the light-only authored AA step for gold TEXT accents (award/
+ *   byline chrome — probe10 re-roled the link species onto link-body).
  * - badge-purple: present in the dark viewport census (#8054FF ×537) — the
  *   30×30 badge stays purple (scoped non-text carrier).
  * - ink-200: #333 appears only as the CTA fill in light; the cta-fill semantic
@@ -118,8 +127,8 @@ const DARK_DEFERRED = new Map([]);
  *   the 17.2 dark sweep decides whether it joins dark-meta.
  */
 const DARK_INVARIANTS = [
-  { name: '--tj-color-gold', why: 'the anchor + decorative carrier; dark-link references it — gold clears AA on dark surfaces (5.876:1 on dark-card)' },
-  { name: '--tj-color-gold-ink', why: 'light-only authored AA step — the link alias carries the dark flip (the bank link-on-tint mold)' },
+  { name: '--tj-color-gold', why: 'the anchor + decorative/award carrier — clears AA on dark surfaces (5.876:1 on dark-card)' },
+  { name: '--tj-color-gold-ink', why: 'light-only authored AA step for gold TEXT accents — award/byline chrome (probe10 re-roled the link species)' },
   { name: '--tj-color-badge-purple', why: 'the 30×30 badge stays purple in dark (census #8054FF ×537 present; scoped non-text carrier)' },
   { name: '--tj-color-ink-200', why: 'light CTA fill duty only — the cta-fill semantic carries the flip; dark strong-UI ink is ink-100/dark-ink' },
   { name: '--tj-color-ink-reference-time', why: 'unbound in dark (dark-article unprobed; 3.982:1 on dark-card stays restricted class) — the 17.2 dark sweep decides' },
@@ -145,7 +154,15 @@ const DARK_TOKEN_NOTES = new Map([
   ],
   [
     '--tj-color-link',
-    'The gold asymmetry mechanized — light link = gold-ink (authored #8A6519, 5.308:1), dark link = dark-link = the reference gold #C79637 (5.876:1 on dark-card).',
+    'Probe10 — the link species is the reference\'s OWN interactive pair: light #1414CC (10.491:1 on card), dark #93A2FF (6.630:1 on dark-card). The 15.2 gold pairing is retired; gold is the award accent.',
+  ],
+  [
+    '--tj-color-link-body',
+    'Probe10 — the reference dark --outline-interactive; the alias and this direct token source the SAME key (one literal).',
+  ],
+  [
+    '--tj-color-focus-ring',
+    'Improvement layer — the reference NAMES --outline-focus but under-applies it (probe10); dark #828BBB = 4.763:1 non-text on dark-card. 2px :focus-visible rings on every interactive.',
   ],
   [
     '--tj-color-engage',
@@ -228,8 +245,8 @@ const TJ_CONFIG = {
       ' * Theme invariants — intentionally absent from the dark rules above:',
       ' * --tj-color-gold, --tj-color-gold-ink, --tj-color-badge-purple,',
       ' * --tj-color-ink-200 and --tj-color-ink-reference-time keep their light',
-      ' * values (gold stays the anchor/decorative carrier — dark-link sources it;',
-      ' * gold-ink is the light-only AA step, the link alias carries the dark flip;',
+      ' * values (gold stays the anchor/decorative/award carrier, clear of AA on',
+      ' * dark surfaces; gold-ink is the light-only AA step for gold text accents;',
       ' * the badge stays purple in dark; ink-200\'s flip rides cta-fill; the',
       ' * time-meta is unbound in dark — 17.2 decides). Typography / radius /',
       ' * spacing / motion / shadows are theme-invariant too — single source in',

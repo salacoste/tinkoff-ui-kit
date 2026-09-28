@@ -106,3 +106,74 @@ DESIGN.md amendment PENDING (orchestrator, lands with the 16.1 pre-work regen AF
 15.3 closes — editing now would drift the generated artifacts under the executor):
 `article-h1` note → resolved-probed; `nav-label` → 17px/700. Then
 `pnpm gen:tokens:tj` + gates.
+
+## probe10 — link species + focus system (2026-09-28, live article + reference CSS)
+
+Session `tinkoff-ui`, article `/news/metro-ukaz-putin/` (probe9 page, still open).
+Forensics for the 16.1 pre-work amendment #2 — the link/focus evidence that
+re-pointed the ТЖ link tokens off gold. Scripts: /tmp/tj-link-census.js,
+/tmp/tj-link-ctx.js, /tmp/tj-ratios.js; CSS pulled to /tmp/tj-*.css.
+
+### Anchor census ×171 (visible anchors, computed styles)
+
+Species that matter:
+- **×8/8 in-body article links** (`A._a_1n56p_7` in `P._paragraph_1w7nq_3`):
+  `rgb(20,20,204)` Charter 21px/400 INHERITED, `text-decoration: underline` with
+  `text-decoration-color: rgba(0,0,0,0)` — the underline EXISTS but paints
+  transparent at rest; thickness 1px, offset .1em (2.1px @21px), position under.
+  transition 0s at rest (hover transition lives in the hover rule).
+- **×10 gold Graphik 15px** = like-bubbles `_bubble_rjnkt_1` (highlighted state
+  rides `--surface-award` = the gold). Gold is the AWARD accent, not the link ink.
+- **×23 black Graphik 17px `_link_jp6vv_241`** = SEARCH-SUGGEST dropdown items
+  (`_suggest_jp6vv_187`) — NOT a body species; out of 16.1.
+- **×68 black Times 16 + ×7 rgb(0,0,238) Times** = ad modules / unstyled anchors
+  (UA defaults) — FR-21 main-kit boundary / no design species.
+- Footer/cookie/app links gray+white Graphik 10-15px — later stories' chrome.
+
+### The reference's OWN link system (minerva/v120/link.css + hedge/v148-1/index4.css)
+
+`._a_1n56p_7` base: `color: rgb(var(--outline-interactive))`; underline `#0000`
+at rest; `:hover` → `text-decoration-color: var(--color-link-border-hover)` =
+`rgba(--outline-interactive, .7)`, `transition: text-decoration-color .1s
+ease-in-out`. Ink color does NOT shift on hover (ink-stable hover). Variants:
+`data-secondary` (ink + always-on .3-alpha underline, hover .7), `data-pseudo`
+(dashed gradient underline), `data-surface=positive/negative/warning/...`,
+`data-inverse`. Theme vars (index4.css `:root` / `prefers-color-scheme: dark` +
+`.tj-auto-theme` class channel — the site has BOTH mechanisms):
+- `--outline-interactive: 20,20,204` / dark `147,162,255`
+- `--outline-interactive-hover: 1,1,160` / dark `129,129,246` (exists; unused by
+  the base link hover — recorded, no token minted)
+- `--outline-secondary: 0,0,0` / dark `208,208,210` (= dark-meta)
+- `--opacity-link-border: .3`→`.5` dark; `--opacity-link-border-hover: .7` both
+- `--outline-focus: 138,138,229` / dark `130,139,187`
+
+### Focus system (the a11y reality)
+
+Only ONE :focus rule across all fetched sheets: like-bubbles
+`outline-color: rgb(var(--outline-focus))` (UA outline otherwise). Body links:
+UA `outline: auto` (nothing authored). CTA (janus Button.css): `outline: none` —
+SUPPRESSED (gap). CTA small sizing confirmed: `data-size=small` → r5, padding
+5px 15px (h30), `transition: background-color .1s ease-in-out`.
+
+### Consequences (landed as the 16.1 pre-work amendment #2)
+
+- DESIGN.md: link-body #1414CC / dark-link-body #93A2FF + focus-ring #8A8AE5 /
+  dark-focus-ring #828BBB; `--tj-color-link` re-pointed off gold (gold-ink
+  re-roled to award-text accent); body-link typography corrected 15/grotesque →
+  21/Charter-inherited; motion: duration-micro 100ms + curve-standard (the
+  measured ease-in-out bezier); editorial-link + cta-write component anchors
+  rewritten (focus fields, hover grammar).
+- Machine ratios (3-dec, tj-ratios.js — sanity #000/#FFF = 21.000): link-body
+  10.491 card / 9.206 page; dark 6.630 dark-card / 7.700 dark-page; focus-ring
+  non-text 3.067 card / 2.691 page (RESTRICTED to card compositions); dark
+  4.763. Pinned in tests/tj-contrast.test.ts (light 18 / dark 13 key sets).
+- Generator: `dark-link` palette key RETIRED (core blocks dark-*→dark-* refs —
+  the alias + direct token now source dark-link-body, one literal); DARK_OVERRIDES
+  +link-body +focus-ring; stale gold-asymmetry literals rewritten.
+- Underline alpha (.3/.7) is a use-site composition (color-mix against the
+  theme-aware ink) — mirrors the reference's compose-at-use architecture; core
+  requires dark-override derived values to be hex, so no rgba tokens.
+- Process gotcha recorded: an inline-JS ratio script lied (zsh quoting +
+  slice(1,3) assumed a '#' prefix — 'FFFFFF' parsed as [255,255,15], sanity
+  19.563 instead of 21.000). File-based rerun with [0,2,4] slices + sanity pin
+  is the mold; the repo's own parseHex strips '#' via regex and is unaffected.

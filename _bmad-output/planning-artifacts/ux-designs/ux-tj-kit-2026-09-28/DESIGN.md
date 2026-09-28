@@ -1,6 +1,6 @@
 ---
 name: tj-kit
-description: The ТЖ (Тиньков Журнал, t-j.ru) editorial design language as a separate exportable sub-kit — Graphik/Charter two-family typography, black-ink-on-white-cards editorial chrome, gold link accent, native prefers-color-scheme dark mode.
+description: The ТЖ (Тиньков Журнал, t-j.ru) editorial design language as a separate exportable sub-kit — Graphik/Charter two-family typography, black-ink-on-white-cards editorial chrome, navy interactive links + gold award accents, native prefers-color-scheme dark mode.
 status: draft
 created: 2026-09-28
 updated: 2026-09-28
@@ -22,9 +22,17 @@ colors:
   # Dividers (extracted)
   divider: '#E5E5E5'
   divider-strong: '#A6A6A6'
-  # Gold — the editorial link accent (extracted)
-  gold: '#C79637'           # reference value; 2.676:1 on card — CANNOT be an AA text color in light
-  gold-ink: '#8A6519'       # AUTHORED AA override for light-theme text links (5.308:1 on card); light-only, the link alias carries the dark flip
+  # Gold — the award/ornament accent (extracted; re-roled OFF the link species by probe10)
+  gold: '#C79637'           # reference value; 2.676:1 on card — CANNOT be an AA text color in light; stays the anchor + decorative carrier
+  gold-ink: '#8A6519'       # AUTHORED AA override for gold TEXT accents — award/byline chrome (5.308:1 on card); light-only, no longer the link alias
+  # Interactive link species (extracted, probe10 2026-09-28 — the reference's OWN link
+  # system, minerva/v120/link.css + hedge/v148-1/index4.css theme vars): ink =
+  # rgb(var(--outline-interactive)); underline TRANSPARENT at rest, revealed on hover at
+  # 70% alpha of the ink (--opacity-link-border-hover), 0.1s ease-in-out. The alpha is a
+  # use-site composition (color-mix against the theme-aware ink token) — mirrors the
+  # reference's compose-at-use architecture and keeps dark on the same key.
+  link-body: '#1414CC'        # reference --outline-interactive (light) — 10.491:1 on card / 9.206:1 on page
+  dark-link-body: '#93A2FF'   # reference dark --outline-interactive — 6.630:1 on dark-card / 7.700:1 on dark-page
   # Scoped accents (extracted; scoped carriers only — see Colors body)
   badge-purple: '#8054FF'   # «Учебник» 30×30 circular badge ONLY — non-text carrier
   # CTA (extracted)
@@ -40,11 +48,20 @@ colors:
   dark-engage: '#717277'    # like/engagement ink — RESTRICTED (3.277:1 on dark-card). Feeds the engage alias.
   dark-cta-fill: '#F5F5F9'  # CTA inverts to a near-white pill
   dark-cta-ink: '#000000'
-  dark-link: '{colors.gold}' # gold clears AA on dark surfaces (5.876:1 on dark-card) — reference value stays; feeds the link alias
+  # probe10: the 15.2 `dark-link` key (gold carrier) is RETIRED — the link alias
+  # dark-sources dark-link-body directly now (the generator blocks dark-*→dark-*
+  # references; one key, one literal, no duplication).
+  # Focus (extracted token + improvement layer): the reference NAMES --outline-focus but
+  # under-applies it — probe10: only like-bubbles carry `outline-color`; body links fall to
+  # the UA outline; the CTA suppresses outline entirely. The kit applies a 2px
+  # :focus-visible ring on every interactive — documented improvement, reference color.
+  focus-ring: '#8A8AE5'       # reference --outline-focus (light) — non-text 3.067:1 on card / 2.691:1 on bare page (RESTRICTED to card surfaces)
+  dark-focus-ring: '#828BBB'  # dark --outline-focus — non-text 4.763:1 on dark-card
 # AA-bearing notes grammar per the bank-kit mold (story 9.2 machine truth);
 # ratios below are MACHINE computations, 3-decimal, trued 2026-09-28 — the ТЖ
 # token story (15.2) mechanizes these exact pins in its contrast test exactly
-# as 1.2/6.1 did. status: verified entries are re-anchored to story: '15.2'.
+# as 1.2/6.1 did. status: verified entries are re-anchored to story: '15.2';
+# probe10 amendments (16.1 pre-work) anchor story: '16.1'.
 aa-annotations:
   ink-reference-meta:
     kind: restricted
@@ -59,8 +76,18 @@ aa-annotations:
   gold-ink:
     kind: override
     status: verified
-    story: '15.2'
-    text: 'authored `#8A6519` (5.308:1 on card) replaces the extracted `#C79637` (2.676:1 — fails even the 3:1 large-text bar) for light-theme editorial text links; `#C79637` stays the anchor + decorative carrier (rules, ornaments). Dark keeps the reference value — `#C79637` = 5.876:1 on dark-card.'
+    story: '16.1'
+    text: 'authored `#8A6519` (5.308:1 on card) replaces the extracted `#C79637` (2.676:1 — fails even the 3:1 large-text bar) for light-theme gold TEXT accents — award/byline chrome; `#C79637` stays the anchor + decorative carrier (rules, ornaments). Dark keeps the reference value — `#C79637` = 5.876:1 on dark-card. Probe10 re-roled the LINK species onto the extracted link-body pair; gold-ink no longer feeds the link alias.'
+  link-body:
+    kind: measured
+    status: verified
+    story: '16.1'
+    text: 'extracted `#1414CC` (reference --outline-interactive) = 10.491:1 on card / 9.206:1 on page — the in-body link ink; dark `#93A2FF` = 6.630:1 on dark-card / 7.700:1 on dark-page. The hover underline (70% alpha of the ink) is decorative — AA rides the ink.'
+  focus-ring:
+    kind: restricted
+    status: verified
+    story: '16.1'
+    text: 'non-text 3:1: `#8A8AE5` = 3.067:1 on card ✓ / 2.691:1 on bare page ✗ — focus rings are card-surface compositions (the ТЖ chrome grammar); dark `#828BBB` = 4.763:1 on dark-card ✓. The reference defines the token but under-applies it (probe10); the kit applies 2px :focus-visible rings — improvement layer.'
   engage:
     kind: restricted
     status: verified
@@ -78,14 +105,18 @@ shadows:
   # card-lift estimates are DELETED (forensics: verify/tj-tokens/NOTES.md).
   overlay: '0 2px 8px rgba(0,0,0,.1)'
 motion:
-  # UNPROBED on the ТЖ reference (no transition captures taken). Starting
-  # contract = the bank kit's motion scale (same curve/duration grammar);
-  # per-component verification lands with each component story (FR-22 gate).
+  # First ТЖ transitions MEASURED probe10 (2026-09-28, link.css + Button.css):
+  # link underline reveal + CTA background = 0.1s ease-in-out — duration-micro
+  # joins the scale and curve-standard records the keyword's exact bezier.
+  # The rest of the contract stays the bank kit's motion grammar; per-component
+  # verification lands with each component story (FR-22 gate).
   curve-expressive-standard: 'cubic-bezier(0.4,0.1,0.2,1)'
   curve-expressive-entrance: 'cubic-bezier(0.35,1.3,0.25,1)'
   curve-expressive-exit: 'cubic-bezier(0.4,0,1,1)'
   curve-productive-standard: 'cubic-bezier(0.2,0,0.4,0.9)'
+  curve-standard: 'cubic-bezier(0.42,0,0.58,1)'   # the measured ease-in-out keyword as its exact bezier — the ТЖ interactive curve (probe10)
   duration-fastest: 75ms
+  duration-micro: 100ms
   duration-fast: 150ms
   duration-moderate: 300ms
   duration-slow: 500ms
@@ -115,7 +146,7 @@ typography:
   time-meta: { fontSize: 15px, fontWeight: '400', fontFamily: '{typography.font-ui}' }
   cta-label: { fontSize: 15px, fontWeight: '400', lineHeight: '20px', fontFamily: '{typography.font-ui}' }
   nav-label: { fontSize: 17px, fontWeight: '700', fontFamily: '{typography.font-ui}', note: 'sidebar rubric labels — probe9 census: navItem ×11/11 at 17px/700 Graphik (vision 16/400 was a wrapper artifact: the pill anchors set no family and compute Times; the inner spans carry Graphik)' }
-  body-link: { fontSize: 15px, fontWeight: '400', fontFamily: '{typography.font-ui}', note: 'in-body links are 15px grotesque inside the 21px serif flow — reference quirk, kept' }
+  body-link: { fontSize: 21px, fontWeight: '400', fontFamily: '{typography.font-reading}', note: 'probe10 census ×8/8: in-body links INHERIT the reading register (Charter 21px, ink = the extracted link-body species); the 15px-grotesque vision read was a wrapper artifact — 15px Graphik links are search-suggest/footer/bubble surfaces, not article body' }
 rounded:
   # PIXEL-PROBED 2026-09-28 on the live reference (forensics:
   # .playwright-cli/verify/tj-tokens/NOTES.md — home/flows/article//pro/
@@ -161,10 +192,16 @@ components:
     typography: '{typography.cta-label}'
     dark-background: '{colors.dark-cta-fill}'
     dark-color: '{colors.dark-cta-ink}'
+    focus-ring: '{colors.focus-ring}'
+    transition: 'background-color 100ms curve-standard (measured, probe10) — reference suppresses outline; the kit shows the ring (improvement)'
   editorial-link:
-    color: '{colors.gold-ink}'
-    hover-color: '{colors.gold}'
-    dark-color: '{colors.dark-link}'
+    color: '{colors.link-body}'
+    dark-color: '{colors.dark-link-body}'
+    focus-ring: '{colors.focus-ring}'
+    hover: 'ink-stable — underline reveal only (70% alpha of the ink via color-mix, 100ms curve-standard)'
+    secondary-color: '{colors.ink-100}'
+    secondary-dark-color: '{colors.dark-meta}'
+    note: 'probe10 re-point: the link species is the extracted interactive pair, not gold. Secondary variant rides ink/dark-meta with an always-on 30% underline (70% on hover); dashed pseudo-links and positive/negative surface variants stay out of 16.1 (no consumer yet).'
   article-body-text:
     typography: '{typography.article-body}'
     color: '{colors.ink-100}'
@@ -216,8 +253,10 @@ generator instance (FR-18); it never mixes into the bank kit's table.
 - **Two-family typography.** Graphik (grotesque) for UI and ALL headings; Charter (serif) for
   the article reading register. The serif body is the strongest ТЖ identity marker and the
   clearest divergence from the bank kit.
-- **Gold, sparingly.** `#C79637` is the editorial link accent (384 uses on the home DOM census)
-  and ornamental rules; it is NOT an AA text color in light (see Colors).
+- **Gold, sparingly.** `#C79637` is the award/ornament accent (384 uses on the home DOM
+  census — rules, ornaments, highlighted like-bubbles) and NOT an AA text color in light
+  (see Colors). Probe10 retired the "gold editorial link" read: the reference's OWN link
+  species is the navy interactive pair `#1414CC`/`#93A2FF` with a hover-revealed underline.
 - **Quiet geometry.** r5 CTAs (not pills!), hairline dividers, FLAT cards — no shadow lifts
   anywhere (the 95-card pixel census: `box-shadow: none`; surfaces separate by color, not
   elevation). Where the bank kit is pill-shaped and yellow, ТЖ is rectangular and ink-colored.
@@ -241,8 +280,13 @@ DOM: light `#FFF×144 / #FFDD2D×11 / #8054FF×3 / #06101E×9`, colors `#000×49
 | ink-300 #6E6E6E (authored) on card | 5.099 | ✓ — essential meta |
 | ink-reference-meta #A6A6A6 on card | 2.434 | ✗ RESTRICTED (decorative/supplementary) |
 | ink-reference-time #808080 on card / dark-card | 3.949 / 3.982 | ✗ RESTRICTED (timestamps/read-time) |
-| gold #C79637 on card | 2.676 | ✗ as text; gold-ink #8A6519 = 5.308 ✓ |
-| gold #C79637 on dark-card #20232A | 5.876 | ✓ — dark links keep the reference value |
+| gold #C79637 on card | 2.676 | ✗ as text; gold-ink #8A6519 = 5.308 ✓ (award chrome) |
+| gold #C79637 on dark-card #20232A | 5.876 | ✓ — award accents in dark |
+| link-body #1414CC on card / page | 10.491 / 9.206 | ✓ — the link species (probe10) |
+| dark-link-body #93A2FF on dark-card / dark-page | 6.630 / 7.700 | ✓ |
+| focus-ring #8A8AE5 vs card (non-text) | 3.067 | ✓ 1.4.11 on card surfaces |
+| focus-ring #8A8AE5 vs page (non-text) | 2.691 | ✗ RESTRICTED — rings ride cards |
+| dark-focus-ring #828BBB vs dark-card (non-text) | 4.763 | ✓ |
 | dark-meta #D0D0D2 on dark-card / dark-page | 10.211 / 11.859 | ✓ |
 | dark-cta-ink #000 on dark-cta-fill #F5F5F9 | 19.311 | ✓ |
 | dark-engage #717277 on dark-card | 3.277 | ✗ RESTRICTED (counts) |
@@ -274,8 +318,10 @@ body 21/400/30 serif · pull-quote 35/400/50 grotesque · time-meta 15/400 · CT
 Resolved 2026-09-28 (probe9, live article page — forensics in
 `.playwright-cli/verify/tj-tokens/NOTES.md`): article-H1 family = Graphik (computed
 on the H1 node itself, fonts.check true); nav-label = 17px/700 (×11/11 census; the
-16/400 vision read was a wrapper artifact). Remaining recorded reference behavior,
-kept: in-body link quirk (15px grotesque links inside 21px serif flow).
+16/400 vision read was a wrapper artifact). Probe10 (same day, link census ×171 +
+the reference's own link.css) retired the last "quirk": in-body links ×8/8 INHERIT
+the reading register (Charter 21px) with the extracted interactive ink — the 15px
+grotesque read was a wrapper artifact of suggest/footer/bubble surfaces.
 
 ## Layout & Spacing
 

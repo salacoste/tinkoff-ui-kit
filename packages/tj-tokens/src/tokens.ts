@@ -21,10 +21,12 @@ export const colorTokens = {
   '--tj-color-divider-strong': '#A6A6A6',
   '--tj-color-gold': '#C79637',
   '--tj-color-gold-ink': '#8A6519',
+  '--tj-color-link-body': '#1414CC',
   '--tj-color-badge-purple': '#8054FF',
   '--tj-color-cta-fill': '#333333',
   '--tj-color-cta-ink': '#FFFFFF',
-  '--tj-color-link': '#8A6519',
+  '--tj-color-focus-ring': '#8A8AE5',
+  '--tj-color-link': '#1414CC',
   '--tj-color-engage': '#A6A6A6',
 } as const;
 
@@ -39,8 +41,10 @@ export const darkColorTokens = {
   '--tj-color-ink-reference-meta': '#D0D0D2',
   '--tj-color-cta-fill': '#F5F5F9',
   '--tj-color-cta-ink': '#000000',
-  '--tj-color-link': '#C79637',
+  '--tj-color-link': '#93A2FF',
   '--tj-color-engage': '#717277',
+  '--tj-color-link-body': '#93A2FF',
+  '--tj-color-focus-ring': '#828BBB',
 } as const;
 
 /** Typography tokens — per-slot size/weight/leading plus the family slots (values: DESIGN.md `typography`; the Graphik/Charter string slots, FR-20). */
@@ -85,7 +89,7 @@ export const typographyTokens = {
   '--tj-text-cta-label-leading': '20px',
   '--tj-text-nav-label-size': '17px',
   '--tj-text-nav-label-weight': '700',
-  '--tj-text-body-link-size': '15px',
+  '--tj-text-body-link-size': '21px',
   '--tj-text-body-link-weight': '400',
   '--tj-font-ui': 'Graphik, Inter, -apple-system, system-ui, "Segoe UI", "Helvetica Neue", sans-serif',
   '--tj-font-reading': 'Charter, "Bitstream Charter", "PT Serif", Georgia, serif',
@@ -137,7 +141,9 @@ export const motionTokens = {
   '--tj-motion-curve-expressive-entrance': 'cubic-bezier(0.35,1.3,0.25,1)',
   '--tj-motion-curve-expressive-exit': 'cubic-bezier(0.4,0,1,1)',
   '--tj-motion-curve-productive-standard': 'cubic-bezier(0.2,0,0.4,0.9)',
+  '--tj-motion-curve-standard': 'cubic-bezier(0.42,0,0.58,1)',
   '--tj-motion-duration-fastest': '75ms',
+  '--tj-motion-duration-micro': '100ms',
   '--tj-motion-duration-fast': '150ms',
   '--tj-motion-duration-moderate': '300ms',
   '--tj-motion-duration-slow': '500ms',

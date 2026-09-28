@@ -6,9 +6,9 @@ GENERATED FILE — DO NOT EDIT. Regenerate with `pnpm gen:tokens:tj`.
 - The `components:` frontmatter block is consumer spec prose — never rendered.
 - The `dark-*` color entries are the palette SOURCE for the dark layer (see "Dark layer") — never emitted as `--tj-color-dark-*` custom properties.
 - No z-scale: the ТЖ layer has no floating surfaces yet — a story needing one amends DESIGN.md first (the bank AD-12 scale stays the reference precedent).
-- AA-bearing color notes are GENERATED from the DESIGN.md `aa-annotations:` block (story 9.2 — the generator literals died; every note must anchor in the Colors body, anchor lost → generation aborts): 5 entries — 5 verified / 0 open `[ASSUMPTION]` flags. Resolved history: ink-reference-meta (Story 15.2); ink-reference-time (Story 15.2); gold-ink (Story 15.2); engage (Story 15.2); badge-purple (Story 15.2).
+- AA-bearing color notes are GENERATED from the DESIGN.md `aa-annotations:` block (story 9.2 — the generator literals died; every note must anchor in the Colors body, anchor lost → generation aborts): 7 entries — 7 verified / 0 open `[ASSUMPTION]` flags. Resolved history: ink-reference-meta (Story 15.2); ink-reference-time (Story 15.2); gold-ink (Story 16.1); link-body (Story 16.1); focus-ring (Story 16.1); engage (Story 15.2); badge-purple (Story 15.2).
 
-Light layer: **96 tokens** on `:host, :root` (colors 16, typography 44, radius 11, spacing 16, shadows 1, motion 8) plus the dark layer: **11 semantic overrides** on `[data-tj-theme="dark"]` AND the native auto leg (`prefers-color-scheme: dark` on `:root:not([data-tj-theme="light"])`).
+Light layer: **100 tokens** on `:host, :root` (colors 18, typography 44, radius 11, spacing 16, shadows 1, motion 10) plus the dark layer: **13 semantic overrides** on `[data-tj-theme="dark"]` AND the native auto leg (`prefers-color-scheme: dark` on `:root:not([data-tj-theme="light"])`).
 
 ## Colors
 
@@ -26,11 +26,13 @@ Direct semantic keys from the `colors` block — the ТЖ table IS semantic (no 
 | `--tj-color-divider` | `#E5E5E5` |  |
 | `--tj-color-divider-strong` | `#A6A6A6` |  |
 | `--tj-color-gold` | `#C79637` |  |
-| `--tj-color-gold-ink` | `#8A6519` | AA override — authored `#8A6519` (5.308:1 on card) replaces the extracted `#C79637` (2.676:1 — fails even the 3:1 large-text bar) for light-theme editorial text links; `#C79637` stays the anchor + decorative carrier (rules, ornaments). Dark keeps the reference value — `#C79637` = 5.876:1 on dark-card. |
+| `--tj-color-gold-ink` | `#8A6519` | AA override — authored `#8A6519` (5.308:1 on card) replaces the extracted `#C79637` (2.676:1 — fails even the 3:1 large-text bar) for light-theme gold TEXT accents — award/byline chrome; `#C79637` stays the anchor + decorative carrier (rules, ornaments). Dark keeps the reference value — `#C79637` = 5.876:1 on dark-card. Probe10 re-roled the LINK species onto the extracted link-body pair; gold-ink no longer feeds the link alias. |
+| `--tj-color-link-body` | `#1414CC` | Measured (Story 16.1) — extracted `#1414CC` (reference --outline-interactive) = 10.491:1 on card / 9.206:1 on page — the in-body link ink; dark `#93A2FF` = 6.630:1 on dark-card / 7.700:1 on dark-page. The hover underline (70% alpha of the ink) is decorative — AA rides the ink. |
 | `--tj-color-badge-purple` | `#8054FF` | Restricted: purple `#8054FF` exists ONLY as the 30×30 circular badge fill (non-text carrier, white glyph); never a text or link color. |
 | `--tj-color-cta-fill` | `#333333` |  |
 | `--tj-color-cta-ink` | `#FFFFFF` |  |
-| `--tj-color-link` | `#8A6519` |  |
+| `--tj-color-focus-ring` | `#8A8AE5` | Restricted: non-text 3:1: `#8A8AE5` = 3.067:1 on card ✓ / 2.691:1 on bare page ✗ — focus rings are card-surface compositions (the ТЖ chrome grammar); dark `#828BBB` = 4.763:1 on dark-card ✓. The reference defines the token but under-applies it (probe10); the kit applies 2px :focus-visible rings — improvement layer. |
+| `--tj-color-link` | `#1414CC` |  |
 | `--tj-color-engage` | `#A6A6A6` | Restricted: engagement ink: dark `#717277` = 3.277:1 on dark-card — counts/secondary affordances only; the light engage alias rides ink-reference-meta (2.434:1, restricted). |
 
 ## Typography
@@ -79,7 +81,7 @@ Per-slot tokens from the `typography` block: `--tj-text-<slot>-size` / `-weight`
 | `--tj-text-cta-label-leading` | `20px` |  |
 | `--tj-text-nav-label-size` | `17px` | sidebar rubric labels — probe9 census: navItem ×11/11 at 17px/700 Graphik (vision 16/400 was a wrapper artifact: the pill anchors set no family and compute Times; the inner spans carry Graphik) |
 | `--tj-text-nav-label-weight` | `700` |  |
-| `--tj-text-body-link-size` | `15px` | in-body links are 15px grotesque inside the 21px serif flow — reference quirk, kept |
+| `--tj-text-body-link-size` | `21px` | probe10 census ×8/8: in-body links INHERIT the reading register (Charter 21px, ink = the extracted link-body species); the 15px-grotesque vision read was a wrapper artifact — 15px Graphik links are search-suggest/footer/bubble surfaces, not article body |
 | `--tj-text-body-link-weight` | `400` |  |
 
 ### Font family slots
@@ -152,7 +154,9 @@ Durations and curves come exclusively from these tokens (AD-9); everything respe
 | `--tj-motion-curve-expressive-entrance` | `cubic-bezier(0.35,1.3,0.25,1)` |  |
 | `--tj-motion-curve-expressive-exit` | `cubic-bezier(0.4,0,1,1)` |  |
 | `--tj-motion-curve-productive-standard` | `cubic-bezier(0.2,0,0.4,0.9)` |  |
+| `--tj-motion-curve-standard` | `cubic-bezier(0.42,0,0.58,1)` |  |
 | `--tj-motion-duration-fastest` | `75ms` |  |
+| `--tj-motion-duration-micro` | `100ms` |  |
 | `--tj-motion-duration-fast` | `150ms` |  |
 | `--tj-motion-duration-moderate` | `300ms` |  |
 | `--tj-motion-duration-slow` | `500ms` |  |
@@ -174,15 +178,17 @@ The reference's OWN dark values (`prefers-color-scheme` live capture — extract
 | `--tj-color-ink-reference-meta` | `#A6A6A6` | `#D0D0D2` | `colors.dark-meta` | Remap — #A6A6A6 vanishes in dark (census ~76px, artwork-adjacent); dark-meta #D0D0D2 carries the duty. The LIGHT restricted ruling (2.434:1) is untouched — the annotation is a light-theme statement. |
 | `--tj-color-cta-fill` | `#333333` | `#F5F5F9` | `colors.dark-cta-fill` |  |
 | `--tj-color-cta-ink` | `#FFFFFF` | `#000000` | `colors.dark-cta-ink` |  |
-| `--tj-color-link` | `#8A6519` | `#C79637` | `colors.dark-link` | The gold asymmetry mechanized — light link = gold-ink (authored #8A6519, 5.308:1), dark link = dark-link = the reference gold #C79637 (5.876:1 on dark-card). |
+| `--tj-color-link` | `#1414CC` | `#93A2FF` | `colors.dark-link-body` | Probe10 — the link species is the reference's OWN interactive pair: light #1414CC (10.491:1 on card), dark #93A2FF (6.630:1 on dark-card). The 15.2 gold pairing is retired; gold is the award accent. |
 | `--tj-color-engage` | `#A6A6A6` | `#717277` | `colors.dark-engage` | Restricted — dark-engage #717277 = 3.277:1 on dark-card: counts/secondary affordances only. The light engage alias rides ink-reference-meta (2.434:1, also restricted). |
+| `--tj-color-link-body` | `#1414CC` | `#93A2FF` | `colors.dark-link-body` | Probe10 — the reference dark --outline-interactive; the alias and this direct token source the SAME key (one literal). |
+| `--tj-color-focus-ring` | `#8A8AE5` | `#828BBB` | `colors.dark-focus-ring` | Improvement layer — the reference NAMES --outline-focus but under-applies it (probe10); dark #828BBB = 4.763:1 non-text on dark-card. 2px :focus-visible rings on every interactive. |
 
 ### Theme invariants
 
 These semantics keep their light values in dark — no override is emitted:
 
-- `--tj-color-gold` — the anchor + decorative carrier; dark-link references it — gold clears AA on dark surfaces (5.876:1 on dark-card)
-- `--tj-color-gold-ink` — light-only authored AA step — the link alias carries the dark flip (the bank link-on-tint mold)
+- `--tj-color-gold` — the anchor + decorative/award carrier — clears AA on dark surfaces (5.876:1 on dark-card)
+- `--tj-color-gold-ink` — light-only authored AA step for gold TEXT accents — award/byline chrome (probe10 re-roled the link species)
 - `--tj-color-badge-purple` — the 30×30 badge stays purple in dark (census #8054FF ×537 present; scoped non-text carrier)
 - `--tj-color-ink-200` — light CTA fill duty only — the cta-fill semantic carries the flip; dark strong-UI ink is ink-100/dark-ink
 - `--tj-color-ink-reference-time` — unbound in dark (dark-article unprobed; 3.982:1 on dark-card stays restricted class) — the 17.2 dark sweep decides
