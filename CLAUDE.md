@@ -419,3 +419,28 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   (probe9): article-H1 = Graphik 700/45/50 CONFIRMED; nav-label corrected to 17/700
   (vision 16/400 was a wrapper artifact); Charter lead/body exact — DESIGN.md
   amendment + regen land as the 16.1 pre-work commit.
+
+- **2026-09-29 STORY 16.1 EXECUTED (code-head `0792d1f`, CI run 36483033096's
+  successor 36496257421 GREEN after one harness round):** the ТЖ family has
+  components — tj-prose (760px Charter reading column, 21/30 body + 27/35
+  lead, Graphik H2 38/700/45 + pull-quote 35/50, 25px rhythm, RU hyphenation),
+  tj-link (probe10 species: link-body ink, rest-transparent underline → 70%
+  color-mix reveal on hover, 1px/0.1em/under, ink-stable hover, deterministic
+  external-rel rule), tj-cta (anchor-only, 44×44 box / 30px pill inset 7px,
+  dark inversion via tokens, zero invented states). FREEZE ritual landed in
+  CONVENTIONS.md: NONE stateful in roster / EMPTY frozen event-map / unwrap
+  bridge = documented FR-17 duplication / NO z tokens (16.4 mints); drawer
+  stays [OPEN — 16.4]. AD-1 second instance PROVEN: scripts/wrapper-gen/
+  core.mjs parameterized (bank byte-identical pre-wiring), tj CEM manifest +
+  tj-react generated wrappers under root gen/check:gen +
+  tests/tj-gen-drift.test.ts. Two review patch rounds (nested-anchor species
+  → tj-link two-surface contract; gen-drift mechanization) + two axe
+  color-surface rounds (ink-300; card-over-gray-page — the ТЖ AA-surface
+  law: no bare-page meta ink in the palette by design). Provisional
+  baselines: 24 tj PNGs; first CI compare caught the LAST unpinned font
+  surface (raw `monospace` story-canvas code chrome — mac Menlo vs CI DejaVu
+  reflowed +5..15px); harness pin `#storybook-root code/pre/kbd/samp` →
+  JetBrains Mono (11.2 precedent), mint4 1516 passed, 22 PNGs re-minted,
+  zero non-ТЖ baselines touched. Side-by-side vision review vs the live
+  capture GREEN; H2 40/24 + pull-quote 32 stay flagged for the maintainer's
+  baseline-review package (5.6 mold). Next: 16.2 rubric header + news card.
