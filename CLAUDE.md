@@ -9,7 +9,7 @@ Study project: the reference site (tinkoff.ru) is the design source of truth; we
 (`@lit/react`); pnpm workspace `pillkit-{tokens,components,react,docs}`; TS 7 strict, Vite 8, Vitest,
 Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) live in `_bmad-output/planning-artifacts/`.
 
-## Project state (updated 2026-09-28 — v1.3.0 RELEASED + tag; maintainer queue (a)–(c) CLOSED)
+## Project state (updated 2026-09-28 — v1.3.0 RELEASED; post-release POLISH ROUND landed; ТЖ = separate kit next)
 
 - **v1.0.0 SHIPPED as git tag `v1.0.0`** (maintainer gate session 2026-09-23/24). All maintainer
   gates closed: 274/274 baselines CONFIRMED (F1 re-taken), VoiceOver SR walk 19/19 (tabs
@@ -256,6 +256,24 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   36402884699 CANCELLED by the newer push (workflow concurrency — content
   subsumed); `9083180` run **36405053534 success** (the cumulative tree
   verdict, checked via `gh run view`).
+- **2026-09-28 POLISH ROUND (post-release; sanction «lets continue to improve»):** maintainer
+  picked three directions — (1) autonomous polish now, (2) admin-zone dose-close, (3) ТЖ as a
+  SEPARATE exportable sub-kit (verbatim directive «отдельным под ui kit… отдельную сущность,
+  а не целый большой проект» — shapes epics-v5; planning starts on the maintainer's word).
+  Landed: **docs-nav regroup `43fb084`** (CI success run 36415613440) — the 11 `Components v2/*`
+  overview pages became `Guides/*` (9) + `Patterns/*` (2: Console chrome, Data surfaces); 26
+  baselines prefix-moved byte-identical, 2 cookie-banner page PNGs re-taken (exact suite casing),
+  component-search ids follow; forensics in `.playwright-cli/verify/docs-regroup/NOTES.md`
+  (incl. the pre-existing `--list` 1440 vs executed 1438 delta — runtime-skipped legs, NOT a
+  rename artifact; stash-verified against HEAD). **OSS scaffolding `a1148f9`:** README freshness
+  (27 components ×2, v1.3.0 pin ×2, «независимый учебный проект» — the repo is public),
+  CONTRIBUTING.md (pnpm-only env, gen-before-test order, 1.5% baseline rule, port-6007
+  serialization, a11y gate FR-16, legal boundaries), RU issue templates (bug report + component
+  request) + PR checklist — all carry the PII-redaction gate. **Admin prep `0cbe955`:**
+  follow-up capture RUNBOOK (3 open states: avatar-menu, row kebab, «…» overflow — read-only,
+  PII redacted BEFORE delivery) + DRAFT menu-popover/avatar-menu gap-map in
+  `_bmad-output/implementation-artifacts/` (NOT a spec; roster decision after captures). CI
+  verdict of the round chain: `0cbe955` run **36417446515 success** (cumulative tree verdict).
 - Fonts: DaytonaSans/DaytonaPragma in `packages/tokens/fonts/` under LICENSE-FONTS.md (separately
   licensed, NOT MIT; consumer rights ONLY per that file)
 - **Lit on this stack requires `experimentalDecorators: true`** — do not "fix" this
