@@ -300,6 +300,20 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   chrome+drawer, 16.6 composition+ad-slot+walkthrough), E17 verification+release (TAG =
   maintainer). Build loop OPENED: spec-15-1 written (parallel family scaffold, FR-17
   mechanized in both lint layers).
+- **2026-09-28 STORY 15.1 EXECUTED (code-head `0b2cd8d`):** the ТЖ family stands —
+  `pillkit-tj-{tokens,components,react}` on the bank molds (dual-alias inherited from
+  tsconfig.base; `/^pillkit-/` vite externals cover both families without an edge);
+  **FR-17 DERIVED, not hand-listed**: `ad4-matrix.mjs` FAMILY_DIRS → `fr17Groups()`/
+  `FR17_MESSAGE`, consumed by eslint (group+escape messages) AND the boundary-test matcher
+  (incl. relative escapes) — both directions trip-probed and reverted; docs = sole
+  exemption (pinned negative-leg in the structure test). CONVENTIONS.md seeded (bank §4/§9
+  grammar, `[OPEN—16.1]` marks, AD-12 drawer ruling verbatim); docs TJ shell + 2 baselines;
+  zero-hardcoded/CI/README ride the single sources. Quick-review lens: SHIP, 4 MINOR all
+  fixed in the orchestrator round (LICENSE per-package scope notes + MIT fields, README ×3
+  with the install-ТЖ-alone recipe, eslint FR-17 message pin). Spec closed: Change Log 1
+  corrects the stale `@tk-kit/*` spec strings to spine-OQ-9 `pillkit-tj-*`; 2 amends the
+  shared-layer enumeration. Gates: orchestrator re-ran install/build/test/lint/typecheck —
+  exit 0; bank src byte-untouched.
 - Fonts: DaytonaSans/DaytonaPragma in `packages/tokens/fonts/` under LICENSE-FONTS.md (separately
   licensed, NOT MIT; consumer rights ONLY per that file)
 - **Lit on this stack requires `experimentalDecorators: true`** — do not "fix" this
