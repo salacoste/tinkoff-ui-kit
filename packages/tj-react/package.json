@@ -1,0 +1,55 @@
+{
+  "name": "pillkit-tj-react",
+  "version": "0.0.0",
+  "description": "React 19 adapters for the ТЖ sub-kit of pillkit — wrappers to be generated from the Custom Elements Manifest of pillkit-tj-components via @lit/react; event handlers receive unwrapped detail payloads. Scaffolded at story 15.1; wrappers land with epic 16.",
+  "keywords": [
+    "pillkit",
+    "pillkit-tj",
+    "react",
+    "react-components",
+    "web-components",
+    "custom-elements",
+    "lit",
+    "wrappers",
+    "ui-kit"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/salacoste/tinkoff-ui-kit.git",
+    "directory": "packages/tj-react"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build && tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@lit/react": "1.0.8",
+    "pillkit-tj-components": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "private": true
+}

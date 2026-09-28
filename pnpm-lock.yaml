@@ -230,6 +230,9 @@ importers:
       pillkit-react:
         specifier: workspace:*
         version: link:../react
+      pillkit-tj-tokens:
+        specifier: workspace:*
+        version: link:../tj-tokens
       pillkit-tokens:
         specifier: workspace:*
         version: link:../tokens
@@ -268,6 +271,36 @@ importers:
       react-dom:
         specifier: 19.3.0
         version: 19.3.0(react@19.3.0)
+
+  packages/tj-components:
+    dependencies:
+      lit:
+        specifier: 3.3.3
+        version: 3.3.3
+
+  packages/tj-react:
+    dependencies:
+      '@lit/react':
+        specifier: 1.0.8
+        version: 1.0.8(@types/react@19.3.0)
+      pillkit-tj-components:
+        specifier: workspace:*
+        version: link:../tj-components
+      react:
+        specifier: ^19.0.0
+        version: 19.3.0
+    devDependencies:
+      '@types/react':
+        specifier: 19.3.0
+        version: 19.3.0
+      '@types/react-dom':
+        specifier: 19.3.0
+        version: 19.3.0(@types/react@19.3.0)
+      react-dom:
+        specifier: 19.3.0
+        version: 19.3.0(react@19.3.0)
+
+  packages/tj-tokens: {}
 
   packages/tokens:
     devDependencies:

@@ -6,10 +6,12 @@ import { describe, expect, it } from 'vitest';
 import {
   ALLOWED_SPECIFIERS,
   CANONICAL_DIRECTIONS,
+  FR17_MESSAGE,
   PACKAGE_DIRS,
   SCAN_ROOTS,
   escapeRegexSource,
   forbiddenGroups,
+  fr17Groups,
 } from '../ad4-matrix.mjs';
 import * as ad4Module from '../ad4-matrix.mjs';
 import eslintConfig from '../eslint.config.js';
@@ -30,6 +32,13 @@ import eslintConfig from '../eslint.config.js';
  * Story 9.2: the matrix (package dirs, allowed specifiers, scan roots) is
  * SINGLE-SOURCED in ../ad4-matrix.mjs — this suite, eslint.config.js and the
  * README pin all derive from it; the matrix lives in exactly one place.
+ *
+ * Story 15.1: the ТЖ family joins the matrix as a parallel lane (AD-4 v5).
+ * The FR-17 edge — families runtime-disjoint in BOTH directions, docs
+ * exempt — is mechanized here and in eslint via the module's fr17Groups;
+ * violation lines crossing the family edge NAME FR-17. The tj-react build
+ * isolation lane mirrors the bank's (scaffold grade: the entry is empty by
+ * design, so isolation asserts as "nothing bundled" plus the externals pin).
  *
  * Build-artifact assumption: `pnpm build` precedes `pnpm test` — the AC command
  * chain is `pnpm install && pnpm build && pnpm test`. This suite reads `dist/` as
@@ -111,9 +120,9 @@ function relativeEscapeViolation(
     return `${filePath}: relative import '${specifier}' leaves ${packageDir} and points outside the workspace`;
   }
   const targetPackage = `pillkit-${targetDir.split('/')[1]}`;
-  return allowed.includes(targetPackage)
-    ? null
-    : `${filePath}: relative import '${specifier}' resolves to ${targetPackage} (allowed: ${allowedList})`;
+  if (allowed.includes(targetPackage)) return null;
+  const fr17Note = fr17Groups(packageDir).includes(targetPackage) ? ` [${FR17_MESSAGE}]` : '';
+  return `${filePath}: relative import '${specifier}' resolves to ${targetPackage} (allowed: ${allowedList})${fr17Note}`;
 }
 
 function violationsIn(
@@ -123,11 +132,13 @@ function violationsIn(
   allowed: readonly string[],
 ): string[] {
   const violations: string[] = [];
+  const fr17 = new Set(fr17Groups(packageDir));
   for (const specifier of extractModuleSpecifiers(source)) {
     const pkg = workspacePackageOf(specifier);
     if (pkg !== null && !allowed.includes(pkg)) {
+      const fr17Note = fr17.has(pkg) ? ` [${FR17_MESSAGE}]` : '';
       violations.push(
-        `${filePath}: imports ${pkg} (allowed: ${allowed.length === 0 ? 'none' : allowed.join(', ')})`,
+        `${filePath}: imports ${pkg} (allowed: ${allowed.length === 0 ? 'none' : allowed.join(', ')})${fr17Note}`,
       );
       continue;
     }
@@ -208,6 +219,51 @@ describe('AD-4 import boundaries (spec 1.1, matrix row 2)', () => {
     expect(found).toHaveLength(5);
     expect(found.every((line) => line.startsWith(syntheticPath))).toBe(true);
   });
+
+  it('matcher flags FR-17 cross-family edges in BOTH directions and exempts docs (spec 15.1)', () => {
+    // Paths are only used for specifier resolution — no files are created.
+    // Direction 1: tj-* → bank family.
+    const tjPath = join(REPO_ROOT, 'packages/tj-components/src/__synthetic__.ts');
+    const tjFound = violationsIn(
+      "import { x } from 'pillkit-components';",
+      tjPath,
+      'packages/tj-components',
+      AD4_MATRIX['packages/tj-components']!,
+    );
+    expect(tjFound).toHaveLength(1);
+    expect(tjFound[0]).toContain(FR17_MESSAGE);
+
+    // Direction 2: bank family → tj-*.
+    const bankPath = join(REPO_ROOT, 'packages/components/src/__synthetic__.ts');
+    const bankFound = violationsIn(
+      "import { x } from 'pillkit-tj-tokens';",
+      bankPath,
+      'packages/components',
+      AD4_MATRIX['packages/components']!,
+    );
+    expect(bankFound).toHaveLength(1);
+    expect(bankFound[0]).toContain(FR17_MESSAGE);
+
+    // The docs exemption: docs composes BOTH families (AD-4 v5).
+    const docsPath = join(REPO_ROOT, 'packages/docs/src/__synthetic__.ts');
+    const docsFound = violationsIn(
+      "import { x } from 'pillkit-tj-tokens';\nimport { y } from 'pillkit-tokens';",
+      docsPath,
+      'packages/docs',
+      AD4_MATRIX['packages/docs']!,
+    );
+    expect(docsFound).toEqual([]);
+
+    // A relative-path FR-17 escape names FR-17 too.
+    const tjEscape = relativeEscapeViolation(
+      '../../components/src/index.js',
+      tjPath,
+      'packages/tj-components',
+      AD4_MATRIX['packages/tj-components']!,
+    );
+    expect(tjEscape).toContain('pillkit-components');
+    expect(tjEscape).toContain(FR17_MESSAGE);
+  });
 });
 
 describe('AD-4 single-source module (spec 9.2)', () => {
@@ -255,6 +311,17 @@ describe('AD-4 single-source module (spec 9.2)', () => {
           CANONICAL_DIRECTIONS,
         );
       }
+      // FR-17 message pin (spec 15.1 review): when this package's
+      // restrictions span the family edge, EVERY message names FR-17; when
+      // they don't (docs composes both families), none may — the exemption
+      // is pinned as tightly as the restriction.
+      const fr17Expected = fr17Groups(packageDir).length > 0;
+      for (const pattern of patterns) {
+        expect(
+          pattern.message?.includes(FR17_MESSAGE),
+          `${packageDir} message ${fr17Expected ? 'must' : 'must NOT'} embed FR-17`,
+        ).toBe(fr17Expected);
+      }
     }
   });
 
@@ -278,6 +345,27 @@ describe('react build isolation (spec 1.1, matrix row 3)', () => {
     expect(/\b(?:class|const|let|var|function)\s+LitElement\b/.test(artifact)).toBe(false);
     expect(/\b(?:class|const|let|var|function)\s+ReactiveElement\b/.test(artifact)).toBe(false);
     expect(/['"]@lit\/reactive-element['"]/.test(artifact)).toBe(false);
+  });
+});
+
+describe('tj-react build isolation (spec 15.1, the bank mold second instance)', () => {
+  it('vite externals pin the workspace family external (both families, one regex)', () => {
+    const config = readFileSync(join(REPO_ROOT, 'packages/tj-react/vite.config.ts'), 'utf8');
+    expect(config).toContain('/^pillkit-/');
+    expect(config).toContain('/^@lit\\//');
+    expect(config).toContain('/^react$/');
+  });
+
+  it('the scaffold artifact inlines no workspace or Lit source', () => {
+    // Scaffold grade: the entry is empty by design (spec 15.1 — no wrapper
+    // precedes its element), so there is no pillkit-tj-components import to
+    // keep external YET; isolation asserts as "nothing bundled". The strict
+    // bank-grade check (external import present in the artifact) becomes
+    // assertable when the first wrapper lands (epic 16).
+    const artifact = readBuiltArtifact('packages/tj-react/dist/index.js');
+    expect(/from\s*['"]pillkit-/.test(artifact)).toBe(false);
+    expect(/\b(?:class|const|let|var|function)\s+LitElement\b/.test(artifact)).toBe(false);
+    expect(/\b(?:class|const|let|var|function)\s+ReactiveElement\b/.test(artifact)).toBe(false);
   });
 });
 

@@ -1,0 +1,43 @@
+{
+  "name": "pillkit-tj-tokens",
+  "version": "0.0.0",
+  "description": "Design tokens for the ТЖ sub-kit of pillkit — the --tj-* custom-property system (light base + native-dark [data-tj-theme=\"dark\"] overrides, AA-verified pairs). Scaffolded at story 15.1; the generated layer lands at 15.2.",
+  "keywords": [
+    "pillkit",
+    "pillkit-tj",
+    "design-tokens",
+    "design-system",
+    "css-variables",
+    "custom-properties",
+    "theming",
+    "dark-mode"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/salacoste/tinkoff-ui-kit.git",
+    "directory": "packages/tj-tokens"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./tokens.css": "./dist/index.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build && tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "private": true
+}

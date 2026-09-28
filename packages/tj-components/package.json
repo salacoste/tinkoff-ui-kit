@@ -1,0 +1,48 @@
+{
+  "name": "pillkit-tj-components",
+  "version": "0.0.0",
+  "description": "Lit custom elements core for the ТЖ sub-kit of pillkit — tj-* editorial components (news cards, rubric chrome, rail) rendered via Shadow DOM and themed with --tj-* custom properties. Scaffolded at story 15.1; components land in epic 16.",
+  "keywords": [
+    "pillkit",
+    "pillkit-tj",
+    "web-components",
+    "custom-elements",
+    "lit",
+    "ui-components",
+    "ui-kit",
+    "design-system",
+    "editorial"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/salacoste/tinkoff-ui-kit.git",
+    "directory": "packages/tj-components"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./CONVENTIONS.md": "./CONVENTIONS.md"
+  },
+  "files": [
+    "dist",
+    "CONVENTIONS.md"
+  ],
+  "scripts": {
+    "build": "vite build && tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "lit": "3.3.3"
+  },
+  "private": true
+}

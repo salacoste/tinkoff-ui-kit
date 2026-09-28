@@ -27,6 +27,9 @@ axe в обеих темах, контраст, клавиатура, reduced-mo
 | `pillkit-tokens` | Дизайн-токены — слои custom properties `--tk-*`: светлая база + тёмные переопределения на `[data-theme="dark"]` |
 | `pillkit-components` | Ядро на Lit custom elements: 27 компонентов `tk-*`, общий overlay-контроллер |
 | `pillkit-react` | React-обёртки, генерируемые из Custom Elements Manifest (`@lit/react`) |
+| `pillkit-tj-tokens` | Токены под-кита ТЖ — `--tj-*` + нативная тёмная тема `[data-tj-theme="dark"]` (семейство заскаффолжено в 15.1, таблица — 15.2) |
+| `pillkit-tj-components` | Ядро ТЖ на Lit custom elements: редакционные компоненты `tj-*` (roster — эпик 16) |
+| `pillkit-tj-react` | React-обёртки ТЖ из CEM-манифеста `pillkit-tj-components` (эпик 16) |
 | `pillkit-docs` | Документация — Storybook 10 (RU); служебный пакет воркспейса, потреблять снаружи не нужно |
 | `tests/` | Закоммиченные гарантии import-boundary + build-isolation для матрицы AD-4 (запускаются в `pnpm test`) |
 | `transitions/` | Вендорные рецепты transitions.dev (сырые `t-*.css` + `_root.css`) — источник моушна; остаются в репозитории, лицензируются отдельно (см. «Лицензия») |
@@ -169,7 +172,7 @@ pnpm lint                                 # typescript-eslint + AD-4 import boun
 pnpm typecheck                            # TS 7 по корневым поверхностям (tests/, конфиги)
 # Матрица AD-4 задана в ad4-matrix.mjs (единый источник для eslint, теста
 # границ импорта и этой строки): allowed directions:
-# components→tokens, react→components, docs→{react, components, tokens}
+# components→tokens, react→components, tj-components→tj-tokens, tj-react→tj-components, docs→{react, components, tokens, tj-react, tj-components, tj-tokens}
 pnpm test:visual                          # визуальная регрессия + axe в обеих темах
 ```
 

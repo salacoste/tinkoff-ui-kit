@@ -17,10 +17,12 @@ import {
   ALLOWED_SPECIFIERS,
   CANONICAL_DIRECTIONS,
   FILE_TYPES,
+  FR17_MESSAGE,
   PACKAGE_DIRS,
   SCAN_ROOTS,
   escapeRegexSource,
   forbiddenGroups,
+  fr17Groups,
 } from './ad4-matrix.mjs';
 
 /** 'packages/components' -> 'components' */
@@ -42,14 +44,17 @@ const ad4Block = (packageDir) => {
   const short = shortName(packageDir);
   const allowed = ALLOWED_SPECIFIERS[packageDir];
   const directions = `allowed directions: ${CANONICAL_DIRECTIONS}`;
+  // FR-17 (story 15.1): when this package's restrictions span the family
+  // edge, the message names it — the ТЖ and bank families are runtime-disjoint.
+  const fr17 = fr17Groups(packageDir).length > 0 ? ` ${FR17_MESSAGE}.` : '';
   const patterns = [];
   if (groups.length > 0) {
     patterns.push({
       group: groups,
       message:
         allowed.length === 0
-          ? `AD-4 import boundary: ${short} is the root of the dependency graph and may not import any workspace package (${directions}).`
-          : `AD-4 import boundary: ${short} may only import ${allowed.join(', ')} (${directions}).`,
+          ? `AD-4 import boundary: ${short} is a root of the dependency graph and may not import any workspace package (${directions}).${fr17}`
+          : `AD-4 import boundary: ${short} may only import ${allowed.join(', ')} (${directions}).${fr17}`,
     });
   }
   if (escape !== null) {
@@ -57,8 +62,8 @@ const ad4Block = (packageDir) => {
       regex: escape,
       message:
         escape === '^\\.\\./'
-          ? `AD-4 import boundary: ${short} may not reach outside its own package via parent-relative imports (${directions}).`
-          : `AD-4 import boundary: ${short} may not reach ${forbiddenDirNames(packageDir).join(' or ')} via relative imports (${directions}).`,
+          ? `AD-4 import boundary: ${short} may not reach outside its own package via parent-relative imports (${directions}).${fr17}`
+          : `AD-4 import boundary: ${short} may not reach ${forbiddenDirNames(packageDir).join(' or ')} via relative imports (${directions}).${fr17}`,
     });
   }
   const extensionGlob = `{${FILE_TYPES.join(',')}}`;

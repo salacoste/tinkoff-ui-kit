@@ -6,12 +6,15 @@ import { describe, expect, it } from 'vitest';
 /**
  * FR-1 zero-hard-coded guard (spec 1.2): only pillkit-tokens emits raw values.
  * Sources under the per-package scan roots (packages/{components,react}/src,
- * packages/docs/{src,.storybook}) must not contain color literals (hex,
- * rgb()/rgba(), hsl()/hsla()) or z-index declarations with non-token values —
- * everything flows through var(--tk-*) custom properties so theming crosses
- * shadow boundaries (AD-2) and the token pipeline stays the single source of
- * values (AD-3). The tokens package itself is excluded by design: its
- * generated artifacts are where raw values live.
+ * packages/tj-{components,react}/src, packages/docs/{src,.storybook}) must
+ * not contain color literals (hex, rgb()/rgba(), hsl()/hsla()) or z-index
+ * declarations with non-token values — everything flows through var(--tk-*)
+ * custom properties so theming crosses shadow boundaries (AD-2) and the
+ * token pipeline stays the single source of values (AD-3). The tokens
+ * packages themselves (bank and ТЖ) are excluded by design: their generated
+ * artifacts are where raw values live. ТЖ placeholder sources ride the bank
+ * scanner from the scaffold (story 15.1); the per-family token grammar
+ * split (--tj-* consumed-tokens etc.) is story 15.2's scoping work.
  *
  * Detector precision rules:
  * - Comment mentions are not values — comments are stripped first, preserving
@@ -47,13 +50,23 @@ const REPO_ROOT = fileURLToPath(new URL('..', import.meta.url));
 const SCAN_ROOTS: Readonly<Record<string, readonly string[]>> = {
   'packages/components': ['src'],
   'packages/react': ['src'],
+  'packages/tj-components': ['src'],
+  'packages/tj-react': ['src'],
   'packages/docs': ['src', '.storybook'],
 };
 const SCANNED_EXTENSION = /\.(ts|tsx|css)$/;
 /** Style-bearing extensions the scanner does NOT read — finding one in a scanned src/ is a tripwire. */
 const UNSCANNED_STYLE_EXTENSION = /\.(scss|less|html|vue|svelte|jsx|mdx)$/;
-/** The four workspace packages (AD-4); anything else under packages/ is unexpected. */
-const KNOWN_PACKAGE_DIRS = new Set(['tokens', 'components', 'react', 'docs']);
+/** The seven workspace packages (AD-4 v5: bank + ТЖ families + docs); anything else under packages/ is unexpected. */
+const KNOWN_PACKAGE_DIRS = new Set([
+  'tokens',
+  'components',
+  'react',
+  'tj-tokens',
+  'tj-components',
+  'tj-react',
+  'docs',
+]);
 
 /** Hex color literal: 3, 4, 6 or 8 hex digits not followed by another hex digit. */
 const HEX_COLOR = /#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})(?![0-9a-fA-F])/g;
@@ -155,7 +168,7 @@ describe('FR-1 zero-hard-coded values (spec 1.2)', () => {
     }
   });
 
-  it('packages/ holds only the four known workspace packages', () => {
+  it('packages/ holds only the seven known workspace packages', () => {
     const unknown: string[] = [];
     for (const entry of readdirSync(join(REPO_ROOT, 'packages'))) {
       let isDirectory = false;

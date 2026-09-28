@@ -25,3 +25,9 @@ export declare function forbiddenGroups(packageDir: string): string[];
 
 /** Relative-escape restriction regex source; `null` = nothing forbidden. */
 export declare function escapeRegexSource(packageDir: string): string | null;
+
+/** The FR-17 cross-family message the boundary layers embed (story 15.1). */
+export declare const FR17_MESSAGE: string;
+
+/** Cross-family workspace package names forbidden to `packageDir` (FR-17). */
+export declare function fr17Groups(packageDir: string): string[];

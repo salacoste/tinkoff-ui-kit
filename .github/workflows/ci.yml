@@ -104,7 +104,7 @@ jobs:
           # All-zero sha (brand-new branch / rewritten history) or a missing
           # object → no usable diff base: scan the full UI source set instead
           # (strictly stronger than the diff, never weaker).
-          UI_ROOTS="packages/tokens/src packages/components/src packages/react/src packages/docs/src packages/docs/.storybook"
+          UI_ROOTS="packages/tokens/src packages/components/src packages/react/src packages/tj-tokens/src packages/tj-components/src packages/tj-react/src packages/docs/src packages/docs/.storybook"
           if [ -n "$BASE_SHA" ] \
               && [ "$BASE_SHA" != "0000000000000000000000000000000000000000" ] \
               && git cat-file -e "$BASE_SHA^{commit}" 2>/dev/null; then

@@ -1,0 +1,19 @@
+/**
+ * pillkit-tj-tokens — scaffold placeholder (story 15.1, the 1.1 mold).
+ *
+ * The real token layers are GENERATED at story 15.2 from the ТЖ DESIGN.md
+ * (ux-designs/ux-tj-kit-2026-09-28/DESIGN.md): light on `:host, :root`,
+ * native-dark overrides on `[data-tj-theme="dark"]`, plus the `auto`
+ * contract. DO NOT hand-author tokens here — the generator is the single
+ * source (AD-3 v5: one mechanism, one input per kit).
+ *
+ * The `--tj-scaffold-placeholder` marker is the scaffold's proof-of-life:
+ * the `./tokens.css` export target (dist/index.css) exists and carries the
+ * ТЖ namespace from day one.
+ */
+
+/* Scaffold marker — replaced entirely by the generated table at 15.2. */
+:host,
+:root {
+  --tj-scaffold-placeholder: initial;
+}
