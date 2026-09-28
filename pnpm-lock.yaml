@@ -223,7 +223,7 @@ importers:
     devDependencies:
       '@storybook/web-components-vite':
         specifier: 10.6.0
-        version: 10.6.0(lit@3.3.3)(storybook@10.6.0(@types/react@19.3.0)(react@19.3.0))(vite@8.3.0(@types/node@26.6.2)(esbuild@0.28.2)(yaml@2.9.1))
+        version: 10.6.0(lit@3.3.3)(storybook@10.6.0(react@19.3.0))(vite@8.3.0(@types/node@26.6.2)(esbuild@0.28.2)(yaml@2.9.1))
 
   packages/docs:
     dependencies:
@@ -236,6 +236,9 @@ importers:
       pillkit-react:
         specifier: workspace:*
         version: link:../react
+      pillkit-tj-components:
+        specifier: workspace:*
+        version: link:../tj-components
       pillkit-tj-tokens:
         specifier: workspace:*
         version: link:../tj-tokens
@@ -248,7 +251,7 @@ importers:
         version: 10.6.0(storybook@10.6.0(@types/react@19.3.0)(react@19.3.0))
       '@storybook/web-components-vite':
         specifier: 10.6.0
-        version: 10.6.0(lit@3.3.3)(storybook@10.6.0(@types/react@19.3.0)(react@19.3.0))(vite@8.3.0(@types/node@26.6.2)(esbuild@0.28.2)(yaml@2.9.1))
+        version: 10.6.0(lit@3.3.3)(storybook@10.6.0(react@19.3.0))(vite@8.3.0(@types/node@26.6.2)(esbuild@0.28.2)(yaml@2.9.1))
       lit:
         specifier: 3.3.3
         version: 3.3.3
@@ -283,6 +286,10 @@ importers:
       lit:
         specifier: 3.3.3
         version: 3.3.3
+    devDependencies:
+      '@storybook/web-components-vite':
+        specifier: 10.6.0
+        version: 10.6.0(lit@3.3.3)(storybook@10.6.0(react@19.3.0))(vite@8.3.0(@types/node@26.6.2)(esbuild@0.28.2)(yaml@2.9.1))
 
   packages/tj-react:
     dependencies:
@@ -2874,7 +2881,7 @@ snapshots:
       axe-core: 4.13.0
       storybook: 10.6.0(@types/react@19.3.0)(react@19.3.0)
 
-  '@storybook/builder-vite@10.6.0(storybook@10.6.0(@types/react@19.3.0)(react@19.3.0))(vite@8.3.0(@types/node@26.6.2)(esbuild@0.28.2)(yaml@2.9.1))':
+  '@storybook/builder-vite@10.6.0(storybook@10.6.0(react@19.3.0))(vite@8.3.0(@types/node@26.6.2)(esbuild@0.28.2)(yaml@2.9.1))':
     dependencies:
       storybook: 10.6.0(@types/react@19.3.0)(react@19.3.0)
       ts-dedent: 2.3.0
@@ -2886,16 +2893,16 @@ snapshots:
     dependencies:
       react: 19.3.0
 
-  '@storybook/web-components-vite@10.6.0(lit@3.3.3)(storybook@10.6.0(@types/react@19.3.0)(react@19.3.0))(vite@8.3.0(@types/node@26.6.2)(esbuild@0.28.2)(yaml@2.9.1))':
+  '@storybook/web-components-vite@10.6.0(lit@3.3.3)(storybook@10.6.0(react@19.3.0))(vite@8.3.0(@types/node@26.6.2)(esbuild@0.28.2)(yaml@2.9.1))':
     dependencies:
-      '@storybook/builder-vite': 10.6.0(storybook@10.6.0(@types/react@19.3.0)(react@19.3.0))(vite@8.3.0(@types/node@26.6.2)(esbuild@0.28.2)(yaml@2.9.1))
-      '@storybook/web-components': 10.6.0(lit@3.3.3)(storybook@10.6.0(@types/react@19.3.0)(react@19.3.0))
+      '@storybook/builder-vite': 10.6.0(storybook@10.6.0(react@19.3.0))(vite@8.3.0(@types/node@26.6.2)(esbuild@0.28.2)(yaml@2.9.1))
+      '@storybook/web-components': 10.6.0(lit@3.3.3)(storybook@10.6.0(react@19.3.0))
       storybook: 10.6.0(@types/react@19.3.0)(react@19.3.0)
       vite: 8.3.0(@types/node@26.6.2)(esbuild@0.28.2)(yaml@2.9.1)
     transitivePeerDependencies:
       - lit
 
-  '@storybook/web-components@10.6.0(lit@3.3.3)(storybook@10.6.0(@types/react@19.3.0)(react@19.3.0))':
+  '@storybook/web-components@10.6.0(lit@3.3.3)(storybook@10.6.0(react@19.3.0))':
     dependencies:
       '@storybook/global': 5.0.0
       lit: 3.3.3

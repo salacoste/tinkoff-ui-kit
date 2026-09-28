@@ -18,6 +18,14 @@ import '@fontsource/inter/cyrillic-400.css';
 import '@fontsource/inter/cyrillic-500.css';
 import '@fontsource/inter/cyrillic-700.css';
 import 'pillkit-tokens/tokens.css';
+// ТЖ token sheet (spec 16.1 docs wiring — the docs package is the sole
+// FR-17 exemption composing BOTH families): document-level by the same rule
+// as the bank sheet above. The toolbar Theme control writes BOTH
+// data-theme (bank) and data-tj-theme (ТЖ) below — one toggle drives both
+// token layers, and the explicit attribute pins the ТЖ sheet deterministically
+// (its prefers-color-scheme auto leg stays disengaged inside docs so the
+// visual harness never depends on the runner's OS theme).
+import 'pillkit-tj-tokens/tokens.css';
 // Daytona — the kit's bundled licensed renames (DaytonaSans = Neue Haas Unica
 // W1G under the maintainer's Monotype license; separately licensed, NOT MIT —
 // packages/tokens/fonts/LICENSE-FONTS.md). Docs render DaytonaSans by default;
@@ -69,10 +77,15 @@ import 'pillkit-tokens/daytona.css';
  * copies are mechanical and grep-able (canvas/surface-base per story file).
  */
 
-/** Applies the toolbar theme to the preview document root — flips the token layer. */
+/** Applies the toolbar theme to the preview document root — flips BOTH token layers. */
 export const withTheme: Decorator = (story, context) => {
   const theme = context.globals.theme === 'dark' ? 'dark' : 'light';
   document.documentElement.dataset.theme = theme;
+  // ТЖ layer (spec 16.1): the same toggle drives data-tj-theme — the docs
+  // composition root is where the two families' theme attributes meet (the
+  // sole FR-17-exempt surface); explicit light also disengages the sheet's
+  // prefers-color-scheme auto leg, keeping the composed docs deterministic.
+  document.documentElement.dataset.tjTheme = theme;
   return story(context);
 };
 

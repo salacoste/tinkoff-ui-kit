@@ -25,6 +25,7 @@
     "pillkit-components": "workspace:*",
     "pillkit-react": "workspace:*",
     "pillkit-tokens": "workspace:*",
+    "pillkit-tj-components": "workspace:*",
     "pillkit-tj-tokens": "workspace:*"
   },
   "devDependencies": {

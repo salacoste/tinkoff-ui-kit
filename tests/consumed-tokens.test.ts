@@ -284,12 +284,9 @@ describe('consumed --tk-* tokens exist in the token sheet (spec 1.7 review)', ()
 // ТЖ scoping (story 15.2) — the same guard for the --tj-* namespace, derived
 // from packages/tj-tokens/src/tokens.css. Scan roots are the ТЖ family
 // (tj-components, tj-react) plus docs (the ТЖ docs section). The component-hook
-// exemption keys off packages/tj-components/src directories — EMPTY until the
-// first ТЖ component lands (15.3+), so until then every fallback consumption
-// must name a declared token; the exemption grows with real components,
-// derived, never hand-listed (the bank mold). The sweep is GREEN-EMPTY today
-// by design: no ТЖ consumers exist yet, and this guard exists so the FIRST
-// `var(--tj-*)` typo cannot pass silently.
+// exemption keys off packages/tj-components/src directories — LIVE since 16.1
+// landed the reading primitives (tj-cta/tj-link/tj-prose), derived, never
+// hand-listed (the bank mold); the exemption grows with real components.
 // ---------------------------------------------------------------------------
 
 const TJ_SCAN_ROOTS: Readonly<Record<string, readonly string[]>> = {
@@ -323,7 +320,13 @@ const tjComponentDirs = new Set(
 function isTjComponentHook(name: string): boolean {
   const rest = name.replace(/^--tj-/, '');
   for (const dir of tjComponentDirs) {
-    if (rest === dir || rest.startsWith(`${dir}-`)) return true;
+    // ТЖ component dirs carry the tag prefix (tj-prose — the OQ-9 naming;
+    // bank dirs don't carry tk-), so a hook of the natural grammar
+    // (--tj-prose-*) matches the dir SANS its 'tj-' prefix as well.
+    const dirNames = dir.startsWith('tj-') ? [dir, dir.slice(3)] : [dir];
+    for (const dirName of dirNames) {
+      if (rest === dirName || rest.startsWith(`${dirName}-`)) return true;
+    }
   }
   return false;
 }
@@ -359,13 +362,21 @@ describe('consumed --tj-* tokens exist in the ТЖ token sheet (story 15.2)', ()
     }
   });
 
-  it('the ТЖ component-hook exemption stays inert until real components land (15.3+)', () => {
-    // No component directories exist at 15.2 — every fallback name must be a
-    // declared token, and a synthesized hook-shaped name is flagged. When 15.3
-    // adds the first component dir, flip this the way the bank 2.3/4.1
-    // assertions flipped.
-    expect(tjComponentDirs.size).toBe(0);
-    expect(tjFallbackViolation('--tj-card-fil')).not.toBeNull();
+  it('the ТЖ component-hook exemption is LIVE on the 16.1 roster (flipped from the 15.2 inert pin)', () => {
+    // 16.1 lands the reading primitives: the exemption now keys off real
+    // component directories, derived — never hand-listed. A <component>-slot
+    // hook fallback of a real component passes; an unknown component prefix
+    // or a typo'd core name stays flagged (flipped the way the bank 2.3/4.1
+    // assertions flipped, per this test's own 15.2 comment).
+    expect([...tjComponentDirs].sort()).toEqual(['tj-cta', 'tj-link', 'tj-prose']);
+    expect(
+      tjFallbackViolation('--tj-prose-lead'),
+      'a real component hook-shaped fallback passes',
+    ).toBeNull();
+    expect(
+      tjFallbackViolation('--tj-card-fil'),
+      'an unknown component prefix stays flagged',
+    ).not.toBeNull();
     expect(tjFallbackViolation('--tj-color-card')).toBeNull();
   });
 

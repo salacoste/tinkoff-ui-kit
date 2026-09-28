@@ -28,21 +28,28 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./CONVENTIONS.md": "./CONVENTIONS.md"
+    "./CONVENTIONS.md": "./CONVENTIONS.md",
+    "./custom-elements.json": "./custom-elements.json"
   },
   "files": [
     "dist",
-    "CONVENTIONS.md"
+    "CONVENTIONS.md",
+    "custom-elements.json"
   ],
   "scripts": {
     "build": "vite build && tsc -p tsconfig.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "gen:manifest": "cem analyze --config cem.config.mjs"
   },
+  "customElements": "custom-elements.json",
   "engines": {
     "node": ">=20"
   },
   "dependencies": {
     "lit": "3.3.3"
+  },
+  "devDependencies": {
+    "@storybook/web-components-vite": "10.6.0"
   },
   "private": true
 }

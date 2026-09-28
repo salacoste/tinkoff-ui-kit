@@ -1,0 +1,385 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "src/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/tj-cta/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/tj-link/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/tj-prose/index.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-cta/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/tj-cta/tj-cta.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-cta/tj-cta.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "ctaStyles",
+          "default": "css` :host { display: inline-flex; } /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */ :host([hidden]) { display: none; } /* The 44×44 invisible interactive box; the pill paints inside it. */ .cta { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; height: 44px; min-width: 44px; padding-inline: 15px; position: relative; background: transparent; text-decoration: none; cursor: pointer; -webkit-tap-highlight-color: transparent; font-family: var(--tj-font-ui); font-size: var(--tj-text-cta-label-size); font-weight: var(--tj-text-cta-label-weight); line-height: var(--tj-text-cta-label-leading); } /* The visible pill: 30px tall, full inline width of the box (label + 2×15px), radius from the CTA token. Ink-stable hover — NOTHING changes on hover by design (cursor affordance only); see the header ruling. */ .cta::before { content: ''; position: absolute; inset-block: 7px; inset-inline: 0; border-radius: var(--tj-radius-cta); background: var(--tj-color-cta-fill); } /* Positioned above the ::before pill (the bank button__label mold) and carrying the ink token — the pill fill and ink pair themes via tokens. */ .cta__label { position: relative; color: var(--tj-color-cta-ink); } /* Focus ring around the BOX (the interactive surface), the improvement layer on the reference's UA outline. 2px token ring, offset 2px. */ .cta:focus-visible { outline: 2px solid var(--tj-color-focus-ring); outline-offset: 2px; } `",
+          "description": "tj-cta styles — tokens only, zero theme branches (AD-3 v5 on the ТЖ\ninstance): every color/radius/typography value consumes an inherited\n`var(--tj-*)` custom property (never adopted into the shadow root — the\ncascade trap). The dark theme INVERTS the pill through tokens alone\n(--tj-color-cta-fill / --tj-color-cta-ink flip in the token layer's dark\nsheet) — this sheet carries no theme branch.\n\nVisual spec: DESIGN.md `components.cta-write` + probe10 evidence: the\nreference CTA is a QUIET pill — label 15/400/20 in the grotesque, radius\n5px, height 30px, padding 5px 15px; ink-on-fill, no border, no shadow,\nNO hover state (the reference's CTA hover is UNPROBED — recorded-\nreference-behavior, restated in the story; nothing is invented here).\n\nStructure — the compact-inset mold (the bank tk-button precedent,\nCONVENTIONS §2 «Compact inset»): the visible pill is a ::before of an\nINVISIBLE 44×44 anchor. Every pixel of the 44px floor box is clickable;\nthe pill paints inset-block so the label box (20px) rides centered inside\nthe 30px pill inside the 44px hit target. The focus ring wraps the BOX\n(the interactive surface), not the pill.\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule — the token sheet carries no counterpart:\n- the 44px interactive-target floor and the derived 7px inset-block\n  (44 − 30 = 14, split 7/7; the bank button's 6px analog is (44−32)/2 —\n  the mold, at this family's measured 30px pill height);\n- the 15px inline padding (probe10 measured 15px on the pill's x-axis;\n  the horizontal counterpart of the same measurement as the 30px height)."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ctaStyles",
+          "declaration": {
+            "name": "ctaStyles",
+            "module": "src/tj-cta/tj-cta.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-cta/tj-cta.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tj-cta — the ТЖ call-to-action anchor (Story 16.1).\n\nANCHOR-ONLY (spec 16.1): the reference CTA is a navigational pill; there\nis no button branch and none may be minted without a new story (a JS\naction CTA would be the exception-log entry that re-opens this). Renders\na native `<a>` in its shadow root with the default slot as the label —\nnative semantics (role, name, Enter activation) by construction.\n\nThe compact-inset mold (bank tk-button precedent): the visible 30px pill\n(radius token, fill/ink token pair) paints as a ::before of an invisible\n44×44 box — every pixel of the floor is clickable and the focus ring\nwraps the box. The dark theme inverts the pill through tokens alone.\n\nQUIET species — no invented states: NO hover fill/press/disabled. The\nreference CTA's hover is UNPROBED (recorded-reference-behavior, probe10);\nthe kit ships the cursor affordance only. If the baseline review measures\na hover treatment, it lands as a new probe + tokens, not a branch here.\n\nAPI is href-only at the freeze: target/rel are NOT offered (the spec's\nsurface; no speculative properties at a freeze — tj-link carries the\nfull anchor pass-through where the reading surface needs it).\n\nSTATELESS: no channel, nothing dispatches — the event-map no-entry ruling\n(packages/tj-react/src/event-map.ts). SSR-compat (AD-10): rendered via\nLit templates only.",
+          "name": "TjCta",
+          "slots": [
+            {
+              "description": "Label (primary content).",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "URL; empty/absent renders an inert anchor (no href attribute).",
+              "attribute": "href"
+            },
+            {
+              "kind": "method",
+              "name": "#anchorHref",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | typeof nothing"
+                }
+              },
+              "description": "The 16.1 href rule: EMPTY string is NOT a live href — render no attribute."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "URL; empty/absent renders an inert anchor (no href attribute).",
+              "fieldName": "href"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tj-cta",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TjCta",
+          "declaration": {
+            "name": "TjCta",
+            "module": "src/tj-cta/tj-cta.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tj-cta",
+          "declaration": {
+            "name": "TjCta",
+            "module": "src/tj-cta/tj-cta.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-link/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/tj-link/tj-link.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-link/tj-link.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "linkStyles",
+          "default": "css` /* Chrome primitive: inline, no box — typography inherits from the surrounding context (the bank \"inline\" variant mold; no backticks in css comments — they would terminate the css template literal). */ :host { display: inline; } /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */ :host([hidden]) { display: none; } .link { color: var(--tj-color-link); text-decoration: underline; text-decoration-color: transparent; text-decoration-thickness: 1px; text-underline-offset: 0.1em; text-underline-position: under; transition: text-decoration-color var(--tj-motion-duration-micro) var(--tj-motion-curve-standard); cursor: pointer; -webkit-tap-highlight-color: transparent; } /* Hover reveal: 70% of the link ink. The INK stays put — no color shift, no weight shift, nothing else moves (restraint grammar). */ .link:hover { text-decoration-color: color-mix(in srgb, var(--tj-color-link-body) 70%, transparent); } /* Focus ring — the improvement layer (probe10: the reference leaves links on the UA outline). 2px token ring, offset 2px, never removed. */ .link:focus-visible { outline: 2px solid var(--tj-color-focus-ring); outline-offset: 2px; } `",
+          "description": "tj-link styles — tokens only, zero theme branches (AD-3 v5 on the ТЖ\ninstance): every color/motion value consumes an inherited `var(--tj-*)`\ncustom property (never adopted into the shadow root — the cascade trap).\n\nVisual spec: DESIGN.md `components.editorial-link` (the link species\nvalues) + the probe10 evidence (.playwright-cli/verify/tj-tokens/NOTES.md):\nthe ТЖ link is the reference's QUIET species — the underline EXISTS but\npaints TRANSPARENT at rest, and reveals on hover at 70% alpha of the ink.\nThe ink color does NOT shift on hover (ink-stable hover — the reference's\nrestraint grammar, opposite of the bank tk-link's blue-pair theming).\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule — the token sheet carries no counterpart:\n- the 1px underline thickness and the 0.1em underline offset (probe10\n  measured geometry: thickness 1px, offset .1em, position under);\n- the 70% hover alpha inside color-mix() (compose-at-use, the reference's\n  own `--opacity-link-border-hover: .7` architecture; no alpha tokens).\n\nThis shadow anchor and tj-prose's ::slotted(a) species are the SAME\nspecies contract from ONE token source (--tj-color-link-body + the\nmeasured geometry) — the documented two-surface duplication, not drift."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "linkStyles",
+          "declaration": {
+            "name": "linkStyles",
+            "module": "src/tj-link/tj-link.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-link/tj-link.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tj-link — the ТЖ text link (Story 16.1).\n\nThe probe10 species as a standalone chrome primitive: the ink consumes\n`--tj-color-link` in both themes (the interactive pair token, never a\nscale step), the underline EXISTS but paints TRANSPARENT at rest and\nreveals on hover at 70% alpha of the ink (color-mix, compose-at-use).\nInk-stable hover — no color shift, the reference's restraint grammar.\nTypography INHERITS from the surrounding context (links live inside\nsentences; the bank `inline` variant mold) — this element owns color,\nunderline geometry and motion only.\n\nAnchors: renders a native `<a>` in its shadow root with the default slot\nas the label (native semantics — role, name and Enter activation by\nconstruction). `href` EMPTY/absent renders the anchor WITHOUT the href\nattribute (inert content, not focusable — no dangling href=\"\"); non-empty\npasses through verbatim. `target` passes through. `rel` follows the bank\n10.4 mold: a consumer rel wins verbatim; otherwise `noopener noreferrer`\nis applied exactly when target=\"_blank\".\n\nv1 BASE species only (spec 16.1): no variants, no disabled, no\nunderline-always mode — additions are a new story, not a property.\n\nSTATELESS (the simple-component mold): no channel, no controlled pair,\nnothing dispatches — the event-map no-entry ruling\n(packages/tj-react/src/event-map.ts). SSR-compat (AD-10): rendered via\nLit templates only.",
+          "name": "TjLink",
+          "slots": [
+            {
+              "description": "Label (primary content).",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "URL; empty/absent renders an inert anchor (no href attribute).",
+              "attribute": "href"
+            },
+            {
+              "kind": "field",
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "description": "Pass-through browsing context for the inner anchor.",
+              "attribute": "target"
+            },
+            {
+              "kind": "field",
+              "name": "rel",
+              "type": {
+                "text": "string"
+              },
+              "description": "Pass-through relationship; consumer rel wins verbatim.",
+              "attribute": "rel"
+            },
+            {
+              "kind": "method",
+              "name": "#anchorRel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | typeof nothing"
+                }
+              },
+              "description": "The 10.4 rel rule, verbatim from the bank dual-tag mold: an explicit\nconsumer rel wins verbatim; otherwise `noopener noreferrer` is applied\nexactly when target=\"_blank\" (and omitted otherwise — nothing)."
+            },
+            {
+              "kind": "method",
+              "name": "#anchorHref",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | typeof nothing"
+                }
+              },
+              "description": "The 16.1 href rule: EMPTY string is NOT a live href — render no attribute."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "URL; empty/absent renders an inert anchor (no href attribute).",
+              "fieldName": "href"
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "description": "Pass-through browsing context for the inner anchor.",
+              "fieldName": "target"
+            },
+            {
+              "name": "rel",
+              "type": {
+                "text": "string"
+              },
+              "description": "Pass-through relationship; consumer rel wins verbatim.",
+              "fieldName": "rel"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tj-link",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TjLink",
+          "declaration": {
+            "name": "TjLink",
+            "module": "src/tj-link/tj-link.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tj-link",
+          "declaration": {
+            "name": "TjLink",
+            "module": "src/tj-link/tj-link.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-prose/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/tj-prose/tj-prose.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-prose/tj-prose.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "proseStyles",
+          "default": "css` /* The reading column: a CAP, not a grid column (spec 16.1) — 760px max, the measured body-column token. Host sets the reading register as the inherited default so unstyled slotted flow (lists, asides — the BYO content contract) still reads Charter. */ :host { display: block; max-width: var(--tj-space-column-reading-body); font-family: var(--tj-font-reading); font-size: var(--tj-text-article-body-size); font-weight: var(--tj-text-article-body-weight); line-height: var(--tj-text-article-body-leading); color: var(--tj-color-ink-100); /* RU hyphenation contract: the browser may hyphenate long words at the column edge. lang=\"ru\" (the hyphenation dictionary selector) is the CONSUMER's document-level duty — hyphens without a lang do nothing (documented in the story). No backticks in css comments — they would terminate the css template literal. */ hyphens: auto; } /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */ :host([hidden]) { display: none; } /* Body flow — Charter 21/30, the measured rhythm. The 25px is the ONE measured prose gap (probe10); unknown slotted tags keep UA styles and render UNSTYLED (inert passthrough — the BYO content contract). */ ::slotted(p) { margin: 0 0 25px; font-family: var(--tj-font-reading); font-size: var(--tj-text-article-body-size); font-weight: var(--tj-text-article-body-weight); line-height: var(--tj-text-article-body-leading); } /* Lead — Charter 27/35, the article's standfirst. Vertical spacing is composition-owned (unmeasured): the lead rides the same 25px paragraph rhythm unless the consumer composes otherwise. */ slot[name='lead']::slotted(p) { font-family: var(--tj-font-reading); font-size: var(--tj-text-article-lead-size); font-weight: var(--tj-text-article-lead-weight); line-height: var(--tj-text-article-lead-leading); } /* In-article H2 — the grotesque interruption: Graphik 38/700/45, ink-100 (probe9: Graphik heads; article-h2 tokens). UA margins neutralized — the vertical band is composition-owned (unmeasured on the reference). */ ::slotted(h2) { margin: 0; font-family: var(--tj-font-ui); font-size: var(--tj-text-article-h2-size); font-weight: var(--tj-text-article-h2-weight); line-height: var(--tj-text-article-h2-leading); color: var(--tj-color-ink-100); } /* Pull-quote — the second grotesque interruption inside the serif flow: Graphik 35/400/50. UA margins (and the UA 40px indent) neutralized — composition-owned, same ruling as the H2. */ ::slotted(blockquote) { margin: 0; font-family: var(--tj-font-ui); font-size: var(--tj-text-pull-quote-size); font-weight: var(--tj-text-pull-quote-weight); line-height: var(--tj-text-pull-quote-leading); color: var(--tj-color-ink-100); } /* Link species — the probe10 species, TOP-LEVEL SLOT ANCHORS ONLY: ink STAYS the interactive pair in both themes, the underline EXISTS but paints transparent at rest and reveals on hover at 70% alpha of the ink. Ink color does NOT shift on hover (ink-stable hover — the reference's restraint grammar); the underline geometry (1px / .1em / under) is measured, flagged above. ::slotted cannot reach descendants: an anchor nested inside a slotted paragraph gets NOTHING from this rule — mark it up as <tj-link> (the second surface of the same species contract, see the header). */ ::slotted(a) { color: var(--tj-color-link-body); font-size: var(--tj-text-body-link-size); font-weight: var(--tj-text-body-link-weight); text-decoration: underline; text-decoration-color: transparent; text-decoration-thickness: 1px; text-underline-offset: 0.1em; text-underline-position: under; transition: text-decoration-color var(--tj-motion-duration-micro) var(--tj-motion-curve-standard); cursor: pointer; } ::slotted(a:hover) { text-decoration-color: color-mix(in srgb, var(--tj-color-link-body) 70%, transparent); } /* Focus ring — the improvement layer (probe10: the reference leaves body links on the UA outline). 2px token ring, offset 2px, never removed. */ ::slotted(a:focus-visible) { outline: 2px solid var(--tj-color-focus-ring); outline-offset: 2px; } `",
+          "description": "tj-prose styles — tokens only, zero theme branches (AD-3 v5 on the ТЖ\ninstance): every color/typography/radius/motion value consumes an\ninherited `var(--tj-*)` custom property (never adopted into the shadow\nroot — the cascade trap; the token sheet stays a consumer-side,\ndocument-level sheet).\n\nVisual spec: DESIGN.md `components.editorial-link` (the link species\nvalues) + EXPERIENCE.md «Reading surface (article)» (the composition).\nThe TWO-FAMILY cascade (FR-20): the reading register is\nCharter (--tj-font-reading) for the lead and body flow; the grotesque\n(--tj-font-ui) interrupts it exactly twice — the in-article H2 and the\npull-quote (blockquote), the reference's own contrast play of a grotesque\nvoice inside the serif column.\n\nRHYTHM OWNERSHIP: the reference carries the 25px paragraph gap on wrapper\nelements, so OUR container owns the rhythm deliberately (spec 16.1) — the\none MEASURED prose gap (probe10: P margin-bottom 25px on the live\narticle). H2/pull-quote/lead VERTICAL spacing is UNMEASURED on the\nreference: this sheet neutralizes their UA margins and the CONSUMER (the\ncomposition story, a product page) composes them — documented in the\nstory and pending the side-by-side baseline review.\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule — the token sheet carries no counterpart:\n- the 25px paragraph rhythm (the measured probe10 gap; the --tj-space-*\n  scale has no 25 step and none may be minted);\n- the 1px underline thickness and the 0.1em underline offset (probe10\n  measured link geometry: thickness 1px, offset .1em, position under);\n- the 70% hover alpha inside color-mix() (the reference's compose-at-use\n  architecture — `--opacity-link-border-hover: .7` composed at the use\n  site; no alpha tokens exist by design).\n\nThe ::slotted(a) species and tj-link's shadow anchor are the SAME species\ncontract from ONE token source (--tj-color-link-body + the measured\nunderline geometry) — the documented two-surface contract (the 16.1\nreview's full formulation): CSS Scoping has NO descendant combinator off\n::slotted, so the rule below reaches ONLY top-level anchors assigned\ndirectly to a slot; links nested INSIDE slotted flow (an anchor within a\nparagraph — the normal editorial case) are unreachable from here and the\nconsumer marks them up as <tj-link>, whose shadow anchor carries the same\nspecies from the same tokens. Not drift — one contract, two surfaces."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "proseStyles",
+          "declaration": {
+            "name": "proseStyles",
+            "module": "src/tj-prose/tj-prose.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-prose/tj-prose.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tj-prose — the ТЖ reading column (Story 16.1, the first ТЖ components).\n\nA typographic CONTAINER, not a styled paragraph: the consumer slots an\narticle's flow content and the element's shadow sheet applies the\ntwo-family reading cascade via `::slotted` rules (Charter for the lead\nand body flow; the grotesque interrupts exactly twice — in-article H2 and\npull-quote; the spec's Intent §1). The column is a CAP, not a grid\ncolumn: `max-width: var(--tj-space-column-reading-body)` on the host.\n\nRhythm ownership: the reference site carries the 25px paragraph gap on\nwrapper elements, so this container owns it deliberately (the one\nMEASURED prose gap, probe10). H2 / pull-quote / lead VERTICAL spacing is\nunmeasured on the reference — their UA margins are neutralized here and\nthe CONSUMER composes the band (the composition story demonstrates; the\npick is flagged for the baseline review).\n\nKnown slotted species: `p` (body, Charter 21/30), `p[slot=lead]` (the\nstandfirst, Charter 27/35), `h2` (Graphik 38/700/45), `blockquote` (the\npull-quote, Graphik 35/400/50), `a` (the probe10 link species:\ntransparent underline at rest, 70%-alpha reveal on hover, ink-stable —\nTOP-LEVEL SLOT ANCHORS ONLY, see the link contract below). Unknown slotted\ntags render UNSTYLED — inert passthrough, the BYO content contract: bring\nyour own styles for anything beyond the species above.\n\nLINK CONTRACT (the two-surface species, the 16.1 review formulation):\n`::slotted` selectors cannot reach DESCENDANTS of slotted nodes (CSS\nScoping has no descendant combinator off ::slotted), so the sheet's\n`::slotted(a)` rule styles only anchors assigned DIRECTLY to a slot.\nLinks nested inside the flow — an anchor within a paragraph, the normal\neditorial case — get nothing from this element and MUST be marked up as\n`<tj-link>`, whose shadow anchor carries the same probe10 species from\nthe same token source (--tj-color-link-body + the measured geometry).\nOne contract, two surfaces — not drift.\n\nRU hyphenation: `hyphens: auto` on the host; `lang=\"ru\"` is the consumer's\ndocument-level duty (hyphenation dictionaries are selected by document\nlanguage, not by the element — documented in the story).\n\nSTATELESS display surface: no properties, no channel, nothing dispatches\n(the event-map no-entry ruling, packages/tj-react/src/event-map.ts).\nSSR-compat (AD-10): rendered via Lit templates only.",
+          "name": "TjProse",
+          "slots": [
+            {
+              "description": "The standfirst paragraph (`p[slot=lead]`, Charter 27/35).",
+              "name": "lead"
+            },
+            {
+              "description": "Article flow: p, h2, blockquote, a (the known species above).",
+              "name": ""
+            }
+          ],
+          "members": [],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tj-prose",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TjProse",
+          "declaration": {
+            "name": "TjProse",
+            "module": "src/tj-prose/tj-prose.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tj-prose",
+          "declaration": {
+            "name": "TjProse",
+            "module": "src/tj-prose/tj-prose.ts"
+          }
+        }
+      ]
+    }
+  ]
+}

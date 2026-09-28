@@ -1,13 +1,15 @@
 import { describe, expect, it } from 'vitest';
 
+import * as mod from './index.js';
+
 /**
- * Story 15.1 scaffold anchor: the public entry stays EMPTY until the first
- * ТЖ component story (epic 16) — no surface may precede 16.1's freeze of
- * the reading primitives' API grammar.
+ * Public-surface pin (story 16.1: the reading primitives landed): the entry
+ * exports exactly the three ТЖ elements — nothing speculative rides along.
+ * The 15.1 scaffold assertion (empty entry) flipped the way the bank's did
+ * when its first component landed.
  */
-describe('pillkit-tj-components scaffold (story 15.1)', () => {
-  it('exports nothing yet — components land with epic 16', async () => {
-    const mod = await import('./index.js');
-    expect(Object.keys(mod)).toEqual([]);
+describe('pillkit-tj-components public surface (story 16.1)', () => {
+  it('exports exactly the reading primitives (code-unit sorted)', () => {
+    expect(Object.keys(mod).sort()).toEqual(['TjCta', 'TjLink', 'TjProse']);
   });
 });

@@ -356,14 +356,13 @@ describe('tj-react build isolation (spec 15.1, the bank mold second instance)', 
     expect(config).toContain('/^react$/');
   });
 
-  it('the scaffold artifact inlines no workspace or Lit source', () => {
-    // Scaffold grade: the entry is empty by design (spec 15.1 — no wrapper
-    // precedes its element), so there is no pillkit-tj-components import to
-    // keep external YET; isolation asserts as "nothing bundled". The strict
-    // bank-grade check (external import present in the artifact) becomes
-    // assertable when the first wrapper lands (epic 16).
+  it('keeps pillkit-tj-components as an external import/export specifier (bank grade, 16.1 flip)', () => {
+    // Flipped from the 15.1 scaffold pin exactly as its comment prescribed:
+    // the first wrappers landed (16.1), so the artifact now MUST keep the
+    // workspace family external — the import rides through unbundled — and
+    // still inline no Lit source (the bank instance above, mirrored).
     const artifact = readBuiltArtifact('packages/tj-react/dist/index.js');
-    expect(/from\s*['"]pillkit-/.test(artifact)).toBe(false);
+    expect(/from\s*['"]pillkit-tj-components['"]/.test(artifact)).toBe(true);
     expect(/\b(?:class|const|let|var|function)\s+LitElement\b/.test(artifact)).toBe(false);
     expect(/\b(?:class|const|let|var|function)\s+ReactiveElement\b/.test(artifact)).toBe(false);
   });
