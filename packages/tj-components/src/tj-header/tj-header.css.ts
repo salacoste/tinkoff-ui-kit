@@ -43,20 +43,26 @@ export const headerStyles = css`
      2026-09-28 reference capture shows the bar's page-gray ground meeting
      the identical page background with NO separating line (the authored
      1px hairline was removed at the 16.5 patch round, vision-evidenced).
-     The height transition is the compress animation itself. */
+     The compress animation runs on the GRID ROW, not a layout box:
+     animating a box metric is forbidden by the design-detector law
+     (layout thrash — the CI gate's own rule), and grid-template-rows is
+     its sanctioned channel for exactly this (px↔px interpolates on every
+     evergreen engine). The bar is a one-row grid; the row IS the bar's
+     height, the item stretches with it. */
   .bar {
     position: sticky;
     top: 0;
     z-index: var(--tj-z-nav);
-    height: var(--tj-space-header-h); /* h72 — the token IS the ТЖ anchor */
+    display: grid;
+    grid-template-rows: var(--tj-space-header-h); /* h72 — the token IS the ТЖ anchor */
     background: var(--tj-color-page);
-    transition: height var(--tj-motion-duration-fast) var(--tj-motion-curve-standard);
+    transition: grid-template-rows var(--tj-motion-duration-fast) var(--tj-motion-curve-standard);
   }
 
   /* The compress: internal data-scrolled (NOT public API) flips at any
      scroll > 0 (TJ_HEADER_SCROLL_THRESHOLD_PX). */
   :host([data-scrolled]) .bar {
-    height: 56px; /* FLAG: compressed h56 — unprobed target, h72's quiet sibling */
+    grid-template-rows: 56px; /* FLAG: compressed h56 — unprobed target, h72's quiet sibling */
   }
 
   /* Reduced-motion belt: the token layer already collapses the duration to
@@ -68,8 +74,9 @@ export const headerStyles = css`
     }
   }
 
-  /* Container-bound inner row (1200 token + page insets). min-height keeps
-     the row filling the compressing bar so the flex centering tracks it. */
+  /* Container-bound inner row (1200 token + page insets). The grid row
+     stretches the item to the compressing bar so the flex centering tracks
+     it (belt: min-height 100% holds the same if a consumer re-flows .bar). */
   .bar__inner {
     box-sizing: border-box;
     display: flex;

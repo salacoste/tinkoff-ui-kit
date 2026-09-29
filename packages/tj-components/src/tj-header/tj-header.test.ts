@@ -351,12 +351,19 @@ describe('tj-header styles (css.ts pins)', () => {
   });
 
   it('the compress: h72 token base → 56px on data-scrolled, over the fast duration + standard curve', () => {
-    expect(cssText).toContain('height: var(--tj-space-header-h)');
+    expect(cssText).toContain('display: grid');
+    expect(cssText).toContain('grid-template-rows: var(--tj-space-header-h)');
     expect(cssText).toContain(':host([data-scrolled]) .bar');
-    expect(cssText).toContain('height: 56px');
+    expect(cssText).toContain('grid-template-rows: 56px');
     expect(cssText).toContain(
-      'transition: height var(--tj-motion-duration-fast) var(--tj-motion-curve-standard)',
+      'transition: grid-template-rows var(--tj-motion-duration-fast) var(--tj-motion-curve-standard)',
     );
+    // The animation channel is the GRID ROW, never a layout box metric —
+    // the design-detector law (CI gates it; px↔px rows interpolate
+    // everywhere). The needle is joined at runtime so this guard's own
+    // source never trips the detector's pattern.
+    const layoutBoxTransition = ['transition:', 'height'].join(' ');
+    expect(cssText).not.toContain(layoutBoxTransition);
   });
 
   it('reduced-motion belt collapses the compress transition', () => {

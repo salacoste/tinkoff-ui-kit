@@ -111,10 +111,13 @@ const DEFAULT_CTA_LABEL = 'Написать';
  * renders WITHOUT the attribute — inert, no tab stop (the 16.1 mold).
  *
  * STICKY + COMPRESS: `position: sticky; top: 0; z-index: var(--tj-z-nav)`
- * (the one sanctioned non-overlay z consumption); height 72px → 56px on any
- * scroll (h72/h56 structural FLAGs) over the 150ms fast token (instant
- * under reduced motion — the token layer collapses the duration, plus the
- * belt below). The internal passive scroll observer flips a host
+ * (the one sanctioned non-overlay z consumption); the bar's grid row goes
+ * 72px → 56px on any scroll (h72/h56 structural FLAGs) over the 150ms fast
+ * token (instant under reduced motion — the token layer collapses the
+ * duration, plus the belt below); the compress animates the GRID ROW, not
+ * a layout box metric (the design-detector law — grid-template-rows is the
+ * sanctioned height-animation channel). The internal passive scroll
+ * observer flips a host
  * `data-scrolled` attribute — internal state, NOT public API. Background
  * `--tj-color-page` with NO divider — the reference bar blends into the
  * page (2026-09-28 capture; the authored hairline was removed at the patch
