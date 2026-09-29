@@ -7,13 +7,57 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-09-30
+
+### Added — v1.4.0 surface (epics-v5: the Т-Журнал / ТЖ editorial family)
+
+- The ТЖ package family — `pillkit-tj-tokens`, `pillkit-tj-components`,
+  `pillkit-tj-react` — a separately consumable editorial kit with ZERO runtime
+  dependencies either direction against the bank family (FR-17, mechanized:
+  import-boundary tests both directions + eslint lanes + ad4-matrix; OQ-10:
+  rides the same git-tag train, own CHANGELOG section)
+- `pillkit-tj-tokens`: own generator input with a dual-emit light/dark contract
+  (`:host` + `:host(:not([data-tj-theme="light"]))`), AA-pinned pairs, register
+  census in TOKENS.md (15.2); Inter/PT Serif font slots with licensed
+  Graphik/Charter path documented, nothing bundled (15.3, OQ-8)
+- Reading primitives (16.1, FREEZE grammar): `tj-prose`, `tj-link`, `tj-cta`
+- Feed surfaces (16.2+16.3): `tj-rubric-header`, `tj-news-card`, `tj-tag-chip`
+  + the /pro/ purple-hero pattern (purple as a scoped carrier, never a page bg)
+- Community (16.4): `tj-composer` + `tj-post-card` — the family's first
+  stateful pair
+- Chrome (16.5): `tj-header` + `tj-rail` + the burger drawer (AD-12 helper,
+  LIFO focus restore, `--tj-z-*` overlay ladder)
+- Article composition pattern (16.6) + the Flow-C ad-slot recipe: ad modules
+  ride the BANK `tk-promo-card` via `--tk-promo-card-*` hooks — the editorial
+  tree carries zero ad-language hexes (FR-21, audit-verified)
+- Docs: the ТЖ section — token reference (TOKENS.md single-source + drift
+  test), theming guide (dark-pairing/overrides/registers), 4 pattern pages,
+  CEM API tables ×10, getting-started (the ТЖ-ALONE install recipe), search
+  +16 rows (17.3)
+- Sweeps (17.1+17.2): a11y 140 legs + dark 45 legs (extraction-verification,
+  native-dark parity ×45; pseudo-composite AA law); SR-RUNSHEET-v1.4.0
+  (live VoiceOver runs = maintainer-side)
+
 ### Internal
+
 - Docs navigation regroup (post-v1.3.0 interlude): the «Components v2» group — named after
   the build window, not the content — splits semantically into `Guides/*` (9 component
   overview pages) and `Patterns/*` (Console chrome, Data surfaces composition pages);
   story display names and suite ids untouched, baselines moved prefix-only (28 byte-identical
   git-mv + 2 re-taken: the cookie-banner page anchor text gained its exact suite casing);
   docs search ids follow; cross-link texts corrected to the exact sidebar names
+- CI: gates `timeout-minutes` 30 → 60 — the suite grew to 2123 visual/axe legs and the
+  17.3 push was timeout-killed three times at exactly ~30:20 (a timeout kill reports as
+  `completed cancelled` under the triggering actor — forensics in ci.yml and the story log);
+  standing practice added: after any post-rebuild source fix run the FULL suite, not
+  scoped legs
+- Bank link contrast law encoded in source: `--tk-color-link` is tuned to surface-base
+  (4.62 AA); on surface-muted it is 4.24 in light — links never sit on muted boxes
+  (theming-guide + the five 17.3 pattern pages, CI round d02a483)
+- Verification: fidelity ledger 11 rows (`.playwright-cli/verify/fidelity-verification-v1-4-0/`)
+  + ad-language audit 0 values + impeccable both trees 297 files exit 0 + baseline review
+  package ЧАСТЬ v1.4.0 assembled (14 commits / 204 PNG-events; the batch-confirm gate
+  itself is the maintainer's)
 
 ## [1.3.0] - 2026-09-28
 
