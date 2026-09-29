@@ -121,6 +121,14 @@ shadows:
   # only measured shadow is the search-suggest overlay panel. The vision
   # card-lift estimates are DELETED (forensics: verify/tj-tokens/NOTES.md).
   overlay: '0 2px 8px rgba(0,0,0,.1)'
+# z-scale (AUTHORED at 16.5 — the burger-drawer opener; unprobed on the
+# reference, cross-origin wall): the bank AD-12 grammar translated at the
+# ТЖ roster's real size — nav 100 (sticky site chrome), drawer 300 (burger
+# sheet + scrim); 200 stays SPARE for a future dropdown step (the
+# one-slot-between-layers rule). Values ride the package CLI constant
+# (packages/tj-tokens/scripts/generate.mjs zScale — scaffold mechanics per
+# AD-3/AD-12, same as the bank kit); recorded here for the paper trail (the
+# CONVENTIONS 16.1 "no z until the opener" ruling resolves at 16.5).
 motion:
   # First ТЖ transitions MEASURED probe10 (2026-09-28, link.css + Button.css):
   # link underline reveal + CTA background = 0.1s ease-in-out — duration-micro
