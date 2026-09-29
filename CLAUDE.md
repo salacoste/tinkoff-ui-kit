@@ -444,3 +444,33 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   zero non-ТЖ baselines touched. Side-by-side vision review vs the live
   capture GREEN; H2 40/24 + pull-quote 32 stay flagged for the maintainer's
   baseline-review package (5.6 mold). Next: 16.2 rubric header + news card.
+
+- **2026-09-29 STORY 16.2+16.3 EXECUTED (batch, code-head `e7a9233`, CI run
+  36503716482 GREEN):** ТЖ feed surfaces — tj-rubric-header (cover/mark/
+  default slots, ::slotted h1/p species, −50px half-overlap mark FLAG,
+  top-corners-only cover clip capture-grounded, graceful-empty via slotchange
+  + change-guarded updated() backstop — happy-dom doesn't fire slotchange on
+  initial assignment), tj-news-card (whole-card single anchor, row-as-link
+  mold; skeleton bones ink-300 12% alpha, NO shimmer; inert/external-rel =
+  16.1 verbatim), tj-tag-chip (theme-invariant purple pill — authored
+  chip-fill #6E48DB 5.813:1 vs the reference's 3.380 wash, decorative
+  chevron, lift −2px, chip-ink ring per the AA-surface law), /pro/ hero
+  PATTERN story (badge-purple field + chip row + r10×h50 CTA, chip-ink on
+  badge-purple 4.536:1 spec-frozen pair; hero-top CTA is a bare TEXT link
+  per the live capture — fidelity note in prose). Executor's CTA inversion
+  (white fill) caught in triage → flipped to spec. Lens PATCH-NEEDED(5), all
+  landed: twin innerHTML invariance pin (dark vs light ancestor
+  serialization equality); card-title leading 24 — ONE species ONE leading;
+  honest full-subtree accessible-name prose + aria-labelledby freeze-note
+  (host-level labelledby is a11y-inert for the shadow anchor — forwarding
+  ids = component change, OUT of batch); four-species ::slotted count pin
+  (cssText KEEPS comments → non-empty-parens regex); cover lh-0 FLAG.
+  PIPEFAIL GATE LAW: `pnpm test | tail` masked ERR_PNPM_RECURSIVE_FIRST_FAIL
+  as TEST OK — full chain re-proven under `set -o pipefail` (tj 103/103,
+  root 180/180). Baselines: 22 new PNGs (11 stories × both themes), zero
+  existing touched, mint 1582/1582. Side-by-side vision GREEN ×3 (rubric
+  overlap renders; news flat/r25/serif lead; hero purple CTA + darker
+  chips). Maintainer package adds: mark white stroke + two-row byline
+  observed-not-shipped; mark/heading optical inset; CTA fill == field fill
+  boundary note. Next: 16.4 composer + post card (first stateful —
+  event-map opens, --tj-z-* mints).
