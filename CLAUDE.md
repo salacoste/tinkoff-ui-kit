@@ -599,3 +599,47 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   Gates: 190/190 root tests (guard + consumed-tokens `patterns/` flip).
   Next: 17.1+17.2 batch (ТЖ a11y sweep + dark sweep) → 17.3 docs → 17.4
   ledger/ad-language audit → 17.5 release prep (TAG = maintainer sanction).
+
+- **2026-09-29 STORIES 17.1+17.2 EXECUTED (code-head `ddd060e`; CI run
+  36572315433 GREEN):** ТЖ a11y sweep
+  (`tests/visual/tj-a11y-sweep.spec.ts`, 140 tests) + dark sweep
+  (`tests/visual/tj-dark-sweep.spec.ts`, 45) — 45-id matrix (= the built
+  docs index; spec prose said 46 — off-by-one ratified as spec's own
+  miscount), scoped 185/185, 5 patch rounds 59→45→7→1→0 (+1 post-lens →0).
+  **PSEUDO-COMPOSITE AA LAW (new family fact):** ТЖ pills paint via
+  `::before` with inset geometry — effectiveBackground composites ABSOLUTE
+  rendering pseudos between own bg and content (CTA label 1.15:1 vs page →
+  ≈19.5:1 vs its real pill); bank molds never needed it (bank pills paint
+  element bg). **3-digit hex law:** `--tj-color-chip-ink: #fff` — sheet
+  readers normalize 3-/6-digit hex to `rgb()`. **Leftover legal set
+  (dark):** transparent + purple field + gold + white-alpha VEILS on
+  purple grounds (the /pro/ hero blobs — `color-mix(white 10%)` tints OF
+  the invariant, fill-side Tier-B; surfaced by the `color(srgb r g b / a)`
+  parseColor extension, Chromium's color-mix serialization). **FR-21 bank
+  boundary:** bankScoped = tk- hosts + tjad page chrome above `.tjad-stage`
+  (the story's own line); bank surfaces skip ТЖ leftover/invariant/shadow
+  legs — spec 8.2 owns them (the `.tjad-toggle` #333 collision was value
+  coincidence, not extraction drift). **LIFO focus restore:** drawer Esc
+  returns focus to the PRE-TRAP element (demo button for programmatic
+  open, not the display:none burger). **Story-side triage:** wordmark
+  rings (`:focus-visible` 2px focus-ring offset 2px, 3 classes) + 44×44
+  floors — wordmarks are FLEX ITEMS (blockified → §9 computed-inline
+  exemption CANNOT apply); «Поиск» 40→44; header chip 36px KEPT (weakest
+  recorded exemption, maintainer re-measure FLAG). Rings: NO underline
+  exceptions (probe10 — the kit ring IS the improvement layer); purple-
+  field stops ring chip-ink; exception array ships EMPTY. **SR pins ×5**
+  (composer button-not-input + host-aria-label forward WINS; drawer
+  dialog/aria-modal/trap/LIFO-Esc; header theme cycle dark→auto→light +
+  RU live-region announcements + `theme-change` detail strings; anchor
+  contracts inert-href/`_blank`-noopener/rel-verbatim ×5 stories;
+  like-toggle scoped off backrail clones) — SR-RUNSHEET-v1.4.0.md (RU,
+  7 surfaces × both themes, мех. ✓ prefilled; live VO maintainer-side).
+  **Standing rulings:** ink-reference-time stays UNBOUND in dark (no
+  dark-article capture; dark block = 13 declarations); ink-200 rides the
+  cta-fill flip (deliberately OUTSIDE legal set); zero forced-invariant
+  failures (no DESIGN.md re-open evidence); native-dark parity ×45 (the
+  dual-emit mechanism proven per story). Lens-172 PATCH-NEEDED → fully
+  integrated (3 MAJOR/2 MINOR/3 PATCH-NICE, closure condition met).
+  Gates: lint+typecheck clean, 190/190 unit. Next: 17.3 docs completion →
+  17.4 ledger + ad-language audit + impeccable + baseline package → 17.5
+  release prep (TAG v1.4.0 = maintainer sanction ONLY).
