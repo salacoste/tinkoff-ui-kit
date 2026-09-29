@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 
+import { apiReferenceDoc } from '../api-reference.js';
+
 import '../tj-cta/tj-cta.js';
 import '../tj-link/tj-link.js';
 import './tj-prose.js';
@@ -356,4 +358,9 @@ export const Accessibility: Story = {
       </tj-prose>
     </main>
   `,
+};
+
+export const Api: Story = {
+  name: 'API',
+  render: () => apiReferenceDoc('tj-prose'),
 };

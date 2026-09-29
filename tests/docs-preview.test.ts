@@ -55,11 +55,19 @@ describe('docs preview runtime (spec 1.5 review)', () => {
     expect(container.textContent).toContain('stub');
   });
 
-  it('withDisclaimer suppresses the banner on the inline-disclaimer story', () => {
+  it('withDisclaimer suppresses the banner on the inline-disclaimer stories', () => {
     const container = renderTo(
       withDisclaimer(stubStory, ctx({ theme: 'light' }, 'getting-started--page')) as ReturnType<typeof stubStory>,
     );
     expect(container.querySelector('.tk-docs-disclaimer')).toBeNull();
     expect(container.textContent).toContain('stub');
+
+    // ТЖ scaffold (spec 17.3): same suppression — the page renders its own
+    // family-scoped disclaimer box inline.
+    const tjContainer = renderTo(
+      withDisclaimer(stubStory, ctx({ theme: 'light' }, 'tj-getting-started--page')) as ReturnType<typeof stubStory>,
+    );
+    expect(tjContainer.querySelector('.tk-docs-disclaimer')).toBeNull();
+    expect(tjContainer.textContent).toContain('stub');
   });
 });

@@ -190,6 +190,28 @@ describe('consumed --tk-* tokens exist in the token sheet (spec 1.7 review)', ()
         `${file} no longer consumes --tk-font-mono — the 11.2 flip regressed`,
       ).toBe(true);
     }
+    // The ТЖ docs surfaces (spec 17.3) joined the flip. They live under
+    // src/tj/ and REUSE the bank basenames (token-reference /
+    // theming-guide / getting-started) — a bare endsWith would match the
+    // bank file and pin nothing, so these ride PATH-QUALIFIED suffixes.
+    // The ТЖ component package (tj-components) stays OUT of this list by
+    // design: its code idiom is `monospace` (the FR-17 boundary —
+    // --tk-font-mono must not cross into the ТЖ package).
+    const tjFlipped = [
+      'tj/token-reference.stories.ts',
+      'tj/theming-guide.stories.ts',
+      'tj/getting-started.stories.ts',
+      'tj/patterns-article.stories.ts',
+      'tj/patterns-rubric.stories.ts',
+      'tj/patterns-community.stories.ts',
+      'tj/patterns-pro.stories.ts',
+    ] as const;
+    for (const file of tjFlipped) {
+      expect(
+        bareMonoConsumers.some((p) => p.endsWith(`/${file}`)),
+        `${file} no longer consumes --tk-font-mono — the 17.3 docs flip regressed`,
+      ).toBe(true);
+    }
   });
 
   it('derives a real component set (vacuous-exemption guard)', () => {

@@ -20,7 +20,8 @@ import { property, state } from 'lit/decorators.js';
 
 /** One searchable docs page — the 19 v1 component pages + the 11 v2 pages
  *  (Guides/ overviews + Patterns/ composition pages; the v2 family joined
- *  at 14.1). */
+ *  at 14.1) + the 16 ТЖ rows (10 tj-* component pages + 6 pattern/recipe
+ *  pages; spec 17.3). */
 interface SearchEntry {
   /** Sidebar/EN name — matches what the consumer sees in Storybook. */
   title: string;
@@ -70,6 +71,29 @@ const COMPONENTS: readonly SearchEntry[] = [
   { title: 'Store badges', tag: 'tk-store-badges', ru: 'Бейджи магазинов', id: 'guides-store-badges--page' },
   { title: 'Console chrome', ru: 'Хром консоли', id: 'patterns-console-chrome--page' },
   { title: 'Data surfaces', ru: 'Поверхности данных', id: 'patterns-data-surfaces--page' },
+  // --- the ТЖ family (spec 17.3): the 10 tj-* component pages + the 6
+  //     pattern/recipe rows. Findable by «tj», by the Russian display name
+  //     or by the tag; the ТЖ getting-started page points here instead of
+  //     embedding the search (its deliberate 17.3 ruling — that page stays
+  //     non-interactive).
+  { title: 'TJ Composer', tag: 'tj-composer', ru: 'ТЖ: композер сообщества', id: 'tj-composer--playground' },
+  { title: 'TJ CTA', tag: 'tj-cta', ru: 'ТЖ: CTA-плашка', id: 'tj-cta--playground' },
+  { title: 'TJ Header', tag: 'tj-header', ru: 'ТЖ: шапка журнала', id: 'tj-header--playground' },
+  { title: 'TJ Link', tag: 'tj-link', ru: 'ТЖ: ссылка в теле', id: 'tj-link--playground' },
+  { title: 'TJ News Card', tag: 'tj-news-card', ru: 'ТЖ: карточка ленты', id: 'tj-news-card--playground' },
+  { title: 'TJ Post Card', tag: 'tj-post-card', ru: 'ТЖ: карточка поста', id: 'tj-post-card--playground' },
+  { title: 'TJ Prose', tag: 'tj-prose', ru: 'ТЖ: колонка чтения', id: 'tj-prose--playground' },
+  { title: 'TJ Rail', tag: 'tj-rail', ru: 'ТЖ: рельс разделов', id: 'tj-rail--playground' },
+  { title: 'TJ Rubric Header', tag: 'tj-rubric-header', ru: 'ТЖ: шапка рубрики', id: 'tj-rubric-header--playground' },
+  { title: 'TJ Tag Chip', tag: 'tj-tag-chip', ru: 'ТЖ: тег-чип', id: 'tj-tag-chip--playground' },
+  //     Pattern/recipe rows compose atoms and own no element of their own —
+  //     no tag chip line renders (the Console chrome mold).
+  { title: 'TJ Article page', ru: 'ТЖ: страница статьи', id: 'tj-article-page--page-composition' },
+  { title: 'TJ Ad slot recipe', ru: 'ТЖ: рекламный слот', id: 'tj-ad-slot-recipe--recipe' },
+  { title: 'TJ Pattern: Rubric', ru: 'ТЖ: страница рубрики', id: 'tj-patterns-rubric--demo' },
+  { title: 'TJ Pattern: Article', ru: 'ТЖ: паттерн статьи', id: 'tj-patterns-article--page' },
+  { title: 'TJ Pattern: Community', ru: 'ТЖ: страница сообщества', id: 'tj-patterns-community--page' },
+  { title: 'TJ Pattern: Pro', ru: 'ТЖ: /pro/ лендинг', id: 'tj-patterns-pro--page' },
 ];
 
 /** Case-insensitive, ё-Insensitive containment. */

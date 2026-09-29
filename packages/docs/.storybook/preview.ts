@@ -51,8 +51,9 @@ import 'pillkit-tokens/daytona.css';
  * free — guaranteed readable in BOTH themes — while manager chrome sits outside
  * the preview and would need Storybook-chrome styling independent of the kit
  * theme system. The banner is persistent chrome: the decorator wraps every
- * story EXCEPT the getting-started page, which carries its own inline
- * disclaimer box (banner suppressed by story id to avoid double rendering).
+ * story EXCEPT the pages that carry their own inline disclaimer box (the bank
+ * and ТЖ getting-started pages; banner suppressed by story id to avoid double
+ * rendering).
  *
  * Theme persistence: Storybook 10 does NOT persist toolbar globals across
  * manager reloads (verified live) — the state lives in the URL as
@@ -114,12 +115,17 @@ const disclaimerStyles = html`
   </style>
 `;
 
-/** The one story that carries its own inline disclaimer box — the banner would duplicate it there. */
-const INLINE_DISCLAIMER_STORY_ID = 'getting-started--page';
+/** Stories that carry their own inline disclaimer box — the banner would duplicate it there. */
+const INLINE_DISCLAIMER_STORY_IDS: readonly string[] = [
+  'getting-started--page',
+  // ТЖ scaffold (spec 17.3): the ТЖ page renders the family-scoped disclaimer
+  // inline; the persistent banner is bank-worded and would double it.
+  'tj-getting-started--page',
+];
 
 /** Persistent chrome: the unofficial-study disclaimer above every story, themed by tokens. */
 export const withDisclaimer: Decorator = (story, context) => {
-  if (context.id === INLINE_DISCLAIMER_STORY_ID) return story(context);
+  if (INLINE_DISCLAIMER_STORY_IDS.includes(context.id)) return story(context);
   return html`
     ${disclaimerStyles}
     <aside class="tk-docs-disclaimer" role="note">

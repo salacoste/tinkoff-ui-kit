@@ -27,10 +27,12 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./tokens.css": "./dist/index.css"
+    "./tokens.css": "./dist/index.css",
+    "./TOKENS.md": "./src/TOKENS.md"
   },
   "files": [
-    "dist"
+    "dist",
+    "src/TOKENS.md"
   ],
   "scripts": {
     "build": "vite build && tsc -p tsconfig.json",

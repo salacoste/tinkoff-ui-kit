@@ -12,7 +12,7 @@ import { buildStoryUrl } from './stories';
  * AT RUNTIME (never hardcoded literals), and a forced-invariant failure is
  * DESIGN.md re-open evidence with measured values, never a silent retune.
  *
- * For every one of the 45 built ТЖ story ids, the story loads in BOTH
+ * For every one of the 68 built ТЖ story ids, the story loads in BOTH
  * themes and the COMPUTED paint of every element (document + shadow trees
  * + pseudos) is compared theme-to-theme:
  *
@@ -81,7 +81,7 @@ interface TjDarkTarget {
   story: string;
 }
 
-/** All 45 built ТЖ story ids — same registry as the 17.1 TSWEEP matrix. */
+/** All 68 built ТЖ story ids — same registry as the 17.1 TSWEEP matrix. */
 const TJSWEEP: readonly TjDarkTarget[] = [
   { component: 'tj-prose', story: 'tj-prose--playground' },
   { component: 'tj-prose', story: 'tj-prose--species' },
@@ -128,6 +128,32 @@ const TJSWEEP: readonly TjDarkTarget[] = [
   { component: 'tj-ad-slot-recipe', story: 'tj-ad-slot-recipe--recipe' },
   { component: 'tj-ad-slot-recipe', story: 'tj-ad-slot-recipe--accessibility' },
   { component: 'tj-getting-started', story: 'tj-getting-started--page' },
+  // --- 17.3 docs rows (23): token-reference ×5, theming-guide ×3, Api ×10,
+  //     patterns ×5 — the docs surfaces join the same dark audit (leftover /
+  //     invariants / FLAT / AA / parity legs ride the shared engine).
+  { component: 'tj-token-reference', story: 'tj-token-reference--colors' },
+  { component: 'tj-token-reference', story: 'tj-token-reference--typography' },
+  { component: 'tj-token-reference', story: 'tj-token-reference--surfaces' },
+  { component: 'tj-token-reference', story: 'tj-token-reference--motion' },
+  { component: 'tj-token-reference', story: 'tj-token-reference--registers' },
+  { component: 'tj-theming-guide', story: 'tj-theming-guide--switching' },
+  { component: 'tj-theming-guide', story: 'tj-theming-guide--overrides' },
+  { component: 'tj-theming-guide', story: 'tj-theming-guide--dark-pairing' },
+  { component: 'tj-prose', story: 'tj-prose--api' },
+  { component: 'tj-link', story: 'tj-link--api' },
+  { component: 'tj-cta', story: 'tj-cta--api' },
+  { component: 'tj-rubric-header', story: 'tj-rubric-header--api' },
+  { component: 'tj-news-card', story: 'tj-news-card--api' },
+  { component: 'tj-tag-chip', story: 'tj-tag-chip--api' },
+  { component: 'tj-composer', story: 'tj-composer--api' },
+  { component: 'tj-post-card', story: 'tj-post-card--api' },
+  { component: 'tj-header', story: 'tj-header--api' },
+  { component: 'tj-rail', story: 'tj-rail--api' },
+  { component: 'tj-patterns-article', story: 'tj-patterns-article--page' },
+  { component: 'tj-patterns-rubric', story: 'tj-patterns-rubric--page' },
+  { component: 'tj-patterns-rubric', story: 'tj-patterns-rubric--demo' },
+  { component: 'tj-patterns-community', story: 'tj-patterns-community--page' },
+  { component: 'tj-patterns-pro', story: 'tj-patterns-pro--page' },
 ];
 
 /** Settle wait — same contract as visual.spec.ts (children or error display). */

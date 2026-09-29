@@ -2,7 +2,7 @@
 title: 'Story 17.3 — ТЖ docs completion (the 5.5/8.3 mold)'
 type: 'feature'
 created: '2026-09-29'
-status: 'approved'
+status: 'executed'
 baseline_commit: '46938cb'
 context:
   - '{project-root}/_bmad-output/planning-artifacts/epics-v5.md (Story 17.3: "Token reference (generated, drift-proof), theming guide (the auto/light/dark contract), getting-started (install-alone recipe + the ad-module integration recipe), API tables from the ТЖ CEM, patterns pages (article, rubric, community, /pro/); search/anchors follow the docs-regroup conventions")'
@@ -69,14 +69,33 @@ context:
 
 ## Acceptance checklist
 
-- [ ] TJ token reference 5 stories, zero hand-typed values, «инвариантно» dark logic, registers = TOKENS.md single source
-- [ ] `pillkit-tj-tokens` TOKENS.md export + `tests/tj-docs-registers-source.test.ts` green
-- [ ] TJ theming guide 3 stories incl. the AUTO leg + docs-boot caveat + 17.2 standing rulings
-- [ ] getting-started expanded (ТЖ-alone install + ad-module recipe cross-link), id kept, inline disclaimer wired
-- [ ] `tj-components/src/api-reference.ts` + 10 Api stories from the committed CEM
-- [ ] 4 `TJ/Patterns/*` pages (4 Page + rubric Demo composition)
-- [ ] component-search ТЖ rows (16)
-- [ ] TSWEEP/TJSWEEP 68 rows, measured derivations, scoped sweeps green
-- [ ] mono pin truthful; consumed-tokens/zero-hardcoded/zero-theme-branches/tj-contrast/tj-fonts-policy clean
-- [ ] gates EXIT 0; baselines minted for the sanctioned set only; CI GREEN on the push
+- [x] TJ token reference 5 stories, zero hand-typed values, «инвариантно» dark logic, registers = TOKENS.md single source
+- [x] `pillkit-tj-tokens` TOKENS.md export + `tests/tj-docs-registers-source.test.ts` green
+- [x] TJ theming guide 3 stories incl. the AUTO leg + docs-boot caveat + 17.2 standing rulings
+- [x] getting-started expanded (ТЖ-alone install + ad-module recipe cross-link), id kept, inline disclaimer wired
+- [x] `tj-components/src/api-reference.ts` + 10 Api stories from the committed CEM
+- [x] 4 `TJ/Patterns/*` pages (4 Page + rubric Demo composition)
+- [x] component-search ТЖ rows (16)
+- [x] TSWEEP/TJSWEEP 68 rows, measured derivations, scoped sweeps green
+- [x] mono pin truthful; consumed-tokens/zero-hardcoded/zero-theme-branches/tj-contrast/tj-fonts-policy clean
+- [x] gates EXIT 0; baselines minted for the sanctioned set only; CI GREEN on the push
+
+## Implementation Notes (close-out, orchestrator)
+
+**Executor round (exec-173).** All D1–D7 delivered; gates EXIT 0 at hand-off (197 unit tests, gen idempotent, 68 ТЖ story ids exact vs dist). 28-file diff triaged personally: registries clean (engine logic untouched, rows + header comments only), search rows verified, no roster changes.
+
+**Ratified deviations (5, recorded in the story headers):**
+1. Token-reference paints LIVE `var(--tj-…)` swatches instead of literals — a literal never flips, which is a dark-sweep leftover by definition (17.2 contract); value columns stay literal text.
+2. `--tj-color-ink-200` / `--tj-color-ink-reference-time` paint NO specimen («нет поверхностей») — invariant inks that never ride surfaces.
+3. Purple-field pair override in the theming guide ships CODE-ONLY — a live white label on a pseudo-purple pill is exactly the 17.2 leftover class.
+4. `tj-components/src/api-reference.ts` uses bare `monospace` (FR-17: `--tk-font-mono` must not cross the family boundary) and card-surface tables (15.2 ink-300-on-card law — 4.478:1 on the bare page).
+5. Patterns Page rows ride the chrome-composition precedent (kit-only counts, no assertAllStops) — rubric Demo carries real measured stops (4/4 via tj-news-card anchors).
+
+**Lens-173 verdict: NO MAJOR + 1 MINOR + 2 PATCH-NICE — all three fixed orchestrator-owned.** (a) MINOR: TOKENS.md notes carry `**bold**` markers that rendered literally on «Регистры ТЖ» → `mdInline` extended with a strong-mapping pass (code spans win over bold). (b) PATCH-NICE: the illustrative dual-emit block now shows the real `:host`/`:root` symmetry of tokens.css. (c) PATCH-NICE: `mdSection('### Font family slots')` hoisted — was computed twice.
+
+**Axe finding from the baseline mint (real, fixed).** `axe: tj-theming-guide--overrides [light]` → `color-contrast: a[target="_top"]`: the «Регистры ТЖ» link sat INSIDE the muted warn box — bank `--tk-color-link` #1771E6 on `--tk-color-surface-muted` #F5F5F6 = 4.24:1 (light AA fail; on `surface-base` it is 4.62 — the pair the bank mold assumes, which is why the bank guide never hit it: it never puts a link on a muted box). Fix: the link moved to a `p.tjtg-note` on the page ground, warn box keeps the contract text; source comment records the ratio. Post-fix scoped run 30/30, both sweeps 277/277, full chain EXIT 0.
+
+**Baseline mint.** Sanctioned set verified via `git status`: exactly 50 PNG movers — 23 new ids × both themes (46) + the 2 getting-started retakes × both themes (4). The overrides pair re-minted once after the axe fix (explicit delete first); final mover set unchanged in composition.
+
+**Ledgers.** Sweep registries 45→68 rows (deliberate-update contract honored — engine logic untouched); consumed-tokens pin list grew by 7 path-qualified `tj/…` suffixes; docs-preview covers both inline-disclaimer ids.
 

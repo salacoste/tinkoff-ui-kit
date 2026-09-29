@@ -9,8 +9,8 @@ import { buildStoryUrl, THEMES } from './stories';
  * here is a family fact, not a refactor:
  *
  * - CHECK 1 (walks, BOTH themes): a REAL Tab walk over EVERY ТЖ story id
- *   (the 45-row TSWEEP registry below = the built docs index exactly; the
- *   spec prose says 46 — off by one, flagged in the story report). Stop
+ *   (the 68-row TSWEEP registry below = the built docs index exactly; 45
+ *   through 17.2, +23 docs rows at 17.3). Stop
  *   counts are DERIVED FROM STORY SOURCE (the 5.1 "measured, not assumed"
  *   law) with the derivation named inline per row; a changed interactive
  *   surface set must update the registry deliberately. Shift+Tab must
@@ -46,7 +46,10 @@ import { buildStoryUrl, THEMES } from './stories';
  *   ad-slot-recipe--recipe — recipe markup is deliberate surface, so
  *   story-chrome stops (wordmark, hero CTA, engage buttons, demo toggles)
  *   get ring/name assertions too, and the TOTAL stop count is pinned
- *   (`totalStops`).
+ *   (`totalStops`). The 17.3 docs pages (token-reference, theming-guide,
+ *   api, patterns Page rows) deliberately do NOT ride assertAllStops:
+ *   their chrome is text + inline ?path anchors (the chrome-composition
+ *   precedent — kit-only counts, chrome names-only).
  * - SR STATE PINS: the stateful surfaces' computed role/state at DOM
  *   level (composer fake-input = button; rail drawer open reflection +
  *   aria-expanded + Esc; header theme control cycle + RU announcements;
@@ -103,7 +106,7 @@ interface TjSweepTarget {
 }
 
 /**
- * TSWEEP — all 45 built ТЖ story ids (docs dist index, sorted). Stop
+ * TSWEEP — all 68 built ТЖ story ids (docs dist index, sorted). Stop
  * derivations cite the story source's interactive set; skeleton/anatomy
  * inert hosts render NO href attribute (the 16.1 rule) hence no stop.
  */
@@ -280,8 +283,71 @@ const TSWEEP: readonly TjSweepTarget[] = [
   // accessibility: tables only.
   { component: 'tj-ad-slot-recipe', story: 'tj-ad-slot-recipe--accessibility', stops: 0, minKitSurfaces: 0 },
   // --- tj-getting-started --------------------------------------------------------------
-  // page: text-only onboarding page, zero interactives.
+  // page (17.3 rewrite, re-derived): STILL zero kit interactives by design —
+  // the expanded scaffold is text + install blocks + INLINE ?path/GitHub
+  // anchors, all of it story chrome (family '' — uncounted in the walk,
+  // name-checked in the scan); the live component-search demo is
+  // deliberately NOT embedded (the 17.3 ruling: that page stays
+  // non-interactive).
   { component: 'tj-getting-started', story: 'tj-getting-started--page', stops: 0, minKitSurfaces: 0 },
+  // --- tj-token-reference (17.3) --------------------------------------------------------
+  // all five stories: generated tables + non-interactive swatches/specimen
+  // spans/SVG curve previews — zero interactive surfaces of ANY family.
+  { component: 'tj-token-reference', story: 'tj-token-reference--colors', stops: 0, minKitSurfaces: 0 },
+  { component: 'tj-token-reference', story: 'tj-token-reference--typography', stops: 0, minKitSurfaces: 0 },
+  { component: 'tj-token-reference', story: 'tj-token-reference--surfaces', stops: 0, minKitSurfaces: 0 },
+  { component: 'tj-token-reference', story: 'tj-token-reference--motion', stops: 0, minKitSurfaces: 0 },
+  { component: 'tj-token-reference', story: 'tj-token-reference--registers', stops: 0, minKitSurfaces: 0 },
+  // --- tj-theming-guide (17.3) ----------------------------------------------------------
+  // switching: live demo stage = 1 tj-cta + 1 tj-link + 2 tj-tag-chip (the
+  // chips ride the recorded 40px sub-floor exemption; code blocks are
+  // pre[tabindex] chrome — NOT matched by the scan SELECTOR).
+  {
+    component: 'tj-theming-guide',
+    story: 'tj-theming-guide--switching',
+    stops: 4,
+    minKitSurfaces: 4,
+    subFloorExempt: ['tj-tag-chip .chip'],
+  },
+  // overrides: default CTA + link-body-overridden CTA (the purple pair
+  // override ships as CODE ONLY — rendering it would mint a text-leftover
+  // for the 17.2 dark sweep).
+  { component: 'tj-theming-guide', story: 'tj-theming-guide--overrides', stops: 2, minKitSurfaces: 2 },
+  // dark-pairing: 1 tj-cta + 1 tj-link in the pairing stage.
+  { component: 'tj-theming-guide', story: 'tj-theming-guide--dark-pairing', stops: 2, minKitSurfaces: 2 },
+  // --- the ten Api pages (17.3) ---------------------------------------------------------
+  // api: manifest tables + the CONVENTIONS footer anchor (story chrome —
+  // uncounted in the walk, name-checked in the scan). Zero kit hosts.
+  ...(
+    [
+      'tj-prose--api',
+      'tj-link--api',
+      'tj-cta--api',
+      'tj-rubric-header--api',
+      'tj-news-card--api',
+      'tj-tag-chip--api',
+      'tj-composer--api',
+      'tj-post-card--api',
+      'tj-header--api',
+      'tj-rail--api',
+    ] as const
+  ).map((story) => ({
+    component: story.replace(/--api$/, ''),
+    story,
+    stops: 0,
+    minKitSurfaces: 0,
+  })),
+  // --- TJ/Patterns pages (17.3) ---------------------------------------------------------
+  // Page rows (article/rubric/community/pro): adoption maps — text + inline
+  // ?path anchors, all chrome (the chrome-composition precedent: kit-only
+  // counts, no assertAllStops).
+  { component: 'tj-patterns-article', story: 'tj-patterns-article--page', stops: 0, minKitSurfaces: 0 },
+  { component: 'tj-patterns-rubric', story: 'tj-patterns-rubric--page', stops: 0, minKitSurfaces: 0 },
+  { component: 'tj-patterns-community', story: 'tj-patterns-community--page', stops: 0, minKitSurfaces: 0 },
+  { component: 'tj-patterns-pro', story: 'tj-patterns-pro--page', stops: 0, minKitSurfaces: 0 },
+  // rubric Demo: the live composition — 4 tj-news-card row-as-link anchors;
+  // tj-rubric-header is a pure display surface (zero interactives).
+  { component: 'tj-patterns-rubric', story: 'tj-patterns-rubric--demo', stops: 4, minKitSurfaces: 4 },
 ];
 
 /**

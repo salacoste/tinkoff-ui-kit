@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 
+import { apiReferenceDoc } from '../api-reference.js';
+
 import './tj-header.js';
 
 // Story-local teardown (lens 16.5): the theme contract lives on the DOCUMENT
@@ -431,4 +433,9 @@ export const Accessibility: Story = {
       </table>
     </main>
   `,
+};
+
+export const Api: Story = {
+  name: 'API',
+  render: () => apiReferenceDoc('tj-header'),
 };
