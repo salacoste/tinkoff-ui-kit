@@ -1,4 +1,4 @@
-# HANDOFF — tinkoff-ui-kit (2026-09-28; v1.3.0 RELEASED + пост-релизный полиш-раунд)
+# HANDOFF — tinkoff-ui-kit (2026-09-30; v1.4.0 ПОДГОТОВЛЕН — ТЖ-семейство, тег ждёт мейнтейнера)
 
 Полная передача проекта новой команде: состояние, план, долги, нюансы, governance. Прочитайте
 этот файл целиком перед первым коммитом. Документы-первоисточники помечены путями.
@@ -31,6 +31,7 @@
 | **v1.2.0 / эпики-v3** | ✅ ИСПОЛНЕНА 8/8 стори-юнитов (2026-09-26, финал — 11.3): 9.1 (tint-brown + font-mono токены; brown-badge ADOPTED — белый нумерал на коричневом, AA 5.413:1; radius-3xl REFUSED пробой 23.8px — «≈32» был артефактом зрения; tooltip 288px-cap) + 9.2 (генератор-истина: aa-annotations из DESIGN.md, AD-4 single-source) + 10.1+10.2 (sr-only ×2, error-канал, слоты subtitle/page-copy; референс-дословные копии лендингов — render-верификация после lens-MAJOR на выдуманном подзаголовке) + 10.3 (promo-card art-mode=bleed + floating-pill, оффсет space-32 Δ=0) + 10.4 (button href/target/rel; no-href байт-идентичен; НОЛЬ отклонений спека — первый в цикле) + 11.1 (a11y-свип режимов: +12 engine-ног, group-VI 42/42, SR-RUNSHEET-v1.2.0) + 11.2 (доки-mono: --tk-font-mono первый потребитель, 36+2+36 перезаписей, харнесс-пин JetBrains Mono) + 11.3 (эта — verification ledger v1.2.0 + жёлтый аудит + impeccable + ЧАСТЬ v1.2.0 + RELEASE §9 + этот close). Итоги: **943 unit + 1380 visual/axe**, 414 базлайн-PNG (392 сюиты + 22 per-component; файлов за окно не прибавилось), packages/react ZERO diff (пропсы едут через CEM). Пруфы: `.playwright-cli/verify/{tokens-9-1,tokens-9-2,batch-10-1-10-2,promo-card-10-3,button-10-4,docs-11-2,a11y-sweep/group-VI.md,fidelity-verification-v1-2-0}/`. Тег НЕ ставился (гейт мейнтейнера — очередь ниже) |
 | **v1.3.0 / эпики-v4** | ✅ ИСПОЛНЕНА 7/7 стори-юнитов (2026-09-28, финал — 14.2): 12.1 (доки-рестракчер по повершруппам Bank/Business/Invest — 10 story-id переименований, байты не тронуты) + 12.2 (капчу-паки v3: bank-вертикаль + per-vertical INDEX-конвенция) + 13.1 (admin gap-map + ПАК: 8 PII-редактированных поверхностей консоли, maintainer-session; roster-ратификация: sidebar-nav DROPPED, empty-state/drawer dropped, avatar-menu split) + 13.2 (tabs `indicator="underline"` + страница паттерна Console chrome + DESIGN.md console-language секция) + 13.3 (badge neutral/attention + хуки `--tk-badge-fill`/`--tk-badge-text` + progress-bar `--tk-progress-bar-height` + страница Data surfaces) + 14.1 (Group VII свип: 9 ног, файл 108; SR-протоколы ×5; поиск 30 записей; theming-фигура; stale-claim свип) + 14.2 (эта — verification ledger v1.3.0 + жёлтый аудит с консольной дисциплиной + impeccable 209 файлов + ЧАСТЬ v1.3.0 + SR-RUNSHEET-v1.3.0 + RELEASE §10 + этот close). Interlude между окнами: mono-extension (33 правила + 151 базлайн), tree-identity гард порта 6007, cookie-banner 7.2(c) REFUSED. Итоги: **951 unit + 1438 visual/axe**, **430 базлайн-PNG** (+16: консольное семейство + 2 страницы паттернов), packages/react + tokens ZERO diff. Пруфы: `.playwright-cli/verify/{a11y-sweep/group-VII.md,fidelity-verification-v1-3-0/,admin-13-1/,mono-extension/}` + `captures-v3/`. Тег НЕ ставился (гейт мейнтейнера — очередь ниже) |
 | **Полиш-раунд пост-релиз** | ✅ (2026-09-28, санкция «lets continue to improve», три направления выбраны): нав-регруппировка доков `43fb084` (Components v2 → **Guides** 9 + **Patterns** 2; 26 базлайнов prefix-move байт-идентично, 2 cookie-страницы пересняты под точный кейсинг; поиск/якоря синхронизированы; CI success 36415613440; форензика — `.playwright-cli/verify/docs-regroup/NOTES.md`) + OSS-оформление `a1148f9` (README-свежесть: 27 компонентов/v1.3.0-пины/«независимый»; CONTRIBUTING.md; шаблоны issue ×2 + PR — с PII-гейтом) + админ-подготовка `0cbe955` (ранбук 3 открытых состояний — avatar-menu/кебаб/overflow, read-only, PII-редакция ДО передачи; драфт гэп-мапы menu-popover — НЕ спек). Направления дальше: **ТЖ = ОТДЕЛЬНЫЙ экспортируемый под-кит** (директива мейнтейнера, эпики-v5 — планирование по слову), админ остаётся first-class |
+| **v1.4.0 / эпики-v5 (ТЖ)** | ✅ ИСПОЛНЕНА 12/12 стори-юнитов (2026-09-30, финал — 17.5): Т-Журнал как **отдельный экспортируемый кит** `pillkit-tj-{tokens,components,react}` с нулём runtime-зависимостей в обе стороны (FR-17 механизован: boundary-тесты ×2 + eslint-полосы + ad4-матрица; OQ-10 — один git-тег-поезд, своя секция CHANGELOG). 15.1–15.3 (скаффолд тройки, токеновый слой dual-emit `:host`/`:host(:not([data-tj-theme="light"]))` + AA-пины, шрифты OQ-8: Inter/PT Serif слоты, zero-fonts инвариант, Graphik/Charter путь задокументирован) + 16.1–16.6 (10 `tj-*`: prose/link/cta, rubric-header/news-card/tag-chip + /pro/ purple-hero, композер/post-card — первая stateful-пара, header/rail + burger-drawer AD-12 + `--tj-z-*`, статья + ad-slot-рецепт на банковских `--tk-promo-card-*` хуках) + 17.1+17.2 (a11y 140 ног + dark 45, extraction-verification) + 17.3 (доки-комплишн: token-reference + theming-guide + 4 страницы паттернов + API-таблицы ×10 + getting-started Flow-A; 50 movers) + 17.4 (квартет: fidelity ledger 11 строк, ad-language аудит **0 значений**, impeccable **297 файлов** exit 0, ЧАСТЬ v1.4.0 — 14 коммитов / 204 PNG-события) + 17.5 (эта — версии ×6 → 1.4.0 ИСПОЛНЕНО в-story + CHANGELOG `[1.4.0] - 2026-09-30` + RELEASE.md §11 + этот close). CI-цепочка окна записана честно: 58d979e 3× timeout-cancel (~30:20, `timeout-minutes: 30` — timeout-kill репортится как cancel; поднят 30→60 в `202beb1`) → 36617540273 RED axe×5 (ссылки на surface-muted 4.24:1 — закон) → фикс `d02a483` → **36623061743 GREEN** (~28 мин); close-out `63bba27` → **36626757077 GREEN**. Итоги: **1267 unit + 2123 visual/axe ног (23 файла)**, **544 базлайн-PNG сюиты + 25 per-component** (+136, всё ТЖ, 0 удалено), 37 компонентов (27 банк + 10 ТЖ). Пруфы: `.playwright-cli/verify/{fidelity-verification-v1-4-0/,tj-a11y-sweep/,tj-dark-sweep/}` + `captures-v3/tj/` + `packages/docs/src/tj/`. Тег НЕ ставился (гейт мейнтейнера — очередь ниже) |
 | Репо | `github.com/salacoste/tinkoff-ui-kit`, ветка `main`. HEAD документирован в CLAUDE.md |
 
 Стек (ЗАМОРОЖЕН, пере-планирование не требуется): Lit 3.3.3 core (shadow DOM) в
@@ -189,6 +190,30 @@ METHOD.md §SR) — при желании мейнтейнер прогоняе�
 открытые состояния в паке отсутствуют; при снятии материала reopened для
 menu-popover атома) — оба не гейтят релиз.
 
+**Мейнтейнерская очередь v1.4.0 (открыта 17.5, 2026-09-30):**
+(a) **batch-confirm базлайнов окна v1.4.0** по ЧАСТИ v1.4.0
+`baseline-review-package.md` (реестр 14 коммитов / 204 PNG-события с
+forensic-однострочниками; наибольшие волны — 16.x-добавления 110 и 50
+movers 17.3; фиделити-контекст — `verify/fidelity-verification-v1-4-0/`:
+ledger 11 строк + ad-language аудит + impeccable 297);
+(b) **релиз v1.4.0** по RELEASE.md «Релиз v1.4.0» §11.1–11.5 (версии ×6 и
+CHANGELOG уже ИСПОЛНЕНЫ в-story 17.5 — в отличие от прежних окон;
+осталось: **тег v1.4.0 — ТОЛЬКО мейнтейнер** §11.3 + свежий потребитель
+Flow-A §11.4 — ТОЛЬКО ТЖ-тройка, без банковских пакетов, рендерит
+tj-семейство);
+(c) исполнить `verify/tj-a11y-sweep/SR-RUNSHEET-v1.4.0.md` (живой
+VoiceOver по ТЖ-поверхностям; механизуемая computed-половина может ехать
+пробой по прецеденту sr-v130-probe.mjs);
+(d) Graphik/Charter лицензии — решение о поставке ТЖ-шрифтов (сейчас
+zero-fonts: слоты систем-first, путь задокументирован);
+(e) header-chip 36px перемер FLAG (закон 17.x-свипов, при стабильной
+капче);
+(f) оппортунистически: iOS momentum-scroll спот-чек модали + avatar-menu/
+kebab open-state капча (перенос из очереди v1.3.0-(d), не гейтят релиз);
+(g) batch-confirm — единственный БЛОКИРУЮЩИЙ predecessor тега; всё
+остальное может ехать после. Ничего из (a)–(f) НЕ исполнено прогоном
+17.5.
+
 ## 5. Нюансы и специфика (уроки, оплаченные багами — НЕ переоткрывайте)
 
 **Стек/сборка:**
@@ -269,22 +294,28 @@ CI (GitHub Actions) гоняет всё это + impeccable headless детек�
 | Референсы v1.3.0 (bank + admin паки) | `.playwright-cli/captures-v3/` (INDEX.md в каждой папке) |
 | Релиз v1.3.0 (тег/рецепт/changelog-драфт) | RELEASE.md, раздел «Релиз v1.3.0» (§10.1–10.7) |
 | SR-спот-чеки v1.3.0 (run-sheet мейнтейнера) | `.playwright-cli/verify/a11y-sweep/SR-RUNSHEET-v1.3.0.md` |
+| Референсы ТЖ (11 PII-clean поверхностей) | `.playwright-cli/captures-v3/tj/` (INDEX.md + probe-notes.md) |
+| Фиделити-ledger v1.4.0 (11 строк) + ad-language аудит + impeccable | `.playwright-cli/verify/fidelity-verification-v1-4-0/` |
+| Пакет базлайнов v1.4.0 (гейт v1.4.0) | `_bmad-output/implementation-artifacts/baseline-review-package.md`, ЧАСТЬ v1.4.0 |
+| Релиз v1.4.0 (Flow-A рецепт уже в CHANGELOG/RELEASE §11) | RELEASE.md, раздел «Релиз v1.4.0» (§11.1–11.7) |
+| SR-спот-чеки v1.4.0 (run-sheet мейнтейнера) | `.playwright-cli/verify/tj-a11y-sweep/SR-RUNSHEET-v1.4.0.md` |
 
 ## 7. С чего начать
 
 1. Прочитать этот файл + CLAUDE.md + epics-v2.md.
 2. Прогнать гейты на HEAD (все зелёные — точка входа чистая).
-3. v2 / v1.2.0 / v1.3.0 ИСПОЛНЕНЫ целиком (эпики-v4 — 12.1 → 14.2; все
-   спеки закрыты, история — в §2 и spec-триажах). Мейнтейнерская очередь
-   §4 v1.3.0 закрыта по (a)→(b)→(c) 2026-09-28 (батч → релиз+тег v1.3.0 →
-   свежий потребитель §10.4 → SR-раншит механизуемой половиной); остались
-   только оппортунистические (d) спот-чеки (iOS momentum-scroll,
-   avatar-menu/kebab open-state капча) — релиз не гейтят. Новые стори
-   (если появятся) — по циклу §5, гейт компонента = FR-16 дословно.
-4. Вопросы мейнтейнеру — только на гейтах: v1.3.0-батч базлайнов,
+3. v2 / v1.2.0 / v1.3.0 / v1.4.0-окно ИСПОЛНЕНЫ целиком (эпики-v5 — 15.1 →
+   17.5; все спеки закрыты, история — в §2 и spec-триажах). Очередь §4
+   v1.3.0 закрыта по (a)→(b)→(c) 2026-09-28 (батч → тег v1.3.0 → SR-раншит);
+   открыта очередь v1.4.0 (§4): batch-confirm ЧАСТЬ v1.4.0 — единственный
+   блокирующий predecessor тега; версии+CHANGELOG уже в репо (17.5 в-story).
+   Новые стори (если появятся) — по циклу §5, гейт компонента = FR-16
+   дословно; ТЖ-компоненты — FR-16 + FR-17 (нуль импортов банка, оба
+   направления, трипваером).
+4. Вопросы мейнтейнеру — только на гейтах: v1.4.0-батч базлайнов,
    релизный тег, SR-чеки — всё остальное автономно по плану.
 
 *Составлено оркестратором autonomous-прогона (2026-09-24; v2-финал — 8.4,
-2026-09-25; v1.3.0-финал — 14.2, 2026-09-28). Всё, что здесь не сказено,
-ищите в memlog-ах спинов и spec-триажах — проект ведёт полную аудиторскую
-историю.*
+2026-09-25; v1.3.0-финал — 14.2, 2026-09-28; v1.4.0-финал — 17.5,
+2026-09-30). Всё, что здесь не сказено, ищите в memlog-ах спинов и
+spec-триажах — проект ведёт полную аудиторскую историю.*
