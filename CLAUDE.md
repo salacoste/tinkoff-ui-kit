@@ -514,3 +514,52 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   news-title-24-over-vision-pixels ruling, composer-on-page pattern ruling.
   Next: 16.5 chrome — tj-header + tj-rail + burger drawer + AD-12 ТЖ
   overlay helper + --tj-z-* mint + theme control menu.
+
+- **2026-09-29 STORY 16.5 EXECUTED (code-head `e945221` — dad294f + CI fix;
+  run 36532883418 GREEN, first run 36530021981 RED at the impeccable
+  detector):** ТЖ chrome complete — tj-header (sticky z `--tj-z-nav`;
+  WHITE CARD PILL chips on the page-gray bar; SEMANTIC-ONLY current
+  (aria-current, zero visual delta — probe9 ×11/11 uniform 17/700 + the
+  capture show NO reference marking; the spec's authored 700-delta was
+  DELETED vision-evidenced); NO divider — the bar blends into the page;
+  stateless theme cycle auto→light→dark on `documentElement
+  data-tj-theme`, auto = REMOVE attribute, no matchMedia, `theme-change`
+  detail = BARE STRING (state lives on the root, not a <prop>-change
+  channel), RU polite announcements; CTA = fully-rounded 36px pill
+  (`--tj-radius-full`, inset-block 4px — NOT the article r5) + tj-rail
+  (w290 rows nav-label species, icon-{value} 40px tiles/30px visual,
+  burger <1200px) + drawer (open REFLECTED + `open-change`
+  {value:boolean}) + the AD-12 ТЖ overlays helper (mountSheet/lockScroll/
+  trapFocus — the documented FR-17 duplication; popover-UA resets +
+  post-await revalidation translated) + `--tj-z-*` mint (nav 100 /
+  drawer 300; 200 spare) + event-map ×2. LESSONS: (1) Lit first-update
+  change-map — EVERY first-update change entry carries old=undefined
+  INCLUDING stamped attributes → guard DISPATCH ONLY, mount
+  unconditionally (bank select.ts mold), guard unmount (burger
+  focus-steal); a stamped `open` owes the sheet from first paint. (2) CEM
+  event inference walks class METHODS only and cannot name CustomEvent
+  subclasses → a nameless manifest entry rides next to @fires; fix =
+  dispatch from a `#emitX` readonly FIELD initializer (the
+  #handleThemeActivate shape). (3) Lit attribute REMOVAL = null property
+  write (`burgerLabel: string | null` + trim-fallback). (4) SSR
+  base-access: `document.createElement?.()` throws ReferenceError when
+  document is undefined — ?. guards the CALL, not the base access;
+  `typeof` ternary; found rewriting a vacuous happy-dom SSR test into
+  `vi.stubGlobal('document', undefined)`. (5) **THE IMPECCABLE DETECTOR
+  IS A CI GATE ON CHANGED UI FILES** — layout-property transitions
+  (`transition: height`!) are BLOCKING; the sanctioned height-animation
+  channel is `grid-template-rows` (px↔px interpolates evergreen) — .bar
+  is a one-row grid, rest-state rendering identical so baselines stand;
+  AND the detector scans TEST sources too: a negative pin's own literal
+  trips the pattern → join the needle at RUNTIME. (6) Vision
+  weight-estimation is unreliable at page scale: two independent passes
+  "saw" mixed rail weights — impossible from uniform CSS, disproved by a
+  3× zoom pass (all labels same stroke; the tiles' visual mass biases the
+  read; the passes even disagreed on WHICH rows); trust computed styles
+  for numbers, vision for structure. Fidelity round: per-chip icons =
+  CONSUMER art (actions-slot norm); «dark hero light-leak» = synthetic
+  story placeholder (slot content, identical in light). Gates: 247/247
+  tj-components (+3), tj-react 19/19, build green. Baselines: 18 PNGs
+  (4+5 stories × both themes), mint 1678/1678, 0 tracked modified;
+  maintainer batch-confirm package = 78. Next: 16.6 article composition
+  + ad-slot recipe + live walkthrough.

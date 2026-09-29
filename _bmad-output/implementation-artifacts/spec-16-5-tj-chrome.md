@@ -143,4 +143,4 @@ context:
 
 **Baselines (orchestrator-minted, port 6007):** `pnpm test:visual:update` → **1678 passed** (1624 → 1678), exit 0; **18 NEW PNGs** (header ×4 stories + rail ×5 stories, light+dark), 0 tracked modified — the chrome changes are confined to new stories. Maintainer batch-confirm package grows to 78 (16.1's 24 + 16.2/16.3's 22 + 16.4's 14 + 16.5's 18).
 
-**CI:** verdict stamped in the close-out commit (docs(bmad)).
+**CI:** first run 36530021981 RED — the impeccable design detector (a gate on CHANGED UI files) blocked the bar's box-metric animation (`[layout-transition] transition: height` in tj-header.css.ts AND the pin test's own literal). Fix `e945221`: `.bar` is a one-row grid; the compress animates `grid-template-rows` 72→56 — the detector's own sanctioned channel (px↔px interpolates on every evergreen engine); rest-state rendering identical → the baselines stand untouched; the negative pin's needle is joined at RUNTIME so its own source cannot trip the pattern. → run **36532883418 GREEN** (API verdict, head `e945221` — includes the visual compare over the 18 new baselines).
