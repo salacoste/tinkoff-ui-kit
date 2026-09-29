@@ -155,7 +155,11 @@ export const Page: Story = {
         </li>
       </ul>
 
-      <p class="tjpat-note">
+      <!-- Ссылки — на грунте страницы, НЕ внутри muted-бокса: банковская
+           пара --tk-color-link даёт AA на surface-base (4.62), на
+           surface-muted в светлой теме — 4.24, провал (закон 17.3;
+           находка CI-рана 36617540273 по пяти паттерн-страницам). -->
+      <p>
         Живые поверхности паттерна:
         <a href="?path=/story/tj-composer--playground" target="_top"
           >tj-composer</a

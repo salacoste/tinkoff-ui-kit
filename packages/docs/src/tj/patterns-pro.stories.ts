@@ -179,7 +179,11 @@ export const Page: Story = {
         </li>
       </ul>
 
-      <p class="tjpat-note">
+      <!-- Ссылки — на грунте страницы, НЕ внутри muted-бокса: банковская
+           пара --tk-color-link даёт AA на surface-base (4.62), на
+           surface-muted в светлой теме — 4.24, провал (закон 17.3;
+           находка CI-рана 36617540273 по пяти паттерн-страницам). -->
+      <p>
         Значения пар и формулировки правил — в
         <a href="?path=/story/tj-token-reference--registers" target="_top"
           >«Регистрах ТЖ»</a
