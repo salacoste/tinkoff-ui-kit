@@ -2,8 +2,8 @@
 title: 'Story 17.5 — Release prep v1.4.0: ТЖ joins the train (recipe §11 + versions + CHANGELOG + HANDOFF; TAG = maintainer)'
 type: 'feature'
 created: '2026-09-29'
-status: 'approved'
-baseline_commit: 'TBD-at-execution (the 17.4 close-out head)'
+status: 'executed'
+baseline_commit: '63bba27'
 context:
   - '{project-root}/_bmad-output/planning-artifacts/epics-v5.md (Story 17.5: "Versions bump across the six shippable packages (bank ×3 + ТЖ ×3) on one tag (OQ-10); CHANGELOG section; RELEASE.md «Релиз v1.4.0» recipe (fresh-clone consumer installs ТЖ ALONE and renders tj-cta — the Flow-A lockfile acceptance at release grade); the tag itself ONLY on the maintainer'"'"'s explicit sanction")'
   - '{project-root}/RELEASE.md §10 «Релиз v1.3.0» (THE MOLD — 10.1 pre-flight / 10.2 version+CHANGELOG / 10.3 tag / 10.4 fresh-consumer / 10.5 changelog draft / 10.6 fonts-legal / 10.7 non-execution proof; §11 mirrors it with measured v1.4.0 facts)'
@@ -134,3 +134,91 @@ RELEASE.md/CHANGELOG/package manifests).
    verdict per the standing rule.
 
 </frozen-after-approval>
+
+## Implementation Notes (close-out, orchestrator-executed)
+
+ORCHESTRATOR-EXECUTED end-to-end (the 14.2/17.4 precedent — release
+files are orchestrator-owned; no executor subagent touched
+RELEASE.md/CHANGELOG/package manifests).
+
+**Task 2 — versions + CHANGELOG (executed FIRST so the recipe commit
+could cite its head):** `7199619` `chore(release): v1.4.0 — version +
+changelog`. Six manifests on line 3 each — bank ×3 `1.3.0 → 1.4.0`, ТЖ ×3
+`0.0.0 → 1.4.0` (OQ-10 join-train); diff verified = exactly 6 version
+lines; root 0.1.0 + docs 0.0.0 untouched. CHANGELOG: fresh empty
+`[Unreleased]` on top; `[1.4.0] - 2026-09-30` = Added (ТЖ family:
+packages, 10 tj-*, dual-emit token layer, docs section, sweeps,
+ad-slot recipe, SR-RUNSHEET) + Internal (the inter-window regroup note
+survived INTO Internal — nothing dropped; CI timeout 30→60; bank link
+contrast law; Verification line: ledger 11 + ad-language 0 + impeccable
+297 + ЧАСТЬ v1.4.0). `pnpm gen` after the bump: **zero drift** — diff =
+exactly the 7 expected files (6 manifests + CHANGELOG), no
+manifest/wrapper changes (CEM embeds no package version — confirmed at
+execution, not from memory). Version-field readers grep: package.json
+imports in docs/src + tests = 0; `1.3.0`/`0.0.0` literals in docs src =
+0; `.version` readers in packages/*/src + tests = 0 — bumps are
+pixel-clean.
+
+**Task 1 — RELEASE.md §11:** 7 subsections at the §10 mirror.
+§11.1 carries the honest CI chain by run id (36593380779 3×
+timeout-cancel → 202beb1 30→60 → 36617540273 RED axe×5 → d02a483 →
+36623061743 GREEN; close-out 63bba27 → 36626757077 GREEN) + the
+full-suite standing practice + batch-confirm + SR-RUNSHEET. §11.2
+records the executed bumps (before→after, both trios). §11.3
+maintainer-only with the `2026-09-28 delegated-execution` precedent
+explicitly NOT extended to v1.4.0. §11.4 = Flow-A at release grade:
+clone `--branch v1.4.0`, ТЖ-ALONE install verbatim from getting-started,
+vite dedupe 3-liner, acceptance = tj-cta both themes (auto leg +
+`data-tj-theme="light"`), NO bank packages in node_modules; Flow-C
+ad-slot referenced as the separate context. §11.5 = the landed
+CHANGELOG text verbatim (historical record). §11.6 adds the NEW window
+block: ТЖ zero-fonts invariant (OQ-8), Graphik/Charter licensed path,
+PII-clean synthetic capture pack. §11.7 proof narrowed to the TAG ONLY
+with the narrowing worded explicitly. **In-story corrections, recorded
+honestly:** §11.5 was first drafted as a single-source pointer — the
+frozen AC demands the verbatim text, so it was rewritten to carry the
+full landed section before close-out; §11.4 gained the `--branch
+v1.4.0` clone line and the tj-cta acceptance leg the AC names (both
+fixed pre-close-out; both ride the close-out commit). Leg count in §11
+re-cited as **2123** (the 17.4 package's corrected measurement), not
+the frozen text's stale 2118 — the spec itself allowed re-citation of
+the corrected package numbers.
+
+**Task 3 — HANDOFF close:** header → 2026-09-30 (v1.4.0 prepared);
+§2 gains the epics-v5 row (12/12 story units 15.1→17.5, CI chain,
+1267 unit + 2123 legs, 544+25 PNG, 37 components, proofs paths); §4
+opens the maintainer queue v1.4.0 — 7 items (batch-confirm ЧАСТЬ
+v1.4.0 = the ONLY blocking predecessor of the tag; tag §11.3;
+SR-RUNSHEET; Graphik/Charter; header-chip 36px FLAG; opportunistic iOS
+momentum-scroll + admin open-state carries; nothing executed); §6
+file-map rows (captures-v3/tj, fidelity-v1-4-0, ЧАСТЬ v1.4.0, RELEASE
+§11, SR-RUNSHEET v1.4.0); §7 start-here updated.
+
+**Task 4 — gates + commits:** local chain at the 17.5 head —
+`pnpm build && pnpm test && pnpm lint && pnpm typecheck` **EXIT 0**
+(1267 unit: 17+713+70+197 bank + 4+247+19 ТЖ); `pnpm gen` zero-diff
+(above). Commits by explicit pathspec, bump first: `7199619` (chore
+release) → `d039d2d` (docs release: §11 + HANDOFF, citing 7199619).
+Push zero-in-flight (in_progress=0, queued=0). No `git tag`;
+`git tag -l` = v1.0.0 v1.1.0 v1.2.0 v1.3.0; npm-команды не запускались.
+
+## Verification
+
+Local gates: build (8 projects) / test (**1267/1267**) / lint /
+typecheck — all EXIT 0 at the 17.5 working head; `pnpm gen` post-bump
+zero-diff; version-reader greps all empty. Visual suite not re-run —
+the window's code content is unchanged since the full 2123/2123 pass on
+d02a483 (17.4 Verification); the 17.5 diff is manifests + release docs
+only, the served tree bit-identical (the 14.2 precedent).
+
+CI: run **36631204306** on `d039d2d` (the §11+HANDOFF head; the bump
+head 7199619 is covered by it — consecutive commits, same tree apart
+from the docs) — verdict recorded below after it existed:
+
+**Run 36631204306 (d039d2d): `gh run view` conclusion `success` —
+GREEN, 2026-09-30** (~29 min, 27 polls; the suite under the 60-min
+ceiling; covers the bump head 7199619 — consecutive commits, same tree
+apart from the docs). The close-out commit (this spec + the §11.4/§11.5
+amendments + CLAUDE.md stamp) carries its own run id in CLAUDE.md.
+
+The tag v1.4.0 was NOT created — maintainer-only (§11.3; IRON RULE).

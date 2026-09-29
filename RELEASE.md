@@ -1034,12 +1034,13 @@ git push origin v1.4.0
 
 Прецедент §5/§8.4/§9.4/§10.4. Отличие окна: Flow-A ставит ТОЛЬКО ТЖ-тройку —
 банковские пакеты потребителю редакционного языка НЕ нужны (FR-17, ноль
-runtime-зависимостей в обе стороны). Рецепт = getting-started ТЖ
-(`packages/docs/src/tj/getting-started.stories.ts`) дословно; банковский
-флоу §10.4 референсен, не повторяется (до тега — recipe-only):
+runtime-зависимостей в обе стороны; отсутствие банковских пакетов в
+`node_modules` — ЧАСТЬ acceptance). Рецепт = getting-started ТЖ
+(`packages/docs/src/tj/getting-started.stories.ts`) дословно, клон ПО ТЕГУ;
+банковский флоу §10.4 референсен, не повторяется (до тега — recipe-only):
 
 ```
-git clone https://github.com/salacoste/tinkoff-ui-kit
+git clone --branch v1.4.0 https://github.com/salacoste/tinkoff-ui-kit
 cd my-app && pnpm init
 # pnpm-workspace.yaml: packages: [., ../tinkoff-ui-kit/packages/*]
 cd ../tinkoff-ui-kit && pnpm install && pnpm build && cd ../my-app
@@ -1050,21 +1051,65 @@ import { defineConfig } from 'vite';
 export default defineConfig({ resolve: { dedupe: ['react', 'react-dom'] } });
 ```
 
-Ожидания прогона: `tj-news-card` рендерится с токенами из
-`pillkit-tj-tokens` (каскад с `<html>`), `data-tj-theme="light"` на корне
-переключает dual-emit слой, композер принимает ввод (первая stateful-пара),
-в `node_modules` НЕТ ни одного `pillkit-{tokens,components,react}` —
+Ожидания прогона (release-grade acceptance): `tj-cta` рендерится в ОБЕИХ
+темах — авто-нога (prefers-color-scheme не переключен) + явная
+`data-tj-theme="light"` на корне переключает dual-emit слой; токены
+каскадом с `<html>`; композер принимает ввод (первая stateful-пара); в
+`node_modules` НЕТ ни одного `pillkit-{tokens,components,react}` —
 потребительская сторона FR-17. Ad-slot-рецепт (Flow-C) сознательно НЕ входит
 в Flow-A: модули рекламы едут банковским `tk-promo-card` через
 `--tk-promo-card-*` хуки — это отдельный контекст, ссылка на
 `packages/docs/src/tj/ad-slot-recipe.stories.ts`.
 
-## 11.5. Драфт changelog v1.4.0 — уже перенесён
+## 11.5. Драфт changelog v1.4.0 (EN — уже перенесён в CHANGELOG.md на §11.2; историческая запись)
 
-Исполнено в-story (§11.2): текст живёт в `CHANGELOG.md` под
-`[1.4.0] - 2026-09-30` (Added — v1.4.0 surface / Internal с
-Verification-строкой). Дубль здесь не приводится — единственный источник
-CHANGELOG.md (правило 14.2).
+В отличие от прежних окон, драфт перенесён САМИМ прогоном 17.5 — ниже
+дословно то, что легло в `CHANGELOG.md` под `[1.4.0] - 2026-09-30`:
+
+```
+### Added — v1.4.0 surface (epics-v5: the Т-Журнал / ТЖ editorial family)
+- The ТЖ package family — pillkit-tj-tokens, pillkit-tj-components,
+  pillkit-tj-react — a separately consumable editorial kit with ZERO runtime
+  dependencies either direction against the bank family (FR-17, mechanized:
+  import-boundary tests both directions + eslint lanes + ad4-matrix; OQ-10:
+  rides the same git-tag train, own CHANGELOG section)
+- pillkit-tj-tokens: own generator input with a dual-emit light/dark contract
+  (:host + :host(:not([data-tj-theme="light"]))), AA-pinned pairs, register
+  census in TOKENS.md (15.2); Inter/PT Serif font slots with licensed
+  Graphik/Charter path documented, nothing bundled (15.3, OQ-8)
+- Reading primitives (16.1, FREEZE grammar): tj-prose, tj-link, tj-cta
+- Feed surfaces (16.2+16.3): tj-rubric-header, tj-news-card, tj-tag-chip
+  + the /pro/ purple-hero pattern (purple as a scoped carrier, never a page bg)
+- Community (16.4): tj-composer + tj-post-card — the family's first
+  stateful pair
+- Chrome (16.5): tj-header + tj-rail + the burger drawer (AD-12 helper,
+  LIFO focus restore, --tj-z-* overlay ladder)
+- Article composition pattern (16.6) + the Flow-C ad-slot recipe: ad modules
+  ride the BANK tk-promo-card via --tk-promo-card-* hooks — the editorial
+  tree carries zero ad-language hexes (FR-21, audit-verified)
+- Docs: the ТЖ section — token reference (TOKENS.md single-source + drift
+  test), theming guide (dark-pairing/overrides/registers), 4 pattern pages,
+  CEM API tables ×10, getting-started (the ТЖ-ALONE install recipe), search
+  +16 rows (17.3)
+- Sweeps (17.1+17.2): a11y 140 legs + dark 45 legs (extraction-verification,
+  native-dark parity ×45; pseudo-composite AA law); SR-RUNSHEET-v1.4.0
+  (live VoiceOver runs = maintainer-side)
+
+### Internal
+- Docs navigation regroup (post-v1.3.0 interlude): the «Components v2» group
+  splits semantically into Guides/* (9) and Patterns/* (2); baselines moved
+  prefix-only (28 byte-identical git-mv + 2 re-taken)
+- CI: gates timeout-minutes 30 → 60 — the suite grew to 2123 visual/axe legs
+  and the 17.3 push was timeout-killed three times at exactly ~30:20 (a
+  timeout kill reports as completed cancelled under the triggering actor);
+  standing practice: after any post-rebuild source fix run the FULL suite
+- Bank link contrast law encoded in source: --tk-color-link is tuned to
+  surface-base (4.62 AA); on surface-muted it is 4.24 in light — links never
+  sit on muted boxes
+- Verification: fidelity ledger 11 rows + ad-language audit 0 values +
+  impeccable both trees 297 files exit 0 + baseline review package
+  ЧАСТЬ v1.4.0 assembled (14 commits / 204 PNG-events)
+```
 
 ## 11.6. Шрифты и право (НЕИЗМЕННО — напоминание + НОВОЕ ОКНА)
 

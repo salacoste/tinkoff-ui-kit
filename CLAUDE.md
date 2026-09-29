@@ -697,3 +697,34 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   PATCH-NICE (both folded pre-execution). Next: 17.5 release prep
   (versions ×6 → 1.4.0, CHANGELOG, RELEASE.md §11 Flow-A recipe,
   HANDOFF; TAG = maintainer sanction ONLY).
+
+- **2026-09-30 STORY 17.5 EXECUTED — EPICS-v5 COMPLETE 12/12 (release
+  head `d039d2d` GREEN by run 36631204306; bump head `7199619`
+  covered):** orchestrator-executed (release files are
+  orchestrator-owned). **Versions ×6 → 1.4.0** (bank 1.3.0→, ТЖ
+  0.0.0→; OQ-10 join-train; root 0.1.0/docs 0.0.0 outside) + CHANGELOG
+  `[1.4.0] - 2026-09-30` (Added ТЖ family + Internal incl. the
+  Verification line; inter-window regroup note survived INTO Internal)
+  — commit `7199619`, bump BEFORE the recipe that cites it.
+  **Gen-clean at execution:** `pnpm gen` post-bump zero drift (CEM
+  embeds no package version); version-reader greps empty (no
+  story/test reads the fields). **RELEASE.md §11.1–11.7** (§10 mirror):
+  honest CI chain by run id, §11.2 = bumps EXECUTED in-story (unlike
+  prior windows — §11.7 proof narrows to the TAG ONLY), §11.4 Flow-A
+  ТЖ-ALONE at release grade (clone `--branch v1.4.0`, tj-cta both
+  themes, NO bank packages in node_modules = FR-17 consumer-side),
+  §11.5 = the landed CHANGELOG text verbatim; two pre-close-out
+  corrections folded and recorded honestly (§11.5 pointer→verbatim per
+  the frozen AC; §11.4 gained --branch + tj-cta acceptance). HANDOFF
+  closed: header 2026-09-30, epics-v5 §2 row (12/12; 1267 unit + 2123
+  legs; 544+25 PNG; 37 components), **maintainer queue v1.4.0 opened
+  (§4, 7 items: batch-confirm ЧАСТЬ v1.4.0 = the ONLY blocking
+  predecessor of the tag; then tag §11.3 → Flow-A §11.4 →
+  SR-RUNSHEET → Graphik/Charter → 36px FLAG → opportunistic iOS/admin
+  carries)**. Gates: build/test **1267**/lint/typecheck EXIT 0; visual
+  not re-run (docs-only diff since the 2123/2123 pass on d02a483 —
+  served tree bit-identical, the 14.2 precedent). Lesson re-learned:
+  writing a CI verdict line before the fact — caught in-story, fixed
+  to placeholder, filled only at the fact (the IRON RULE held). **TAG
+  v1.4.0 NOT created — maintainer explicit sanction ONLY. epics-v5 is
+  DONE; the next window belongs to the maintainer's queue.**
