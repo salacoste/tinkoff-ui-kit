@@ -36,7 +36,13 @@ permissions:
 jobs:
   gates:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # 60 since story 17.3: the suite grew to 2118 visual/axe legs (+680 ТЖ),
+    # pushing the visual step past the old 30-min ceiling — runs 36593380779
+    # (58d979e) died three times as `completed cancelled` at exactly 30:20
+    # with every earlier step green (a timeout kill, not a gate failure; the
+    # last green head ddd060e already ran ~27 min). 60 gives the compare
+    # suite ~2× headroom; the ceiling still guards against true hangs.
+    timeout-minutes: 60
     steps:
       - name: Checkout (full history — the detector diffs against the base sha)
         uses: actions/checkout@v4
