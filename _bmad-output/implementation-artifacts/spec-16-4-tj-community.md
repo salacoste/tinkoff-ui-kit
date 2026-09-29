@@ -149,4 +149,4 @@ context:
 
 **Baselines:** first mint 1624/1624 passed (9.9m), +42 vs the 1582 floor = exactly 14 NEW PNGs (composer ×3 stories + post-card ×4 stories, each ×2 themes), ZERO existing modified — the remaining +28 are the axe/visual pairs of the same stories. Community-pattern pair re-minted post-fix: 2 PNGs deleted explicitly first (the standing rule), update-mode re-take. **Final delta (post re-mint):** tree = exactly 14 untracked PNGs (the re-minted pattern pair among them), 0 tracked baselines modified. The re-mint's `-g "community-pattern"` scoping was silently lost to pnpm's `--` passthrough (playwright treats post-`--` args as POSITIONAL file filters) → the run became a FULL-suite update: 1624/1624 passed (9.9m), exit 0 — a bonus byte-stability re-verification of all 1610 existing baselines. Standing lesson: for scoped update runs OMIT the `--` (`pnpm test:visual:update -g "x"`).
 
-**CI:** _(pending)_
+**CI:** run 36513699070 GREEN (API verdict `gh run view --json conclusion` = success, code-head `26e11e0`, ~21m) — the full gates + visual compare owned the verdict; the 14 new baselines compared clean, all 1610 existing stable.

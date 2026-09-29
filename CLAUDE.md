@@ -429,8 +429,8 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   external-rel rule), tj-cta (anchor-only, 44×44 box / 30px pill inset 7px,
   dark inversion via tokens, zero invented states). FREEZE ritual landed in
   CONVENTIONS.md: NONE stateful in roster / EMPTY frozen event-map / unwrap
-  bridge = documented FR-17 duplication / NO z tokens (16.4 mints); drawer
-  stays [OPEN — 16.4]. AD-1 second instance PROVEN: scripts/wrapper-gen/
+  bridge = documented FR-17 duplication / NO z tokens (16.5 mints); drawer
+  stays [OPEN — 16.5]. AD-1 second instance PROVEN: scripts/wrapper-gen/
   core.mjs parameterized (bank byte-identical pre-wiring), tj CEM manifest +
   tj-react generated wrappers under root gen/check:gen +
   tests/tj-gen-drift.test.ts. Two review patch rounds (nested-anchor species
@@ -473,4 +473,44 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   chips). Maintainer package adds: mark white stroke + two-row byline
   observed-not-shipped; mark/heading optical inset; CTA fill == field fill
   boundary note. Next: 16.4 composer + post card (first stateful —
-  event-map opens, --tj-z-* mints).
+  event-map opens; the --tj-z-*/drawer/overlay marker corrected to 16.5).
+
+- **2026-09-29 STORY 16.4 EXECUTED (code-head `26e11e0`, CI run 36513699070
+  GREEN):** ТЖ community + the family's FIRST STATEFUL surface — tj-composer
+  (fake-input card = real `<button type="button">`, name = ghost text
+  card-title 17/400 ink-300, Enter/Space native, height DERIVED 24/40/24 = 88
+  never declared, avatar 40 aria-hidden wrapper, structural r20 FLAG —
+  `--tj-radius-composer` stays a maintainer ratification candidate, NOT
+  minted) dispatching `open-compose` (composed+bubbling, TjOpenComposeEvent;
+  editor is consumer-side by FR); tj-post-card (TRANSPARENT cell — the
+  reference's cards are text cells on a shared white sheet; boxing breaks the
+  composition — on the tj-news-card anchor mold verbatim: inert empty-href,
+  noopener+noreferrer on bare _blank; slots avatar-20-FLAG/byline/date/
+  title/count; clamp quartet pinned INSIDE the extracted ::slotted(h2,h3)
+  rule; count = decorative bubble SVG + static text, never a live region).
+  EVENT-MAP OPENS: first entry `'tj-composer': { onOpenCompose:
+  'open-compose' }` + React smoke + NEW tests/tj-event-map-completeness.test.ts
+  (scans BOTH dispatch idioms, no non-tj- skip — loud attribution, bank net
+  mirrored). Lens MAJOR (real): `@property() override title` SHADOWS the
+  native reflecting accessor — property writes never reflect (exactly how
+  @lit/react sets known props) → documented consumer-wins contract was dead
+  on the React path; fix = precedence chain ATTRIBUTE (verbatim, "" =
+  deliberate suppression) → non-empty PROPERTY → slot mirror. Lit lesson:
+  attribute REMOVAL maps to a NULL property write — null-guard required.
+  Side-by-side round 1: ONE real pattern finding, SPEC-ORIGIN — frozen Intent
+  put the composer INSIDE the white sheet (tone-on-tone, card stopped
+  reading); the reference carries it on the GRAY PAGE above the sheet →
+  fixed STORY-side (sibling + .tjcp-composer rule; component untouched),
+  round 2 PASS. Ellipsis «defect» = FALSE POSITIVE (vision's own
+  transcription ended three titles with «…»; round 2 transcribed it again).
+  CONVENTIONS §4 ТЖ rows frozen; drawer/overlay/--tj-z-* markers corrected
+  16.4 → 16.5 (final epics numbering — 16.4 owns NONE of them); README +2;
+  consumed-tokens roster 6 → 8. Baselines: 14 new PNGs (3+4 stories × 2
+  themes), all 1610 existing byte-stable (full-suite re-verify 1624/1624).
+  pnpm `--` passthrough lesson: `pnpm test:visual:update -- -g "x"` loses
+  the grep (post-`--` args = POSITIONAL filters for playwright) → full
+  suite ran; scoped update = OMIT the `--`. Maintainer package adds:
+  composer r20 FLAG, count-below-title micro-delta, meta-avatar 20,
+  news-title-24-over-vision-pixels ruling, composer-on-page pattern ruling.
+  Next: 16.5 chrome — tj-header + tj-rail + burger drawer + AD-12 ТЖ
+  overlay helper + --tj-z-* mint + theme control menu.
