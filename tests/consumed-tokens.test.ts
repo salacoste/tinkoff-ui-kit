@@ -362,19 +362,26 @@ describe('consumed --tj-* tokens exist in the ТЖ token sheet (story 15.2)', ()
     }
   });
 
-  it('the ТЖ component-hook exemption is LIVE on the 16.5 ten-component roster + the overlays module (flipped from the 15.2 inert pin)', () => {
+  it('the ТЖ component-hook exemption is LIVE on the 16.5 ten-component roster + the overlays module + the patterns story directory (flipped from the 15.2 inert pin)', () => {
     // 16.1 landed the reading primitives; 16.2+16.3 grew the roster to six
     // with the feed surfaces; 16.4 to eight with the community surfaces;
     // 16.5 to ten with the site chrome (tj-header/tj-rail) plus the AD-12
     // overlay helper directory (src/overlays/ — a mechanics module, not a
     // component: no --tj-overlays-* hooks are declared, so its presence in
-    // the derived set is inert). The exemption keys off real component
-    // directories, derived — never hand-listed. A <component>-slot hook
-    // fallback of a real component passes; an unknown component prefix or a
-    // typo'd core name stays flagged (flipped the way the bank 2.3/4.1
-    // assertions flipped, per this test's own 15.2 comment).
+    // the derived set is inert). 16.6 added src/patterns/ — the article-page
+    // RECIPE story directory (pattern, not API: the roster closed at 16.5);
+    // stories only, no element definitions. Precision (the 16.6 lens): the
+    // directory JOINS the derived exemption set, so a future --tj-patterns-*
+    // fallback WOULD resolve against it — none are declared today, which is
+    // an observed fact, not a mechanism (same standing as overlays). The
+    // exemption keys off
+    // real component directories, derived — never hand-listed. A
+    // <component>-slot hook fallback of a real component passes; an unknown
+    // component prefix or a typo'd core name stays flagged (flipped the way
+    // the bank 2.3/4.1 assertions flipped, per this test's own 15.2 comment).
     expect([...tjComponentDirs].sort()).toEqual([
       'overlays',
+      'patterns',
       'tj-composer',
       'tj-cta',
       'tj-header',
