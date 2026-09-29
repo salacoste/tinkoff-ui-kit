@@ -4,12 +4,29 @@ import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import * as litReact from '@lit/react';
 import { afterAll, describe, expect, it, vi } from 'vitest';
-import { TjOpenComposeEvent } from 'pillkit-tj-components';
+import {
+  TJ_THEME_ATTRIBUTE,
+  TjOpenChangeEvent,
+  TjOpenComposeEvent,
+  TjThemeChangeEvent,
+} from 'pillkit-tj-components';
 
-import { Composer, Cta, EVENT_MAP, Link, NewsCard, PostCard, Prose, RubricHeader, TagChip } from './index.js';
+import {
+  Composer,
+  Cta,
+  EVENT_MAP,
+  Header,
+  Link,
+  NewsCard,
+  PostCard,
+  Prose,
+  Rail,
+  RubricHeader,
+  TagChip,
+} from './index.js';
 
 /**
- * pillkit-tj-react generated surface (stories 16.1 + 16.2/16.3 + 16.4 batch).
+ * pillkit-tj-react generated surface (stories 16.1 + 16.2/16.3 + 16.4 + 16.5).
  * The wrapper imports `pillkit-tj-components` (built dist — the packages run
  * in topological order under `pnpm -r test`) and the pinned `@lit/react`;
  * React itself resolves via the workspace peer (19.3.0). The smoke test
@@ -17,12 +34,12 @@ import { Composer, Cta, EVENT_MAP, Link, NewsCard, PostCard, Prose, RubricHeader
  * public surface, so an object-shape check alone would not catch a broken
  * binding (the bank index.test.ts mold).
  *
- * 16.4 opens the event registry: tj-composer's `open-compose` is the FIRST
- * ТЖ entry — the `onOpenCompose` wrapper prop is exercised END-TO-END here
- * (react-dom render, real shadow-button click, payload-less unwrap: the
- * handler receives the TjOpenComposeEvent itself, never detail). The
- * remaining wrappers still bind zero kit events (the no-entry rulings in
- * event-map.ts).
+ * 16.4 opened the event registry (tj-composer's payload-less `open-compose`);
+ * 16.5 adds the site-chrome pair, both exercised END-TO-END here: tj-header's
+ * `onThemeChange` (the full theme cycle through the real theme button —
+ * document-root attribute writes + removal-on-auto + the bare-STRING detail
+ * handing React the event itself) and tj-rail's `onOpenChange` (the §9
+ * overlay row: detail { value } unwraps to the bare boolean).
  */
 
 // React 19 act() environment flag (test-utils lives on 'react' now).
@@ -46,11 +63,22 @@ const renderToContainer = async (element: React.ReactElement): Promise<HTMLEleme
   return container;
 };
 
-describe('pillkit-tj-react (stories 16.1 + 16.2/16.3 + 16.4)', () => {
-  it('generates the eight ТЖ wrappers from the ТЖ manifest', () => {
+describe('pillkit-tj-react (stories 16.1 + 16.2/16.3 + 16.4 + 16.5)', () => {
+  it('generates the ten ТЖ wrappers from the ТЖ manifest', () => {
     // createComponent returns a React ForwardRefExoticComponent — an object
     // with the React forward_ref tag and a render function.
-    for (const wrapper of [Composer, Cta, Link, NewsCard, PostCard, Prose, RubricHeader, TagChip]) {
+    for (const wrapper of [
+      Composer,
+      Cta,
+      Header,
+      Link,
+      NewsCard,
+      PostCard,
+      Prose,
+      Rail,
+      RubricHeader,
+      TagChip,
+    ]) {
       expect(wrapper).toBeTypeOf('object');
       expect(wrapper.$$typeof).toBeDefined();
       expect((wrapper as { render?: unknown }).render).toBeTypeOf('function');
@@ -192,6 +220,126 @@ describe('pillkit-tj-react (stories 16.1 + 16.2/16.3 + 16.4)', () => {
     expect(el?.shadowRoot?.querySelector('.count__icon')?.getAttribute('aria-hidden')).toBe('true');
   });
 
+  describe('onThemeChange — the 16.5 theme channel, end-to-end', () => {
+    it('cycles the document-root theme through the REAL theme button; handlers receive the event itself (bare-STRING detail)', async () => {
+      const handler = vi.fn();
+      const container = await renderToContainer(
+        React.createElement(Header, {
+          onThemeChange: handler,
+          items: [
+            { label: 'Главное', href: '/main' },
+            { label: 'Разборы', href: '/razbory' },
+          ],
+        }),
+      );
+      const el = container.querySelector('tj-header');
+      expect((el as unknown as { items?: Array<{ label: string }> }).items?.length).toBe(2);
+      const button = el?.shadowRoot?.querySelector('button.theme') as HTMLButtonElement;
+      expect(document.documentElement.hasAttribute(TJ_THEME_ATTRIBUTE)).toBe(false); // auto
+
+      try {
+        await act(async () => {
+          button.click();
+          await new Promise((resolve) => setTimeout(resolve, 0));
+        });
+        expect(document.documentElement.getAttribute(TJ_THEME_ATTRIBUTE)).toBe('light');
+
+        await act(async () => {
+          button.click();
+          await new Promise((resolve) => setTimeout(resolve, 0));
+        });
+        expect(document.documentElement.getAttribute(TJ_THEME_ATTRIBUTE)).toBe('dark');
+
+        await act(async () => {
+          button.click();
+          await new Promise((resolve) => setTimeout(resolve, 0));
+        });
+        // auto = the attribute is REMOVED — the sheet's native-auto leg takes over.
+        expect(document.documentElement.hasAttribute(TJ_THEME_ATTRIBUTE)).toBe(false);
+      } finally {
+        document.documentElement.removeAttribute(TJ_THEME_ATTRIBUTE);
+      }
+
+      expect(handler).toHaveBeenCalledTimes(3);
+      // The unwrap contract's object check fails on a STRING detail — the
+      // frozen §9 shape ruling: handlers receive the event itself.
+      const payloads = handler.mock.calls.map((call) => call[0]);
+      for (const payload of payloads) {
+        expect(payload).toBeInstanceOf(TjThemeChangeEvent);
+      }
+      expect(payloads.map((payload) => (payload as TjThemeChangeEvent).detail)).toEqual([
+        'light',
+        'dark',
+        'auto',
+      ]);
+    });
+  });
+
+  describe('onOpenChange — the 16.5 drawer channel, end-to-end', () => {
+    it('burger toggle round-trips the unwrapped BOOLEAN (the §9 overlay row unwrap)', async () => {
+      const handler = vi.fn();
+      const container = await renderToContainer(
+        React.createElement(Rail, {
+          onOpenChange: handler,
+          items: [
+            { label: 'Главное', href: '/main', value: 'main' },
+            { label: 'Разборы', href: '/razbory', value: 'razbory' },
+          ],
+        }),
+      );
+      const el = container.querySelector('tj-rail');
+      expect((el as unknown as { items?: Array<{ label: string }> }).items?.length).toBe(2);
+      const burger = el?.shadowRoot?.querySelector('button.burger') as HTMLButtonElement;
+
+      await act(async () => {
+        burger.click();
+        await new Promise((resolve) => setTimeout(resolve, 0));
+      });
+      expect((el as unknown as { open?: boolean }).open).toBe(true);
+      expect(el?.hasAttribute('open')).toBe(true); // reflected through the wrapper
+
+      await act(async () => {
+        burger.click();
+        await new Promise((resolve) => setTimeout(resolve, 0));
+      });
+      expect((el as unknown as { open?: boolean }).open).toBe(false);
+
+      expect(handler).toHaveBeenCalledTimes(2);
+      // detail { value: boolean } passes the unwrap contract's object check —
+      // the handler receives the BARE boolean, never the event.
+      expect(handler.mock.calls[0][0]).toBe(true);
+      expect(handler.mock.calls[1][0]).toBe(false);
+    });
+
+    it('the dispatched occurrence is the TjOpenChangeEvent class (event identity pin)', async () => {
+      const seen: string[] = [];
+      const container = await renderToContainer(
+        React.createElement(Rail, {
+          onOpenChange: (event: TjOpenChangeEvent) => {
+            // Typed as the class by consumers who want the full event; the
+            // unwrap contract actually hands over the boolean — cast back.
+            seen.push(String(event));
+          },
+          items: [{ label: 'Главное', href: '/main', value: 'main' }],
+        }),
+      );
+      const el = container.querySelector('tj-rail');
+      const burger = el?.shadowRoot?.querySelector('button.burger') as HTMLButtonElement;
+      await act(async () => {
+        burger.click();
+        await new Promise((resolve) => setTimeout(resolve, 0));
+      });
+      // The unwrap contract is mechanical: String(true) — the boolean, not an
+      // event (the class identity lives on the ELEMENT dispatch, pinned in
+      // the tj-rail unit suite).
+      expect(seen).toEqual(['true']);
+      await act(async () => {
+        (el as unknown as { open?: boolean }).open = false;
+        await new Promise((resolve) => setTimeout(resolve, 0));
+      });
+    });
+  });
+
   describe('onOpenCompose — the registry FIRST ТЖ entry, end-to-end', () => {
     it('receives the TjOpenComposeEvent itself on REAL activation (payload-less unwrap)', async () => {
       const handler = vi.fn();
@@ -245,11 +393,15 @@ describe('pillkit-tj-react (stories 16.1 + 16.2/16.3 + 16.4)', () => {
     expect(typeof litReact.createComponent).toBe('function');
   });
 
-  it('ships the OPENED registry — exactly the first ТЖ entry (16.4)', () => {
-    // The registry opened at 16.4: tj-composer is the FIRST event-bearing ТЖ
-    // surface. Every other wrapper stays no-entry (stateless display/link
+  it('ships the OPENED registry — composer (16.4) + the site-chrome pair (16.5)', () => {
+    // The registry opened at 16.4 (tj-composer) and grew at 16.5 with the
+    // chrome pair: tj-header's theme cycle (bare-STRING detail → handlers get
+    // the event) and tj-rail's drawer channel (§9 overlay row unwrap → bare
+    // boolean). Every other wrapper stays no-entry (stateless display/link
     // surface rides the native composed click or dispatches nothing).
     expect(EVENT_MAP['tj-composer']).toEqual({ onOpenCompose: 'open-compose' });
+    expect(EVENT_MAP['tj-header']).toEqual({ onThemeChange: 'theme-change' });
+    expect(EVENT_MAP['tj-rail']).toEqual({ onOpenChange: 'open-change' });
     expect(EVENT_MAP['tj-prose']).toBeUndefined();
     expect(EVENT_MAP['tj-link']).toBeUndefined();
     expect(EVENT_MAP['tj-cta']).toBeUndefined();
@@ -257,7 +409,7 @@ describe('pillkit-tj-react (stories 16.1 + 16.2/16.3 + 16.4)', () => {
     expect(EVENT_MAP['tj-rubric-header']).toBeUndefined();
     expect(EVENT_MAP['tj-tag-chip']).toBeUndefined();
     expect(EVENT_MAP['tj-post-card']).toBeUndefined();
-    expect(Object.keys(EVENT_MAP)).toEqual(['tj-composer']);
+    expect(Object.keys(EVENT_MAP)).toEqual(['tj-composer', 'tj-header', 'tj-rail']);
   });
 
   it('freezes the event registry at runtime (file edits, never mutation)', () => {

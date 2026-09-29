@@ -177,6 +177,13 @@
 }
 }
 
+/* Z-scale (Story 16.5) — scaffold mechanics, not a DESIGN.md extraction. AD-12: z-order comes only from --tj-z-*; the ТЖ overlay helper owns every floating surface. One spare slot (200) between the two layers. */
+:host,
+:root {
+  --tj-z-nav: 100;
+  --tj-z-drawer: 300;
+}
+
 /* Dark theme (Story 15.2) — the reference's OWN dark values (prefers-color-scheme extraction, not authored), re-declared semantically. Apply via `data-tj-theme="dark"` or let the native auto leg below follow the OS. */
 :host([data-tj-theme="dark"]),
 :root[data-tj-theme="dark"] {

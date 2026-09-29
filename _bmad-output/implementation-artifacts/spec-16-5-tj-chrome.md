@@ -2,7 +2,7 @@
 title: 'Story 16.5 — ТЖ chrome: tj-header + tj-rail + burger drawer (AD-12 helper, --tj-z-* opens)'
 type: 'feature'
 created: '2026-09-29'
-status: 'draft'
+status: 'executed'
 baseline_commit: 'e7f202d'
 context:
   - '{project-root}/_bmad-output/planning-artifacts/epics-v5.md (Story 16.5 — the largest 16.x; split trigger recorded if the helper exceeds ~1 screen of diff)'
@@ -93,13 +93,13 @@ context:
 ## Tasks & Acceptance
 
 **Execution:**
-- [ ] tj-header (slots + items/active-value + cta-href/label + theme control cycle/announcement + sticky 72→56)
-- [ ] tj-rail (items/current-value + icon tiles + aria-current + burger + drawer channel)
-- [ ] ТЖ overlay helper (mountSheet + lockScroll + trapFocus — translated, commented omissions, post-await + UA resets)
-- [ ] `--tj-z-*` mint + regen + drift check + guard roster
-- [ ] Event-map ×2 + React smokes ×2 + CONVENTIONS `[OPEN — 16.5]` resolved + README +2
-- [ ] Stories RU (playground/anatomy/accessibility per component + chrome pattern + drawer + theme contract) with FR-22 sections
-- [ ] Full gates ×7 packages (test → lint → typecheck → build); NO test:visual locally
+- [x] tj-header (slots + items/active-value + cta-href/label + theme control cycle/announcement + sticky 72→56)
+- [x] tj-rail (items/current-value + icon tiles + aria-current + burger + drawer channel)
+- [x] ТЖ overlay helper (mountSheet + lockScroll + trapFocus — translated, commented omissions, post-await + UA resets)
+- [x] `--tj-z-*` mint + regen + drift check + guard roster
+- [x] Event-map ×2 + React smokes ×2 + CONVENTIONS `[OPEN — 16.5]` resolved + README +2
+- [x] Stories RU (playground/anatomy/accessibility per component + chrome pattern + drawer + theme contract) with FR-22 sections
+- [x] Full gates ×7 packages (test → lint → typecheck → build); NO test:visual locally
 
 **Acceptance Criteria:**
 - Given the theme control at auto, when clicked three times, then `data-tj-theme` on `document.documentElement` goes absent→'light'→'dark'→absent, each step dispatches `theme-change` with the matching detail, the polite region announces the mode, and the React wrapper's `onThemeChange` receives all three (smoke-verified).
@@ -129,4 +129,18 @@ context:
 
 ## Implementation Notes
 
-_(orchestrator fills: executor deviations, triage, lens verdicts, patch rounds, gates, side-by-side, baselines, CI)_
+**Executor round** (subagent `tj-chrome-165`, single pass, all 7 tasks): both components + the overlays helper + the z mint + event-map ×2 landed per the code map. Executor deviations ratified in triage: chips/rows species = nav-label **17/700** (the probe9 census ×11/11 — stronger than the spec's authored cta-label 15/400); the sheet is a shadow-tree child of `tj-rail` (the 2.3 ratified pattern — the burger's aria-controls resolves in one tree); `burger-label` empty-fallback at the prop; the helper translated with post-await revalidation + popover-UA resets as demanded.
+
+**Triage (orchestrator):** (a) MAJOR — the drawer lifecycle guarded BOTH dispatch and mount on the first-update change entry; Lit stamps EVERY first-update change with old value `undefined` (reactive-element `_$changeProperty`: `if (!this.hasUpdated && !useDefault) oldValue = undefined` — stamped attributes included), so a STAMPED `open` attribute never mounted its sheet (reflected `open` + `aria-expanded` with no scrim/lock/trap/z). Fix: dispatch-only guard (the bank select.ts:289-307 mold) + UNCONDITIONAL mount + guarded unmount (initialization-to-closed must not focus-steal the burger); reconnect-while-open explicitly skipped (exotic, bank-uncovered, unspecced). (b) the current-marking ruling — resolved in the fidelity round below.
+
+**Lens verdict:** PATCH-NEEDED (2 MAJOR / 3 MINOR / 3 NIT), all folded into one consolidated patch round: (a) as above; (b) `burgerLabel` null write — Lit maps attribute REMOVAL to a null property write on String-typed props → `.trim()` throws; `string | null` + fallback; (c) the CEM analyzer infers events from `dispatchEvent` sites in class METHODS and cannot name CustomEvent subclasses there → a NAMELESS manifest entry rode next to the @fires row; fix: the dispatch moved to a `#emitOpenChange` field initializer (the `#handleThemeActivate` shape) — the manifest carries exactly one named `open-change` after regen; (d) the vacuous SSR test replaced with stubbed globals (`vi.stubGlobal('document', undefined)`) — rewriting it FOUND A REAL BUG: `document.createElement?.('div')` throws ReferenceError when `document` is undefined (`?.` guards the CALL, not the base access); fixed with a `typeof document === 'undefined'` ternary; (e) theme-story attribute leak — story-local `tjhh-theme-reset` element restoring `data-tj-theme` on disconnect; (f) missing Anatomy stories (task demanded playground/anatomy/accessibility per component) — delivered ×2.
+
+**Fidelity patch round (reference-first — 2026-09-28 captures + probe9):** current marking re-ruled **SEMANTIC-ONLY** — the reference renders every row/chip in ONE species (probe9 ×11/11 uniform 17/700; the capture shows NO weight/pill/color delta on any row) — the spec's authored 700-delta marking and its `[aria-current]` css rules DELETED (deviation from spec §nav-chips/§species, evidence-named; `aria-current="page"` alone remains). Header chips = **WHITE CARD PILLS** (`--tj-color-card` on the page-gray bar, `--tj-radius-chip`, nav-label species) — the capture's per-chip icons ruled CONSUMER art (the actions-slot norm); the authored 1px bar hairline REMOVED (the bar blends into the page); the CTA re-ruled a **fully-rounded 36px pill** (`--tj-radius-full`, `inset-block: 4px` — the capture pill, NOT the article CTA's r5 h30). The sheet gained `height: auto; border: none` popover-UA re-assertions. Unit tests re-pinned to all of the above (incl. `not.toContain(".chip[aria-current='page']")`); stories prose + README updated («чипы-пилюли»).
+
+**Side-by-side vision (light + dark — minted renders vs `tj-home-{viewport,dark-viewport}-2026-09-28.png`): PASS.** Light: pill chips, no divider, uniform chips, fully-rounded dark CTA, theme control, rail directly on gray. Dark: dark canvas, blending bar, card pills, inverted CTA. Two vision claims DISMISSED with evidence: (1) «rail rows mixed weight» — structurally impossible (the `.row` base carries the species; NO differentiating selector exists in the sheet) and disproven pixel-level (a 3× zoom pass reads ALL labels as the same stroke, «о»/«а» matching across tile/non-tile rows; the two full-page passes even disagreed on WHICH rows were «bold» — 17px antialiasing next to busy tiles misleads at page scale); (2) «dark hero light-leak» — the story's synthetic placeholder art (slotted consumer content), identical by design in light.
+
+**Gates:** `set -o pipefail && pnpm lint && pnpm typecheck && pnpm test && pnpm build` — all green (tj-components **247/247** — +3: stamped-open mount, burger-label null write, sheet UA resets; tj-react 19/19). `pnpm gen` ×2; `check:tokens-drift:tj` / `check:gen` exit 1 pre-commit by design (vs-HEAD comparison on the uncommitted tree).
+
+**Baselines (orchestrator-minted, port 6007):** `pnpm test:visual:update` → **1678 passed** (1624 → 1678), exit 0; **18 NEW PNGs** (header ×4 stories + rail ×5 stories, light+dark), 0 tracked modified — the chrome changes are confined to new stories. Maintainer batch-confirm package grows to 78 (16.1's 24 + 16.2/16.3's 22 + 16.4's 14 + 16.5's 18).
+
+**CI:** verdict stamped in the close-out commit (docs(bmad)).

@@ -12,6 +12,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/overlays/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/tj-composer/index.js"
           }
         },
@@ -21,6 +29,14 @@
           "declaration": {
             "name": "*",
             "module": "src/tj-cta/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/tj-header/index.js"
           }
         },
         {
@@ -53,6 +69,14 @@
           "declaration": {
             "name": "*",
             "module": "src/tj-prose/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/tj-rail/index.js"
           }
         },
         {
@@ -397,6 +421,339 @@
           "declaration": {
             "name": "TjCta",
             "module": "src/tj-cta/tj-cta.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-header/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/tj-header/tj-header.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-header/tj-header.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "headerStyles",
+          "default": "css` :host { display: block; } /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */ :host([hidden]) { display: none; } /* The sticky bar: page-token ground + the one sanctioned non-overlay z consumption (the nav token, AD-12). NO divider hairline — the 2026-09-28 reference capture shows the bar's page-gray ground meeting the identical page background with NO separating line (the authored 1px hairline was removed at the 16.5 patch round, vision-evidenced). The height transition is the compress animation itself. */ .bar { position: sticky; top: 0; z-index: var(--tj-z-nav); height: var(--tj-space-header-h); /* h72 — the token IS the ТЖ anchor */ background: var(--tj-color-page); transition: height var(--tj-motion-duration-fast) var(--tj-motion-curve-standard); } /* The compress: internal data-scrolled (NOT public API) flips at any scroll > 0 (TJ_HEADER_SCROLL_THRESHOLD_PX). */ :host([data-scrolled]) .bar { height: 56px; /* FLAG: compressed h56 — unprobed target, h72's quiet sibling */ } /* Reduced-motion belt: the token layer already collapses the duration to 0ms; the explicit none keeps the jump honest even if a consumer overrides the token back on. */ @media (prefers-reduced-motion: reduce) { .bar { transition: none; } } /* Container-bound inner row (1200 token + page insets). min-height keeps the row filling the compressing bar so the flex centering tracks it. */ .bar__inner { box-sizing: border-box; display: flex; align-items: center; gap: var(--tj-space-24); min-height: 100%; max-width: var(--tj-space-container); margin-inline: auto; padding-inline: var(--tj-space-24); } /* Neutral slot wrappers — the kit ships spacing only, no art. */ .bar__wordmark, .bar__actions { display: inline-flex; align-items: center; } /* Nav chips: WHITE PILL chips (the reference treatment — card ground on the page-gray bar, 2026-09-28 capture) in the FULL nav-label species (17/700 — the probe9 census; Graphik 700 reads medium-weight). The reference's per-chip colored icons are CONSUMER content, not kit chrome (the actions-slot norm): the kit ships the pill, the pill's interior is the consumer's. Current marking is SEMANTIC-ONLY — aria-current, zero visual delta (the capture shows all pills equivalent; unprobed marking is not invented). */ .chips { display: flex; align-items: center; gap: var(--tj-space-24); min-width: 0; } .chip { box-sizing: border-box; display: inline-flex; align-items: center; min-height: 36px; /* FLAG: authored pill height (capture estimate 36–40) */ padding-inline: 12px; /* FLAG: authored pill x-inset (4-grid pick) */ border-radius: var(--tj-radius-chip); background: var(--tj-color-card); font-family: var(--tj-font-ui); font-size: var(--tj-text-nav-label-size); font-weight: var(--tj-text-nav-label-weight); color: var(--tj-color-ink-100); text-decoration: none; white-space: nowrap; } .chip:focus-visible { outline: 2px solid var(--tj-color-focus-ring); outline-offset: 2px; } /* The theme control: a bare 44×44 icon button (the a11y hit floor — the same structural number as every interactive box in the family). No hover state — unprobed on the reference, nothing invented. */ .theme { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; width: 44px; /* FLAG: the family's 44px interactive floor */ height: 44px; /* FLAG: same floor, one pair */ padding: 0; border: none; background: transparent; color: var(--tj-color-ink-100); cursor: pointer; -webkit-tap-highlight-color: transparent; } .theme:focus-visible { outline: 2px solid var(--tj-color-focus-ring); outline-offset: 2px; } /* Decorative fallback glyph: a half/half contrast circle in ink tokens — reads as a theme toggle in BOTH themes without per-mode art. The slot override replaces it wholesale (the template hides the empty slot). */ .theme__glyph { display: block; width: 24px; /* FLAG: icon box metric, decorative only */ height: 24px; /* FLAG: same box */ } /* The header's OWN CTA — the compact-inset mold re-implemented here (the no-cross-compose norm): a 44×44 invisible anchor, the visible pill painted by ::before. The 2026-09-28 capture shows the header CTA as a FULLY-ROUNDED pill ~36–40px tall (radius = half height) — NOT the article CTA's 5px radius-cta: the pill runs the full radius token at a 36px height (inset-block 4px = (44−36)/2, 4-grid). Dark flips fill/ink through the token layer alone. NO hover state (the CTA ruling — unprobed). */ .bar__cta { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; height: 44px; /* FLAG: the 44×44 floor (compact-inset mold) */ min-width: 44px; /* FLAG: same floor */ padding-inline: 15px; /* FLAG: measured pill x-padding (probe10) */ position: relative; background: transparent; text-decoration: none; cursor: pointer; -webkit-tap-highlight-color: transparent; font-family: var(--tj-font-ui); font-size: var(--tj-text-cta-label-size); font-weight: var(--tj-text-cta-label-weight); line-height: var(--tj-text-cta-label-leading); } .bar__cta::before { content: ''; position: absolute; inset-block: 4px; /* FLAG: (44−36)/2 — the capture's 36–40px pill at the 4-grid */ inset-inline: 0; border-radius: var(--tj-radius-full); /* fully rounded — the capture's pill ends */ background: var(--tj-color-cta-fill); } .bar__cta-label { position: relative; color: var(--tj-color-cta-ink); } .bar__cta:focus-visible { outline: 2px solid var(--tj-color-focus-ring); outline-offset: 2px; } /* The polite theme announcement region — the standard clip recipe (structurally inert; the progress-bar mold's own numbers). */ .visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; } `",
+          "description": "tj-header styles — tokens only, zero theme branches (AD-3 v5 on the ТЖ\ninstance): every color/motion value consumes an inherited `var(--tj-*)`\ncustom property (never adopted into the shadow root — the cascade trap).\nThe bar re-themes light/dark through the token layer alone.\n\nVisual spec: spec 16.5 + EXPERIENCE.md Header + the 2026-09-28 reference\ncapture — sticky site chrome on `--tj-color-page` blending into the page\n(NO divider), white card pill chips, container-bound inner row, height\ncompressing 72→56 on any scroll over the fast duration. Capture-exact\nanatomy; the few remaining unmeasured picks stay flagged (flag-don't-\ninvent; nothing pretends to be measured).\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule — the token sheet carries no counterpart:\n- the 56px compressed height (h72 IS a token, h56 is not; the\n  compression target is unprobed),\n- the chip pill's 36px height / 12px x-inset (capture-estimated chrome\n  geometry — the pill treatment itself is reference-licensed, the exact\n  metrics are maintainer-confirms),\n- the 44×44 theme-button hit floor + the CTA's 44×44 floor and its\n  derived 4px inset-block (36px pill) / 15px inline padding,\n- the 24px glyph box of the decorative fallback (icon metric).\n\nOn-scale spacing picks (unmeasured — maintainer confirms at the\nside-by-side): inner gap 24, container inset 24.\nNo backticks in css comments — they would terminate the css literal."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "headerStyles",
+          "declaration": {
+            "name": "headerStyles",
+            "module": "src/tj-header/tj-header.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-header/tj-header.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "TJ_THEME_ATTRIBUTE",
+          "type": {
+            "text": "string"
+          },
+          "default": "'data-tj-theme'",
+          "description": "The document-root theme attribute the whole ТЖ family themes through (OQ-9)."
+        },
+        {
+          "kind": "class",
+          "description": "The `theme-change` occurrence (§9 grammar, the TjOpenComposeEvent class\nmold): the theme control was activated and the resulting mode is now in\nforce on the document root. `detail` is the resulting mode STRING\n('auto' | 'light' | 'dark') — the spec's explicit 16.5 ruling, NOT a\n`{ value }` payload: the state lives on `document.documentElement`, not on\nthe element, so this is not a `<prop>-change` value channel and the React\nunwrap contract hands handlers the event itself.",
+          "name": "TjThemeChangeEvent",
+          "members": [
+            {
+              "kind": "field",
+              "name": "eventName",
+              "static": true,
+              "readonly": true,
+              "default": "'theme-change'",
+              "type": {
+                "text": "'theme-change'"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "CustomEvent",
+            "module": "src/tj-header/tj-header.ts"
+          }
+        },
+        {
+          "kind": "variable",
+          "name": "TJ_HEADER_SCROLL_THRESHOLD_PX",
+          "type": {
+            "text": "number"
+          },
+          "default": "0",
+          "description": "Scroll threshold (px) at which the bar compresses — the ТЖ contract is\nANY scroll (>0) compresses, back to 0 restores (EXPERIENCE Header), so the\nthreshold is 0 and the comparison is strict. A JS timing constant like the\nbank navbar's TK_NAVBAR_SCROLL_THRESHOLD_PX (the token layer cannot feed\nJS comparisons)."
+        },
+        {
+          "kind": "class",
+          "description": "tj-header — the ТЖ sticky site chrome (Story 16.5): wordmark slot, nav\nchips, an actions slot (CONSUMER interiors — the kit ships spacing only,\nno icon art), the theme control, and the «Написать» CTA.\n\nTHE NAV (the bank navbar mold translated, never imported): `items` is\nnavigation data — `active-value` is a PROP ONLY (no §4 pair, no event;\nthe consumer sets it from its router). A value matching nothing marks NO\nchip. Current marking is SEMANTIC-ONLY: `aria-current=\"page\"` with ZERO\nvisual delta — the 2026-09-28 reference capture shows all nav pills\nequivalent (no weight delta, no highlight, no underline; the probe9\ncensus renders the species uniform 17/700). Unprobed marking is not\ninvented (the 16.5 patch-round ruling, vision-evidenced).\n\nTHE THEME CONTROL (the State-Patterns contract): a built-in\n`<button type=\"button\">` that cycles auto→light→dark→auto STATELESSLY —\non every click it READS `data-tj-theme` off the document root and writes\nthe next mode; auto REMOVES the attribute (the sheet's auto leg is\n`:not([data-tj-theme=\"light\"])` + prefers-color-scheme — no-flash by\nconstruction, the selector is render-blocking CSS). NO matchMedia\nlistener: auto re-resolution is pure CSS, nothing for JS to do. The\ncontrol dispatches `theme-change` (the resulting mode) and announces it\nvia an internal `aria-live=\"polite\"` region (RU copy). The decorative\nfallback glyph (aria-hidden contrast circle) is overridable by the\n`theme-icon` slot — ONE glyph for all modes, no per-mode art.\n\nTHE CTA: `cta-href`/`cta-label` render the header's OWN anchor (the\nno-cross-compose norm — the tj-cta compact-inset mold re-implemented\nhere, never composed): 44×44 invisible hit floor, a fully-rounded 36px\nvisible pill via tokens (`--tj-radius-full` +\n`--tj-color-cta-fill`/`--tj-color-cta-ink`; dark re-resolves to\nthe inverted pill, zero branches — the 2026-09-28 capture's pill, NOT\nthe article CTA's 5px radius). Empty/unset `cta-href` → the anchor\nrenders WITHOUT the attribute — inert, no tab stop (the 16.1 mold).\n\nSTICKY + COMPRESS: `position: sticky; top: 0; z-index: var(--tj-z-nav)`\n(the one sanctioned non-overlay z consumption); height 72px → 56px on any\nscroll (h72/h56 structural FLAGs) over the 150ms fast token (instant\nunder reduced motion — the token layer collapses the duration, plus the\nbelt below). The internal passive scroll observer flips a host\n`data-scrolled` attribute — internal state, NOT public API. Background\n`--tj-color-page` with NO divider — the reference bar blends into the\npage (2026-09-28 capture; the authored hairline was removed at the patch\nround). NO hide-on-scroll (unprobed → no invention).\n\nSSR-compat (AD-10): rendered via Lit templates only; the scroll listener\nattaches on connect and is passive.",
+          "name": "TjHeader",
+          "slots": [
+            {
+              "description": "The brand block; ONE accessible name rides the slot's own text (the kit wraps neutrally).",
+              "name": "wordmark"
+            },
+            {
+              "description": "Icon-button cluster (consumer interiors; the kit ships spacing only).",
+              "name": "actions"
+            },
+            {
+              "description": "Overrides the theme control's decorative fallback glyph.",
+              "name": "theme-icon"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "TjHeaderItem[]"
+              },
+              "default": "[]",
+              "description": "Nav chips ({ label, href }); href-less/duplicate-href entries clamp out with a dev warn."
+            },
+            {
+              "kind": "field",
+              "name": "activeValue",
+              "type": {
+                "text": "string | null | undefined"
+              },
+              "description": "The current chip's href — NOT a channel (the spec's §9 exception row 3\ntranslated): a plain input prop the consumer sets; the element\ndispatches nothing. Accepted from the `active-value` attribute, never\nreflected (value data, CONVENTIONS §2). Lit maps attribute REMOVAL to\na null property write — every read is null-guarded.",
+              "attribute": "active-value"
+            },
+            {
+              "kind": "field",
+              "name": "ctaHref",
+              "type": {
+                "text": "string | null | undefined"
+              },
+              "description": "The CTA anchor's URL (string data, never reflects). Empty/absent\nrenders NO href attribute — the 16.1 inert-content rule (the news-card\nmold): visually present, no tab stop.",
+              "attribute": "cta-href"
+            },
+            {
+              "kind": "field",
+              "name": "ctaLabel",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "'Написать'",
+              "description": "The CTA label (string data, never reflects); default the reference copy.",
+              "attribute": "cta-label"
+            },
+            {
+              "kind": "field",
+              "name": "#scrolled",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The data-scrolled flag driven by the passive scroll listener."
+            },
+            {
+              "kind": "field",
+              "name": "#announcement",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The last theme announcement (the polite region's text; empty = silent)."
+            },
+            {
+              "kind": "field",
+              "name": "#themeIconSlotted",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The theme-icon slot carries content (drives the fallback glyph — graceful both ways)."
+            },
+            {
+              "kind": "method",
+              "name": "#handleThemeIconSlotchange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#syncThemeIconPresence",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#slotHasContent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLSlotElement | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#onScroll",
+              "privacy": "private",
+              "readonly": true,
+              "description": "The ONE scroll code in the file (the bank navbar mold): flips the host's\n`data-scrolled` attribute at the threshold; the CSS compresses the bar\nover the 150ms token. Toggle only on threshold cross — no rAF thrash."
+            },
+            {
+              "kind": "method",
+              "name": "#currentMode",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TjThemeMode"
+                }
+              },
+              "description": "Reads the mode in force RIGHT NOW off the document root — the stateless\nheart of the contract (no cached mode, no MutationObserver: consumer\nout-of-band writes — SSR, other controls, devtools — can never desync\nthe control because it never remembers anything)."
+            },
+            {
+              "kind": "field",
+              "name": "#handleThemeActivate",
+              "privacy": "private",
+              "readonly": true,
+              "description": "The ONLY interactive path of the theme control: read fresh → write next\n(auto = REMOVE the attribute — the sheet's auto leg takes over) →\nannounce → dispatch. No matchMedia, no listener, no stored state."
+            },
+            {
+              "kind": "method",
+              "name": "#ctaHref",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | typeof nothing"
+                }
+              },
+              "description": "The 16.1 href rule: EMPTY string is NOT a live href — render no attribute."
+            }
+          ],
+          "events": [
+            {
+              "description": "The theme control cycled; `detail` = the resulting 'auto'|'light'|'dark'.",
+              "name": "theme-change"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string | null | undefined"
+              },
+              "description": "The current chip's href — NOT a channel (the spec's §9 exception row 3\ntranslated): a plain input prop the consumer sets; the element\ndispatches nothing. Accepted from the `active-value` attribute, never\nreflected (value data, CONVENTIONS §2). Lit maps attribute REMOVAL to\na null property write — every read is null-guarded.",
+              "name": "active-value",
+              "fieldName": "activeValue"
+            },
+            {
+              "type": {
+                "text": "string | null | undefined"
+              },
+              "description": "The CTA anchor's URL (string data, never reflects). Empty/absent\nrenders NO href attribute — the 16.1 inert-content rule (the news-card\nmold): visually present, no tab stop.",
+              "name": "cta-href",
+              "fieldName": "ctaHref"
+            },
+            {
+              "type": {
+                "text": "string | null"
+              },
+              "description": "The CTA label (string data, never reflects); default the reference copy.",
+              "name": "cta-label",
+              "default": "DEFAULT_CTA_LABEL",
+              "fieldName": "ctaLabel"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tj-header",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TJ_THEME_ATTRIBUTE",
+          "declaration": {
+            "name": "TJ_THEME_ATTRIBUTE",
+            "module": "src/tj-header/tj-header.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TjThemeChangeEvent",
+          "declaration": {
+            "name": "TjThemeChangeEvent",
+            "module": "src/tj-header/tj-header.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TJ_HEADER_SCROLL_THRESHOLD_PX",
+          "declaration": {
+            "name": "TJ_HEADER_SCROLL_THRESHOLD_PX",
+            "module": "src/tj-header/tj-header.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TjHeader",
+          "declaration": {
+            "name": "TjHeader",
+            "module": "src/tj-header/tj-header.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tj-header",
+          "declaration": {
+            "name": "TjHeader",
+            "module": "src/tj-header/tj-header.ts"
           }
         }
       ]
@@ -1187,6 +1544,418 @@
           "declaration": {
             "name": "TjProse",
             "module": "src/tj-prose/tj-prose.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-rail/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/tj-rail/tj-rail.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-rail/tj-rail.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "railStyles",
+          "default": "css` :host { display: block; width: var(--tj-space-rail-sidebar); } /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */ :host([hidden]) { display: none; } .rail { font-family: var(--tj-font-ui); } .rail__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--tj-space-4); } /* One row = the anchor itself (nav>ul>li>a): tile + label inside it. The tile is aria-hidden — the row's accessible name is the label alone. min-height 44 = the family's hit floor. The FULL nav-label species rides the base (17/700, the probe9 census ×11/11 — every reference row is the same weight); current marking is SEMANTIC-ONLY (aria-current, zero visual delta — the 2026-09-28 reference capture shows NO visual distinction, and unprobed marking is not invented). */ .row { display: flex; align-items: center; gap: var(--tj-space-12); min-height: 44px; /* FLAG: the 44px interactive floor */ text-decoration: none; color: var(--tj-color-ink-100); font-family: var(--tj-font-ui); font-size: var(--tj-text-nav-label-size); font-weight: var(--tj-text-nav-label-weight); } .row__label { white-space: nowrap; } .row:focus-visible { outline: 2px solid var(--tj-color-focus-ring); outline-offset: 2px; } /* The decorative icon tile: 40×40 box (spec) with the icon-tile radius; the slotted art centers at the probed 30px visual. Renders ONLY while the slot carries an element — empty tiles collapse (label-only rows are the designed default, no 40px holes). */ .tile { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; flex: none; width: 40px; /* FLAG: 40px touch-scaled tile (probe: 30px visual) */ height: 40px; /* FLAG: same box */ border-radius: var(--tj-radius-icon-tile); } .tile ::slotted(img), .tile ::slotted(svg) { display: block; width: 30px; /* FLAG: the probed 30px visual inside the 40px box */ height: 30px; /* FLAG: same */ } .tile--empty { display: none; } /* The burger: 44×44 invisible button (display none at ≥1200 — the rail list is the chrome), the 40×40 visual chip painted by ::before at the inset (compact-inset mold). NO hover state — unprobed, nothing invented. */ .burger { box-sizing: border-box; display: none; align-items: center; justify-content: center; width: 44px; /* FLAG: the family's 44px interactive floor */ height: 44px; /* FLAG: same floor */ padding: 0; border: none; background: transparent; color: var(--tj-color-ink-100); cursor: pointer; position: relative; -webkit-tap-highlight-color: transparent; } .burger::before { content: ''; position: absolute; inset-block: 2px; /* FLAG: (44−40)/2 — the chip inset */ inset-inline: 2px; /* FLAG: same — a 40×40 chip */ border-radius: var(--tj-radius-control-sm); /* FLAG: authored chip radius */ background: var(--tj-color-card); /* FLAG: authored chip fill — quiet card on page */ } .burger svg { position: relative; /* the glyph paints above the chip */ display: block; } .burger:focus-visible { outline: 2px solid var(--tj-color-focus-ring); outline-offset: 2px; } /* The sheet: full-height left sheet, w290 (token) with the mobile clamp, card ground, overlay shadow, panel radius on the INNER vertical edge only (the left edge runs flush into the viewport). Stacking is the helper's (z set inline at mount — none declared here, AD-12). border/height re-assert the popover-UA base ([popover] paints border: solid + height: fit-content — the bank navbar.css mold's own two symptoms): author origin beats UA, so the drawer keeps its edge-flush geometry on the PRIMARY (top-layer) path, which happy-dom never paints. */ .sheet { box-sizing: border-box; position: fixed; inset-block: 0; inset-inline-start: 0; width: min(var(--tj-space-rail-sidebar), 86vw); /* FLAG: the 86vw mobile clamp */ height: auto; /* stretch: top+bottom pinned + auto height = full height (UA fit-content would clip) */ margin: 0; /* belt under the popover-UA margin reset */ border: none; /* the UA [popover] border paints a stray dark outline (bank 3.10) */ overflow-y: auto; padding: var(--tj-space-16) var(--tj-space-24); background: var(--tj-color-card); box-shadow: var(--tj-shadow-overlay); border-start-end-radius: var(--tj-radius-panel); /* FLAG: inner edge only */ border-end-end-radius: var(--tj-radius-panel); /* FLAG: same edge, bottom corner */ } /* The template drives [hidden]; enforce it against future display tweaks. */ .sheet[hidden] { display: none; } .sheet__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--tj-space-4); } /* The burger breakpoint: below 1200 the rail list collapses into the burger; the host column collapses with it. The sheet mechanics are NOT gated here — programmatic open works at ANY viewport (the spec). */ @media (max-width: 1199px) { :host { width: auto; } .rail__list { display: none; } .burger { display: inline-flex; } } `",
+          "description": "tj-rail styles — tokens only, zero theme branches (AD-3 v5 on the ТЖ\ninstance): every color/motion value consumes an inherited `var(--tj-*)`\ncustom property (never adopted into the shadow root — the cascade trap).\nLight/dark re-theme through the token layer alone.\n\nVisual spec: spec 16.5 — the w290 section rail (nav>ul>li>a rows, optional\ndecorative icon tiles) + the burger breakpoint and the full-height sheet.\nThe reference's rail sat behind the cross-origin wall: every structural\nnumber below is flagged for the maintainer's side-by-side.\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule — the token sheet carries no counterpart:\n- the 40px icon-tile box (the probe measured 30px tiles — the spec's 40px\n  touch-scaled box wins; the 30px VISUAL survives as the slotted-icon\n  size inside it),\n- the 44px row/burger hit floors (the family's a11y constant),\n- the 1199px burger breakpoint (a media query, the spec's explicit pick —\n  container queries deferred),\n- the burger's 40×40 visual chip (inset 2px = (44−40)/2, the\n  compact-inset mold at this family's chip size; chip fill/radius are\n  AUTHORED picks — unprobed),\n- the sheet's 86vw mobile clamp (the token carries the 290 anchor itself).\n\nNO z-index in this sheet anywhere: the overlay helper owns stacking\n(AD-12) — it sets var(--tj-z-drawer) inline on the sheet at mount.\nNo backticks in css comments — they would terminate the css literal."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "railStyles",
+          "declaration": {
+            "name": "railStyles",
+            "module": "src/tj-rail/tj-rail.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-rail/tj-rail.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "The `open-change` occurrence (§9 grammar, the TjOpenComposeEvent class\nmold): the drawer's open state flipped — burger, Esc, scrim, a drawer link,\nor a programmatic `open` write; the element itself never narrates WHY.\n`detail: { value: boolean }` is the CONVENTIONS §9 overlay row verbatim —\nthe React unwrap contract hands handlers the bare boolean.",
+          "name": "TjOpenChangeEvent",
+          "members": [
+            {
+              "kind": "field",
+              "name": "eventName",
+              "static": true,
+              "readonly": true,
+              "default": "'open-change'",
+              "type": {
+                "text": "'open-change'"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "CustomEvent",
+            "module": "src/tj-rail/tj-rail.ts"
+          }
+        },
+        {
+          "kind": "class",
+          "description": "tj-rail — the ТЖ left section rail (Story 16.5): a w290 sidebar of\nsection rows (`nav > ul > li > a`), each optionally fronted by a decorative\n40×40 icon tile carrying the per-item `icon-{value}` slot, plus a burger\n(below 1200px) opening a focus-trapped full-height sheet.\n\nNAVIGATION, NOT A FORM CONTROL (the header ruling verbatim):\n`current-value` is a PROP ONLY — a plain input the consumer sets from its\nrouter; no §4 pair, no event (unit-pinned). A value matching nothing (or a\nvalue-less row) marks NOTHING. Current marking is SEMANTIC-ONLY:\n`aria-current=\"page\"` with ZERO visual delta — the reference census\n(probe9 navItem ×11/11) renders every row in the SAME nav-label species\n(17/700), and the 2026-09-28 reference capture shows NO visual distinction\non any row — no weight delta, no pill, no color shift. Unprobed marking is\nnot invented (the 16.5 patch-round ruling, vision-evidenced).\n\nTHE ICON TILES: a tile renders ONLY while its `icon-{value}` slot carries\nan ELEMENT node (an empty tile would leave a 40px hole — label-only rows\nare the designed default). The tile wrapper is `aria-hidden` — the icon is\ndecorative; the row's accessible name is the label alone.\n\nTHE BURGER + SHEET (AD-12 — the overlay helper owns every mechanic; this\nfile holds ZERO bespoke z/scroll/trap code, structurally pinned):\n- `open` is a REFLECTED boolean property + `open-change`\n  (`detail: { value: boolean }`) — the CONVENTIONS §9 overlay row; every\n  source (burger, Esc, scrim, drawer link, programmatic write) emits from\n  the single `updated()` dispatch site.\n- PROGRAMMATIC OPEN WORKS AT ANY VIEWPORT: the sheet mechanics are not\n  gated on the burger's media query — the burger is merely INVISIBLE at\n  ≥1200px (the spec's explicit ruling).\n- the sheet is a shadow-tree child (the bank 2.3 ratified pattern — the\n  burger's aria-controls id resolves within one tree) mounted through\n  `mountSheet` (scrim + popover/fixed ladder at `--tj-z-drawer`),\n  scroll-locked via `lockScroll`, Tab-cycled + restored via `trapFocus`.\n- Esc closes; a scrim click closes; a drawer link click closes (native\n  navigation is the anchor's own); close re-focuses the burger (the trap's\n  LIFO restore is the belt, the explicit focus the spec's demand) and\n  re-homes the sheet node (the fixed fallback path detaches it on release).\n- the drawer re-renders the SAME items as label-only rows (the icon tiles\n  are the desktop rail's signature; the sheet is the reference's plain\n  list — FLAGGED for the side-by-side).\n\nSSR-compat (AD-10): rendered via Lit templates only; nothing imperative at\nconstruction; teardown on disconnect is quiet (no focus churn).",
+          "name": "TjRail",
+          "slots": [
+            {
+              "description": "Per-item decorative icon, slotted into the row's 40×40 aria-hidden tile (value-less rows have no tile).",
+              "name": "icon-{value}"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "TjRailItem[]"
+              },
+              "default": "[]",
+              "description": "Rail rows ({ label, href, value? }); rows with duplicate NON-EMPTY values clamp out with a dev warn."
+            },
+            {
+              "kind": "field",
+              "name": "currentValue",
+              "type": {
+                "text": "string | null | undefined"
+              },
+              "description": "The current row's value — NOT a channel (the header active-value ruling\nverbatim): a plain input prop; the element dispatches nothing. Accepted\nfrom the `current-value` attribute, never reflected (value data, §2).\nLit maps attribute REMOVAL to a null property write — reads are\nnull-guarded.",
+              "attribute": "current-value"
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The drawer's open state — a PUBLIC channel (the CONVENTIONS §9 overlay\nrow): reflected (boolean, §2), source of truth for the mount/unmount\nchoreography, announced via `open-change` from `updated()`.",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "burgerLabel",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "'Разделы'",
+              "description": "Accessible name of the burger button (also the sheet dialog's label). An\nEMPTY/whitespace value falls back to the default — an empty string would\nstrip the control's accessible name entirely (the bank 8.1 a11y ruling).\nLit maps attribute REMOVAL to a null property write (String type, no\ndefault in the config) — reads null-guard (the ctaLabel pitfall, pinned).",
+              "attribute": "burger-label"
+            },
+            {
+              "kind": "field",
+              "name": "#iconSlotted",
+              "privacy": "private",
+              "default": "new Set<string>()",
+              "description": "Values whose icon-{value} slot carries an ELEMENT node (drives the tile)."
+            },
+            {
+              "kind": "field",
+              "name": "#sheetHandle",
+              "privacy": "private",
+              "type": {
+                "text": "TjSheetHandle | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#lockHandle",
+              "privacy": "private",
+              "type": {
+                "text": "TjScrollLockHandle | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#trapHandle",
+              "privacy": "private",
+              "type": {
+                "text": "TjFocusTrapHandle | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#sheetEl",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null",
+              "description": "The sheet node reference — survives the helper's reparent/detach cycles."
+            },
+            {
+              "kind": "field",
+              "name": "#uniqueId",
+              "privacy": "private",
+              "type": {
+                "text": "string | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#nextId",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "static": true,
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#id",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#emitOpenChange",
+              "privacy": "private",
+              "readonly": true,
+              "description": "The dispatch hop (a private FIELD, the #handleThemeActivate shape): the\nCEM analyzer infers events from dispatchEvent calls inside class METHODS\nand cannot name a CustomEvent subclass there — the inferred entry rides\nthe manifest NAMELESS next to the"
+            },
+            {
+              "kind": "method",
+              "name": "#handleIconSlotchange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#trackSlot",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLSlotElement"
+                  }
+                }
+              ],
+              "description": "Adds/removes the slot's value from #iconSlotted (change-guarded)."
+            },
+            {
+              "kind": "method",
+              "name": "#syncIconSlots",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#sheet",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "description": "The sheet panel — by shadow-tree class, else the captured node\nreference: the helper's fixed fallback REPARENTS the panel to <body>\nwhile open and DETACHES it on release, so tree lookups alone lose it\nexactly when it needs closing or re-homing."
+            },
+            {
+              "kind": "method",
+              "name": "#burger",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLButtonElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#mountSheet",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#unmountSheet",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#handleSheetKeydown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "Esc closes (the spec's matrix row). The Tab cycle lives in the helper's\ntrap — this handler never touches Tab."
+            },
+            {
+              "kind": "method",
+              "name": "#handleSheetClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "A clicked drawer link closes the sheet; navigation itself is the anchor's own."
+            },
+            {
+              "kind": "method",
+              "name": "#renderRow",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "TjRailItem"
+                  }
+                },
+                {
+                  "name": "currentValue",
+                  "type": {
+                    "text": "string | null | undefined"
+                  }
+                },
+                {
+                  "name": "withTile",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "One row link — shared by the rail list and the sheet list (same data, same current marking)."
+            }
+          ],
+          "events": [
+            {
+              "description": "The drawer opened/closed; `detail.value` = the boolean state.",
+              "name": "open-change"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string | null | undefined"
+              },
+              "description": "The current row's value — NOT a channel (the header active-value ruling\nverbatim): a plain input prop; the element dispatches nothing. Accepted\nfrom the `current-value` attribute, never reflected (value data, §2).\nLit maps attribute REMOVAL to a null property write — reads are\nnull-guarded.",
+              "name": "current-value",
+              "fieldName": "currentValue"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "The drawer's open state — a PUBLIC channel (the CONVENTIONS §9 overlay\nrow): reflected (boolean, §2), source of truth for the mount/unmount\nchoreography, announced via `open-change` from `updated()`.",
+              "name": "open",
+              "default": "false",
+              "fieldName": "open"
+            },
+            {
+              "type": {
+                "text": "string | null"
+              },
+              "description": "Accessible name of the burger button (also the sheet dialog's label). An\nEMPTY/whitespace value falls back to the default — an empty string would\nstrip the control's accessible name entirely (the bank 8.1 a11y ruling).\nLit maps attribute REMOVAL to a null property write (String type, no\ndefault in the config) — reads null-guard (the ctaLabel pitfall, pinned).",
+              "name": "burger-label",
+              "default": "DEFAULT_BURGER_LABEL",
+              "fieldName": "burgerLabel"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tj-rail",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TjOpenChangeEvent",
+          "declaration": {
+            "name": "TjOpenChangeEvent",
+            "module": "src/tj-rail/tj-rail.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TjRail",
+          "declaration": {
+            "name": "TjRail",
+            "module": "src/tj-rail/tj-rail.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tj-rail",
+          "declaration": {
+            "name": "TjRail",
+            "module": "src/tj-rail/tj-rail.ts"
           }
         }
       ]

@@ -5,10 +5,10 @@ GENERATED FILE — DO NOT EDIT. Regenerate with `pnpm gen:tokens:tj`.
 - Source of truth: `_bmad-output/planning-artifacts/ux-designs/ux-tj-kit-2026-09-28/DESIGN.md` frontmatter — blocks `colors`, `typography`, `rounded`, `spacing`, `shadows`, `motion`.
 - The `components:` frontmatter block is consumer spec prose — never rendered.
 - The `dark-*` color entries are the palette SOURCE for the dark layer (see "Dark layer") — never emitted as `--tj-color-dark-*` custom properties.
-- No z-scale: the ТЖ layer has no floating surfaces yet — a story needing one amends DESIGN.md first (the bank AD-12 scale stays the reference precedent).
+- The z-scale (16.5) is scaffold mechanics, not an extraction (own section below) — AUTHORED at the drawer opener, the bank AD-12 scale as the reference precedent.
 - AA-bearing color notes are GENERATED from the DESIGN.md `aa-annotations:` block (story 9.2 — the generator literals died; every note must anchor in the Colors body, anchor lost → generation aborts): 8 entries — 8 verified / 0 open `[ASSUMPTION]` flags. Resolved history: ink-reference-meta (Story 15.2); ink-reference-time (Story 15.2); gold-ink (Story 16.1); link-body (Story 16.1); focus-ring (Story 16.1); engage (Story 15.2); badge-purple (Story 16.2); chip-fill (Story 16.2).
 
-Light layer: **105 tokens** on `:host, :root` (colors 20, typography 47, radius 11, spacing 16, shadows 1, motion 10) plus the dark layer: **13 semantic overrides** on `[data-tj-theme="dark"]` AND the native auto leg (`prefers-color-scheme: dark` on `:root:not([data-tj-theme="light"])`).
+Light layer: **107 tokens** on `:host, :root` (colors 20, typography 47, radius 11, spacing 16, shadows 1, motion 10, z-scale 2) plus the dark layer: **13 semantic overrides** on `[data-tj-theme="dark"]` AND the native auto leg (`prefers-color-scheme: dark` on `:root:not([data-tj-theme="light"])`).
 
 ## Colors
 
@@ -167,6 +167,15 @@ Durations and curves come exclusively from these tokens (AD-9); everything respe
 | `--tj-motion-duration-slow` | `500ms` |  |
 
 Reduced motion is mechanical: under `prefers-reduced-motion: reduce` the stylesheet re-declares every `--tj-motion-duration-*` token to `0ms` on `:host, :root` — theme-independent. Components pair it with opacity-only fallbacks.
+
+## Z-scale — scaffold mechanics (Story 16.5)
+
+Not a DESIGN.md extraction. Stacking order is fixed by the AD-12 usage ruling: z-order comes only from the `--tj-z-*` scale and the ТЖ overlay helper (packages/tj-components/src/overlays/) owns every floating surface — no component implements its own z-index. Values leave one spare slot between layers (200 stays free for a future dropdown step); mint-grow only when a surface demands it — two tokens at the roster's honest size, not the bank's six.
+
+| Token | Value | Notes |
+| --- | --- | --- |
+| `--tj-z-nav` | `100` | sticky site chrome (tj-header) |
+| `--tj-z-drawer` | `300` | the rail burger sheet + scrim (focus-trapped, scroll-locked) |
 
 ## Dark layer (Story 15.2)
 

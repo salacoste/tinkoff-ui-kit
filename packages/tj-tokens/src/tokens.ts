@@ -3,7 +3,7 @@
  *
  * DO NOT EDIT BY HAND — regenerate with `pnpm gen:tokens:tj`.
  * Source of truth: _bmad-output/planning-artifacts/ux-designs/ux-tj-kit-2026-09-28/DESIGN.md
- * (frontmatter blocks; no z-scale in the ТЖ layer).
+ * (frontmatter blocks; the z-scale is scaffold mechanics authored at 16.5 — the drawer opener).
  * Values mirror src/tokens.css — see src/TOKENS.md for the canonical listing
  * with assumption flags and rationale.
  */
@@ -154,6 +154,12 @@ export const motionTokens = {
   '--tj-motion-duration-slow': '500ms',
 } as const;
 
+/** Z-scale — overlay stacking order (Story 16.5); scaffold mechanics fixed by the AD-12 usage ruling, not a DESIGN.md extraction. */
+export const zTokens = {
+  '--tj-z-nav': '100',
+  '--tj-z-drawer': '300',
+} as const;
+
 /** Every --tj-* custom property emitted by the light layer. */
 export const tokens = {
   ...colorTokens,
@@ -162,6 +168,7 @@ export const tokens = {
   ...spaceTokens,
   ...shadowTokens,
   ...motionTokens,
+  ...zTokens,
 } as const;
 
 /** Union of every token custom-property name. */

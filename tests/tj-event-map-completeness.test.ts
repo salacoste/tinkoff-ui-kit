@@ -144,11 +144,22 @@ describe('ТЖ EVENT_MAP ↔ component sources completeness (Story 16.4)', () =>
     expect(manifestTags.size, 'manifest must list at least one element').toBeGreaterThan(0);
     expect(manifestTags).toContain('tj-composer');
     expect(manifestTags).toContain('tj-post-card');
+    expect(manifestTags).toContain('tj-header');
+    expect(manifestTags).toContain('tj-rail');
     expect(dispatches.length, 'at least the tj-composer open-compose must be found').toBeGreaterThan(
       0,
     );
     expect(dispatches).toContainEqual(
       expect.objectContaining({ tag: 'tj-composer', eventName: 'open-compose' }),
+    );
+    // The 16.5 chrome pair, demanded by the net on BOTH sides of the idiom:
+    // the theme occurrence (bare-string detail — handlers receive the event)
+    // and the drawer channel (the §9 overlay row unwrap).
+    expect(dispatches).toContainEqual(
+      expect.objectContaining({ tag: 'tj-header', eventName: 'theme-change' }),
+    );
+    expect(dispatches).toContainEqual(
+      expect.objectContaining({ tag: 'tj-rail', eventName: 'open-change' }),
     );
   });
 

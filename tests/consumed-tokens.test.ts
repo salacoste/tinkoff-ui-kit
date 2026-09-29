@@ -362,21 +362,27 @@ describe('consumed --tj-* tokens exist in the ТЖ token sheet (story 15.2)', ()
     }
   });
 
-  it('the ТЖ component-hook exemption is LIVE on the 16.4 eight-component roster (flipped from the 15.2 inert pin)', () => {
+  it('the ТЖ component-hook exemption is LIVE on the 16.5 ten-component roster + the overlays module (flipped from the 15.2 inert pin)', () => {
     // 16.1 landed the reading primitives; 16.2+16.3 grew the roster to six
-    // with the feed surfaces; 16.4 grows it to eight with the community
-    // surfaces. The exemption keys off real component directories, derived
-    // — never hand-listed. A <component>-slot hook fallback of a real
-    // component passes; an unknown component prefix or a typo'd core name
-    // stays flagged (flipped the way the bank 2.3/4.1 assertions flipped,
-    // per this test's own 15.2 comment).
+    // with the feed surfaces; 16.4 to eight with the community surfaces;
+    // 16.5 to ten with the site chrome (tj-header/tj-rail) plus the AD-12
+    // overlay helper directory (src/overlays/ — a mechanics module, not a
+    // component: no --tj-overlays-* hooks are declared, so its presence in
+    // the derived set is inert). The exemption keys off real component
+    // directories, derived — never hand-listed. A <component>-slot hook
+    // fallback of a real component passes; an unknown component prefix or a
+    // typo'd core name stays flagged (flipped the way the bank 2.3/4.1
+    // assertions flipped, per this test's own 15.2 comment).
     expect([...tjComponentDirs].sort()).toEqual([
+      'overlays',
       'tj-composer',
       'tj-cta',
+      'tj-header',
       'tj-link',
       'tj-news-card',
       'tj-post-card',
       'tj-prose',
+      'tj-rail',
       'tj-rubric-header',
       'tj-tag-chip',
     ]);
@@ -393,6 +399,41 @@ describe('consumed --tj-* tokens exist in the ТЖ token sheet (story 15.2)', ()
       'an unknown component prefix stays flagged',
     ).not.toBeNull();
     expect(tjFallbackViolation('--tj-color-card')).toBeNull();
+  });
+
+  it('the 16.5 z-scale is declared AND consumed (the flip-the-assertion protocol)', () => {
+    // Two tokens minted at 16.5 (scaffold mechanics, the AD-12 usage ruling:
+    // z-order comes only from --tj-z-*; the overlay helper owns every
+    // floating surface). Declaration pin — a generator regression that drops
+    // the zScale fails HERE with the name, never as undeclared-consumption
+    // noise below. Consumption pin (the no-consumer era never opens):
+    // --tj-z-nav is consumed bare by the header chrome sheet, --tj-z-drawer
+    // by the overlay helper's sheet mount — named by file so a partial
+    // regression fails on exactly the file that lost the consumption.
+    expect(declaredTjTokens).toContain('--tj-z-nav');
+    expect(declaredTjTokens).toContain('--tj-z-drawer');
+    const consumers: Record<string, string[]> = {
+      '--tj-z-nav': [],
+      '--tj-z-drawer': [],
+    };
+    for (const root of TJ_SCAN_ROOTS['packages/tj-components'] ?? []) {
+      for (const filePath of walkSources(join(REPO_ROOT, 'packages/tj-components', root))) {
+        const text = stripComments(readFileSync(filePath, 'utf8'));
+        for (const name of Object.keys(consumers)) {
+          if ([...text.matchAll(CONSUMED_BARE_TOKEN_TJ)].some((m) => m[1] === name)) {
+            consumers[name]?.push(filePath);
+          }
+        }
+      }
+    }
+    expect(
+      consumers['--tj-z-nav']?.some((p) => p.endsWith('tj-header/tj-header.css.ts')),
+      '--tj-z-nav lost its chrome consumer (tj-header.css.ts)',
+    ).toBe(true);
+    expect(
+      consumers['--tj-z-drawer']?.some((p) => p.endsWith('overlays/mount-sheet.ts')),
+      '--tj-z-drawer lost its sheet consumer (mount-sheet.ts)',
+    ).toBe(true);
   });
 
   it('every var(--tj-*) consumed in tj-components/tj-react/docs is declared (green-empty until 15.3)', () => {

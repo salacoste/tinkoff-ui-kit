@@ -14,10 +14,11 @@
  *   decorators produce attribute entries with TypeScript types (what wrapper
  *   generation and the future docs argTables consume).
  * - Globs cover `src/` only — dist artifacts, stories and tests stay out:
- *   the manifest is the component API, not the package's file list. No
- *   `overlays`-style mechanics-module exclusion yet — the ТЖ roster has no
- *   non-element module to exclude (the AD-12 overlay helper, when it lands,
- *   re-opens this list deliberately).
+ *   the manifest is the component API, not the package's file list. The
+ *   AD-12 overlay helper (src/overlays/, story 16.5) is EXCLUDED — it is a
+ *   framework-agnostic module, not a custom element; its named re-exports
+ *   ride `src/index.ts` instead (the exclusion its own 16.1 comment
+ *   anticipated).
  * - `dev: true` keeps the dev-mode plugin set on (linking the definition
  *   entries to their declarations).
  * - `plugins: [sortModulesPlugin]` — the determinism fix carried from the
@@ -45,6 +46,7 @@ export default {
     'src/**/*.ts',
     '!src/**/*.stories.ts',
     '!src/**/*.test.ts',
+    '!src/overlays/**',
   ],
   outdir: '.',
   litelement: true,

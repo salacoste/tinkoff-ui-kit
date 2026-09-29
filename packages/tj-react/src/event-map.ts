@@ -13,9 +13,13 @@
  * THE FIRST ENTRY LANDED AT 16.4 (the first stateful ТЖ surface): tj-composer
  * — the fake-input community card — dispatches `open-compose` (occurrence,
  * §3 bare verb, NO payload: `detail` stays null, so the unwrap contract
- * passes the TjOpenComposeEvent itself to React handlers). The machinery
- * predicted at 16.1 is now proven by the populated case: append an entry,
- * re-run `pnpm gen`, and the wrappers pick the prop up at RUNTIME via
+ * passes the TjOpenComposeEvent itself to React handlers). 16.5 adds the
+ * site-chrome pair: tj-header (theme-change — a bare-STRING detail, not a
+ * value channel: the state lives on the document root, so handlers receive
+ * the event itself) and tj-rail (open-change — the CONVENTIONS §9 overlay
+ * row, detail { value: boolean } unwrapped to the bare boolean). The
+ * machinery predicted at 16.1 is proven by the populated case: append an
+ * entry, re-run `pnpm gen`, and the wrappers pick the prop up at RUNTIME via
  * createKitComponent (packages/tj-react/src/kit-component.ts) — generated
  * wrapper files do NOT change when the registry grows.
  *
@@ -44,6 +48,23 @@ export const EVENT_MAP: Readonly<Record<string, Readonly<TjKitElementEventMap>>>
     // opens THEIR editor (the kit never renders one). TjOpenComposeEvent
     // naming (CONVENTIONS §4, re-opened on the ТЖ instance at 16.4).
     onOpenCompose: 'open-compose',
+  },
+  'tj-header': {
+    // 16.5 — the theme control: a BARE-STRING-detail occurrence, not a
+    // `<prop>-change` value channel — the state lives on
+    // document.documentElement (data-tj-theme), not on the element, so the
+    // element has no `theme` prop the event could mirror. detail =
+    // 'auto' | 'light' | 'dark' (a STRING) fails the unwrap contract's
+    // object check, so React handlers receive the TjThemeChangeEvent itself
+    // (the payload-less-occurrence mechanics, by shape rather than by
+    // absence).
+    onThemeChange: 'theme-change',
+  },
+  'tj-rail': {
+    // 16.5 — the drawer channel, the CONVENTIONS §9 overlay row verbatim:
+    // reflected `open` + open-change with detail: { value: boolean } — the
+    // unwrap contract hands React handlers the bare boolean.
+    onOpenChange: 'open-change',
   },
   //
   // 'tj-prose': none at 16.1 — STATELESS READING CONTAINER: pure flow

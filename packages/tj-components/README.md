@@ -6,7 +6,7 @@ Shadow DOM, темизация через `--tj-*`. Семейство ТЖ не
 пакеты — и наоборот (FR-17); docs-пакет репозитория собирает оба семейства и
 только он.
 
-Статус: восемь компонентов (stories 16.1 + 16.2/16.3 + 16.4, фриз
+Статус: десять компонентов (stories 16.1 + 16.2/16.3 + 16.4 + 16.5, фриз
 API-грамматики). Примитивы чтения: `tj-prose` (колонка чтения —
 двухсемейный каскад на слотах), `tj-link` (ссылка хрома — прозрачное
 подчёркивание, 70% при наведении), `tj-cta` (якорная плашка 30px в
@@ -19,9 +19,16 @@ AA-пара, инвариантная к теме; паттерн /pro/ hero з�
 — КНОПКА, не поле: активация диспетчит `open-compose` — первую запись
 ТЖ-реестра событий), `tj-post-card` (прозрачная ячейка поста — кламп две
 строки, зеркало `title` якоря; паттерн страницы сообщества задокументирован
-историей композиции, не API). Все восемь компонентов stateless: `tj-composer`
-несёт единственное событие-вхождение (`open-compose`), но не держит
-состояния; манифест
+историей композиции, не API). Хром сайта (16.5): `tj-header` (липкая шапка —
+чипы-пилюли навигации, слот wordmark, переключатель темы со stateless-циклом
+auto→light→dark по атрибуту `data-tj-theme` и RU-анонсом, CTA «Написать»,
+сжатие 72→56px при скролле), `tj-rail` (левый рельс разделов — плитки
+`icon-{value}`, маркер `aria-current`, бургер <1200px с фокус-ловушкой
+шкафа-«шторки»; `open`/`open-change` — первый оверлей ТЖ, механику держит
+хелпер `src/overlays/`, z-порядок — только `--tj-z-*`). Все компоненты, кроме
+канала `open` рельса, stateless: `tj-composer` несёт единственное
+событие-вхождение (`open-compose`), `tj-header` — `theme-change`, но ни один
+не держит состояния; манифест
 `custom-elements.json` коммитится (`gen:manifest`). API-грамматика
 наследует `CONVENTIONS.md` этого пакета (§4/§9 банковского кита с
 ТЖ-неймингом).
@@ -44,7 +51,7 @@ pnpm add -w pillkit-tj-components pillkit-tj-tokens --workspace
 
 ```ts
 import 'pillkit-tj-tokens/tokens.css';
-import 'pillkit-tj-components'; // регистрирует tj-prose / tj-link / tj-cta / tj-rubric-header / tj-news-card / tj-tag-chip / tj-composer / tj-post-card
+import 'pillkit-tj-components'; // регистрирует tj-prose / tj-link / tj-cta / tj-rubric-header / tj-news-card / tj-tag-chip / tj-composer / tj-post-card / tj-header / tj-rail
 ```
 
 ## Лицензия

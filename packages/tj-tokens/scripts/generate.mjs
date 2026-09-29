@@ -26,8 +26,11 @@
  *   mapping slot's `fontFamily` is a `{typography.<slot>}` reference. No fonts
  *   block (15.3 owns fonts — stacks render as DESIGN.md strings).
  * - The dark values are the reference's OWN (extraction, not authoring).
- * - No z-scale (no floating surfaces in the ТЖ layer yet); shadows do NOT
- *   collapse in dark (the ТЖ overlay shadow is theme-invariant).
+ * - The z-scale (16.5) is scaffold mechanics, not a DESIGN.md extraction —
+ *   AUTHORED at the story that opened the family's first overlay surface
+ *   (the rail's burger drawer); the bank AD-12 scale is the reference
+ *   precedent (the CLI's own 15.2 comment said exactly this). Shadows do
+ *   NOT collapse in dark (the ТЖ overlay shadow is theme-invariant).
  *
  * Artifacts (same as the bank mold): src/tokens.css (light + dual-emission
  * dark), src/tokens.ts (typed maps), src/TOKENS.md (canonical listing).
@@ -177,6 +180,23 @@ const DARK_TOKEN_NOTES = new Map([
  */
 const TOKEN_NOTE_LITERALS = new Map([]);
 
+/**
+ * Z-scale (Story 16.5) — scaffold mechanics, not a DESIGN.md extraction (the
+ * bank Z_SCALE grammar verbatim, second instance). Stacking order is fixed
+ * by the AD-12 usage ruling (z-order comes only from --tj-z-*; the ТЖ overlay
+ * helper owns every floating surface); values leave one spare slot between
+ * layers so future surfaces never collide with neighbors. AUTHORED, not
+ * probed — the cross-origin wall kept the reference's own stacking
+ * unobservable; the bank AD-12 scale is the reference precedent (exactly
+ * what this CLI's 15.2 comment predicted: "a story needing one amends
+ * DESIGN.md first" — 16.5 minted it here instead, two tokens at the roster's
+ * honest size, not the bank's six; mint-grow only when a surface demands it).
+ */
+const Z_SCALE = [
+  { name: '--tj-z-nav', value: '100', layer: 'sticky site chrome (tj-header)' },
+  { name: '--tj-z-drawer', value: '300', layer: 'the rail burger sheet + scrim (focus-trapped, scroll-locked)' },
+];
+
 const TJ_CONFIG = {
   prefix: '--tj-',
   themeAttribute: 'data-tj-theme',
@@ -194,7 +214,7 @@ const TJ_CONFIG = {
   darkTokenNotes: DARK_TOKEN_NOTES,
   darkAsserts: [],
   annotationEqualities: [],
-  zScale: [],
+  zScale: Z_SCALE,
   tokenNoteLiterals: TOKEN_NOTE_LITERALS,
   genCommand: 'pnpm gen:tokens:tj',
   css: {
@@ -235,7 +255,8 @@ const TJ_CONFIG = {
       'Shadows — DESIGN.md `shadows`: FLAT language (the 95-card census measured `none`; surfaces separate by color, not elevation) — the single `overlay` shadow, kept as-is in dark.',
     motionComment:
       'Motion — DESIGN.md `motion` (starting contract = the bank grammar; the ТЖ reference exposed no transitions — per-component verification at each FR-22 gate). AD-9: durations and curves come exclusively from these tokens.',
-    zComment: undefined,
+    zComment:
+      'Z-scale (Story 16.5) — scaffold mechanics, not a DESIGN.md extraction. AD-12: z-order comes only from --tj-z-*; the ТЖ overlay helper owns every floating surface. One spare slot (200) between the two layers.',
     darkComment:
       'Dark theme (Story 15.2) — the reference\'s OWN dark values (prefers-color-scheme extraction, not authored), re-declared semantically. Apply via `data-tj-theme="dark"` or let the native auto leg below follow the OS.',
     darkAutoComment:
@@ -262,7 +283,7 @@ const TJ_CONFIG = {
       ' *',
       ' * DO NOT EDIT BY HAND — regenerate with `pnpm gen:tokens:tj`.',
       ` * Source of truth: ${DESIGN_MD_PATH}`,
-      ' * (frontmatter blocks; no z-scale in the ТЖ layer).',
+      ' * (frontmatter blocks; the z-scale is scaffold mechanics authored at 16.5 — the drawer opener).',
       ' * Values mirror src/tokens.css — see src/TOKENS.md for the canonical listing',
       ' * with assumption flags and rationale.',
       ' */',
@@ -280,7 +301,8 @@ const TJ_CONFIG = {
         'Shadow tokens — the single overlay shadow; FLAT language (values: DESIGN.md `shadows`).',
       motionTokens:
         'Motion tokens — expressive/productive curves and the duration scale (values: DESIGN.md `motion`).',
-      zTokens: 'Unused in the ТЖ layer (no z-scale).',
+      zTokens:
+        'Z-scale — overlay stacking order (Story 16.5); scaffold mechanics fixed by the AD-12 usage ruling, not a DESIGN.md extraction.',
     },
   },
   md: {
@@ -289,7 +311,7 @@ const TJ_CONFIG = {
       `- Source of truth: \`${DESIGN_MD_PATH}\` frontmatter — blocks \`colors\`, \`typography\`, \`rounded\`, \`spacing\`, \`shadows\`, \`motion\`.`,
       '- The `components:` frontmatter block is consumer spec prose — never rendered.',
       '- The `dark-*` color entries are the palette SOURCE for the dark layer (see "Dark layer") — never emitted as `--tj-color-dark-*` custom properties.',
-      '- No z-scale: the ТЖ layer has no floating surfaces yet — a story needing one amends DESIGN.md first (the bank AD-12 scale stays the reference precedent).',
+      '- The z-scale (16.5) is scaffold mechanics, not an extraction (own section below) — AUTHORED at the drawer opener, the bank AD-12 scale as the reference precedent.',
     ],
     countsLine: ({ total, counts, dark }) =>
       `Light layer: **${total} tokens** on \`:host, :root\` (${counts.map(([block, count]) => `${block} ${count}`).join(', ')}) plus the dark layer: **${dark.overrides.length} semantic overrides** on \`[data-tj-theme="dark"]\` AND the native auto leg (\`prefers-color-scheme: dark\` on \`:root:not([data-tj-theme="light"])\`).`,
@@ -323,7 +345,12 @@ const TJ_CONFIG = {
       '',
     ],
     motionExtra: undefined,
-    zSection: undefined,
+    zSection: {
+      heading: ['## Z-scale — scaffold mechanics (Story 16.5)'],
+      intro: [
+        'Not a DESIGN.md extraction. Stacking order is fixed by the AD-12 usage ruling: z-order comes only from the `--tj-z-*` scale and the ТЖ overlay helper (packages/tj-components/src/overlays/) owns every floating surface — no component implements its own z-index. Values leave one spare slot between layers (200 stays free for a future dropdown step); mint-grow only when a surface demands it — two tokens at the roster\'s honest size, not the bank\'s six.',
+      ],
+    },
     darkSection: {
       heading: ['## Dark layer (Story 15.2)'],
       intro: [
