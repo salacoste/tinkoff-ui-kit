@@ -197,6 +197,20 @@ const canvasStyles = html`
       text-decoration: none;
       color: var(--tj-color-ink-100);
       font-size: var(--tj-text-nav-label-size);
+      /* 44px hit-area floor (17.1 sweep): the slotted anchor is a FLEX ITEM —
+       * blockified, so the §9 inline-prose exemption cannot apply; the text
+       * stays 20px tall inside an invisible 44px box (the .tjhh-action
+       * precedent). FLAG: authored a11y floor, not extraction. */
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      min-width: 44px;
+    }
+    /* The 17.1 sweep ruling: slotted consumer anchors GET the kit's 2px
+     * focus ring (probe10 improvement layer — rings everywhere). */
+    .tjart-wordmark:focus-visible {
+      outline: 2px solid var(--tj-color-focus-ring);
+      outline-offset: 2px;
     }
     /* The reading column is a WHITE column over the gray page (the t-j.ru
        reference, the 16.1 composition mold — the ink-300/reference inks need

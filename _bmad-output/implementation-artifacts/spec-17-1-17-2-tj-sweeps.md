@@ -2,7 +2,7 @@
 title: 'Story 17.1+17.2 — ТЖ a11y sweep + ТЖ dark sweep (extraction-verification)'
 type: 'feature'
 created: '2026-09-29'
-status: 'draft'
+status: 'executed'
 baseline_commit: 'da6771f'
 context:
   - '{project-root}/_bmad-output/planning-artifacts/epics-v5.md (Stories 17.1/17.2 + Sequencing: "17.1+17.2 (batch)"; Port-6007 serialization — ТЖ stories join the ONE visual suite)'
@@ -84,10 +84,10 @@ context:
 ## Tasks & Acceptance
 
 **Execution:**
-- [ ] tj-a11y-sweep engine: matrix ×46 with derivation comments, walks ×2 themes, ring/name/geometry legs, pattern assertAllStops rows, SR state pins
-- [ ] tj-dark-sweep engine: parity / alpha-chain AA / leftovers / forced invariants / shadow+borders / native-dark parity leg, ×46
-- [ ] reduced-motion + visual/axe coverage NOTE only (discovery already covers ТЖ — no work, recorded in ledger)
-- [ ] full gates ×7 packages (`test → lint → typecheck → build`); NO test:visual locally
+- [x] tj-a11y-sweep engine: matrix ×46 with derivation comments, walks ×2 themes, ring/name/geometry legs, pattern assertAllStops rows, SR state pins
+- [x] tj-dark-sweep engine: parity / alpha-chain AA / leftovers / forced invariants / shadow+borders / native-dark parity leg, ×46
+- [x] reduced-motion + visual/axe coverage NOTE only (discovery already covers ТЖ — no work, recorded in ledger)
+- [x] full gates ×7 packages (`test → lint → typecheck → build`); NO test:visual locally
 
 **Acceptance Criteria:**
 - Given any of the 46 ТЖ stories, when the a11y engine walks it in either theme, then every kit stop is ringed with the theme-resolved `--tj-color-focus-ring` and the stop count equals the row pin — a changed interactive surface fails loudly demanding a deliberate matrix update.
@@ -110,3 +110,73 @@ context:
 - `pnpm test && pnpm lint && pnpm typecheck && pnpm build` (executor, PIPEFAIL law)
 - Orchestrator post-review: `pnpm build` (docs dist fresh) → scoped functional validation `pnpm test:visual --grep "tj-(a11y|dark)-sweep"` on the 6007 lane (scoped runs OMIT the `--`; NO baseline mint — engines are functional-only) → matrix-number corrections as patch rounds → push zero-in-flight → CI verdict via `gh run view --json conclusion` (never before the fact).
 </frozen-after-approval>
+
+## Implementation Notes (close-out, 2026-09-29)
+
+**Executor:** both engines delivered (+185 functional tests); own typecheck
+fix re-run green. **Registry correction ratified:** the built docs index
+carries **45** ТЖ story ids, not 46 (spec prose off-by-one); both engines
+enumerate all 45 (each TSWEEP row cites its derivation). Spec context path
+corrected in flight: `packages/tj-tokens/src/tokens.css`; the dark block =
+13 declarations.
+
+**Orchestrator triage (real kit findings):**
+- **F1** — slotted wordmark anchors had NO focus ring → rings added
+  (`.tjhh-wordmark` / `.tjart-wordmark` / `.tjrl-wordmark`, probe10 layer).
+- **F2** — `.tjhh-action` «Поиск» 40px → **44px** hit-area literals (FLAG:
+  no `--tj-space-44` on the 4-step scale; no fill → hit-area only).
+- **F3** — tj-header `.chip` 36px KEPT as the recorded sub-floor exemption
+  (extraction-faithful capture estimate; hit-area expansion = consumer
+  recipe; maintainer re-measure FLAG stands).
+- **Run-3 floors** — the slotted wordmarks are FLEX ITEMS (blockified — §9
+  computed-inline exemption cannot apply): invisible 44×44 hit-area boxes
+  on all three wordmark classes (logo/text unchanged).
+
+**Engine patch rounds (orchestrator-owned; scoped 6007 lane,
+`pnpm exec playwright test -g "tj-(a11y|dark)-sweep"`):**
+59 → 45 → 7 → 1 → **0 / 185 passed** → [lens parser extension surfaced
+one legitimate case] → 1 → **0 / 185 passed (final)**:
+1. 3-/6-digit hex normalization in both engines' sheet readers
+   (`--tj-color-chip-ink: #fff` broke ring/AA comparisons by string).
+2. Dark-sweep text-leftover leg gated `visible && hasText` (SB `#root-inner`
+   wrapper UA-black + the story `<style>` element's CSS-source text paint
+   nothing; the bank mold needed no gate — its legal set includes ink-black).
+3. `effectiveBackground` composites ABSOLUTE rendering pseudos between own
+   bg and content — ТЖ pills ride `::before` with inset geometry (the CTA
+   label measured 1.15:1 against the page, ≈19.5:1 against its real pill).
+4. `bankScoped` follows the FR-21 story's own boundary (tk- hosts + page
+   chrome above `.tjad-stage`); the leftover leg now SKIPS bank surfaces
+   entirely (the executor's `!bank && …` inverted the exemption — bank
+   charcoal/yellow/white invariants are spec 8.2's business).
+5. SR pins corrected to true contracts: drawer Esc = LIFO restore to the
+   PRE-TRAP element (the demo button, not the invisible burger); like-toggle
+   pin scoped off the opt-in backrail's class clones.
+6. `parseColor` extended to Chromium's `color(srgb r g b / a)` serialization
+   (lens-172 MINOR; color-mix fills) — surfaced the /pro/ hero blob veils
+   (`color-mix(white 10%)` over the theme-invariant field), legalized as
+   white-alpha veils ON purple grounds (the fill-side Tier-B analog);
+   `checkPaint` gained the record index for the ground check.
+
+**Standing rulings recorded:** `--tj-color-ink-reference-time` stays UNBOUND
+in dark (no dark-article reference; never renders; re-opens with a capture).
+Zero forced-invariant failures across 45 rows (no DESIGN.md re-open
+evidence). Native-dark parity proven on all 45 rows.
+
+**Verdicts:** scoped 185/185; gates `pnpm lint && pnpm typecheck && pnpm
+test` → 190/190 unit, EXIT 0 (docs dist rebuilt). Ledgers:
+`.playwright-cli/verify/tj-a11y-sweep/ledger.md` +
+`SR-RUNSHEET-v1.4.0.md`, `.playwright-cli/verify/tj-dark-sweep/ledger.md`.
+CI owns the compare verdict (never local).
+
+**Lens review (lens-172, PATCH-NEEDED → fully integrated):** 3 MAJOR —
+each independently resolved by the orchestrator's patch rounds exactly as
+prescribed (pseudo-composite effectiveBackground; bankScoped = the story's
+own tjad-stage boundary; leftover leg skips bank surfaces). 2 MINOR —
+parseColor `color(srgb …)` (landed; surfaced the hero-blob veils → run-7
+legalization) + ink-200 / ink-reference-time documentation (engine header +
+ledger). 3 PATCH-NICE — all landed (the `at()` theme-path helper, the
+pro-hero TSWEEP comment, the composer-anatomy pin comment). Lens laws
+verified clean: bank molds byte-identical, FR-21 boundary held, zero hex
+literals, matrix honest (registry 45), native-dark leg sound. Lens closure
+condition met («MAJORs fixed + scoped 185/185») — final scoped verdict
+**185/185 GREEN, lint/typecheck clean**.

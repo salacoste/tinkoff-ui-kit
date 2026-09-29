@@ -95,14 +95,34 @@ const canvasStyles = html`
       font-size: var(--tj-text-cta-label-size);
     }
     /* Story-only slot interiors (consumer art, not kit chrome). */
+    /* 44px hit-area floor (17.1 sweep): the slotted anchor is a FLEX ITEM —
+     * blockified, so the §9 inline-prose exemption cannot apply; the logo
+     * stays 32px tall inside an invisible 44px box (the .tjhh-action
+     * precedent). FLAG: authored a11y floor, not extraction. */
+    .tjhh-wordmark {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      min-width: 44px;
+    }
     .tjhh-wordmark img {
       display: block;
       height: var(--tj-space-32);
       width: auto;
     }
+    /* The 17.1 sweep ruling: slotted consumer anchors GET the kit's 2px
+     * focus ring (probe10 — the reference under-applies --outline-focus; the
+     * ring is the kit's improvement layer, rings everywhere). */
+    .tjhh-wordmark:focus-visible {
+      outline: 2px solid var(--tj-color-focus-ring);
+      outline-offset: 2px;
+    }
     .tjhh-action {
-      height: var(--tj-space-40);
-      min-width: var(--tj-space-40);
+      /* 44px literal — the 5.1 clickable floor (no --tj-space-44 on the
+       * 4-step scale; the button paints no fill, so the box growth is
+       * hit-area only). FLAG: authored a11y floor, not extraction. */
+      height: 44px;
+      min-width: 44px;
       border: none;
       border-radius: var(--tj-radius-control-sm);
       background: transparent;

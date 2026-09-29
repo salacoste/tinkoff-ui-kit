@@ -53,6 +53,22 @@ const canvasStyles = html`
       font-family: var(--tj-font-ui);
       color: var(--tj-color-ink-100);
     }
+    /* 44px hit-area floor (17.1 sweep): the slotted anchor is a FLEX ITEM —
+     * blockified, so the §9 inline-prose exemption cannot apply; the text
+     * stays 20px tall inside an invisible 44px box (the .tjhh-action
+     * precedent). FLAG: authored a11y floor, not extraction. */
+    .tjrl-wordmark {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      min-width: 44px;
+    }
+    /* The 17.1 sweep ruling: slotted consumer anchors GET the kit's 2px
+     * focus ring (probe10 improvement layer — rings everywhere). */
+    .tjrl-wordmark:focus-visible {
+      outline: 2px solid var(--tj-color-focus-ring);
+      outline-offset: 2px;
+    }
     .tjrl-canvas h1 {
       margin: 0 0 var(--tj-space-8);
       font-size: var(--tj-text-article-h2-size);
@@ -192,7 +208,7 @@ export const ChromeComposition: Story = {
           active-value="#razbory"
           cta-href="#write"
         >
-          <a slot="wordmark" href="#top" style="font-weight: 700; text-decoration: none; color: var(--tj-color-ink-100); font-size: var(--tj-text-nav-label-size);"
+          <a slot="wordmark" href="#top" class="tjrl-wordmark" style="font-weight: 700; text-decoration: none; color: var(--tj-color-ink-100); font-size: var(--tj-text-nav-label-size);"
             >ЖУРНАЛ</a
           >
         </tj-header>
