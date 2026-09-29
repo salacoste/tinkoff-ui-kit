@@ -3,12 +3,13 @@ import * as React from 'react';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import * as litReact from '@lit/react';
-import { afterAll, describe, expect, it } from 'vitest';
+import { afterAll, describe, expect, it, vi } from 'vitest';
+import { TjOpenComposeEvent } from 'pillkit-tj-components';
 
-import { Cta, EVENT_MAP, Link, NewsCard, Prose, RubricHeader, TagChip } from './index.js';
+import { Composer, Cta, EVENT_MAP, Link, NewsCard, PostCard, Prose, RubricHeader, TagChip } from './index.js';
 
 /**
- * pillkit-tj-react generated surface (stories 16.1 + 16.2/16.3 batch).
+ * pillkit-tj-react generated surface (stories 16.1 + 16.2/16.3 + 16.4 batch).
  * The wrapper imports `pillkit-tj-components` (built dist — the packages run
  * in topological order under `pnpm -r test`) and the pinned `@lit/react`;
  * React itself resolves via the workspace peer (19.3.0). The smoke test
@@ -16,10 +17,12 @@ import { Cta, EVENT_MAP, Link, NewsCard, Prose, RubricHeader, TagChip } from './
  * public surface, so an object-shape check alone would not catch a broken
  * binding (the bank index.test.ts mold).
  *
- * 16.1 pins the EMPTY-registry contract: all wrappers bind zero kit events
- * (the reading primitives AND the 16.2/16.3 feed surfaces dispatch nothing —
- * the no-entry rulings in event-map.ts) and the unwrap bridge exists but
- * never fires. The 16.2/16.3 smoke rows mirror the 16.1 rows.
+ * 16.4 opens the event registry: tj-composer's `open-compose` is the FIRST
+ * ТЖ entry — the `onOpenCompose` wrapper prop is exercised END-TO-END here
+ * (react-dom render, real shadow-button click, payload-less unwrap: the
+ * handler receives the TjOpenComposeEvent itself, never detail). The
+ * remaining wrappers still bind zero kit events (the no-entry rulings in
+ * event-map.ts).
  */
 
 // React 19 act() environment flag (test-utils lives on 'react' now).
@@ -43,11 +46,11 @@ const renderToContainer = async (element: React.ReactElement): Promise<HTMLEleme
   return container;
 };
 
-describe('pillkit-tj-react (stories 16.1 + 16.2/16.3)', () => {
-  it('generates the six ТЖ wrappers from the ТЖ manifest', () => {
+describe('pillkit-tj-react (stories 16.1 + 16.2/16.3 + 16.4)', () => {
+  it('generates the eight ТЖ wrappers from the ТЖ manifest', () => {
     // createComponent returns a React ForwardRefExoticComponent — an object
     // with the React forward_ref tag and a render function.
-    for (const wrapper of [Cta, Link, NewsCard, Prose, RubricHeader, TagChip]) {
+    for (const wrapper of [Composer, Cta, Link, NewsCard, PostCard, Prose, RubricHeader, TagChip]) {
       expect(wrapper).toBeTypeOf('object');
       expect(wrapper.$$typeof).toBeDefined();
       expect((wrapper as { render?: unknown }).render).toBeTypeOf('function');
@@ -154,6 +157,81 @@ describe('pillkit-tj-react (stories 16.1 + 16.2/16.3)', () => {
     );
   });
 
+  it('renders <Composer> as tj-composer with the label channel through the wrapper (smoke)', async () => {
+    const container = await renderToContainer(
+      React.createElement(Composer, { label: 'Спросите сообщество' }),
+    );
+    const el = container.querySelector('tj-composer');
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    expect((el as unknown as { label?: string }).label).toBe('Спросите сообщество');
+    const button = el?.shadowRoot?.querySelector('button.composer');
+    expect(button?.getAttribute('type')).toBe('button');
+    expect(el?.shadowRoot?.querySelector('.composer__label')?.textContent).toBe(
+      'Спросите сообщество',
+    );
+  });
+
+  it('renders <PostCard> as tj-post-card with the anchor + title mirror through the wrapper (smoke)', async () => {
+    const container = await renderToContainer(
+      React.createElement(
+        PostCard,
+        { href: '/posts/1', target: '_blank' },
+        React.createElement('span', { slot: 'byline' }, 'Ирина Сомова'),
+        React.createElement('h2', { slot: 'title' }, 'Заголовок поста сообщества'),
+        React.createElement('span', { slot: 'count' }, '42'),
+      ),
+    );
+    const el = container.querySelector('tj-post-card');
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    expect((el as unknown as { href?: string }).href).toBe('/posts/1');
+    const anchor = el?.shadowRoot?.querySelector('a.card');
+    expect(anchor?.getAttribute('href')).toBe('/posts/1');
+    // The 10.4 rel mint + the slotted-title mirror hold through the wrapper.
+    expect(anchor?.getAttribute('rel')).toBe('noopener noreferrer');
+    expect(anchor?.getAttribute('title')).toBe('Заголовок поста сообщества');
+    expect(el?.shadowRoot?.querySelector('.count__icon')?.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  describe('onOpenCompose — the registry FIRST ТЖ entry, end-to-end', () => {
+    it('receives the TjOpenComposeEvent itself on REAL activation (payload-less unwrap)', async () => {
+      const handler = vi.fn();
+      const container = await renderToContainer(
+        React.createElement(Composer, { onOpenCompose: handler }),
+      );
+      const el = container.querySelector('tj-composer');
+      const button = el?.shadowRoot?.querySelector('button.composer') as HTMLButtonElement;
+      await act(() => {
+        button.click(); // the REAL interactive path: native button activation
+      });
+      expect(handler).toHaveBeenCalledTimes(1);
+      const payload = handler.mock.calls[0][0];
+      // Payload-less occurrence: there is no detail.value to unwrap — the
+      // frozen contract hands the handler the event itself (§9 grammar).
+      expect(payload).toBeInstanceOf(TjOpenComposeEvent);
+      expect((payload as TjOpenComposeEvent).type).toBe('open-compose');
+      expect((payload as TjOpenComposeEvent).composed).toBe(true);
+      expect((payload as TjOpenComposeEvent).bubbles).toBe(true);
+    });
+
+    it('receives a directly-dispatched open-compose too (the bank mold)', async () => {
+      const handler = vi.fn();
+      const container = await renderToContainer(
+        React.createElement(Composer, { onOpenCompose: handler }),
+      );
+      const el = container.querySelector('tj-composer');
+      await act(() => {
+        el?.dispatchEvent(
+          new CustomEvent('open-compose', {
+            composed: true,
+            bubbles: true,
+          }),
+        );
+      });
+      expect(handler).toHaveBeenCalledTimes(1);
+      expect((handler.mock.calls[0][0] as Event).type).toBe('open-compose');
+    });
+  });
+
   it('forwards refs through the HOC to the underlying elements (every wrapper is a forwardRef HOC)', async () => {
     const proseRef = React.createRef<HTMLElement>();
     await renderToContainer(React.createElement(Prose, { ref: proseRef }));
@@ -167,18 +245,19 @@ describe('pillkit-tj-react (stories 16.1 + 16.2/16.3)', () => {
     expect(typeof litReact.createComponent).toBe('function');
   });
 
-  it('ships the EMPTY event registry — no reading primitive, no feed surface maps events', () => {
-    // The freeze ruling (spec 16.1 + 16.2/16.3 + CONVENTIONS §9): stateless
-    // display/link surface — tj-link/tj-cta/tj-news-card/tj-tag-chip ride the
-    // native composed click, tj-prose/tj-rubric-header dispatch nothing. The
-    // first stateful ТЖ surface APPENDS here (16.4+).
+  it('ships the OPENED registry — exactly the first ТЖ entry (16.4)', () => {
+    // The registry opened at 16.4: tj-composer is the FIRST event-bearing ТЖ
+    // surface. Every other wrapper stays no-entry (stateless display/link
+    // surface rides the native composed click or dispatches nothing).
+    expect(EVENT_MAP['tj-composer']).toEqual({ onOpenCompose: 'open-compose' });
     expect(EVENT_MAP['tj-prose']).toBeUndefined();
     expect(EVENT_MAP['tj-link']).toBeUndefined();
     expect(EVENT_MAP['tj-cta']).toBeUndefined();
     expect(EVENT_MAP['tj-news-card']).toBeUndefined();
     expect(EVENT_MAP['tj-rubric-header']).toBeUndefined();
     expect(EVENT_MAP['tj-tag-chip']).toBeUndefined();
-    expect(Object.keys(EVENT_MAP)).toEqual([]);
+    expect(EVENT_MAP['tj-post-card']).toBeUndefined();
+    expect(Object.keys(EVENT_MAP)).toEqual(['tj-composer']);
   });
 
   it('freezes the event registry at runtime (file edits, never mutation)', () => {

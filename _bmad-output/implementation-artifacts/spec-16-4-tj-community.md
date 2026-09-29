@@ -2,7 +2,7 @@
 title: 'Story 16.4 — ТЖ community: tj-composer + tj-post-card (first stateful — the event-map opens)'
 type: 'feature'
 created: '2026-09-29'
-status: 'draft'
+status: 'executed'
 baseline_commit: '063bb4a'
 context:
   - '{project-root}/_bmad-output/planning-artifacts/epics-v5.md (Story 16.4: composer + post card; Story 16.5 owns the drawer + AD-12 overlay helper + --tj-z-* minting)'
@@ -83,12 +83,12 @@ context:
 ## Tasks & Acceptance
 
 **Execution:**
-- [ ] tj-composer (button + label channel + open-compose dispatch + avatar slot aria-hidden + on-scale height composition)
-- [ ] tj-post-card (news-card anchor mold verbatim + clamp quartet + title-attr mirror + bubble/count line)
-- [ ] Event-map first entry + `pnpm gen` + React `onOpenCompose` smoke + tests/tj-event-map-completeness.test.ts
-- [ ] CONVENTIONS §4 ТЖ rows + 16.5 marker correction; README +2
-- [ ] Stories RU (playground/anatomy/accessibility/composition per the 16.1 grammar) with FR-22 sections; community pattern story (sheet + 3-col grid + composer atop)
-- [ ] Full gates ×7 packages (test → lint → typecheck → build); NO test:visual locally
+- [x] tj-composer (button + label channel + open-compose dispatch + avatar slot aria-hidden + on-scale height composition)
+- [x] tj-post-card (news-card anchor mold verbatim + clamp quartet + title-attr mirror + bubble/count line)
+- [x] Event-map first entry + `pnpm gen` + React `onOpenCompose` smoke + tests/tj-event-map-completeness.test.ts
+- [x] CONVENTIONS §4 ТЖ rows + 16.5 marker correction; README +2
+- [x] Stories RU (playground/anatomy/accessibility/composition per the 16.1 grammar) with FR-22 sections; community pattern story (sheet + 3-col grid + composer atop)
+- [x] Full gates ×7 packages (test → lint → typecheck → build); NO test:visual locally
 
 **Acceptance Criteria:**
 - Given the composer, when activated by click/Enter/Space, then `open-compose` dispatches composed+bubbling with the registry class, and the React wrapper's `onOpenCompose` receives it (smoke-verified).
@@ -117,4 +117,36 @@ context:
 
 ## Implementation Notes
 
-_(orchestrator fills after execution)_
+**Executor round** — mold-faithful end to end; zero spec violations in orchestrator triage (anchor mold verbatim, on-scale 24/40/24 height arithmetic, structural r20 + avatar-20 + clamp-quartet flags all placed, no invented states, artifacts untouched). Seven sound deviations, all recorded by the executor:
+
+1. **Registry path:** the spec's Code Map named `packages/tj-components/src/event-map.ts`; the REAL 15.1-scaffold registry (which the smoke test, completeness net, and gen machinery all read) is `packages/tj-react/src/event-map.ts` — entry landed there. (Spec Code Map label corrected post-hoc here; the spec body elsewhere named the real path.)
+2. **Entry shape:** the frozen registry grammar is `{ ReactProp → native event name }` (runtime lookup in `createKitComponent`), so the entry is `'tj-composer': { onOpenCompose: 'open-compose' }` — the spec's `{ 'open-compose': TjOpenComposeEvent }` notation was conceptual.
+3. **Meta-avatar FLAG rationale:** `--tj-space-20` exists in the space scale (same value, spacing channel — not a size channel); the literal stays per the spec's explicit command, the FLAG comment names the measurement basis + the channel ruling (the r20-vs-radius-chip logic extended).
+4. **Completeness net scans BOTH dispatch idioms** (`new CustomEvent('name'` bank mold + `new TjX…Event()` class mold resolved via `static readonly eventName`) — necessary or the tj-composer entry would be hand-guarded instead of net-demanded.
+5. **Empty-label contract row:** implemented as host `aria-label` forwarding (tracked property, consumer wins) rather than a bare fallback string.
+6. **Ride-along mechanical pins:** consumed-tokens roster flip 6→8 (the 16.2+16.3 flip-the-assertion protocol); stale header updates where prose said "ships EMPTY" in present tense.
+7. **Native typing:** `ariaLabel: string | null` (ARIAMixin) and `title: string` — both caught by the build stage.
+
+**Lens quick-review round** — verdict PATCH-NEEDED(1 MAJOR + 2 MINOR + 5 NIT); MAJOR + both MINORs + 4 NITs landed (orchestrator-owned patches):
+
+- **MAJOR (dead property channel — REAL):** `@property() override title` shadows the native reflecting accessor, so a consumer PROPERTY write (`el.title = 'x'` — exactly how `@lit/react` sets known props) never touches the attribute; `#syncAnchorTitle` read only `getAttribute('title')` and silently overrode the consumer's tooltip with the slot mirror. The documented consumer-wins contract was dead on the PRIMARY React path. Fix: precedence chain ATTRIBUTE (verbatim, `""` = deliberate suppression) → non-empty PROPERTY → slot mirror; false jsdoc rewritten; two new pins (property round-trip + attribute-beats-property precedence). The composer's `aria-label` forwarding already read the property — the story's own consistency proved the mold.
+- **MINOR (height pins weaker than prose):** `not.toContain('height: 88')` missed `height: 96`/`max-height`/`block-size`. Hardened to a scoped rule-extraction pin: the `.composer { … }` block itself must carry ZERO height/block-size declarations (scoped so the avatar's legit `height: var(--tj-space-40)` and any line-height cannot defeat it).
+- **MINOR (completeness net silent skip):** the `if (!tag.startsWith('tj-')) continue` let a grammar-matching dispatch in a non-component file ship unregistered green (the bank net fails loudly there). Skip removed — non-manifest directory tags now fail test 2's attribution check.
+- **NITs landed:** ::slotted count pin (exactly two non-empty-paren selectors) + the clamp quartet pinned INSIDE the extracted `::slotted(h2,h3)` rule (moving it to `.title` now fails); empty `aria-label=""` host pin (no attribute → content name survives); story prose token name corrected to `--tj-radius-badge` (the css actually consumes it); README «Семь stateless» → honest «все восемь stateless; tj-composer несёт единственное событие, но не держит состояния».
+- **NIT accepted-as-is (bank-mirror property):** double-quoted/template-literal dispatch literals escape the net's regexes — the bank net carries the identical hole and its comment documents «future verbs append»; not a regression, noted for the family's ledger.
+
+**Gates** (post-patch, pipefail chain, `&&` between the pnpm commands): GENUINELY GREEN — tj-tokens 4 · tokens 17 · tj-components 156 · tj-react 16 · components 713 · react 70 · root 183 (root = 18 files incl. the new tj-event-map-completeness ×3 + consumed-tokens flip) · lint clean · typecheck clean · docs Storybook build Done.
+
+**Process lesson (standing — the PIPEFAIL GATE LAW, second variant):** the patch-round gate chain was mis-structured as `pnpm test | tail && echo "=== LINT ==="; pnpm lint | tail && echo …` — the `&&` gated only the decorative HEADER echoes while `;` chained the gates themselves: `pnpm test` genuinely failed (two of the orchestrator's own patch tests) and the chain still printed `ALL GATES GREEN`. The law's second clause: chain the GATES with `&&` between the pnpm commands themselves (`pnpm test | tail && pnpm lint | tail && …`); never `;`-separate stages, never let an echo be the right operand. (The two real failures were both orchestrator patch bugs, caught and fixed in-round: Lit maps attribute REMOVAL to a NULL property write — `this.title.length` threw, null-guard added; and the ::slotted count pin mis-counted two selector strings h2+h3 as one occurrence — the count is 3.)
+
+**Side-by-side (vision round on minted CDN baselines, 4_5v analyze_image):**
+
+- **tj-composer anatomy — PASS.** Card ~90–96px vs avatar 40 (the band brackets the derived 88 = 24/40/24); radius read 20–24 (structural r20 FLAG inside the band); ghost text regular-weight gray in the ~#8C8F94 register (= ink-300's channel), vertically centered, clean gap right of the avatar; no extra controls; zero defects. The reported «subtle shadow» is edge-contrast perception on white-card-over-gray-canvas — the css declares NO box-shadow (pinned). The avatar placeholder reading as a filled gray disc is the STORY's neutral SVG placeholder art; the reference's stroke-only placeholder is consumer art, not kit chrome (the spec ruling held).
+- **community-pattern round 1 — ONE real finding, pattern-level, spec-origin:** the frozen Intent §3 placed the composer INSIDE the white sheet → tone-on-tone, the card stopped reading as a card; the reference carries the composer on the GRAY PAGE above the sheet, «Выбор редакции» a separate white block (capture facts). The executor had followed the frozen text faithfully — the miss was the orchestrator's own spec wording, not the implementation. **Fixed story-side (orchestrator patch):** composer moved to a SIBLING above the sheet — `.tjcp-composer { display: block; max-width: var(--tj-space-column-main); margin: 0 0 var(--tj-space-32) }` — riding the existing gray canvas (`.tjpc-canvas` already carries `--tj-color-page`); story prose + pattern FLAG comments updated to the reference composition; component css/ts UNTOUCHED. Gates after the patch: typecheck · lint · docs build green.
+- **Ellipsis «defect» — FALSE POSITIVE:** vision claimed a missing «…» glyph while its own transcription ended THREE titles with «…» («…консерватор ил…», «налогообложении…»); `-webkit-line-clamp: 2` always draws the ellipsis in Chromium and the quartet is pinned inside the extracted `::slotted(h2,h3)` rule by the unit suite. No action.
+- **Round 1 otherwise CONFIRMED the reference register:** 3 equal columns, text-only transparent cells (no per-card boxing), meta row with author darker/bolder than the date, comment line with bubble glyph + count on its own line, avatars and bubbles render, no orphan «·», no misalignment.
+- **Round 2 (re-minted community-pattern, post-fix) — PASS, the fix landed:** the composer now reads as its OWN white rounded card on the gray page, ABOVE the sheet, clear gap; the sheet holds ONLY the 3-column grid; all grid registers re-confirmed (3 equal columns, transparent cells, author-bolder-than-date, 2-line titles — the ellipsis EXPLICITLY transcribed this round: «…консерватор ил…», double-confirming round 1's ellipsis claim false); no overlap/clipping/orphan separators, icons intact. Two residual observations, both NON-defects: (a) «stacked pair reads by gap only, no elevation» — the kit ships no shadows by design (unprobed → no invention; the reference is flat white-on-gray); (b) «composer inner content starts ~100px vs grid's ~60px» — vision measured the composer's TEXT start (32 padding + 40 avatar + 24 gap ≈ 96 from the card edge — the reference's own anatomy) against the first grid column's text; the OUTER EDGES align (vision's own confirmation), and inner insets are anatomy of different elements. No action on either.
+
+**Baselines:** first mint 1624/1624 passed (9.9m), +42 vs the 1582 floor = exactly 14 NEW PNGs (composer ×3 stories + post-card ×4 stories, each ×2 themes), ZERO existing modified — the remaining +28 are the axe/visual pairs of the same stories. Community-pattern pair re-minted post-fix: 2 PNGs deleted explicitly first (the standing rule), update-mode re-take. **Final delta (post re-mint):** tree = exactly 14 untracked PNGs (the re-minted pattern pair among them), 0 tracked baselines modified. The re-mint's `-g "community-pattern"` scoping was silently lost to pnpm's `--` passthrough (playwright treats post-`--` args as POSITIONAL file filters) → the run became a FULL-suite update: 1624/1624 passed (9.9m), exit 0 — a bonus byte-stability re-verification of all 1610 existing baselines. Standing lesson: for scoped update runs OMIT the `--` (`pnpm test:visual:update -g "x"`).
+
+**CI:** _(pending)_

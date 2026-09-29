@@ -11,9 +11,10 @@
  * piece of runtime: the payload-unwrap bridge (`./kit-component.js`, a
  * documented FR-17-driven duplication of the bank contract) that delivers
  * the unwrapped `detail.value` to React handlers instead of the raw
- * CustomEvent. At 16.1 the registry is EMPTY — the reading primitives
- * dispatch no kit events — so the wrappers bind zero events; the first
- * stateful ТЖ surface (16.4+) appends registry entries and re-runs `pnpm gen`.
+ * CustomEvent. The registry OPENED at 16.4: tj-composer's `open-compose`
+ * (payload-less occurrence — handlers receive the TjOpenComposeEvent
+ * itself) is the first ТЖ entry; the seven stateless wrappers still bind
+ * zero events. Future entries are file edits + `pnpm gen`.
  */
 export * from './generated/index.js';
 export { EVENT_MAP } from './event-map.js';

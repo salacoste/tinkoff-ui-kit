@@ -362,17 +362,20 @@ describe('consumed --tj-* tokens exist in the ТЖ token sheet (story 15.2)', ()
     }
   });
 
-  it('the ТЖ component-hook exemption is LIVE on the 16.2+16.3 six-component roster (flipped from the 15.2 inert pin)', () => {
-    // 16.1 landed the reading primitives; 16.2+16.3 grow the roster to six
-    // with the feed surfaces. The exemption keys off real component
-    // directories, derived — never hand-listed. A <component>-slot hook
-    // fallback of a real component passes; an unknown component prefix or a
-    // typo'd core name stays flagged (flipped the way the bank 2.3/4.1
-    // assertions flipped, per this test's own 15.2 comment).
+  it('the ТЖ component-hook exemption is LIVE on the 16.4 eight-component roster (flipped from the 15.2 inert pin)', () => {
+    // 16.1 landed the reading primitives; 16.2+16.3 grew the roster to six
+    // with the feed surfaces; 16.4 grows it to eight with the community
+    // surfaces. The exemption keys off real component directories, derived
+    // — never hand-listed. A <component>-slot hook fallback of a real
+    // component passes; an unknown component prefix or a typo'd core name
+    // stays flagged (flipped the way the bank 2.3/4.1 assertions flipped,
+    // per this test's own 15.2 comment).
     expect([...tjComponentDirs].sort()).toEqual([
+      'tj-composer',
       'tj-cta',
       'tj-link',
       'tj-news-card',
+      'tj-post-card',
       'tj-prose',
       'tj-rubric-header',
       'tj-tag-chip',

@@ -12,6 +12,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/tj-composer/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/tj-cta/index.js"
           }
         },
@@ -36,6 +44,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/tj-post-card/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/tj-prose/index.js"
           }
         },
@@ -53,6 +69,224 @@
           "declaration": {
             "name": "*",
             "module": "src/tj-tag-chip/index.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-composer/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/tj-composer/tj-composer.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-composer/tj-composer.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "composerStyles",
+          "default": "css` :host { display: block; width: 100%; } :host([hidden]) { display: none; } .composer { box-sizing: border-box; display: flex; width: 100%; align-items: center; gap: var(--tj-space-24); /* avatar → ghost-text gap (scale value) */ /* Height composes from scale parts: padding-block 24×2 + avatar 40 = 88 (the vision band 88–96 brackets it — derived, not declared). */ padding: var(--tj-space-24) var(--tj-space-32); background: var(--tj-color-card); border: none; border-radius: 20px; /* FLAG: probe-measured r20 — no card-family token carries 20 (chip=20 is pill geometry, NOT a card radius); --tj-radius-composer is a ratification candidate, not minted here */ font-family: var(--tj-font-ui); text-align: left; cursor: pointer; /* the single native affordance touch — a button that opens, no hover art (unprobed) */ -webkit-tap-highlight-color: transparent; /* the 16.1 tap-no-flash idiom */ } .composer:focus-visible { outline: 2px solid var(--tj-color-focus-ring); /* the 16.1/16.3 tj ring mold verbatim */ outline-offset: 2px; } /* The avatar is decorative HERE (identification rides the button's ghost text name — the 16.3 mark ruling generalized to the user's own avatar): the wrapper is aria-hidden in the template so slotted alt text cannot pollute the button's accessible name. Absent slot → no phantom circle (the wrapper is only rendered while the slot has content). */ .composer__avatar { flex: none; } .composer__avatar ::slotted(img) { display: block; width: var(--tj-space-40); /* avatar 40 — scale value (the reference's stroke-only placeholder is consumer art, not kit chrome) */ height: var(--tj-space-40); border-radius: var(--tj-radius-badge); /* round — the news-card avatar idiom */ object-fit: cover; } .composer__label { /* Ghost text = card-title species 17/400 (one-species-one-leading); ink-300 on the white card = the AA meta step (the AA-surface law). No card-title-leading token exists — 24 is the on-scale pick (the news-card excerpt precedent). */ margin: 0; font-size: var(--tj-text-card-title-size); font-weight: var(--tj-text-card-title-weight); line-height: var(--tj-space-24); /* FLAG: pick — no card-title-leading token; scale value */ color: var(--tj-color-ink-300); } `",
+          "description": "tj-composer styles (spec 16.4) — tokens ONLY; every structural non-token\nvalue carries its FLAG inline (flag-don't-invent).\n\nHeight is DERIVED on-scale, never declared: padding-block 24 × 2 + avatar\n40 = 88 (the vision band 88–96 brackets it — no height FLAG, it composes\nfrom scale parts). Radius is the one structural FLAG (probe-measured r20;\nno card-family token carries 20 — `--tj-radius-chip` is pill geometry, not\na card radius; a `--tj-radius-composer` token is a maintainer ratification\ncandidate, NOT minted here — no new tokens this story)."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "composerStyles",
+          "declaration": {
+            "name": "composerStyles",
+            "module": "src/tj-composer/tj-composer.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-composer/tj-composer.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "The `open-compose` occurrence event (§9 grammar, the consent-choice/load-more\nbare-verb mold): NO payload — `detail` stays null, so the React unwrap\ncontract passes the event itself to payload-less handlers.\n\nThe `TjX…Event` naming opens the ТЖ event-class grammar (CONVENTIONS §4,\nre-opened on the ТЖ instance by this story): the class IS the dispatch\nsurface — the element dispatches `new TjOpenComposeEvent()`, and consumers\nmay type listeners against the class.",
+          "name": "TjOpenComposeEvent",
+          "members": [
+            {
+              "kind": "field",
+              "name": "eventName",
+              "static": true,
+              "readonly": true,
+              "default": "'open-compose'",
+              "type": {
+                "text": "'open-compose'"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "CustomEvent",
+            "module": "src/tj-composer/tj-composer.ts"
+          }
+        },
+        {
+          "kind": "class",
+          "description": "tj-composer — the ТЖ community fake-input card (Story 16.4).\n\nA BUTTON, not an input: the reference surface is a white card that LOOKS\nlike a text field but OPENS the editor — a real `<textarea>` would promise\nediting this kit never delivers (the editor is consumer-side by FR/design;\nthe event is the kit's whole contract). A shadow `<button type=\"button\">`\ncarries the ghost text as its accessible name, so Enter/Space activate\nnatively and SR users hear exactly what happens: something opens.\n\nAnatomy: (a) an `avatar` slot inside an aria-hidden wrapper — the user's\navatar is decorative HERE (identification rides the ghost text; slotted\nalt text must not pollute the button's name — the 16.3 mark ruling\ngeneralized), and (b) the ghost text. Height is DERIVED on-scale:\npadding-block 24 × 2 + avatar 40 = 88 (the vision band 88–96 brackets it;\nno height declaration at all). Radius is the one structural FLAG\n(probe-measured r20; a `--tj-radius-composer` token is a maintainer\nratification candidate, NOT minted here).\n\n`label` is a STRING CHANNEL (never reflects — the 16.1 bank freeze carried\nover): the default is the reference copy «Написать пост или вопрос…»; a\nnon-empty label swaps the ghost text (and the button name) verbatim.\nEmpty-string label is the story-documented contract edge: the consumer who\nempties it names the button themselves — a host `aria-label` forwards to\nthe shadow button verbatim and wins (the consumer-wins rule).\n\nHover = NOTHING (unprobed — no invention). The focus ring is the shipped\n16.1/16.3 tj ring mold verbatim (2px focus-ring token, offset 2px, on the\ncard surface). Cursor pointer (native button affordance).\n\nSTATELESS beyond the dispatch (the simple-component mold): no editor, no\nopen state, no controlled pair — activation changes NOTHING on the element;\n`open-compose` is the whole contract (the event-map's FIRST ТЖ entry,\npackages/tj-react/src/event-map.ts). SSR-compat (AD-10): rendered via Lit\ntemplates only.",
+          "name": "TjComposer",
+          "slots": [
+            {
+              "description": "The user's avatar image (decorative here — the wrapper is aria-hidden; graceful empty: no phantom circle).",
+              "name": "avatar"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Написать пост или вопрос…'",
+              "description": "Ghost text = the button's accessible name (default «Написать пост или вопрос…»). String channel — never reflects.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "ariaLabel",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Host `aria-label` forwarding (the story-documented empty-label contract\nrow): tracked so attribute add/change/remove re-renders; non-empty\nforwards to the shadow button verbatim and WINS over the content name\n(native ARIA precedence — consumer intent is never overwritten). The\ntype follows the native ARIIMixin declaration (string | null).",
+              "attribute": "aria-label"
+            },
+            {
+              "kind": "field",
+              "name": "#avatarSlotted",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Avatar slot has content (drives the decorative wrapper — graceful empty)."
+            },
+            {
+              "kind": "method",
+              "name": "#handleAvatarSlotchange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#syncAvatarPresence",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#slotHasContent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLSlotElement | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#handleActivate",
+              "privacy": "private",
+              "readonly": true,
+              "description": "The ONLY interactive path (the consent-choice mold): dispatch and change\nNOTHING — no editor, no state, no focus move. Enter/Space reach here\nthrough the native button activation."
+            }
+          ],
+          "events": [
+            {
+              "description": "Occurrence (§3 bare verb, NO payload): the card was pressed (click/Enter/Space) — the consumer opens THEIR editor; composed, bubbles; nothing else mutates.",
+              "name": "open-compose"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Написать пост или вопрос…'",
+              "description": "Ghost text = the button's accessible name (default «Написать пост или вопрос…»). String channel — never reflects.",
+              "fieldName": "label"
+            },
+            {
+              "name": "aria-label",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Host `aria-label` forwarding (the story-documented empty-label contract\nrow): tracked so attribute add/change/remove re-renders; non-empty\nforwards to the shadow button verbatim and WINS over the content name\n(native ARIA precedence — consumer intent is never overwritten). The\ntype follows the native ARIIMixin declaration (string | null).",
+              "fieldName": "ariaLabel"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tj-composer",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TjOpenComposeEvent",
+          "declaration": {
+            "name": "TjOpenComposeEvent",
+            "module": "src/tj-composer/tj-composer.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TjComposer",
+          "declaration": {
+            "name": "TjComposer",
+            "module": "src/tj-composer/tj-composer.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tj-composer",
+          "declaration": {
+            "name": "TjComposer",
+            "module": "src/tj-composer/tj-composer.ts"
           }
         }
       ]
@@ -575,6 +809,301 @@
           "declaration": {
             "name": "TjNewsCard",
             "module": "src/tj-news-card/tj-news-card.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-post-card/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/tj-post-card/tj-post-card.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-post-card/tj-post-card.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "postCardStyles",
+          "default": "css` /* NOT the 760 column family: the grid cell sizes itself to the consumer's sheet — no max-width on the host. */ :host { display: block; } /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */ :host([hidden]) { display: none; } /* TRANSPARENT by ruling: no background, no padding, no radius, no border — the cell rides the composition sheet (see the pattern story). The whole cell is ONE anchor — the row-as-link mold translated from tj-news-card: byline → date → title → count ride a single tab stop, one accessible name from the anchor's flattened subtree (DOM order). FLAT: no shadow, no hover rule anywhere in this sheet (pinned by the unit suite). */ .card { display: block; text-decoration: none; color: inherit; } /* Ring on the CELL surface — the AA-surface law: the cell renders on the composition sheet (card fill), where focus-ring is AA (3.067:1 non-text on card) — the shipped 16.1/16.3 tj ring mold verbatim. */ .card:focus-visible { outline: 2px solid var(--tj-color-focus-ring); outline-offset: 2px; } /* Meta row: mini avatar (20px structural FLAG) + author (byline 15/700/20 ink-100) + date (time-meta 15/400 ink-300) + consumer-side «·» joins — the SEPARATORS live in the consumer's slots, so an empty slot never leaves an orphan dot. The avatar wrapper is aria-hidden in the template (identification rides the author name — the 16.3 ruling generalized). */ .meta { display: flex; align-items: center; gap: var(--tj-space-8); } .meta__avatar { flex: none; width: 20px; /* FLAG: vision-measured tiny circle — structural per spec 16.4; --tj-space-20 carries the same VALUE but is a spacing step, not a size channel (the r20-vs-radius-chip ruling extended) */ height: 20px; /* FLAG: vision-measured tiny circle — structural */ border-radius: var(--tj-radius-badge); overflow: hidden; } slot[name='avatar']::slotted(img) { display: block; width: 100%; height: 100%; object-fit: cover; } .meta__author { font-family: var(--tj-font-ui); font-size: var(--tj-text-byline-size); font-weight: var(--tj-text-byline-weight); line-height: var(--tj-text-byline-leading); color: var(--tj-color-ink-100); } .meta__date { font-family: var(--tj-font-ui); font-size: var(--tj-text-time-meta-size); font-weight: var(--tj-text-time-meta-weight); line-height: var(--tj-text-byline-leading); /* pick — no time-meta-leading token; the byline leading is 20 */ color: var(--tj-color-ink-300); } /* Title: the slotted consumer heading keeps heading-level freedom (h2/h3) — the component never renders its own heading element. news-title 24/700/30 ink-100 (the DESIGN row already names community posts; the machine probe beats the vision's pixel-guess on downscaled cells). The clamp quartet is the EXPERIENCE 2-line contract verbatim — structural, FLAGGED; the full text rides the anchor's title attribute (the mirror in the element source), so the clamp never loses information. */ .title { display: block; margin-top: var(--tj-space-16); } slot[name='title']::slotted(h2), slot[name='title']::slotted(h3) { margin: 0; font-family: var(--tj-font-ui); font-size: var(--tj-text-news-title-size); font-weight: var(--tj-text-news-title-weight); line-height: var(--tj-text-news-title-leading); color: var(--tj-color-ink-100); display: -webkit-box; /* FLAG: the clamp quartet (line 1 of 4) — 2-line EXPERIENCE contract */ -webkit-box-orient: vertical; /* FLAG: the clamp quartet (2 of 4) */ -webkit-line-clamp: 2; /* FLAG: the clamp quartet (3 of 4) */ overflow: hidden; /* FLAG: the clamp quartet (4 of 4) */ } /* Count line: the decorative speech bubble (aria-hidden, currentColor — the chip-chevron mold) + the number text (time-meta 15/400 ink-300; static text, NEVER a live region — nothing here dispatches). Own flow line after the clamped title: a clamp box is a block, an inline sibling after it cannot share its last line — no float hacks invented (the count-below-title micro-delta, recorded in story prose). */ .count { display: inline-flex; align-items: center; gap: var(--tj-space-4); margin-top: var(--tj-space-12); font-family: var(--tj-font-ui); font-size: var(--tj-text-time-meta-size); font-weight: var(--tj-text-time-meta-weight); line-height: var(--tj-text-byline-leading); /* pick — no time-meta-leading token */ color: var(--tj-color-ink-300); } .count__icon { flex: none; color: currentColor; } `",
+          "description": "tj-post-card styles — tokens only, zero theme branches (AD-3 v5 on the ТЖ\ninstance): every color value consumes an inherited `var(--tj-*)` custom\nproperty (never adopted into the shadow root — the cascade trap).\n\nVisual spec: EXPERIENCE.md community post cell + probe-notes §Сообщество\n(post titles 24/700/30 = the news-title species; DESIGN.md names community\nposts on that row) + the community viewport capture. The cell is\nTRANSPARENT by ruling: the reference's cards are text-only cells on a\nshared white sheet (the composition PATTERN owns the sheet — card fill +\npanel radius); boxing the cells would break the composition. No own\nbackground, radius, border, or padding — the card IS the content.\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule — the token sheet carries no counterpart:\n- the meta avatar 20px box (vision-measured tiny circle — a structural\n  FLAG; --tj-space-20 carries the same value but is a spacing step, not\n  a size channel — the r20-vs-radius-chip ruling extended);\n- the clamp quartet on the slotted heading (display -webkit-box /\n  -webkit-box-orient vertical / -webkit-line-clamp 2 / overflow hidden —\n  the EXPERIENCE 2-line contract verbatim; a clamp is structural CSS, no\n  token could carry it).\n\nOn-scale picks (the 16.1 H2-band mold — maintainer confirms at the\nside-by-side vs the tj-community captures): meta-row gap 8, title top\noffset 16, count top offset 12, the ghost count register (time-meta\n15/400 ink-300 with the byline leading — no time-meta-leading token\nexists). No backticks in css comments — they would terminate the css\nliteral."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "postCardStyles",
+          "declaration": {
+            "name": "postCardStyles",
+            "module": "src/tj-post-card/tj-post-card.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-post-card/tj-post-card.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tj-post-card — the ТЖ community post cell (Story 16.4).\n\nThe grid cell of the community page's «Выбор редакции»: a TRANSPARENT\ntext-only card (no own background/radius/border/padding — the reference's\ncells ride a shared white sheet owned by the consumer composition; boxing\nthem would break the composition — see the pattern story). The carrier is\nthe tj-news-card anchor mold TRANSLATED verbatim (never imported — FR-17):\nONE shadow `<a href>` wraps the whole cell, so byline → date → title →\ncount ride a single tab stop with one accessible name built from the\nanchor's flattened subtree in DOM order (the 16.3 honest-prose mold — NO\nhost-level labelledby claims).\n\nSlots: `avatar` (meta-row mini avatar, 20px structural FLAG, aria-hidden\nwrapper — identification rides the author name; graceful empty: no\nphantom circle), `byline` (author name — byline 15/700/20 ink-100),\n`date` (timestamp — time-meta 15/400 ink-300), `title` (the consumer's\nh2/h3 — news-title 24/700/30 ink-100: the DESIGN row already names\ncommunity posts; the machine probe beats the vision's pixel-guess on\ndownscaled cells), `count` (the comment number — time-meta 15/400\nink-300, static text, NEVER a live region; the component renders a\ndecorative speech-bubble SVG aria-hidden before it, the chip-chevron\nmold; graceful empty: no orphan bubble). The «·» joins are consumer-side\ninside the byline/date slots, so an empty slot never leaves an orphan\nseparator.\n\n2-line clamp (the EXPERIENCE contract verbatim): the slotted h2/h3 gets\nthe FLAGGED clamp quartet (-webkit-box / vertical / line-clamp 2 /\noverflow hidden). Clamp recovery — the `title` attribute mirror: on\ntitle-slot slotchange (and every update) the component sets the ANCHOR's\n`title` to the trimmed textContent of the first assigned title element\n(the full text rides the anchor as the tooltip). A consumer-set `title`\nattribute/property on the HOST forwards verbatim and WINS — consumer\nintent is never overwritten (the consumer-wins rule; the host `title` is\ntracked as a reactive property so attribute add/change/remove re-syncs).\n\nCount placement fidelity note: the reference tucks the bubble at the\ntitle's truncation line; the kit's count rides its own flow line after\nthe clamped title (a clamp box is a block — an inline sibling after it\ncannot share its last line; no float hacks invented). Recorded for the\nmaintainer's side-by-side pass.\n\nAnchor contract — the 16.1 tj-link mold verbatim: `href` empty/absent\nrenders the anchor WITHOUT the href attribute (inert content, not\nfocusable); `target` passes through; `rel` follows the bank 10.4 rule\n(consumer rel wins verbatim, otherwise `noopener noreferrer` exactly\nwhen target=\"_blank\").\n\nSTATELESS (the simple-component mold): no channel, no controlled pair,\nnothing dispatches — the event-map no-entry ruling\n(packages/tj-react/src/event-map.ts). No like/bookmark/engagement UI\n(the capture knows none), no skeleton (unprobed). SSR-compat (AD-10):\nrendered via Lit templates only.",
+          "name": "TjPostCard",
+          "slots": [
+            {
+              "description": "Mini author avatar (decorative — the wrapper is aria-hidden; graceful empty).",
+              "name": "avatar"
+            },
+            {
+              "description": "Author name (byline tokens, ink-100).",
+              "name": "byline"
+            },
+            {
+              "description": "Timestamp (time-meta tokens, ink-300); «·» joins live consumer-side.",
+              "name": "date"
+            },
+            {
+              "description": "The post heading (h2 or h3 — news-title species, ink-100; 2-line clamp, full text mirrored to the anchor title).",
+              "name": "title"
+            },
+            {
+              "description": "The comment number (time-meta tokens, ink-300; static text — never a live region).",
+              "name": "count"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "URL; empty/absent renders an inert anchor (no href attribute).",
+              "attribute": "href"
+            },
+            {
+              "kind": "field",
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "description": "Pass-through browsing context for the inner anchor.",
+              "attribute": "target"
+            },
+            {
+              "kind": "field",
+              "name": "rel",
+              "type": {
+                "text": "string"
+              },
+              "description": "Pass-through relationship; consumer rel wins verbatim.",
+              "attribute": "rel"
+            },
+            {
+              "kind": "field",
+              "name": "title",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Consumer tooltip override — forwards to the inner anchor verbatim and WINS over the slotted-title mirror.",
+              "attribute": "title"
+            },
+            {
+              "kind": "field",
+              "name": "#avatarSlotted",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Avatar slot has content (drives the fixed-size wrapper — graceful empty)."
+            },
+            {
+              "kind": "field",
+              "name": "#countSlotted",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Count slot has content (drives the bubble line — no orphan icon)."
+            },
+            {
+              "kind": "method",
+              "name": "#anchorRel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | typeof nothing"
+                }
+              },
+              "description": "The 10.4 rel rule, verbatim from the 16.1 tj-link mold: an explicit\nconsumer rel wins verbatim; otherwise `noopener noreferrer` is applied\nexactly when target=\"_blank\" (and omitted otherwise — nothing)."
+            },
+            {
+              "kind": "method",
+              "name": "#anchorHref",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | typeof nothing"
+                }
+              },
+              "description": "The 16.1 href rule: EMPTY string is NOT a live href — render no attribute."
+            },
+            {
+              "kind": "method",
+              "name": "#handleAvatarSlotchange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#handleCountSlotchange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#handleTitleSlotchange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#slotHasContent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLSlotElement | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#syncOptionalSlots",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncAnchorTitle",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "The clamp recovery + consumer-wins rule: the anchor's `title` mirrors\nthe slotted title's full trimmed text — UNLESS the consumer set a\n`title` on the host, which forwards verbatim and wins (never overwrite\nconsumer intent; an empty ATTRIBUTE is a deliberate suppression).\nPrecedence: ATTRIBUTE presence (Lit observes it) → non-empty PROPERTY\n(the React path — property writes never touch the attribute, the Lit\naccessor shadows the native reflecting one) → the slot mirror."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "URL; empty/absent renders an inert anchor (no href attribute).",
+              "fieldName": "href"
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "description": "Pass-through browsing context for the inner anchor.",
+              "fieldName": "target"
+            },
+            {
+              "name": "rel",
+              "type": {
+                "text": "string"
+              },
+              "description": "Pass-through relationship; consumer rel wins verbatim.",
+              "fieldName": "rel"
+            },
+            {
+              "name": "title",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Consumer tooltip override — forwards to the inner anchor verbatim and WINS over the slotted-title mirror.",
+              "fieldName": "title"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tj-post-card",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TjPostCard",
+          "declaration": {
+            "name": "TjPostCard",
+            "module": "src/tj-post-card/tj-post-card.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tj-post-card",
+          "declaration": {
+            "name": "TjPostCard",
+            "module": "src/tj-post-card/tj-post-card.ts"
           }
         }
       ]
