@@ -28,7 +28,31 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/tj-news-card/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/tj-prose/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/tj-rubric-header/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/tj-tag-chip/index.js"
           }
         }
       ]
@@ -300,6 +324,263 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/tj-news-card/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/tj-news-card/tj-news-card.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-news-card/tj-news-card.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "newsCardStyles",
+          "default": "css` /* The 760-wide column family (census) — the card caps itself like tj-prose; the feed column around it stays consumer-owned. */ :host { display: block; max-width: var(--tj-space-column-reading-body); } /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */ :host([hidden]) { display: none; } /* FLAT by census (the 95-card feed survey): no shadow property, no hover rule anywhere in this sheet (pinned by the unit suite). The whole card is ONE anchor — the row-as-link mold: title + byline + counts ride a single tab stop. */ .card { display: block; box-sizing: border-box; padding: var(--tj-space-24); background: var(--tj-color-card); border-radius: var(--tj-radius-card); text-decoration: none; color: inherit; } /* Ring on the CARD surface — the AA-surface law: focus-ring is a card-surface composition (3.067:1 non-text on card), NOT bare page. */ .card:focus-visible { outline: 2px solid var(--tj-color-focus-ring); outline-offset: 2px; } /* Byline row: squircle mark + circular avatar + author name. The mark is decorative (aria-hidden wrapper in the template); the avatar keeps its consumer alt (identification rides the author name). */ .byline { display: flex; align-items: center; gap: var(--tj-space-12); } .byline__mark { flex: none; width: var(--tj-space-40); height: var(--tj-space-40); border-radius: var(--tj-radius-panel); overflow: hidden; } slot[name='mark']::slotted(img) { display: block; width: 100%; height: 100%; object-fit: cover; } .byline__avatar { flex: none; width: var(--tj-space-32); height: var(--tj-space-32); border-radius: var(--tj-radius-badge); overflow: hidden; } slot[name='avatar']::slotted(img) { display: block; width: 100%; height: 100%; object-fit: cover; } .byline__author { font-family: var(--tj-font-ui); font-size: var(--tj-text-byline-size); font-weight: var(--tj-text-byline-weight); line-height: var(--tj-text-byline-leading); color: var(--tj-color-ink-100); } /* Title: the slotted consumer heading keeps heading-level freedom (h2/h3) — the component never renders its own heading element. */ .title { display: block; margin-top: var(--tj-space-16); } slot[name='title']::slotted(h2), slot[name='title']::slotted(h3) { margin: 0; font-family: var(--tj-font-ui); font-size: var(--tj-text-news-title-size); font-weight: var(--tj-text-news-title-weight); line-height: var(--tj-text-news-title-leading); color: var(--tj-color-ink-100); } /* Excerpt (optional both ways — the wrapper renders only when slotted): the spec's small-card register pick — card-title SIZE 17/400 in the READING family (the article-body register at card scale). */ .excerpt { display: block; margin-top: var(--tj-space-12); } slot[name='excerpt']::slotted(p) { margin: 0; font-family: var(--tj-font-reading); font-size: var(--tj-text-card-title-size); font-weight: var(--tj-text-card-title-weight); line-height: var(--tj-space-24); color: var(--tj-color-ink-100); } /* Meta row: timestamp + counts — time-meta 15/400 ink-300 (the AA meta step; the RESTRICTED reference grays never render in kit stories). The container carries the type; slotted time/spans INHERIT it. Counts are static text — NEVER live regions (nothing here dispatches). */ .meta { display: block; margin-top: var(--tj-space-16); font-family: var(--tj-font-ui); font-size: var(--tj-text-time-meta-size); font-weight: var(--tj-text-time-meta-weight); line-height: var(--tj-text-byline-leading); color: var(--tj-color-ink-300); } /* Skeleton bones: meta ink at 12% alpha (the spec's named FLAG), NO animation (reference skeleton behavior unprobed — nothing invented). Shapes mirror the card anatomy: mark squircle + word bone + two title lines + meta line. Widths are flagged on-scale picks. */ .card--skeleton { display: block; padding: var(--tj-space-24); background: var(--tj-color-card); border-radius: var(--tj-radius-card); } .sk { background: color-mix(in srgb, var(--tj-color-ink-300) 12%, transparent); /* FLAG: the 12% bone alpha (spec 16.2) */ border-radius: var(--tj-radius-cta); } .sk-row { display: flex; align-items: center; gap: var(--tj-space-12); margin-bottom: var(--tj-space-16); } .sk--mark { flex: none; width: var(--tj-space-40); height: var(--tj-space-40); border-radius: var(--tj-radius-panel); } .sk--word { width: 20%; /* FLAG: bone widths (on-scale anatomy picks) */ height: var(--tj-text-byline-leading); } .sk--title { width: 92%; /* FLAG: bone widths */ height: var(--tj-text-news-title-leading); margin-bottom: var(--tj-space-8); } .sk--title-short { width: 64%; /* FLAG: bone widths */ margin-bottom: var(--tj-space-8); } .sk--meta { width: 34%; /* FLAG: bone widths */ height: var(--tj-text-byline-leading); margin-top: var(--tj-space-8); } `",
+          "description": "tj-news-card styles — tokens only, zero theme branches (AD-3 v5 on the ТЖ\ninstance): every color/motion value consumes an inherited `var(--tj-*)`\ncustom property (never adopted into the shadow root — the cascade trap).\n\nVisual spec: DESIGN.md `components.news-card` (card surface, card radius,\nnews-title h2/h3 ink-100, byline 15/700/20 ink-100) + the 95-card census\n(NOTES.md: 760×270 feed cards, box-shadow NONE — FLAT, surfaces separate\nby color, not elevation; NO hover lift: the census knows no card motion).\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule — the token sheet carries no counterpart:\n- the bone 12% alpha inside color-mix() (the spec's named FLAG — meta-ink\n  alpha, NEVER a bank gray import; reference skeleton behavior unprobed,\n  so NO shimmer/animation is invented);\n- the bone width percentages (on-scale picks mirroring the card anatomy —\n  mark/word-bone/second-title-line/meta widths).\n\nOn-scale picks (unmeasured, the 16.1 H2-band mold — maintainer confirms at\nthe side-by-side vs the tj-rubric-news captures): the mark 40 / avatar 32\nboxes (space-scale reads), the card inset 24, byline gap 12, the title\ntop offset 16, excerpt 12 / meta 16, the excerpt register (card-title\nsize 17/400 in the READING family — the spec's small-card register pick)\nand its 24 leading. No backticks in css comments — they would terminate\nthe css literal."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "newsCardStyles",
+          "declaration": {
+            "name": "newsCardStyles",
+            "module": "src/tj-news-card/tj-news-card.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-news-card/tj-news-card.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tj-news-card — the ТЖ single-link feed card (Story 16.3).\n\nThe row-as-link mold TRANSLATED from the bank card family (never imported\n— FR-17): ONE shadow `<a href>` wraps the whole card, so title + byline +\ncounts ride a single tab stop with a single accessible name (the name\ncomputation rides the slotted title; an aria-labelledby pattern with a\nconsumer-owned heading id is demonstrated in the story — the component\nadds no aria of its own beyond the skeleton/busy handling).\n\nSlots: `mark` (mini squircle, decorative — aria-hidden wrapper), `avatar`\n(consumer image, keeps its own alt), `byline` (author name — byline tokens\n15/700/20 ink-100), `title` (news-title 24/700/30 ink-100; the slotted\nheading keeps consumer heading-level freedom — h2 or h3, the component\nnever renders its own heading), `excerpt` (OPTIONAL both ways — the\narticle-body register at card scale 17/400, the flagged on-scale pick),\n`meta` (timestamp + counts — time-meta 15/400 ink-300; counts are static\ntext, NEVER live regions). The card is FLAT: no shadow, no hover lift\n(the 95-card census measured box-shadow none across the feed).\n\n`skeleton` boolean attribute: bones replace the slot content at the\nflagged meta-ink alpha, the host carries `aria-busy=\"true\"`, the bones\ncontainer is aria-hidden, and NO shimmer exists (reference skeleton\nbehavior unprobed — nothing invented). The anchor does not render while\nskeleton (no empty focus stop); removing the attribute restores the live\nslots. Empty optional slots never render bones.\n\nAnchor contract — the 16.1 tj-link mold verbatim: `href` empty/absent\nrenders the anchor WITHOUT the href attribute (inert content, not\nfocusable); `target` passes through; `rel` follows the bank 10.4 rule\n(consumer rel wins verbatim, otherwise `noopener noreferrer` exactly\nwhen target=\"_blank\").\n\nSTATELESS (the simple-component mold): no channel, no controlled pair,\nnothing dispatches — the event-map no-entry ruling\n(packages/tj-react/src/event-map.ts). SSR-compat (AD-10): rendered via\nLit templates only.",
+          "name": "TjNewsCard",
+          "slots": [
+            {
+              "description": "Mini squircle mark image (decorative; the wrapper is aria-hidden).",
+              "name": "mark"
+            },
+            {
+              "description": "Author avatar image (consumer-owned alt).",
+              "name": "avatar"
+            },
+            {
+              "description": "Author name (byline tokens, ink-100).",
+              "name": "byline"
+            },
+            {
+              "description": "The card heading (h2 or h3 — news-title species, ink-100).",
+              "name": "title"
+            },
+            {
+              "description": "Optional lead paragraph (article-body register at card scale).",
+              "name": "excerpt"
+            },
+            {
+              "description": "Timestamp + counts row (time-meta species, ink-300; static text).",
+              "name": "meta"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "URL; empty/absent renders an inert anchor (no href attribute).",
+              "attribute": "href"
+            },
+            {
+              "kind": "field",
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "description": "Pass-through browsing context for the inner anchor.",
+              "attribute": "target"
+            },
+            {
+              "kind": "field",
+              "name": "rel",
+              "type": {
+                "text": "string"
+              },
+              "description": "Pass-through relationship; consumer rel wins verbatim.",
+              "attribute": "rel"
+            },
+            {
+              "kind": "field",
+              "name": "skeleton",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Bone mode — REFLECTS as the `skeleton` attribute (the bank article-card\nmold): the host carries aria-busy while on, and the shadow root swaps\nthe anchor for an aria-hidden bones container.",
+              "attribute": "skeleton",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "#excerptSlotted",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Excerpt slot has content (drives the optional wrapper — graceful both ways)."
+            },
+            {
+              "kind": "method",
+              "name": "#anchorRel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | typeof nothing"
+                }
+              },
+              "description": "The 10.4 rel rule, verbatim from the 16.1 tj-link mold: an explicit\nconsumer rel wins verbatim; otherwise `noopener noreferrer` is applied\nexactly when target=\"_blank\" (and omitted otherwise — nothing)."
+            },
+            {
+              "kind": "method",
+              "name": "#anchorHref",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | typeof nothing"
+                }
+              },
+              "description": "The 16.1 href rule: EMPTY string is NOT a live href — render no attribute."
+            },
+            {
+              "kind": "method",
+              "name": "#handleExcerptSlotchange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#syncExcerptPresence",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#slotHasContent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLSlotElement | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#renderSkeleton",
+              "privacy": "private",
+              "description": "Bones mirror the card anatomy; NO excerpt bone (the optional slot never bones)."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Bone mode — REFLECTS as the `skeleton` attribute (the bank article-card\nmold): the host carries aria-busy while on, and the shadow root swaps\nthe anchor for an aria-hidden bones container.",
+              "name": "skeleton",
+              "default": "false",
+              "fieldName": "skeleton"
+            },
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "URL; empty/absent renders an inert anchor (no href attribute).",
+              "fieldName": "href"
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "description": "Pass-through browsing context for the inner anchor.",
+              "fieldName": "target"
+            },
+            {
+              "name": "rel",
+              "type": {
+                "text": "string"
+              },
+              "description": "Pass-through relationship; consumer rel wins verbatim.",
+              "fieldName": "rel"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tj-news-card",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TjNewsCard",
+          "declaration": {
+            "name": "TjNewsCard",
+            "module": "src/tj-news-card/tj-news-card.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tj-news-card",
+          "declaration": {
+            "name": "TjNewsCard",
+            "module": "src/tj-news-card/tj-news-card.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/tj-prose/index.ts",
       "declarations": [],
       "exports": [
@@ -377,6 +658,323 @@
           "declaration": {
             "name": "TjProse",
             "module": "src/tj-prose/tj-prose.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-rubric-header/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/tj-rubric-header/tj-rubric-header.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-rubric-header/tj-rubric-header.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "rubricHeaderStyles",
+          "default": "css` /* Layout surface: a CARD with panel radius. The cover clips ITSELF (top-corners-only radius) so the host needs no overflow clipping — the half-overlapping mark must paint OUTSIDE the flow box, and a host-level clip would cut it. */ :host { display: block; background: var(--tj-color-card); border-radius: var(--tj-radius-panel); } /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */ :host([hidden]) { display: none; } /* Cover: an empty slot renders a zero-height invisible box — graceful. */ .cover { /* FLAG: line-height 0 — kills the inline baseline gap under the slotted img (structural box math, NOT a text leading pick). */ line-height: 0; } slot[name='cover']::slotted(img) { display: block; width: 100%; height: 100%; object-fit: cover; /* Top-corners-only clip: the panel radius cuts the cover where it meets the card edge; the bottom edge runs a STRAIGHT cut into the card body (tj-rubric-news viewport capture). */ border-radius: var(--tj-radius-panel) var(--tj-radius-panel) 0 0; } /* The squircle mark: decorative wrapper (aria-hidden in the template). 100×100 = the spec's named FLAG size; panel radius keeps the squircle family. Default flow margin keeps the empty-cover case graceful. */ .mark { width: 100px; /* FLAG: 100×100 mark box (spec 16.2, unmeasured) */ height: 100px; /* FLAG: same box — one flag pair */ margin-block-start: var(--tj-space-24); margin-inline-start: var(--tj-space-24); border-radius: var(--tj-radius-panel); overflow: hidden; } /* The overlap: half the mark over the cover boundary — -50px pulls the 100px box up its own half. Applied ONLY when cover content exists (the template conditions the class); without cover art the mark sits in normal flow (graceful, no negative-margin hole). */ .mark--overlap { margin-block-start: -50px; /* FLAG: the 50/50 overlap (spec 16.2) */ } slot[name='mark']::slotted(img) { display: block; width: 100%; height: 100%; object-fit: cover; } /* The consumer heading + subtitle flow. The component NEVER renders its own heading element — ::slotted() styles the consumer's h1/p (the no-heading-invention rule, spec 16.2). */ .flow { padding: var(--tj-space-16) var(--tj-space-24) var(--tj-space-24); } ::slotted(h1) { margin: 0; font-family: var(--tj-font-ui); font-size: var(--tj-text-rubric-h1-size); font-weight: var(--tj-text-rubric-h1-weight); line-height: var(--tj-text-rubric-h1-leading); color: var(--tj-color-ink-100); } /* Subtitle: card-title 17/400 is the ON-SCALE pick (species unmeasured — DESIGN.md rubric-header note, flagged for the side-by-side). ink-300 = the AA meta step (the capture subtitle is gray). */ ::slotted(p) { margin: var(--tj-space-8) 0 0; font-family: var(--tj-font-ui); font-size: var(--tj-text-card-title-size); font-weight: var(--tj-text-card-title-weight); /* Same leading pick as the news-card excerpt — ONE card-title species, ONE leading (otherwise the species leads differently per context). */ line-height: var(--tj-space-24); /* FLAG: the card-title leading pick */ color: var(--tj-color-ink-300); } `",
+          "description": "tj-rubric-header styles — tokens only, zero theme branches (AD-3 v5 on the\nТЖ instance): every color/motion value consumes an inherited `var(--tj-*)`\ncustom property (never adopted into the shadow root — the cascade trap).\n\nVisual spec: DESIGN.md `components.rubric-header` (card surface, panel\nradius, rubric-h1 h1, card-title subtitle) + the capture ground\n(.playwright-cli/captures-v3/tj/tj-rubric-news-viewport-2026-09-28.png —\ncover top-corners rounded / bottom straight cut, the mark left-aligned and\nroughly half over the cover boundary, everything left-aligned).\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule — the token sheet carries no counterpart:\n- the mark 100×100 box (spec 16.2: the squircle art size) and its -50px\n  overlap margin (HALF the mark over the cover boundary — the spec's named\n  structural FLAG, unmeasured);\n- the bone-free zone: this component has NO skeleton — nothing else here.\n\nOn-scale spacing picks (unmeasured, the 16.1 H2-band mold — maintainer\nconfirms at the side-by-side vs the tj-rubric-news captures): the flow\ninset 16/24/24, the subtitle top offset 8, the mark inline offset 24,\nthe subtitle leading 24 (the card-title species pick — the SAME leading\nthe news-card excerpt carries; one species, one leading).\nNo backticks in css comments — they would terminate the css literal."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "rubricHeaderStyles",
+          "declaration": {
+            "name": "rubricHeaderStyles",
+            "module": "src/tj-rubric-header/tj-rubric-header.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-rubric-header/tj-rubric-header.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tj-rubric-header — the ТЖ rubric landing head (Story 16.2).\n\nA LAYOUT surface, slots only — no properties, no variants: the `cover`\nslot (the slotted `<img>` gets panel-radius top-corner clipping +\nobject-fit cover; consumer alt is mandatory-by-contract, an empty alt is\nacceptable for decorative covers), the `mark` slot (the 100×100 squircle\nart — the component wraps it in an aria-hidden decorative box; overlap =\nhalf the mark over the cover boundary, the spec's structural FLAG), and\nthe DEFAULT slot = the consumer's `<h1>` (styled `::slotted(h1)` rubric-h1\n38/700/45 ink-100) + subtitle flow (`::slotted(p)` card-title 17/400, the\nflagged on-scale pick). Card surface, panel radius — the component NEVER\nrenders its own heading element (the no-heading-invention rule).\n\nGraceful-empty contract (spec 16.2 edge matrix): a missing cover renders\nno overlap art (the mark drops into normal flow); a missing mark renders\nno mark box at all; an empty default slot renders the padded card body.\nSlot presence is tracked via slotchange (the bank article-card mold) —\ndisplay bookkeeping only, nothing dispatches.\n\nUnknown slotted tags are unstyled inert passthrough (BYO content\ncontract — the dev note lives in the story).\n\nSTATELESS (the simple-component mold): no channel, no controlled pair,\nnothing dispatches — the event-map no-entry ruling\n(packages/tj-react/src/event-map.ts). SSR-compat (AD-10): rendered via\nLit templates only.",
+          "name": "TjRubricHeader",
+          "slots": [
+            {
+              "description": "Cover image (an `<img>`; alt mandatory-by-contract, empty alt for decorative covers).",
+              "name": "cover"
+            },
+            {
+              "description": "The 100×100 squircle mark image (decorative; the wrapper is aria-hidden).",
+              "name": "mark"
+            },
+            {
+              "description": "The consumer's h1 (rubric-h1) and subtitle p (card-title) flow.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#coverSlotted",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Cover art present (drives the mark overlap class — display bookkeeping only)."
+            },
+            {
+              "kind": "field",
+              "name": "#markSlotted",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Mark art present (drives whether the mark box renders at all)."
+            },
+            {
+              "kind": "method",
+              "name": "#handleCoverSlotchange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#handleMarkSlotchange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#slotHasContent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLSlotElement | null"
+                  }
+                }
+              ]
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tj-rubric-header",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TjRubricHeader",
+          "declaration": {
+            "name": "TjRubricHeader",
+            "module": "src/tj-rubric-header/tj-rubric-header.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tj-rubric-header",
+          "declaration": {
+            "name": "TjRubricHeader",
+            "module": "src/tj-rubric-header/tj-rubric-header.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-tag-chip/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/tj-tag-chip/tj-tag-chip.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-tag-chip/tj-tag-chip.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "tagChipStyles",
+          "default": "css` :host { display: inline-flex; } /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */ :host([hidden]) { display: none; } .chip { display: inline-flex; align-items: center; box-sizing: border-box; height: 40px; /* FLAG: the measured 40px pill (census 121–127×40, r20) */ padding-inline: var(--tj-space-20); /* FLAG: on-scale end pick (unmeasured) */ border-radius: var(--tj-radius-chip); background: var(--tj-color-chip-fill); color: var(--tj-color-chip-ink); font-family: var(--tj-font-ui); font-size: var(--tj-text-nav-label-size); font-weight: var(--tj-text-nav-label-weight); text-decoration: none; white-space: nowrap; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform var(--tj-motion-duration-fast) var(--tj-motion-curve-standard); } /* Hover/focus LIFT (EXPERIENCE names it; −2px is the flagged magnitude). Reduced motion: the token layer collapses duration-fast to 0ms — the transform still applies, instantly. No component media query. */ .chip:hover, .chip:focus-visible { transform: translateY(-2px); /* FLAG: lift magnitude (unmeasured) */ } /* Focus ring = chip-ink (white), NOT --tj-color-focus-ring: the generic ring #8A8AE5 fails the non-text 3:1 bar against the purple field — the DESIGN row ruling (AA-surface law: the ring rides its surface's ink). Pinned here and by the unit suite. */ .chip:focus-visible { outline: 2px solid var(--tj-color-chip-ink); outline-offset: 2px; } .chip__label { display: inline-flex; align-items: center; } /* Decorative chevron — inline SVG in the template with aria-hidden and stroke=currentColor; inherits the chip ink through color. */ .chip__chevron { flex: none; margin-inline-start: var(--tj-space-8); /* FLAG: label→chevron gap (spec-named) */ } `",
+          "description": "tj-tag-chip styles — tokens only, zero theme branches (AD-3 v5 on the ТЖ\ninstance): every color/motion value consumes an inherited `var(--tj-*)`\ncustom property (never adopted into the shadow root — the cascade trap).\n\nVisual spec: DESIGN.md `components.tag-chip` (radius chip 20, chip-fill /\nchip-ink — the authored AA pair, THEME-INVARIANT: chips ride the purple\nfields in BOTH themes; nav-label 17/700; height 40) + the census\n(NOTES.md: 121–127×40 pills r20 on home/flows//pro/).\n\nTHEME-INVARIANCE: the pair chip-fill/chip-ink has NO dark override in the\ntoken sheet (the 15.2 invariants list) — a data-tj-theme=\"dark\" ancestor\nchanges nothing. The sheet below branches on nothing; the unit suite pins\nboth facts.\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule — the token sheet carries no counterpart:\n- the 40px pill height (census-measured; no size token exists);\n- the inline end padding 20px (the census pills' 121–127px widths imply\n  ~20px ends — on-scale pick, unmeasured);\n- the -2px hover/focus LIFT (EXPERIENCE names the lift, not its size);\n- the chevron geometry: the 24-unit viewBox, the 2px stroke, the path\n  coordinates and the 1em sizing (decorative glyph, currentColor);\n- the 8px label→chevron gap (margin-inline-start from the space scale —\n  the spec's named FLAGGED geometry).\n\nReduced motion: the tokens' own prefers-reduced-motion block collapses\n--tj-motion-duration-fast to 0ms, so the lift becomes instant — the\ncomponent adds NO media query of its own (verified, not reinvented).\nNo backticks in css comments — they would terminate the css literal."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "tagChipStyles",
+          "declaration": {
+            "name": "tagChipStyles",
+            "module": "src/tj-tag-chip/tj-tag-chip.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tj-tag-chip/tj-tag-chip.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tj-tag-chip — the ТЖ purple-field nav chip (Story 16.3).\n\nA shadow `<a href>` pill: h40, radius chip 20, fill\n`var(--tj-color-chip-fill)` / ink `var(--tj-color-chip-ink)` — the\nAUTHORED AA pair (5.813:1), THEME-INVARIANT by design: chips ride the\npurple fields in both themes, the token pair carries no dark override,\nand a `data-tj-theme=\"dark\"` ancestor changes nothing (pinned by test).\nLabel = the default slot in nav-label 17/700 + a COMPONENT-RENDERED\ndecorative chevron (inline aria-hidden SVG, currentColor — the chip's own\nink, not a color of its own).\n\nMotion: hover/focus LIFT translateY(−2px) on duration-fast + curve-standard\n(EXPERIENCE names the lift; −2px is the flagged magnitude). Focus ring =\nchip-ink 2px/offset-2px — NOT the generic focus-ring token, which fails\nthe non-text 3:1 bar on the purple field (the DESIGN row ruling). Reduced\nmotion: the tokens' own prefers-reduced-motion block collapses\nduration-fast to 0ms — the lift turns instant; no component media query.\n\nAnchor contract — the 16.1 tj-link mold verbatim: `href` empty/absent\nrenders the anchor WITHOUT the href attribute (inert content, not\nfocusable); `target` passes through; `rel` follows the bank 10.4 rule\n(consumer rel wins verbatim, otherwise `noopener noreferrer` exactly\nwhen target=\"_blank\").\n\nChips are LINKS in natural tab order — no tablist/aria-selected semantics\n(EXPERIENCE). Wrapping rows are CONSUMER layout: chips flex-wrap, never\nscroll (documented + demoed in the /pro/ hero pattern story).\n\nSTATELESS (the simple-component mold): no channel, no controlled pair,\nnothing dispatches — the event-map no-entry ruling\n(packages/tj-react/src/event-map.ts). SSR-compat (AD-10): rendered via\nLit templates only.",
+          "name": "TjTagChip",
+          "slots": [
+            {
+              "description": "Label (nav-label species, chip-ink on chip-fill).",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "URL; empty/absent renders an inert anchor (no href attribute).",
+              "attribute": "href"
+            },
+            {
+              "kind": "field",
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "description": "Pass-through browsing context for the inner anchor.",
+              "attribute": "target"
+            },
+            {
+              "kind": "field",
+              "name": "rel",
+              "type": {
+                "text": "string"
+              },
+              "description": "Pass-through relationship; consumer rel wins verbatim.",
+              "attribute": "rel"
+            },
+            {
+              "kind": "method",
+              "name": "#anchorRel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | typeof nothing"
+                }
+              },
+              "description": "The 10.4 rel rule, verbatim from the 16.1 tj-link mold: an explicit\nconsumer rel wins verbatim; otherwise `noopener noreferrer` is applied\nexactly when target=\"_blank\" (and omitted otherwise — nothing)."
+            },
+            {
+              "kind": "method",
+              "name": "#anchorHref",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | typeof nothing"
+                }
+              },
+              "description": "The 16.1 href rule: EMPTY string is NOT a live href — render no attribute."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "URL; empty/absent renders an inert anchor (no href attribute).",
+              "fieldName": "href"
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "description": "Pass-through browsing context for the inner anchor.",
+              "fieldName": "target"
+            },
+            {
+              "name": "rel",
+              "type": {
+                "text": "string"
+              },
+              "description": "Pass-through relationship; consumer rel wins verbatim.",
+              "fieldName": "rel"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tj-tag-chip",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TjTagChip",
+          "declaration": {
+            "name": "TjTagChip",
+            "module": "src/tj-tag-chip/tj-tag-chip.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tj-tag-chip",
+          "declaration": {
+            "name": "TjTagChip",
+            "module": "src/tj-tag-chip/tj-tag-chip.ts"
           }
         }
       ]

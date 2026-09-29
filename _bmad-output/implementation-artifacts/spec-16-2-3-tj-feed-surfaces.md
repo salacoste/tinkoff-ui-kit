@@ -2,7 +2,7 @@
 title: 'Story 16.2+16.3 (batch) — ТЖ feed surfaces: tj-rubric-header + tj-news-card + tj-tag-chip + /pro/ hero pattern'
 type: 'feature'
 created: '2026-09-29'
-status: 'draft'
+status: 'executed'
 baseline_commit: '76b8ca5'
 context:
   - '{project-root}/_bmad-output/planning-artifacts/epics-v5.md (Stories 16.2 + 16.3; batching sanctioned at the sequencing note: «16.2+16.3 (batch)»)'
@@ -76,13 +76,13 @@ Plus the machinery ride-along: all three are stateless display/link surfaces —
 ## Tasks & Acceptance
 
 **Execution:**
-- [ ] tj-rubric-header (slots + slotted typography + overlap geometry + graceful-empty)
-- [ ] tj-news-card (whole-card anchor + slots + skeleton + inert/external rules)
-- [ ] tj-tag-chip (pill + chevron + lift + chip-ink ring + theme-invariance pin)
-- [ ] /pro/ hero pattern story (tokens-only composition, both themes)
-- [ ] Stories RU (playground/anatomy-or-species/accessibility/composition per the 16.1 story grammar) with FR-22 sections
-- [ ] `pnpm gen` (manifest + wrappers ×3; event-map untouched) + index re-exports + README
-- [ ] Full gates ×7 packages (test → lint → typecheck → build); NO test:visual locally
+- [x] tj-rubric-header (slots + slotted typography + overlap geometry + graceful-empty)
+- [x] tj-news-card (whole-card anchor + slots + skeleton + inert/external rules)
+- [x] tj-tag-chip (pill + chevron + lift + chip-ink ring + theme-invariance pin)
+- [x] /pro/ hero pattern story (tokens-only composition, both themes)
+- [x] Stories RU (playground/anatomy-or-species/accessibility/composition per the 16.1 story grammar) with FR-22 sections
+- [x] `pnpm gen` (manifest + wrappers ×3; event-map untouched) + index re-exports + README
+- [x] Full gates ×7 packages (test → lint → typecheck → build); NO test:visual locally
 
 **Acceptance Criteria:**
 - Given the docs build, when the harness reads the story index, then the new ТЖ stories are discovered with zero harness edits and pass axe in BOTH themes (zero violations — restricted inks never story-rendered; counts/timestamps at ink-300).
@@ -111,4 +111,36 @@ Plus the machinery ride-along: all three are stateless display/link surfaces —
 
 ## Implementation Notes
 
-(post-review orchestrator triage lands here)
+**Executor round** — mold-faithful on all three components; one spec deviation caught in orchestrator triage:
+
+- **CTA inversion (fixed)**: the executor rendered the /pro/ hero CTA as chip-ink fill / badge-purple label (white button, purple text). The spec froze the OPPOSITE direction — chip-ink ON badge-purple = the 4.536:1 machine-pinned pair. Direction settled empirically: vision pass over the live `tj-pro-viewport-2026-09-28.png` capture shows the hero-top CTA is a bare white TEXT link (no fill), while the purple r10×h50 fills all live BELOW the fold on white surfaces — so the pattern story shows the measured purple form per spec, and the story prose now carries the fidelity note (text-link hero-top vs measured filled-below-fold). Flipped via two css/story edits; baseline minted after the flip.
+- **Slot presence machinery**: slotchange tracking + a change-guarded `updated()` backstop (happy-dom does not fire slotchange on initial assignment); hidden catch-slot present in both template branches — the graceful-empty rows verified by test.
+
+**Lens quick-review round** — verdict PATCH-NEEDED(5); all five landed:
+
+1. Vacuous theme-invariance test (two `toBeTruthy` asserts) → replaced with a REAL pin: mount twins under `data-tj-theme="dark"` vs light ancestors, assert `shadowRoot.innerHTML` serialization equality — any future theme branch in render() diverges the serialization.
+2. Rubric `::slotted(p)` carried NO line-height → the species led differently per context (the story canvas donated 30px). Pinned `line-height: var(--tj-space-24)` — the SAME card-title-species leading the news-card excerpt carries (one species, one leading; flagged).
+3. Host-level `aria-labelledby` demo is a11y-INERT for the shadow anchor (host = roleless container; name computation never sees it) while the SR protocol row promised a trimmed name. Story prose rewritten ×3 to the honest claim: full name from the anchor's flattened subtree (author → title → excerpt → meta, DOM order). Forwarding consumer ids onto the shadow anchor would be a component change — ruled OUT of batch, recorded as a maintainer freeze-note in the story.
+4. No pin for the unknown-tags passthrough row → added a selector-count test: exactly four non-empty-paren `::slotted()` selectors (cover-img / mark-img / h1 / p) + the four exact strings (additions AND removals fail).
+5. Raw `line-height: 0` in `.cover` unflagged → FLAG comment added (inline-baseline kill = structural box math, not a leading pick).
+
+**Process lessons (standing):**
+
+- **Pipefail gate law**: the first gate chain ran as `pnpm test 2>&1 | tail && echo OK` — the pipeline exit status was tail's, and a REAL `ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL` printed a false TEST OK. Full chain re-run under `set -o pipefail`: all four gates genuinely GREEN (tj-components 103/103, root 180/180, gen drift clean, docs build OK).
+- **cssText KEEPS comments**: the finding-4 count regex initially matched `/::slotted\(/g` — a PROSE mention of bare `::slotted()` in a css comment counted as a fifth selector. Regex pinned to non-empty parens `/::slotted\([^)]+\)/g` with an explanatory test comment.
+
+**Geometry/capture ground:**
+
+- Cover clip is TOP-CORNERS-ONLY (panel radius up top, straight cut into the card body) — capture-grounded, and the host carries NO overflow clip precisely so the half-overlapping mark can paint outside the flow box.
+- Mark overlap −50px (half of the 100×100 squircle over the cover boundary) — renders exactly as spec'd in the minted baseline.
+- Observed-not-shipped (→ maintainer package): the live reference's mark carries a white stroke and a two-row byline; neither is in this batch's scope.
+
+**Baselines (orchestrator-minted post-review, port 6007 single-owner):** 1582/1582 visual+axe passed; delta = exactly 22 NEW PNGs (light+dark × 11 stories), zero existing baselines modified (16.1's PNGs byte-stable).
+
+**Side-by-side vision verdicts (minted baselines vs captures):**
+
+- rubric-header vs `tj-rubric-news-viewport`: overlap/mark/hierarchy/gray-subtitle all ✓, no defects. Observation → maintainer package: the mark sits optically a hair left of the heading's left edge (border-radius optics vs glyph side-bearing; both are at space-24 — not a bug).
+- news-card vs the same capture: flat (no shadow/border) ✓, radius reads ~20–25 on the 760 column ✓, meta distinctly smaller+gray ✓, excerpt in the serif reading register while byline/title/meta stay sans ✓, no defects.
+- pro-hero vs `tj-pro-viewport`: CTA renders purple-fill + white label after the flip ✓ (r10×h50, flatter than the chips), chips darker-than-field pills with white labels + chevrons ✓ (the deliberate AA trade — reference's lighter wash fails AA with white labels; census + spec agree), white bold h1 ✓, tone-on-tone squircles clipped by the panel ✓. Observation → maintainer package: CTA fill == field fill (badge-purple on badge-purple) makes the button boundary faint at a glance — the measured purple CTAs live on WHITE surfaces below the fold; the story prose documents the hero-top text-link form.
+
+**CI**: run 36500086036 (spec push @27da218) = success → push gate was open for the batch commit; batch CI verdict recorded in the close-out commit.
