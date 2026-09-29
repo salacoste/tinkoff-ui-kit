@@ -643,3 +643,57 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   Gates: lint+typecheck clean, 190/190 unit. Next: 17.3 docs completion →
   17.4 ledger + ad-language audit + impeccable + baseline package → 17.5
   release prep (TAG v1.4.0 = maintainer sanction ONLY).
+
+- **2026-09-29 STORY 17.3 EXECUTED (code-head `58d979e` + CI rounds
+  `202beb1`+`d02a483`; CI run 36623061743 GREEN):** ТЖ docs completion —
+  token-reference (registers/typography/colors live from TOKENS.md
+  single-source + drift test), theming-guide (dark-pairing/overrides/
+  registers), patterns ×4 (article/community/pro/rubric page+demo), API
+  tables via CEM, getting-started EXPANDED (ТЖ-ALONE install = Flow-A;
+  ad-module cross-link one-directional), component-search +16 rows,
+  68-row a11y/dark sweep registries (engine untouched, rows only). 50
+  baseline movers (23 new ids ×2 + getting-started retakes ×2). Lens-173
+  (1 MINOR + 2 PATCH-NICE) all fixed: mdInline `**bold**`→`<strong>`,
+  dual-emit :host-symmetry, mdSection hoist. **Bank link contrast law
+  (recorded in source comments, bit twice):** `--tk-color-link` #1771E6
+  is tuned to surface-base (4.62 AA); on surface-muted #F5F5F6 = 4.24
+  (light AA fail) — links NEVER sit on muted boxes. First bite:
+  theming-guide overrides link (mint catch, fixed pre-push). Second:
+  five pattern pages (`.tjpat-note > a`, CI 36617540273 RED) — fix
+  d02a483 moves all five to page ground (rubric--demo keeps its box for
+  the PII disclaimer only); exactly 10 PNGs delete+re-minted. **CI
+  timeout law:** run 36593380779 cancelled ×3 at exactly ~30:20 with
+  zero failed steps = `timeout-minutes: 30` ceiling, NOT manual cancels
+  (timeout kills report as cancelled under the triggering actor; suite
+  grew to 2123 legs vs prior green 27 min) — raised 30→60 (202beb1).
+  **Verification lesson (standing practice now):** after any post-rebuild
+  source fix, run the FULL suite, not scoped legs — the 17.3 close's
+  scoped-only re-verification left the pattern legs unexamined and CI
+  owned the catch; full local 2123/2123 (12.3m) before d02a483's push.
+  **Leg count corrected:** 2123/23 files (`--list` + CI tail; the
+  earlier «2118» was a partial mint tail). Gates: 1267 unit EXIT 0,
+  full chain clean. Next: 17.4 → 17.5 (TAG = maintainer sanction ONLY).
+
+- **2026-09-29 STORY 17.4 EXECUTED (orchestrator-run quartet; tree
+  green by run 36623061743):** the 14.2-mold verification quartet,
+  everything at the post-fix head — fidelity ledger
+  `verify/fidelity-verification-v1-4-0/ledger.md` 11 rows (token layer →
+  reading → feed → /pro/ → community → chrome incl. drawer+AD-12 →
+  article → ad-slot recipe → dark → fonts → a11y; honest
+  composition/pattern-consistency classifications; 17.2 dark verdicts
+  cited not re-proven; scope note = 17.3 docs pages are NOT rows);
+  **ad-language audit 0 values** (grep family FFDD2D|FCC521|FAB619|
+  06101E over tj-tokens/tj-components/tj-react/docs-src-tj = 0; ads =
+  bank tk-promo-card via `--tk-promo-card-*` hooks — FR-21 split;
+  docs leg rides zero-hardcoded in CI); **impeccable BOTH trees 297
+  files exit 0** (209 bank + 88 ТЖ; probe exit 2 reproduced; deep sweep
+  all clean; +scoped re-run exit 0 over the 4 axe-fix files);
+  **baseline package ЧАСТЬ v1.4.0** (544 suite PNG +136 ТЖ 0 deleted, 25
+  per-component, 1267 unit, 2123 legs; register 14 commits / 204
+  PNG-events with forensics; per-epic inventory; ~1h review order; GATE
+  NOT EXECUTED — maintainer ratifies). CI chain recorded honestly in
+  the spec (3× timeout-cancel → 202beb1 → 36617540273 RED axe ×5 →
+  d02a483 → **36623061743 GREEN**). Lens-174 APPROVED + MINOR +
+  PATCH-NICE (both folded pre-execution). Next: 17.5 release prep
+  (versions ×6 → 1.4.0, CHANGELOG, RELEASE.md §11 Flow-A recipe,
+  HANDOFF; TAG = maintainer sanction ONLY).
