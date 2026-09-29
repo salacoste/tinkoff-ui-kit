@@ -2,7 +2,7 @@
 title: 'Story 16.6 — ТЖ article composition + ad-slot recipe + live walkthrough'
 type: 'feature'
 created: '2026-09-29'
-status: 'draft'
+status: 'executed'
 baseline_commit: 'cd52924'
 context:
   - '{project-root}/_bmad-output/planning-artifacts/epics-v5.md (Story 16.6 — the roster CLOSES at 16.5: this is a PATTERN story, zero new package API)'
@@ -78,10 +78,10 @@ context:
 ## Tasks & Acceptance
 
 **Execution:**
-- [ ] article-page pattern story (header + rail + prose flow + H1/byline + engagement bar recipe + skeleton + FR-22)
-- [ ] ad-slot recipe story in docs (tk-promo-card consumer-side, FR-21 split, empty variant)
-- [ ] imports guard test (ТЖ-only lines, loud attribution) green
-- [ ] README pattern pointer; full gates ×7 packages (test → lint → typecheck → build); NO test:visual locally
+- [x] article-page pattern story (header + rail + prose flow + H1/byline + engagement bar recipe + skeleton + FR-22)
+- [x] ad-slot recipe story in docs (tk-promo-card consumer-side, FR-21 split, empty variant)
+- [x] imports guard test (ТЖ-only lines, loud attribution) green
+- [x] README pattern pointer; full gates ×7 packages (test → lint → typecheck → build); NO test:visual locally
 
 **Acceptance Criteria:**
 - Given the article-page story file, when the imports guard runs, then every import resolves to a ТЖ module or `lit` — a bank path or `--tk-*` read fails the test naming the offending line.
@@ -107,4 +107,16 @@ context:
 
 ## Implementation Notes
 
-_(orchestrator fills: executor deviations, triage, lens verdicts, patch rounds, gates, side-by-side, baselines, walkthrough, CI)_
+**Executor round** (per plan; both stories + guard + README delivered in one pass). Triage found **1 MAJOR — the CANVAS-SCOPE LAW**: the executor's canvas chrome used OUTER descendant selectors (`.tjart-canvas p`, `.tjad-page > ul` reach-through), and an outer `(0,1,1)` descendant selector BEATS every `::slotted` rule of tj-prose — Chromium counts only the ::slotted() ARGUMENT's specificity — so story chrome repainted the slotted article flow (ink-300 + 12px rhythm on prose paragraphs, a 15px crushed H2 in the ad story). Patched to the tj-prose-story mold: canvas chrome NEVER descends (`.tjart-note` classes for notes, `.tjart-frame >`/`.tjad-page >` child combinators for headings; same-root comment in both files). MINORS: skeleton bone census authored from assumed line counts (flagged by lens with a runtime-parity demand), ad-slot demo label orphaned on collapse, scroll listener capturing a replaced node (lens: query FRESH per event). Lens verdict: PATCH-NEEDED → all findings patched (bone byline wrapped in a flex-row mirror block; `is-adfree` now hides the WHOLE slot incl. label; listener re-queries `#tjart-backrail` every event).
+
+**THE AXE COLLISION (spec bug, ratified deviation).** The frozen spec directed time-meta into «the restricted time-ink» (15/400 #808080) and engage counts onto `--tj-color-engage` — both are sub-AA BY token-table design (reference-time 3.949:1 on card; engage 2.434:1 light / 3.277:1 dark), pinned FAILING in tests/tj-contrast.test.ts RESTRICTED_PAIRS. Baseline mint surfaced it mechanically: the CI axe legs failed color-contrast on `time` / byline meta / engage counts (light+dark) + the ad-slot rail label. No ТЖ story had ever RENDERED a restricted ink before (16.2/16.3 components document them in prose only — that is WHY their axe passed). Resolution: story-side per the 16.2/16.3 news-card mold — card-ground meta text rides the AUTHORED AA step `--tj-color-ink-300` (5.099:1 on card), page-ground text rides `ink-100` (the tj-rail label mold, both themes); restricted inks stay documented table facts for opt-in reference-fidelity consumers and NEVER render in kit stories. The token layer was NOT retuned (the 15.2 RESTRICTED pins + reference fidelity stand). Chrome comment + RU prose + anatomy row updated to record the contract; the spec's «restricted time-ink» directive is recorded here as the deviation.
+
+**Gates.** Full chain green twice (post-patch and post-walkthrough-round): lint ✓ typecheck ✓ root tests **190/190** (incl. the NEW imports guard tests/tj-article-pattern-imports.test.ts + the consumed-tokens 16.6 dir-set flip: `patterns` joins the derived exemption set) ✓ build ✓. `&&`-chained throughout.
+
+**Baselines (orchestrator-minted, port 6007 single-owner).** 10 NEW PNGs: `visual-tj-article-page--{page-composition,anatomy,accessibility}-{light,dark}` + `visual-tj-ad-slot-recipe--{recipe,accessibility}-{light,dark}`. Mint round 1 failed the 3 axe legs above → explicit delete of the stale PNGs → story-side axe fix → scoped re-mint (`pnpm test:visual:update --grep tj-article-page` 18 passed; `--grep tj-ad-slot-recipe` 12 passed) with axe legs GREEN. Full-suite update run confirmed existing baselines byte-stable (0 modified). The walkthrough-round bone fix (below) touches ONLY the `display:none` skeleton subtree — zero impact on minted default-state baselines.
+
+**Side-by-side vision review — PASS** (both themes; `.playwright-cli/captures-v3/tj/tj-article-{viewport,fullpage}-2026-09-28.png`): composition carries the reference's structural truths — white reading card over gray page, icon-tile rail, header pill chips, quiet byline meta, engagement below the fold (confirmed on the reference viewport), NO scroll-back rail on the reference (opt-in OFF default correct), lead>body hierarchy, display pull-quote, blue in-body link. The reference's light byline meta IS the sub-AA restricted class — the authored AA step is the sanctioned deviation above. Reference ad surfaces (top carousel band, floating yellow overlay) are site-level ads, out of pattern scope; the Flow-C recipe stands on the accent-locator 760/290 registers. Dark leg (no article-dark reference exists): #20232A card over #12151C page, consistent with the home-dark capture; both legs axe-clean.
+
+**Live walkthrough — 22/22 PASS** (`.playwright-cli/verify/tj-article/walkthrough.mjs` + NOTES.md; docs dist rebuilt after the final patch): tab topology exactly 18 stops (hidden backrail contributes none); 2px token rings; like Enter/Space flips aria-pressed, label unchanged, demo 128→129; theme cycle ×3 with exact RU announcements + focus retention; skeleton `aria-busy` + zero tab stops + **zero layout shift (1310 vs 1310)**; scroll-back rail direction-based with the 120px floor, shown rail adds exactly 4 stops, hidden rail none; Esc inert at 1280; native-dark auto leg (attribute absent + OS dark renders dark; first click writes light); axe zero violations both themes. **One REAL story defect caught and fixed here: bone census drift 30px** — live paragraphs measure 4/4/3/**4** lines, the census authored 4/4/3/**3** (last paragraph bone `para-l3` vs a 120px live block); localized block-by-block via `probe-census.mjs`, fixed by flipping the last bone to `para-l4` + retuning the census comment. Five DRIVER-side bugs also fixed during the round (unscoped «Разборы» role query; Chromium sequential-focus-starting-point walks sampling the DOM tail after clicks — now focus the first tab stop directly; `body.focus()` no-op; child-in-display:none keeping its own computed display; native-dark leg needing the post-boot attribute removal the docs runtime writes). Full verdict detail in NOTES.md; live VO/NVDA stay maintainer-side (METHOD.md §SR).
+
+**Deviations ratified:** (1) restricted-ink → authored-AA-steps (THE AXE COLLISION above — the CI axe gate owns the rendered truth); (2) skeleton census retune 4/4/3/4 (the lens parity demand made mechanical); (3) everything else per frozen plan. Roster intact: zero new components/props/events/tokens/deps — `patterns/` is stories only.

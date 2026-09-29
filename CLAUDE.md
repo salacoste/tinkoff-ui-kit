@@ -563,3 +563,39 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   (4+5 stories × both themes), mint 1678/1678, 0 tracked modified;
   maintainer batch-confirm package = 78. Next: 16.6 article composition
   + ad-slot recipe + live walkthrough.
+
+- **2026-09-29 STORY 16.6 EXECUTED (code-head `04d172e`; CI run 36550125641
+  GREEN):** ТЖ article PATTERN story (zero new package API — roster stays
+  closed at 16.5; `src/patterns/` = stories only) + Flow-C ad-slot recipe
+  (docs-side, the sole both-families composition point) + imports guard +
+  live walkthrough 22/22. **CANVAS-SCOPE LAW (the lens MAJOR, the
+  load-bearing discovery):** an OUTER descendant selector (`.tjart-canvas p`,
+  0,1,1) BEATS every `::slotted` rule — Chromium counts only the ::slotted()
+  ARGUMENT's specificity — so story/page chrome NEVER descends into slotted
+  flow: notes carry a class (`.tjart-note`), doc headings scope to OWN
+  children (`.tjart-frame > h1/h2`, `.tjad-page > h1/h2` — the
+  `.tjprose-canvas > p` 16.1 mold; a mold regression, fixed as such).
+  **RESTRICTED-INK CONTRACT (the axe collision — a spec bug, ratified
+  deviation):** the 15.2 RESTRICTED_PAIRS (reference-time 3.949:1, engage
+  2.434:1 light / 3.277:1 dark) are sub-AA BY token-table design and had
+  NEVER rendered before 16.6 — minting them into 15px/400 text failed the CI
+  axe legs (color-contrast). The CI axe GATE owns the rendered truth:
+  card-ground meta text rides the AUTHORED AA step ink-300 (5.099:1), page-
+  ground text rides ink-100 (the tj-rail mold, both themes — ink-300 is
+  card-only: 4.47:1 on light page gray misses); restricted inks stay
+  documented table facts for opt-in reference-fidelity consumers, NEVER
+  rendered by kit stories. Token layer untouched (RESTRICTED pins stand).
+  **Skeleton census mold:** bones mirror the live flow's MEASURED line counts
+  (calc(N × leading)); prose rhythm = the flagged 25px literal; walkthrough
+  proves zero layout shift (1310=1310) — and the census is RETUNED on probe,
+  not trusted: the walkthrough round caught a 30px drift (live 4/4/3/4 vs
+  authored 4/4/3/3) that block-by-block probing localized to one bone.
+  Walkthrough 22/22: 18-stop tab topology (hidden backrail = 0 stops), like
+  toggle emit-only, theme cycle ×3 + native-dark auto leg (attribute absent +
+  OS dark; the docs boot runtime writes `light` — the auto leg needs
+  post-boot removal), scroll-back rail opt-in (shown = +4 stops exactly),
+  Esc inert, axe 0 both themes. Baselines: 10 NEW (article ×3 stories +
+  ad-slot ×2, light+dark), mint axe legs green, existing byte-stable.
+  Gates: 190/190 root tests (guard + consumed-tokens `patterns/` flip).
+  Next: 17.1+17.2 batch (ТЖ a11y sweep + dark sweep) → 17.3 docs → 17.4
+  ledger/ad-language audit → 17.5 release prep (TAG = maintainer sanction).
