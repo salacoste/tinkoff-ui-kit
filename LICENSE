@@ -36,7 +36,18 @@ license — nothing in the MIT grant extends to them:
    maintainer with Monotype Imaging Inc. and ParaType. The terms governing
    these files are stated in packages/tokens/fonts/LICENSE-FONTS.md.
 
-2. Vendored transitions.dev recipes — transitions/t-*.css and
+2. Bundled ТЖ fonts — packages/tj-fonts/fonts/ (xcharter-*.woff2) and the
+   package's stylesheet fonts.css. These are FREE fonts distributed under
+   the Bitstream Charter license terms (use, copy, modify, sublicense,
+   sell and redistribute, with the license notice kept intact on all
+   copies). The verbatim grant, the XCharter attribution and the
+   redistribution terms are stated in packages/tj-fonts/LICENSE-FONTS.md;
+   the package pillkit-tj-fonts is a mixed-license payload
+   ("SEE LICENSE IN LICENSE"). Graphik is deliberately absent from this
+   payload: the Commercial Type EULA grants usage licenses, not
+   redistribution rights.
+
+3. Vendored transitions.dev recipes — transitions/t-*.css and
    transitions/_root.css. These files are vendored, unmodified, from the
    transitions.dev free recipes pack and remain subject to the upstream
    usage terms (https://transitions.dev/terms.html): every recipe — free or
