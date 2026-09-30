@@ -17,11 +17,13 @@ import { css } from 'lit';
  * rule — the token sheet carries no counterpart:
  * - the 56px compressed height (h72 IS a token, h56 is not; the
  *   compression target is unprobed),
- * - the chip pill's 36px height / 12px x-inset (capture-estimated chrome
- *   geometry — the pill treatment itself is reference-licensed, the exact
- *   metrics are maintainer-confirms),
+ * - the chip pill's 40px height / 12px x-inset (REMEASURED 2026-09-30 on
+ *   the stable captures — 7 nav chips × 2 pages, zero spread; queue (e)
+ *   closing the 16.5 estimate) — the pill treatment itself is
+ *   reference-licensed,
  * - the 44×44 theme-button hit floor + the CTA's 44×44 floor and its
- *   derived 4px inset-block (36px pill) / 15px inline padding,
+ *   derived 7px inset-block (30px pill — remeasured, probe-notes-agreed) /
+ *   15px inline padding,
  * - the 24px glyph box of the decorative fallback (icon metric).
  *
  * On-scale spacing picks (unmeasured — maintainer confirms at the
@@ -114,7 +116,7 @@ export const headerStyles = css`
     box-sizing: border-box;
     display: inline-flex;
     align-items: center;
-    min-height: 36px; /* FLAG: authored pill height (capture estimate 36–40) */
+    min-height: 40px; /* REMEASURED: 7 nav chips × 2 captures, zero spread (queue (e), 2026-09-30) */
     padding-inline: 12px; /* FLAG: authored pill x-inset (4-grid pick) */
     border-radius: var(--tj-radius-chip);
     background: var(--tj-color-card);
@@ -166,11 +168,11 @@ export const headerStyles = css`
   /* The header's OWN CTA — the compact-inset mold re-implemented here (the
      no-cross-compose norm): a 44×44 invisible anchor, the visible pill
      painted by ::before. The 2026-09-28 capture shows the header CTA as a
-     FULLY-ROUNDED pill ~36–40px tall (radius = half height) — NOT the
-     article CTA's 5px radius-cta: the pill runs the full radius token at a
-     36px height (inset-block 4px = (44−36)/2, 4-grid). Dark flips fill/ink
-     through the token layer alone. NO hover state (the CTA ruling —
-     unprobed). */
+     FULLY-ROUNDED 30px pill (98×30, identical on both captures; the 16.5
+     probe-notes already recorded h30) — NOT the article CTA's 5px
+     radius-cta: the pill runs the full radius token at a 30px height
+     (inset-block 7px = (44−30)/2). Dark flips fill/ink through the token
+     layer alone. NO hover state (the CTA ruling — unprobed). */
   .bar__cta {
     box-sizing: border-box;
     display: inline-flex;
@@ -193,7 +195,7 @@ export const headerStyles = css`
   .bar__cta::before {
     content: '';
     position: absolute;
-    inset-block: 4px; /* FLAG: (44−36)/2 — the capture's 36–40px pill at the 4-grid */
+    inset-block: 7px; /* (44−30)/2 — remeasured 30px pill (both captures + probe-notes agree) */
     inset-inline: 0;
     border-radius: var(--tj-radius-full); /* fully rounded — the capture's pill ends */
     background: var(--tj-color-cta-fill);

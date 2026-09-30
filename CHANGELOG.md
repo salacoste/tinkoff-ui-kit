@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- tj-header pill metrics remeasured against the stable reference captures
+  (spec 18.1, queue v1.4.0-(e)): nav chips 36→40px (7 chips × 2 captures,
+  zero spread), the header CTA pill 36→30px with its inset-block 4→7px
+  ((44−30)/2; the 16.5 probe-notes already recorded h30). Visual
+  baselines intentionally NOT re-minted — the delta is sub-threshold
+  (<1.5% pixel law); the computed truth is pinned in unit tests.
+
 ## [1.4.0] - 2026-09-30
 
 ### Added — v1.4.0 surface (epics-v5: the Т-Журнал / ТЖ editorial family)

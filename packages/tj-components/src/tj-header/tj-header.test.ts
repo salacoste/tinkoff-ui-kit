@@ -19,7 +19,7 @@ import {
  * announcements, the inert-CTA href rule, the scroll observer flipping the
  * internal data-scrolled flag, and the css.ts pins (sticky z token, h72→h56
  * compress over motion tokens, NO divider, card pill chips, fully-rounded
- * 36px CTA pill, NO hover, zero theme branches).
+ * 30px CTA pill (remeasured 2026-09-30, spec 18.1), NO hover, zero theme branches).
  *
  * happy-dom provides NO layout: scroll positions are stubbed globals and the
  * compress geometry is pinned at the css.ts level (real measurement lives in
@@ -391,9 +391,9 @@ describe('tj-header styles (css.ts pins)', () => {
     expect(cssText).not.toContain('text-decoration: underline');
   });
 
-  it('the CTA: 44 floor with the fully-rounded 36px capture pill (4px inset, 15px inline, cta tokens)', () => {
+  it('the CTA: 44 floor with the fully-rounded 30px capture pill (7px inset, 15px inline, cta tokens)', () => {
     expect(cssText).toContain('.bar__cta::before');
-    expect(cssText).toContain('inset-block: 4px');
+    expect(cssText).toContain('inset-block: 7px');
     expect(cssText).toContain('padding-inline: 15px');
     expect(cssText).toContain('border-radius: var(--tj-radius-full)');
     expect(cssText).toContain('background: var(--tj-color-cta-fill)');

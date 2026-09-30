@@ -103,7 +103,7 @@ const DEFAULT_CTA_LABEL = 'Написать';
  *
  * THE CTA: `cta-href`/`cta-label` render the header's OWN anchor (the
  * no-cross-compose norm — the tj-cta compact-inset mold re-implemented
- * here, never composed): 44×44 invisible hit floor, a fully-rounded 36px
+ * here, never composed): 44×44 invisible hit floor, a fully-rounded 30px
  * visible pill via tokens (`--tj-radius-full` +
  * `--tj-color-cta-fill`/`--tj-color-cta-ink`; dark re-resolves to
  * the inverted pill, zero branches — the 2026-09-28 capture's pill, NOT

@@ -760,3 +760,42 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   place; HANDOFF header/§2/§4 — queue item (b) CLOSED, (a) de-blocked
   to retrospective; spec 17.5 addendum. **v1.4.0 IS RELEASED (git-tag
   train, `private: true` intact, npm commands never run).**
+
+- **2026-09-30 POST-v1.4.0 QUEUE — (a) batch-confirm CLOSED + (e)
+  remeasure/18.1 EXECUTED + (d) brief (same window, directive «давай
+  продолжать согласно плана» + «продолжаем разработку»):**
+  **(a) РЕТРО-ПРИСЕСТ ДЕЛЕГИРОВАН** (прецедент v1.3.0): fan-out шесть
+  групп A–F по порядку v1.4.0-§3 + ImageMagick-пиксели ground truth +
+  source/ledger-grounding + montage-композиты. Итог: **136 suite-ТЖ +
+  3 per-component — все ✅, 0 флагов, 0 перезаписей** (A 30/30, B 28/28,
+  C 18/18 — композер 88px/r20/770px пиксель-пруф, D 22/22, E 13/13,
+  F 28/28); банковские касания механически (26×R100 + 2 cookie eyeball
+  + монопины 20d3796 + цепочка getting-started 776→821→866 + 4
+  контент-ретейка 58d979e + 10 axe-фикс рерайтов d02a483); **2 поправки
+  реестра ратифицированы** (20d3796 = 22 ТЖ-события; 67b7fd9 = ТЖ
+  getting-started — банковские ретейки легли в 58d979e; арифметика 204
+  не меняется). ✅-блок — ЧАСТЬ v1.4.0 baseline-review-package.md.
+  Уроки: группа B пала на автокомпакте от полноразмерных PNG — хвост
+  перезапущен D/F-молдом «пиксели + ОДИН montage-комозит + ≤2
+  full-size vision» (теперь дефолт присестов); vision-API 429
+  аккаунт-лимит на пике fan-out — граница записана честно, дозорный
+  проход по 4 кандидатам довыполнен. **(e) ПЕРЕМЕР (делегированный,
+  стабильные капчи): чипы 40px** (7 × 2 капчи, ноль разброса; 30px
+  иконки + 5+5 инфлекции = 40; метод самопроверен — авторские 36
+  читались как 36) **/ CTA «Написать» 30px** (98×30 байт-в-байт на обеих
+  капчах; probe-notes 16.5 уже знал h30 — авторские 36 были завышением)
+  → **spec 18.1 EXECUTED** (нумерация 18.x открыта этим фиксом): css.ts
+  ×4 блока + test pin 7px + проза ×4; `--tj-radius-chip: 20px` не тронут
+  (уже 40/2); gen-дифф ровно 1 файл (CEM); юнит 247/247, build/lint/
+  typecheck EXIT 0; **полный постфиксный прогон 2123/2123 GREEN
+  (12.5 мин) — упавшее множество ПУСТО, реминт отменён законом 1.5%**
+  (прецедент 5.4-F1: PNG стареет, computed-истина в пинах). CHANGELOG
+  [Unreleased] Fixed. **(d)** бриф-меморандум Graphik/Charter
+  (`briefs/brief-tj-fonts-graphik-charter-2026-09-30.md`; опции A/B/C;
+  решение мейнтейнера, ничего не блокирует). **(f)** avatar-menu/kebab
+  open-state БЛОКИРУЕТСЯ на доставке мейнтейнера (ранбук
+  `captures-v3/admin/RUNBOOK-followup-captures.md`); **(c)** живой VO —
+  мейнтейнер (механизуемая половина закрыта 17.2). Коммиты: присест-запись
+  отдельным коммитом + фикс-коммит (18.1 + бриф + CHANGELOG + HANDOFF +
+  этот штамп), один push; CI-вердикт головы — по run id ПОСЛЕ факта,
+  в память окна (практика 17.5: рекурсивных штамп-коммитов не заводим).
