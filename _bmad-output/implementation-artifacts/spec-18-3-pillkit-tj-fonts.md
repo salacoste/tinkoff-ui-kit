@@ -107,7 +107,19 @@
 - **База:** CI 36709057024 (18.2, head 827f0c6) = **success** — коммит
   18.3 разрешён (AC-9).
 
-## Verification
+## Fix round (CI 36715005825)
+
+Первый пуш `fccfe44` — CI **failure за 26 с**: `pnpm install
+--frozen-lockfile` → `ERR_PNPM_PACKAGE_MANAGER_NO_IMPORTER`: у
+pnpm-lock.yaml нет `importers["packages/tj-fonts"]`. Корень — pnpm 12.5.1
+quirk: у пакета НОЛЬ зависимостей ⇒ локальный install (и
+`--lockfile-only`) считает дерево «Already up to date» и НЕ дописывает
+пустой импортёр, а frozen-режим строго требует запись (прецедент-форма в
+том же файле: `packages/tj-tokens: {}`). Фикс: ручная вставка
+`packages/tj-fonts: {}` в алфавитную позицию (tj-components → tj-fonts →
+tj-react) + локальное доказательство `pnpm install --frozen-lockfile`
+GREEN. Урок в CLAUDE.md-стамп: новый workspace-пакет = проверять
+importers-запись в lockfile ДО пуша (локальный «up to date» лжёт).
 
 - `pnpm vitest run tests/tj-fonts-policy.test.ts` → **7/7 passed**
   (4 инварианта тройки + 3 carrier-теста; фикс регэкспа см. Notes).
