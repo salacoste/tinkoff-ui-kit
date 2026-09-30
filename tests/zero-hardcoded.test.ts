@@ -52,12 +52,15 @@ const SCAN_ROOTS: Readonly<Record<string, readonly string[]>> = {
   'packages/react': ['src'],
   'packages/tj-components': ['src'],
   'packages/tj-react': ['src'],
+  // tj-fonts (18.3): the fonts carrier — fonts.css joins the FR-1 net (it is
+  // authored CSS; clean of color/z-index literals by content).
+  'packages/tj-fonts': ['.'],
   'packages/docs': ['src', '.storybook'],
 };
 const SCANNED_EXTENSION = /\.(ts|tsx|css)$/;
 /** Style-bearing extensions the scanner does NOT read — finding one in a scanned src/ is a tripwire. */
 const UNSCANNED_STYLE_EXTENSION = /\.(scss|less|html|vue|svelte|jsx|mdx)$/;
-/** The seven workspace packages (AD-4 v5: bank + ТЖ families + docs); anything else under packages/ is unexpected. */
+/** The eight workspace packages (AD-4 v5 + 18.3 tj-fonts carrier); anything else under packages/ is unexpected. */
 const KNOWN_PACKAGE_DIRS = new Set([
   'tokens',
   'components',
@@ -65,6 +68,7 @@ const KNOWN_PACKAGE_DIRS = new Set([
   'tj-tokens',
   'tj-components',
   'tj-react',
+  'tj-fonts',
   'docs',
 ]);
 
@@ -168,7 +172,7 @@ describe('FR-1 zero-hard-coded values (spec 1.2)', () => {
     }
   });
 
-  it('packages/ holds only the seven known workspace packages', () => {
+  it('packages/ holds only the eight known workspace packages', () => {
     const unknown: string[] = [];
     for (const entry of readdirSync(join(REPO_ROOT, 'packages'))) {
       let isDirectory = false;

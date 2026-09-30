@@ -94,7 +94,7 @@ Per-slot tokens from the `typography` block: `--tj-text-<slot>-size` / `-weight`
 | Token | Value | Notes |
 | --- | --- | --- |
 | `--tj-font-ui` | `Graphik, Inter, -apple-system, system-ui, "Segoe UI", "Helvetica Neue", sans-serif` |  |
-| `--tj-font-reading` | `Charter, "Bitstream Charter", "PT Serif", Georgia, serif` |  |
+| `--tj-font-reading` | `XCharter, Charter, "Bitstream Charter", "PT Serif", Georgia, serif` |  |
 
 Family slots (FR-20): **ui = Graphik** (grotesque — UI and all headings), **reading = Charter** (serif — the article reading register, the strongest ТЖ identity marker). Stacks carry the reference family names first (licensed consumers auto-pickup, the OQ-2 policy) with open cyrillic-capable fallbacks behind (Inter / PT Serif, OQ-8). No font files are bundled — 15.3 owns fonts; these render as DESIGN.md strings.
 

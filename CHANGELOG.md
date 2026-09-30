@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `pillkit-tj-fonts` — the ТЖ fonts carrier package (spec 18.3, queue
+  v1.4.0-(d), maintainer rulings B/split/XCharter): bundled XCharter ×4
+  faces (400 / 400 italic / 700 / 700 italic, woff2, no subsetting) — the
+  free Charter idiom WITH Cyrillic under the Bitstream Charter license
+  terms (verbatim grant + Panov/Sharpe attribution in LICENSE-FONTS.md;
+  the rename to "XCharter" is the license's rename clause at work).
+  Graphik is deliberately absent — the Commercial Type EULA grants usage,
+  not redistribution — and travels as a commented `@font-face` recipe in
+  `fonts.css`. The `--tj-font-reading` slot now leads with XCharter; the
+  `pillkit-tj-*` trio stays zero-fonts by test (`tests/tj-fonts-policy.test.ts`
+  re-scoped + a carrier describe pinning faces/manifest/licenses).
+
 ### Fixed
 
 - tj-header pill metrics remeasured against the stable reference captures

@@ -33,12 +33,16 @@ export const PACKAGE_DIRS = [
   'packages/tj-tokens',
   'packages/tj-components',
   'packages/tj-react',
+  'packages/tj-fonts',
   'packages/docs',
 ];
 
 /**
  * Per-package allowed `pillkit-*` specifiers (AD-4 allowed directions).
  * tokens and tj-tokens are each their lane's root: nothing allowed.
+ * tj-fonts (18.3) is the fonts CARRIER — an asset payload outside the FR-17
+ * family lanes: it imports nothing, and (derived from PACKAGE_DIRS) the ТЖ
+ * trio may not import IT — the boundary twin of the zero-fonts policy test.
  */
 export const ALLOWED_SPECIFIERS = {
   'packages/tokens': [],
@@ -47,7 +51,11 @@ export const ALLOWED_SPECIFIERS = {
   'packages/tj-tokens': [],
   'packages/tj-components': ['pillkit-tj-tokens'],
   'packages/tj-react': ['pillkit-tj-components'],
-  // docs may import every kit package of BOTH families (AD-4 v5).
+  'packages/tj-fonts': [],
+  // docs may import every kit package of BOTH families (AD-4 v5) + the fonts
+  // carrier (18.3): its stories SHOW the consumer import line — the same
+  // display-text precedent as the tokens.css line — and a future story may
+  // load the real faces.
   'packages/docs': [
     'pillkit-react',
     'pillkit-components',
@@ -55,13 +63,15 @@ export const ALLOWED_SPECIFIERS = {
     'pillkit-tj-react',
     'pillkit-tj-components',
     'pillkit-tj-tokens',
+    'pillkit-tj-fonts',
   ],
 };
 
 /**
  * Per-package scan roots — the boundary test's ONE net covers docs
  * `.storybook` (the Storybook config dir imports workspace packages and must
- * not sit outside the matrix walk).
+ * not sit outside the matrix walk). tj-fonts has no TS sources today (fonts +
+ * one stylesheet); root '.' keeps both nets armed for the day it does.
  */
 export const SCAN_ROOTS = {
   'packages/tokens': ['src'],
@@ -70,6 +80,7 @@ export const SCAN_ROOTS = {
   'packages/tj-tokens': ['src'],
   'packages/tj-components': ['src'],
   'packages/tj-react': ['src'],
+  'packages/tj-fonts': ['.'],
   'packages/docs': ['src', '.storybook'],
 };
 
@@ -78,7 +89,7 @@ export const FILE_TYPES = ['ts', 'tsx'];
 
 /** The canonical allowed-directions string — every consumer embeds it verbatim. */
 export const CANONICAL_DIRECTIONS =
-  'components→tokens, react→components, tj-components→tj-tokens, tj-react→tj-components, docs→{react, components, tokens, tj-react, tj-components, tj-tokens}';
+  'components→tokens, react→components, tj-components→tj-tokens, tj-react→tj-components, docs→{react, components, tokens, tj-react, tj-components, tj-tokens, tj-fonts}';
 
 const packageNameOf = (packageDir) => `pillkit-${packageDir.split('/')[1]}`;
 

@@ -97,7 +97,7 @@ export const typographyTokens = {
   '--tj-text-body-link-size': '21px',
   '--tj-text-body-link-weight': '400',
   '--tj-font-ui': 'Graphik, Inter, -apple-system, system-ui, "Segoe UI", "Helvetica Neue", sans-serif',
-  '--tj-font-reading': 'Charter, "Bitstream Charter", "PT Serif", Georgia, serif',
+  '--tj-font-reading': 'XCharter, Charter, "Bitstream Charter", "PT Serif", Georgia, serif',
 } as const;
 
 /** Radius tokens (values: DESIGN.md `rounded`). */

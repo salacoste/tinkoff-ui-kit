@@ -231,19 +231,24 @@ export default defineConfig({ resolve: { dedupe: ['react', 'react-dom'] } });</c
 
       <h2>Шрифты</h2>
       <p>
-        Байтов шрифтов кит не дистрибутирует (OQ-8). Слоты
-        <code>--tj-font-ui</code> / <code>--tj-font-reading</code> несут
-        лицензируемые семейства референса первыми — Graphik (гротеск:
-        интерфейс и заголовки) и Charter (сериф: колонка чтения, самый
-        сильный идентификатор ТЖ) — с открытыми cyrillic-способными fallback
-        (Inter / PT Serif): без лицензий рендерится fallback-цепочка. Этот
+        Читающий сериф кит дистрибутирует сам: пакет
+        <code>pillkit-tj-fonts</code> несёт XCharter ×4 начертания (woff2,
+        Bitstream-лицензия — свободное распространение) — Charter-идиому С
+        кириллицей, тогда как оригинальный Bitstream Charter латинский
+        (228 глифов). Слот <code>--tj-font-reading</code> ведёт XCharter, так
+        что достаточно одного импорта рядом с токеновым листом:
+        <code>import 'pillkit-tj-fonts/fonts.css';</code>. Гротеск
+        <code>--tj-font-ui</code> остаётся Graphik-первым, но байтов Graphik
+        в ките нет и не будет: EULA Commercial Type не даёт права
+        перераспределения — держатели лицензии используют рецепт
+        <code>@font-face</code> из комментария в <code>fonts.css</code> (или
+        <code>packages/docs/src/local-fonts/</code>, gitignored, по шаблону
+        <code>local-fonts.example.css</code>). Тройка
+        <code>pillkit-tj-*</code> остаётся zero-fonts по тесту; этот
         документационный харнесс пинит оба слота на локально раздаваемые
-        Inter / PT Serif (детерминированные рендеры на любой машине);
-        лицензионные woff2 кладите в
-        <code>packages/docs/src/local-fonts/</code> (папка gitignored) по
-        шаблону <code>local-fonts.example.css</code>. Своё семейство
-        ставьте ПЕРВЫМ в стеке и повторите fallback в конце — значение слота
-        заменяется целиком.
+        Inter / PT Serif (детерминированные рендеры на любой машине). Своё
+        семейство ставьте ПЕРВЫМ в стеке и повторите fallback в конце —
+        значение слота заменяется целиком.
       </p>
 
       <h2>Рекламный модуль в ТЖ-потоке (Flow C)</h2>

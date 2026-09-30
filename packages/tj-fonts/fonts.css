@@ -1,0 +1,72 @@
+/**
+ * pillkit-tj-fonts — bundled reading fonts for the ТЖ editorial family.
+ *
+ * SEPARATELY LICENSED ASSETS — the woff2 files in fonts/ are NOT covered by
+ * any MIT-style license; they ship under the Bitstream Charter license terms
+ * (free use, copy, modify, sublicense, sell and redistribute; this notice and
+ * the license text travel with every copy — see LICENSE-FONTS.md next to this
+ * file).
+ *
+ * XCharter is the Charter idiom WITH Cyrillic (the original Bitstream
+ * Charter carries 228 Latin-only glyphs); the rename from "Bitstream
+ * Charter" to "XCharter" is itself compliance with the license clause:
+ * modified fonts must not carry the original name. Extension © 2009–2012
+ * Andrey Panov, © 2013–2024 Michael Sharpe (CTAN fonts/xcharter 1.26).
+ *
+ * Import alongside the ТЖ token sheet — the reading slot leads with
+ * XCharter, so importing this sheet is all it takes:
+ *   import 'pillkit-tj-tokens/tokens.css';
+ *   import 'pillkit-tj-fonts/fonts.css';
+ *
+ * Graphik (the UI-family slot leader) is NOT and will not be bundled:
+ * the Commercial Type EULA grants usage licenses, not redistribution
+ * rights. The commented recipe below is the consumer-side path.
+ */
+
+@font-face {
+  font-family: 'XCharter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/xcharter-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'XCharter';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/xcharter-400italic.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'XCharter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./fonts/xcharter-700.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'XCharter';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./fonts/xcharter-700italic.woff2') format('woff2');
+}
+
+/* ---------------------------------------------------------------------------
+ * Graphik — RECIPE ONLY (Commercial Type; the EULA grants usage licenses,
+ * not the right to redistribute font files, so this public repository must
+ * not carry a single Graphik byte). Consumers holding a Commercial Type
+ * web/app license: drop the licensed woff2 files next to this sheet (or on
+ * your asset host) and uncomment, adjusting paths and the covered weights.
+ *
+ * @font-face {
+ *   font-family: 'Graphik';
+ *   font-style: normal;
+ *   font-weight: 400;  // add one @font-face per licensed weight/style
+ *   font-display: swap;
+ *   src: url('./local/graphik-400.woff2') format('woff2');
+ * }
+ * ------------------------------------------------------------------------ */

@@ -102,7 +102,7 @@
      these render as DESIGN.md strings. An override replaces the whole
      value: re-include the fallback stack. */
   --tj-font-ui: Graphik, Inter, -apple-system, system-ui, "Segoe UI", "Helvetica Neue", sans-serif;
-  --tj-font-reading: Charter, "Bitstream Charter", "PT Serif", Georgia, serif;
+  --tj-font-reading: XCharter, Charter, "Bitstream Charter", "PT Serif", Georgia, serif;
 }
 
 /* Radius — DESIGN.md `rounded` (pixel-probed 2026-09-28: cards 25 / panels 30 — the vision trio deleted; icon-tile 7 on the 30×30 rail tiles; badge 50%). Quiet geometry: r5 CTAs, not pills. */

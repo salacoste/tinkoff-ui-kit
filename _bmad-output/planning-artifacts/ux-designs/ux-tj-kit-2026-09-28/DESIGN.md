@@ -150,8 +150,13 @@ typography:
   # Stacks carry the reference's exact family names first (licensed consumers
   # auto-pickup — the OQ-2 policy); open fallbacks per OQ-8 (UX proposal:
   # Inter grotesque / PT Serif reading — final at the token story).
+  # 18.3 (queue (d), ruling split/XCharter): XCharter leads the reading stack —
+  # the FREE Charter idiom WITH Cyrillic (Bitstream terms, renamed per the
+  # license clause), bundled in pillkit-tj-fonts; original "Bitstream Charter"
+  # (Latin-only, 228 glyphs) stays for consumers who installed it; Graphik
+  # remains slot+recipe only (Commercial Type EULA grants no redistribution).
   font-ui: 'Graphik, Inter, -apple-system, system-ui, "Segoe UI", "Helvetica Neue", sans-serif'
-  font-reading: 'Charter, "Bitstream Charter", "PT Serif", Georgia, serif'
+  font-reading: 'XCharter, Charter, "Bitstream Charter", "PT Serif", Georgia, serif'
   # Display/heading register (Graphik) — per-surface h1 scale from computed probes
   display-featured: { fontSize: 55px, fontWeight: '700', lineHeight: '1.1', fontFamily: '{typography.font-ui}', note: '/pro/ featured course cards — the largest type on the site' }
   article-h1: { fontSize: 45px, fontWeight: '700', lineHeight: '50px', fontFamily: '{typography.font-ui}', note: 'reading column w764; family RESOLVED probe9 (2026-09-28, live article): computed Graphik 700/45px/50px, fonts.check true — the site ships Graphik as a VARIABLE face (loaded 400+600, covering 700)' }

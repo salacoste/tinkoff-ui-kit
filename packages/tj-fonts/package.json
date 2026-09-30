@@ -1,0 +1,38 @@
+{
+  "name": "pillkit-tj-fonts",
+  "version": "1.4.0",
+  "description": "Bundled reading fonts for pillkit-tj (the ТЖ editorial family) — XCharter: the free Charter idiom with Cyrillic, under the Bitstream Charter license terms; Graphik stays a slot + recipe (bring your own licensed files).",
+  "keywords": [
+    "pillkit",
+    "pillkit-tj",
+    "fonts",
+    "xcharter",
+    "charter",
+    "cyrillic",
+    "serif",
+    "editorial"
+  ],
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/salacoste/tinkoff-ui-kit.git",
+    "directory": "packages/tj-fonts"
+  },
+  "type": "module",
+  "exports": {
+    "./fonts.css": "./fonts.css",
+    "./fonts/*": "./fonts/*",
+    "./LICENSE-FONTS.md": "./LICENSE-FONTS.md"
+  },
+  "files": [
+    "fonts",
+    "fonts.css",
+    "LICENSE",
+    "LICENSE-FONTS.md",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "private": true
+}
