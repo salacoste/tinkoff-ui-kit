@@ -1,7 +1,7 @@
 # Spec 18.4 — Documentation actualization post-18.3 (factual sync across consumer surfaces)
 
-- **status:** EXECUTING 2026-09-30 (orchestrator; docs-only round, no component/story text changes → no baseline impact expected)
-- **baseline_commit:** `8b1f0d9` (штамп-коммит 18.3; CI 36718261116 вердикт — по факту, коммит 18.4 поверх зелёной базы)
+- **status:** EXECUTED 2026-09-30 (orchestrator; docs-only round; **CI run 36721958634 = success** on head `87538af` — вердикт по API после факта)
+- **baseline_commit:** `8b1f0d9` (штамп-коммит 18.3; CI 36718261116 = success — база зелёная)
 - **триггер:** запрос мейнтейнера «саммари по проекту + отвалидировать и актуализировать фактическую документацию».
 
 ## Найденные устаревания (факт-чек по дереву)
