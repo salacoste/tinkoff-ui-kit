@@ -866,3 +866,46 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   `@font-face` не пишем даже в прозе.** Гейты: test 200/200 + lint +
   typecheck EXIT 0; стори-тексты не менялись → базлайны не затронуты.
   Коммит `87538af`, **CI 36721958634 = success**.
+
+- **2026-09-30 LATE-3 — (19.1) tk-menu-popover EXECUTED (Epic 19 «admin
+  follow-up» открыт; санкция «ok lets continue»; материал = follow-up
+  pack (f), 5 PNG captures-v3/admin, ПД-заливки проверены):** атом +
+  `tk-menu-item` / `tk-menu-divider` в `src/menu-popover/`; APG-меню
+  поверх overlay-контроллера (popover-API primary; happy-dom —
+  container-fallback молда select). **Anchor-wiring редизайн по ходу
+  раунда: happy-dom НЕ стреляет slotchange при ПЕРВИЧНОЙ раскладке слота**
+  — биндинг якоря не кэшируется: pull-resolve `#anchorElement` из
+  assignedElements + host-делегирование клика/клавиш (молд tk-tooltip),
+  `#pathHitsAnchor` по composedPath; попутный факт: второй
+  `slot="anchor"` НЕ замещает первый (проектируются оба, [0] выигрывает).
+  Позиционирование: **`alignment: 'start' | 'end'` в
+  `computeFloatingPosition`** (прецедент matchAnchorWidth — новая опция,
+  не смена контракта; валидация броском + 6 тестов). Событийность §9:
+  `open`/`open-change` + `select` (деталь = строка); молчание первого
+  рендера — флаг `#hasRenderedOnce` в `updated()` БЕЗУСЛОВНО (old-value
+  семантика Lit при апгрейде атрибутов даёт null → ложный выстрел).
+  Токены: панель — нейтрали + хуки `--tk-menu-popover-*` (fill/border/
+  radius/width/divider), ноль жёлтого; строки 44px поверх замера ≈40±2
+  (пол A11y — закон); деструктив = красный текст без заливки; БЕЗ
+  `aria-controls` (idref в shadow-дерево, прецедент select/axe).
+  Стори: 9 (песочница с логом, открытое меню, варианты, паттерны
+  avatar-menu c header-слотом / table-kebab / header-overflow, темизация,
+  чек-лист, API); плитка-аватар = identity-пара primary (рулирование:
+  плитка — ХРОМ ТРИГГЕРА, «ноль жёлтого» покрывает панель). Fix-раунд
+  визуала: (1) axe `button-name` — иконочный кебаб-триггер без имени →
+  `aria-label` обеим кнопкам (пикселей не меняет); (2) **Open-стори у
+  ЛЕВОГО края клампила 280px панель к viewport и прятала контракт
+  flush-правых-краёв** → фигура перенесена вправо (режим кадров консоли),
+  базлайны переминчены явно; (3) getting-started--page легитимно вырос на
+  ряд индекса (3916→3937px) — реминт явно. Гаранты: hidden-guard 33→37
+  (28 листов, список дедуплирован Set — menu-popover даёт 4 листа),
+  event-map, CEM + 3 обёртки, sweep VII строка (1 стоп / ≥5 поверхностей,
+  measured). Покрытие: unit 29 (suite 200/200) · отфильтрованный visual
+  36/36 · регион 2/2 (fixed / z-токен / ниже якоря / flush ≤1px / ≥270px
+  пины; top-layer дрейф-защита вне body-capture) · **полный compare
+  2182/2182 GREEN (двухпроходный)**. Уроки: `-g "menupopover"` НЕ матчит
+  регион-спеку (grep по title — запускать файлом) и ран в `| tail` без
+  `pipefail` глотает exit-код. Коммит `9bdd14d` (52 файла), **CI
+  36749011384 = success** (вердикт по API после факта). CHANGELOG
+  [Unreleased] Added. Спека EXECUTED с таблицей capture→токен и 10
+  рулированиями.
