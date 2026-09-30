@@ -799,3 +799,49 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   отдельным коммитом + фикс-коммит (18.1 + бриф + CHANGELOG + HANDOFF +
   этот штамп), один push; CI-вердикт головы — по run id ПОСЛЕ факта,
   в память окна (практика 17.5: рекурсивных штамп-коммитов не заводим).
+
+- **2026-09-30 LATE — (18.2) README-freshness GREEN + (18.3)
+  pillkit-tj-fonts EXECUTED (queue (d) закрыт живыми рулингами B /
+  сплит / XCharter; то же окно, санкция «ok lets fix and continue»):**
+  **(18.2)** тег-пин v1.4.0 (README + банковский getting-started, где
+  застыл v1.0.0), ловушка devEngines (`pnpm init` v12 пишет caret-спеку),
+  тип `--prefer-offline`; пара базлайнов переминтована (явное удаление →
+  scoped), полный compare 2123/2123 (12.2 мин). Коммит `827f0c6`, **CI
+  36709057024 = success**. **(18.3)** рулинги мейнтейнера (живые ответы):
+  модель B (Daytona-молд, отдельный НЕ-MIT шрифтовой пакет) / сплит
+  (Charter-идиом бандлим, Graphik слот+рецепт — EULA Commercial Type без
+  редистрибуции) / XCharter (кириллица 1144 глифов; оригинал Bitstream
+  Charter латинский 228, cmap-проверено). Пакет `packages/tj-fonts`:
+  4 woff2 (CTAN xcharter 1.26 OTF → fonttools, без сабсеттинга;
+  сессионный конвейер /tmp), fonts.css (+ЗАКОММЕНТИРОВАННЫЙ рецепт
+  Graphik), LICENSE-FONTS.md (дословный Bitstream-грант + атрибуция
+  Panov/Sharpe + «Graphik не поставляется»), mixed-payload LICENSE,
+  README. Слот `--tj-font-reading` ведёт XCharter — правка ТОЛЬКО в
+  DESIGN.md → gen:tokens:tj (дифф = 1 строка ×3 артефакта). Тесты:
+  инвариант тройки нетронут + carrier-describe (7/7); **регистрация
+  пакета в ad4-matrix** (гейты поймали: census 7→8 в zero-hardcoded,
+  docs += pillkit-tj-fonts в ALLOWED_SPECIFIERS — display-text
+  прецедент; тройка структурно НЕ МОЖЕТ импортировать носитель —
+  forbiddenGroups выводится из PACKAGE_DIRS; README-пин канонической
+  строки синхронно; CANONICAL_DIRECTIONS += tj-fonts). Fix-уроки раунда:
+  (1) подсчёт активных @font-face — СНАЧАЛА стрип комментариев (наивный
+  регэксп ловит рецептовый блок: 5≠4); (2) визуальный ран БЕЗ
+  `pnpm --filter pillkit-docs build` сравнивает против СТЕЙЛ dist
+  (поймано до траты 12 минут). Полный compare **2123/2123 (12.7 мин) —
+  упавшее множество ПУСТО: оба текстовых дельта-набора (tj-getting-started
+  абзац / tj-token-reference--typography +1 слово) суб-1.5%, реминт
+  отменён законом** (второй случай подряд после 18.1). Гейты: root
+  vitest 200/200 (было 198+2 до регистрации), lint/typecheck EXIT 0,
+  check:gen + банковский tokens-drift zero-drift. Коммит `fccfe44` →
+  **CI fail за 26 с**: pnpm 12.5.1 QUIRK — локальный install (и
+  --lockfile-only) НЕ дописывает пустой importer для
+  беззависимостного пакета («Already up to date»), а CIшный
+  --frozen-lockfile строго требует `importers["packages/tj-fonts"]` →
+  фикс `a485cab`: ручная запись `packages/tj-fonts: {}` (форма
+  `packages/tj-tokens: {}`) + локальное frozen-GREEN доказательство.
+  **УРОК: новый workspace-пакет ⇒ проверять importers-запись в
+  pnpm-lock.yaml ДО пуша (локальный «up to date» лжёт).** **CI
+  36715355750 = success** (голова `a485cab`, вердикт по API после
+  факта). Спека 18.3 EXECUTED с fix-round секцией; CHANGELOG
+  [Unreleased] Added. Очередь мейнтейнера: остались (c) живой VO и (f)
+  open-state капчи + iOS momentum-scroll.
