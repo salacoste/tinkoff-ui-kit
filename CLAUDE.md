@@ -728,3 +728,35 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   to placeholder, filled only at the fact (the IRON RULE held). **TAG
   v1.4.0 NOT created — maintainer explicit sanction ONLY. epics-v5 is
   DONE; the next window belongs to the maintainer's queue.**
+
+- **2026-09-30 POST-17.5 — TAG v1.4.0 PLACED + Flow-A GATE PASSED (same
+  window, by the maintainer's explicit three-part directive «1 confirm
+  CI / 2 new tag ok / 3 continue»):** (1) CI validated by API verdicts
+  ONLY — all four window heads GREEN (36623061743 `d02a483`,
+  36626757077 `63bba27`, 36631204306 `d039d2d`, 36634633196 `6510262`),
+  in-flight 0, local==remote; two historical non-greens explained
+  (202beb1 RED axe round closed by d02a483; 58d979e timeout-cancel,
+  cap now 60). (2) Annotated tag on `6510262`: tag object
+  `0e620018f9844d03990f9eb88d0781757a389e7b`, deref verified locally
+  AND by `git ls-remote --tags` post-push; tag push does NOT trigger CI
+  (workflow: push branches [main] only); batch-confirm was NOT run as a
+  separate sitting — the sanction came directly, item stays as a
+  retrospective honesty point. (3) Flow-A §11.4 executed at release
+  grade: fresh consumer `my-app` links the ТЖ trio @1.4.0 — node_modules
+  census EXACTLY `pillkit-tj-{tokens,components,react}`, zero bank
+  packages (FR-17 consumer-side); 3 dual-emit legs PASS (auto-light
+  `#f0f0f0` / forced-dark `#12151c` / emulated-dark-OS + light-override
+  `#f0f0f0` — the `:not([data-tj-theme="light"])` guard holds); 2 CTAs
+  per leg incl. the React wrapper `Cta`; console clean; vite build 34
+  modules / 4.43 kB token sheet. DEVIATION recorded honestly: clone was
+  LOCAL by tag (network bulk transport degraded ~2.5 MB/min; tree
+  identity guaranteed by the pushed tag object, remote deref-checked
+  BEFORE cloning). Traps re-hit & solved: `pnpm init` (v12) writes a
+  caret `devEngines.packageManager` spec that `pnpm add` itself rejects
+  (fix by key, JSON-safe — README quick-start note candidate);
+  `--prefer-offline` beats hung registry resolution (shared store).
+  Proof pack `verify/v140-fresh-clone/` (NOTES.md + 6 PNG). Stamps:
+  RELEASE §11.3 «ИСПОЛНЕНО», §11.4 «ГИТ ПРОЙДЕН», §11.7 superseded-in-
+  place; HANDOFF header/§2/§4 — queue item (b) CLOSED, (a) de-blocked
+  to retrospective; spec 17.5 addendum. **v1.4.0 IS RELEASED (git-tag
+  train, `private: true` intact, npm commands never run).**

@@ -222,3 +222,29 @@ apart from the docs). The close-out commit (this spec + the §11.4/§11.5
 amendments + CLAUDE.md stamp) carries its own run id in CLAUDE.md.
 
 The tag v1.4.0 was NOT created — maintainer-only (§11.3; IRON RULE).
+
+## Addendum (post-17.5, same window, 2026-09-30) — tag + Flow-A EXECUTED
+
+Supersedes the line above and the Story Flow "no `git tag`" record: after
+the close-out head `6510262` went GREEN (run 36634633196), the maintainer
+issued an explicit three-part directive («1 - confirm and validate CI CD
+statuses, 2 - new tag ok, 3 - continue»), which IS the §11.3 sanction the
+spec deferred to. Executed by the orchestrator under it:
+
+1. CI validated by API verdicts only: all four window heads GREEN
+   (36623061743 / 36626757077 / 36631204306 / 36634633196), in-flight 0.
+2. Annotated tag `v1.4.0` on `6510262` (tag object `0e620018f9…`, deref
+   `6510262f…`), pushed, remote re-verified via ls-remote deref. Tag push
+   does not trigger CI (workflow: push branches [main] only). Batch-confirm
+   was not run as a separate sitting — the sanction came directly; the
+   item remains a retrospective honesty point (HANDOFF §4a).
+3. §11.4 Flow-A gate PASSED 3/3 (dual-emit legs incl. the emulated-dark-OS
+   + light-override core leg; node_modules census = exactly the ТЖ trio,
+   zero bank packages; React wrapper renders; vite build clean). Honest
+   deviation: LOCAL tag clone (network bulk transport degraded; tree
+   identity by the pushed tag object). Proof pack:
+   `.playwright-cli/verify/v140-fresh-clone/` (NOTES.md + 6 PNG).
+
+Release-file stamps (RELEASE §11.3/§11.4/§11.7, HANDOFF header/§2/§4,
+CLAUDE.md post-17.5 stamp) are orchestrator-owned and ride the same
+docs+verify-only commit; its own CI verdict goes to CLAUDE.md by run id.
