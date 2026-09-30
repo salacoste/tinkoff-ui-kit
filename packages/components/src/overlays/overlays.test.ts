@@ -436,6 +436,76 @@ describe('computeFloatingPosition (synthetic geometry)', () => {
       }),
     ).toThrow(/unknown placement 'diagonal'/);
   });
+
+  // --- alignment (Story 19.1 — cross-axis anchoring, right-edge menus) -----
+
+  it("alignment 'end' flushes trailing edges on vertical placements (right-edge menu)", () => {
+    const anchor = { top: 300, left: 400, width: 120, height: 40 }; // right edge 520
+    const position = computeFloatingPosition(anchor, floating, viewport, {
+      placement: 'bottom',
+      offset: 4,
+      alignment: 'end',
+    });
+    expect(position.placement).toBe('bottom');
+    expect(position.top).toBe(344); // 300 + 40 + 4 — unchanged by alignment
+    expect(position.left).toBe(320); // 520 − 200: trailing edges flush
+  });
+
+  it("alignment 'end' survives a vertical flip (the console kebab near the bottom edge)", () => {
+    const anchor = { top: 740, left: 400, width: 120, height: 40 };
+    const position = computeFloatingPosition(anchor, floating, viewport, {
+      placement: 'bottom',
+      offset: 4,
+      alignment: 'end',
+    });
+    expect(position.placement).toBe('top');
+    expect(position.top).toBe(636); // 740 − 4 − 100
+    expect(position.left).toBe(320); // right-edge anchoring kept across the flip
+  });
+
+  it("alignment 'end' clamps a trailing-edge menu whose anchor sits at the left edge", () => {
+    const anchor = { top: 300, left: 40, width: 120, height: 40 }; // right edge 160 < floating width
+    const position = computeFloatingPosition(anchor, floating, viewport, {
+      placement: 'bottom',
+      offset: 4,
+      alignment: 'end',
+    });
+    expect(position.left).toBe(8); // −40 clamped back inside the viewport padding
+  });
+
+  it("alignment 'end' flushes trailing edges on horizontal placements (bottom alignment)", () => {
+    const anchor = { top: 300, left: 400, width: 60, height: 40 }; // bottom edge 340
+    const position = computeFloatingPosition(anchor, floating, viewport, {
+      placement: 'right',
+      offset: 4,
+      alignment: 'end',
+    });
+    expect(position.placement).toBe('right');
+    expect(position.left).toBe(464); // 400 + 60 + 4
+    expect(position.top).toBe(240); // 340 − 100: bottom edges flush
+  });
+
+  it("alignment 'start' is the default (prior behavior unchanged)", () => {
+    const anchor = { top: 300, left: 400, width: 120, height: 40 };
+    const start = computeFloatingPosition(anchor, floating, viewport, {
+      placement: 'bottom',
+      offset: 4,
+      alignment: 'start',
+    });
+    const omitted = computeFloatingPosition(anchor, floating, viewport, {
+      placement: 'bottom',
+      offset: 4,
+    });
+    expect(start).toEqual(omitted);
+  });
+
+  it('throws on an unknown alignment (runtime garbage must be loud)', () => {
+    expect(() =>
+      computeFloatingPosition({ top: 0, left: 0, width: 10, height: 10 }, floating, viewport, {
+        alignment: 'middle' as never,
+      }),
+    ).toThrow(/unknown alignment 'middle'/);
+  });
 });
 
 describe('positionFloating (DOM wiring)', () => {

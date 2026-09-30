@@ -153,3 +153,95 @@ coordinates and the verification evidence ledger live in
 `../../verify/admin-13-1/NOTES.md`. Verification = a deterministic pixel
 audit (unique-color count inside every fill) + fresh-path vision sweeps;
 all 8 files CLEAN before commit.)
+
+---
+
+## 2026-09-30 — follow-up pack (f): OPEN STATES (5 кадров, мейнтейнер)
+
+Session mold unchanged (MAINTAINER SESSION, read-only, chat delivery; PNGs
+are ground truth, probe = vision ±). Files dated 2026-09-30. This pack
+closes the «Not captured (honest absence)» line above: avatar-menu OPEN,
+kebab OPEN, overflow OPEN (+ bonus kebab on «Ваши счета», + optional empty
+state). Dimensions below are raw PNG px (DPR 2); chrome numbers = CSS px.
+
+**PII: заливки наведены мейнтейнером ДО передачи; pipeline-верификация =
+пофреймовый vision-sweep — 5/5 CLEAN до укладки в дерево** (лог в конце
+секции). Значения не транскрибируются (закон ПД); лейблы пунктов меню —
+UI-хром, не ПД.
+
+### Cross-frame popover chrome (all four open frames)
+
+- Панель: белая, волосяная рамка 1px (нейтраль), радиус r12–16, мягкая
+  большая тень; якорь — правым краем к триггеру, зазор ≈4–6px.
+  Монохром: жёлтого НЕТ ни в одном open-состоянии (дисциплина 13.1 держится).
+- Строка: h≈40, px≈12–16, лейбл 14–15; группы разделены 1px-делителем на
+  всю ширину панели. Ховер со скриншота недоступен — в спеке фиксируем
+  нейтральную заливку во всю ширину строки (по консольному языку).
+- Деструктив в кебабах — КРАСНЫЙ текст (семейство #E5372B), без заливки;
+  «Выйти» в avatar-menu — обычный нейтральный ряд.
+- Ширины: avatar ≈280–300, kebab ≈240–260, overflow ≈240.
+
+### admin-avatar-menu-open (794×1288) — slot 1
+
+Узкий кроп хедера + панель. Триггер = аватар + подпись орг (под заливкой).
+Панель открывается фирменным user-блоком: аватар ~40 + две строки
+(имя/почта — заливка), ниже группы пунктов С ведущими иконками ~20,
+делитель, «Выйти» без иконки. **Draft-развилка закрыта**: user-блок ЕСТЬ,
+но статичен (своего поведения/токенов нет) → header-slot атома;
+`tk-avatar-menu` отдельным компонентом НЕ заводим.
+
+### admin-kebab-open (514×482) — slot 2
+
+Кроп строки таблицы «Платежи» + панель. Пункты = КОМАНДЫ без иконок,
+включая длинный лейбл («Скачать платёжное поручение» — не переносится,
+ширины панели хватает); деструктив красным текстом. **OQ-2 закрыт:
+команды → семантика APG menu** (role=menu/menuitem, стрелки, Esc на
+триггер), не listbox и не навигация.
+
+### admin-overflow-open (2000×268) — slot 3
+
+Широкая полоса page-header (H1 + right-aligned sub-tabs + «…»), в кадре —
+верх открытой панели под кнопкой. Тот же молд: третий консьюмер атома.
+
+### admin-kebab-accounts-open (768×1434) — bonus
+
+«Ваши счета»: kebab на flat-строке списка (НЕ таблицы) открывает панель,
+идентичную slot 2 — хром-матрица не зависит от поверхности-носителя.
+
+### admin-empty-state (926×258) — optional №4
+
+КОМПАКТНЫЙ empty-блок: горизонтальный состав (пиктограмма в мягком круге +
+заголовок + саб + действие в строку), НЕ полноэкранная центрированная
+иллюстрация. Паттерн заземлён частично: компактный вариант — в админ-доку
+паттерном; full-page empty state не наблюдался → `tk-empty-state`
+остаётся ungrounded, в 19.1 НЕ входит.
+
+### Roster delta (vs the 13.1 table + draft OQ)
+
+| Было | Стало (по этому паку) |
+|---|---|
+| «open state NOT captured» (13.1, menu-popover) | CLOSED — 4 open-кадра, хром-матрица едина |
+| Draft OQ-1: ширина/якорь | панель у триггера правым краем, зазор 4–6, ширины 240–300 |
+| Draft OQ-2: семантика | команды → APG menu |
+| Draft OQ-3: empty state | компактный grounded; full-page — нет; компонент НЕ заводим |
+| Draft OQ-5: `--tk-menu-*` | да: хук-слой (панель/рамка/ховер/деструктив) поверх нейтралей |
+| avatar-menu компонент? | НЕТ — header-slot атома, композиция-паттерн доки |
+
+Решение зафиксировано в
+`_bmad-output/implementation-artifacts/spec-19-1-admin-menu-popover.md`.
+
+## PII redaction log — follow-up pack (2026-09-30)
+
+Mold 13.1: opaque fills, geometry/chrome untouched; unredacted originals
+live ONLY in the maintainer's local chat cache.
+
+| File | Redacted regions (data classes) |
+|---|---|
+| admin-avatar-menu-open | header org label + avatar; panel user block (name/email) |
+| admin-kebab-open | counterparty/purpose/amount cells of the host row |
+| admin-overflow-open | numeric limit values in the page-header area |
+| admin-kebab-accounts-open | balances; account numbers |
+| admin-empty-state | frame proved generic — nothing sensitive observed |
+
+Verification: per-frame vision sweep on delivery (5/5 CLEAN) — fills
+painted by the maintainer pre-delivery, no pipeline box-pass this round.

@@ -19,6 +19,7 @@ export * from './filter-chips/index.js';
 export * from './footer/index.js';
 export * from './input/index.js';
 export * from './link/index.js';
+export * from './menu-popover/index.js';
 export * from './modal/index.js';
 export * from './navbar/index.js';
 export * from './pagination/index.js';

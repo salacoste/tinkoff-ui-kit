@@ -36,6 +36,14 @@
  * but `true`/`'min'`/`undefined`) throw loudly on the first application —
  * module style; geometry itself (computeFloatingPosition) is untouched: width
  * matching is a DOM-style concern, not geometry.
+ *
+ * Story 19.1 addition (the same sanctioned-extension precedent):
+ * `alignment` — cross-axis anchoring, `'start'` (default, the prior
+ * behavior) or `'end'` (trailing edges flush — the console menus anchor
+ * panels by the trigger's RIGHT edge). Unlike matchAnchorWidth this is pure
+ * geometry, so it lives IN computeFloatingPosition and is unit-tested there
+ * with the rest of the synthetic geometry; garbage values throw loudly
+ * alongside the placement check.
  */
 
 /** The four anchored sides. */
@@ -59,6 +67,15 @@ export interface TkViewport {
 export interface TkComputeOptions {
   /** Requested side; flipped to the opposite only when clipped. Default `bottom`. */
   placement?: TkPlacement;
+  /**
+   * Cross-axis alignment against the anchor: `start` (default) aligns the
+   * floating box's leading edge with the anchor's; `end` aligns the TRAILING
+   * edges (right-edge menus: the anchor's right edge and the floating box's
+   * right edge flush). (Story 19.1 addition, the `matchAnchorWidth`
+   * precedent — a new option, not a contract change; MenuPopover's console
+   * pattern anchors its panel by the right edge.)
+   */
+  alignment?: 'start' | 'end';
   /** Gap between anchor edge and floating box, px. Default 0. */
   offset?: number;
   /** Minimum distance from every viewport edge, px. Default 8. */
@@ -97,6 +114,7 @@ export function computeFloatingPosition(
   options: TkComputeOptions = {},
 ): TkFloatingPosition {
   const placement = options.placement ?? 'bottom';
+  const alignment = options.alignment ?? 'start';
   const offset = options.offset ?? 0;
   const padding = options.viewportPadding ?? 8;
 
@@ -107,6 +125,14 @@ export function computeFloatingPosition(
       `positionFloating: unknown placement '${String(placement)}' — expected top/right/bottom/left`,
     );
   }
+  // Same clause for alignment (Story 19.1): a typo'd value would degrade to
+  // silent `start` and anchor the surface on the wrong edge.
+  if (alignment !== 'start' && alignment !== 'end') {
+    throw new Error(
+      `positionFloating: unknown alignment '${String(alignment)}' — expected start/end`,
+    );
+  }
+  const alignEnd = alignment === 'end';
 
   const anchorRight = anchor.left + anchor.width;
   const anchorBottom = anchor.top + anchor.height;
@@ -131,22 +157,25 @@ export function computeFloatingPosition(
 
   let top: number;
   let left: number;
+  // Cross-axis alignment (Story 19.1): on vertical placements it picks the
+  // left edge (`start` = anchor's left, `end` = trailing edges flush — the
+  // right-edge console menus); on horizontal placements, the top edge.
   switch (chosen) {
     case 'bottom':
       top = anchorBottom + offset;
-      left = anchor.left;
+      left = alignEnd ? anchorRight - floating.width : anchor.left;
       break;
     case 'top':
       top = anchor.top - offset - floating.height;
-      left = anchor.left;
+      left = alignEnd ? anchorRight - floating.width : anchor.left;
       break;
     case 'right':
       left = anchorRight + offset;
-      top = anchor.top;
+      top = alignEnd ? anchorBottom - floating.height : anchor.top;
       break;
     case 'left':
       left = anchor.left - offset - floating.width;
-      top = anchor.top;
+      top = alignEnd ? anchorBottom - floating.height : anchor.top;
       break;
   }
 

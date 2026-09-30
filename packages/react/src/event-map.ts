@@ -107,6 +107,13 @@ export const EVENT_MAP: Readonly<Record<string, Readonly<TkKitElementEventMap>>>
     onOpenChange: 'open-change',
     onConsentChoice: 'consent-choice',
   },
+  // Story 19.1 — the §9 frozen overlay-surface state event (the tk-modal/
+  // tk-tooltip mapping) + the §3 bare occurrence verb: a row was activated.
+  // Both demanded mechanically by tests/event-map-completeness.test.ts.
+  'tk-menu-popover': {
+    onOpenChange: 'open-change',
+    onSelect: 'select',
+  },
   // 'tk-toast': none at v4.3 — FIRE-AND-FORGET (spec 4.3 ruling): no `open`
   // channel and no kit events at all; a toast appears already visible,
   // never takes focus, and the slotted action serves its own native click

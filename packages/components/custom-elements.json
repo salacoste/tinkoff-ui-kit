@@ -3884,6 +3884,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/menu-popover/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/modal/index.js"
           }
         },
@@ -4850,6 +4858,696 @@
           "declaration": {
             "name": "TkLink",
             "module": "src/link/link.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/menu-popover/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/menu-popover/menu-popover.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/menu-popover/menu-item.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/menu-popover/menu-divider.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/menu-popover/menu-divider.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-menu-divider — the 1px full-width group rule inside `tk-menu-popover`\n(spec 19.1): the open captures show item groups separated by a hairline\nacross the whole panel width (probe-notes § 2026-09-30), the same\nlanguage the console's page headers use. role=separator by construction.",
+          "name": "TkMenuDivider",
+          "members": [],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-menu-divider",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkMenuDivider",
+          "declaration": {
+            "name": "TkMenuDivider",
+            "module": "src/menu-popover/menu-divider.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-menu-divider",
+          "declaration": {
+            "name": "TkMenuDivider",
+            "module": "src/menu-popover/menu-divider.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/menu-popover/menu-item.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-menu-item — one command row of `tk-menu-popover` (spec 19.1), the\nfollow-up pack's grounded anatomy: ≈44px row (captures ≈40±2 — the A11y\nFloor's ≥44 target wins, see menu-popover.css.ts), 12px inline padding,\noptional leading 20px-class icon in the `icon` slot (the avatar-menu\npattern), and the destructive variant as RED TEXT with no fill (the\nkebab captures' «Удалить» rows — probe-notes § 2026-09-30).\n\nThe element is APG-menu shaped BY CONSTRUCTION: role=menuitem, roving\ntabindex (-1 — tk-menu-popover promotes the current row to 0 and moves\nreal focus among rows), aria-disabled for the unselectable state.\nActivation (click / Enter / Space) is MEDIATED by tk-menu-popover, which\nowns the `select` event and the open/close choreography — a bare item\noutside a menu-popover renders and is focusable but dispatches nothing.",
+          "name": "TkMenuItem",
+          "slots": [
+            {
+              "description": "Leading icon slot (the avatar-menu pattern; colored text-secondary).",
+              "name": "icon"
+            },
+            {
+              "description": "The command label.",
+              "name": "default"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disabled: row present but inert — skipped by navigation, never selects.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'default' | 'destructive'"
+              },
+              "default": "'default'",
+              "description": "Visual variant: `default` | `destructive` (red text, no fill).",
+              "attribute": "variant",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "tabIndex",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disabled: row present but inert — skipped by navigation, never selects.",
+              "name": "disabled",
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "type": {
+                "text": "'default' | 'destructive'"
+              },
+              "description": "Visual variant: `default` | `destructive` (red text, no fill).",
+              "name": "variant",
+              "default": "'default'",
+              "fieldName": "variant"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-menu-item",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkMenuItem",
+          "declaration": {
+            "name": "TkMenuItem",
+            "module": "src/menu-popover/menu-item.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-menu-item",
+          "declaration": {
+            "name": "TkMenuItem",
+            "module": "src/menu-popover/menu-item.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/menu-popover/menu-popover.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "menuPopoverStyles",
+          "default": "css` /* The host sizes to its anchor projection — the panel is NOT inside this root's layout flow (controller-mounted, position: fixed). */ :host { display: inline-block; } /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */ :host([hidden]) { display: none; } `",
+          "description": "tk-menu-popover styles — FOUR sheets, one per shadow root in the family\n(spec 19.1; the select.css.ts two-sheet mold, extended by the family's\nauxiliary elements):\n\n- `menuPopoverStyles` — the tk-menu-popover HOST: anchor-slot sizing only\n  (the host renders nothing else; the panel is a generated shadow child).\n- `menuPanelStyles` — the PANEL's own shadow root (the select menu mold:\n  the panel is a generated child of the host's shadow tree carrying its\n  own root, so its styles never leak document-level (§6) and travel with\n  the panel when the controller's fallback path reparents it; `:host`\n  rules are author-origin and reset the popover UA sheet).\n- `menuItemStyles` — tk-menu-item's own root (each row owns its box:\n  roving focus, hover, destructive and disabled states live with the\n  element that carries them).\n- `menuDividerStyles` — tk-menu-divider's own root (a 1px rule).\n\nTokens only (FR-1), zero theme branches (AD-3). Visual spec: the\ncaptures-v3/admin follow-up pack (f) 2026-09-30 — white panel, hairline\nborder, radius ≈12, soft dropdown shadow, rows ≈40 (see the 44px ruling\nbelow), 1px full-width group dividers, destructive rows as RED TEXT with\nno fill, «Выйти» as a plain neutral row, panel widths 240–300, anchored\nright-edge to the trigger with a ≈4–6px gap; yellow appears nowhere in\nany open state (the console's mono discipline, probe-notes 13.1).\n\nPer-component custom properties (`--tk-menu-popover-*`, CONVENTIONS §6 —\nthe grammar derives the prefix from the component directory, the\n`--tk-data-table-*` precedent), each consumed WITH its token default:\n- `--tk-menu-popover-fill`    panel background (default surface-base)\n- `--tk-menu-popover-border`  panel hairline   (default border-default)\n- `--tk-menu-popover-radius`  panel radius     (default radius-md = 12)\n- `--tk-menu-popover-width`   panel width      (default 280px — the\n  capture-measured 240–300 band's midpoint, a flagged structural literal)\n- `--tk-menu-popover-divider` divider rule     (default border-default)\n\nKnown structural (non-token) values, flagged per the flag-don't-invent rule:\n- the panel's 280px default width (capture-measured band 240–300; the\n  kebab/overflow patterns narrow it per story via the hook);\n- the row min-height 44px — the captures measure ≈40±2, but the kit's\n  ≥44×44 interactive-target floor (EXPERIENCE A11y Floor, mechanized by\n  the a11y sweep) outranks a ±2px probe reading: 44 taken deliberately,\n  no exception-log entry needed (the floor is law, not a deviation);\n- the row's 12px inline padding (capture ≈12–16; the select row literal);\n- the panel's 4px inner inset (the select menu literal);\n- the panel's spacing-derived max-height (the select long-list row:\n  7 × 48px-equivalent steps + panel padding + one headroom step)."
+        },
+        {
+          "kind": "variable",
+          "name": "menuPanelStyles",
+          "default": "css` :host { box-sizing: border-box; display: block; margin: 0; inset: auto; border: 1px solid var(--tk-menu-popover-border, var(--tk-color-border-default)); padding: var(--tk-space-4); background: var(--tk-menu-popover-fill, var(--tk-color-surface-base)); color: var(--tk-color-text-primary); font-family: var(--tk-font-body); border-radius: var(--tk-menu-popover-radius, var(--tk-radius-md)); box-shadow: var(--tk-shadow-dropdown); width: var(--tk-menu-popover-width, 280px); max-width: calc(100vw - var(--tk-space-16)); overflow-y: auto; overscroll-behavior: contain; /* Long-list row, spacing-derived (the select menu literal's shape): ~7 visible rows + the panel's own 2 × 4px vertical padding + one headroom step, so a fractional overflow never sprouts a scrollbar gutter (the 2.3 vision-pass lesson). */ max-height: calc(var(--tk-space-48) * 7 + var(--tk-space-12)); } /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */ :host([hidden]) { display: none; } /* The optional static header block (avatar-menu's user block): projected light content via the named slot, inset to the row text grid. */ .panel__header { padding: var(--tk-space-8) var(--tk-space-12); } /* Rows and dividers are the panel's LIGHT children (routed there from the host by menu-popover.ts — same shadow tree as the panel's id refs); one default slot projects them in authored order. */ `",
+          "description": "The PANEL sheet — adopted into the generated panel's own shadow root\n(see the file header). `:host` resets the popover UA sheet on the popover\nmounting path exactly as select's menu does. The panel is hidden when\nclosed via the `hidden` attribute (set by menu-popover.ts) — never via\nshadow styles, so the attribute survives the controller's reparenting."
+        },
+        {
+          "kind": "variable",
+          "name": "menuItemStyles",
+          "default": "css` :host { box-sizing: border-box; display: flex; align-items: center; gap: var(--tk-space-8); min-height: 44px; padding: var(--tk-space-4) var(--tk-space-12); border-radius: var(--tk-radius-sm); font-family: var(--tk-font-body); font-size: var(--tk-text-body-m-size); line-height: var(--tk-text-body-m-leading); color: var(--tk-color-text-primary); cursor: pointer; user-select: none; } /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */ :host([hidden]) { display: none; } :host(:hover) { background: var(--tk-color-surface-muted); } /* Keyboard focus (roving arrows): the unified ring, inset into the row. */ :host(:focus-visible) { outline: 2px solid var(--tk-color-focus-ring); outline-offset: -2px; } /* Destructive (the kebab captures): RED TEXT, never a fill — the error-on-field step stays AA on every surface the row can paint (base, muted hover, field — the TOKENS.md verified trio). */ :host([variant='destructive']) { color: var(--tk-color-error-on-field); } :host([aria-disabled='true']) { color: var(--tk-color-text-muted); cursor: default; } :host([aria-disabled='true']:hover) { background: transparent; } ::slotted([slot='icon']) { flex: none; display: inline-flex; color: var(--tk-color-text-secondary); } /* Long labels truncate visually (the kebab capture's non-wrapping long command); the accessible name keeps the full string. */ .item__label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } `",
+          "description": "tk-menu-item — the row's own sheet (the element owns its box: roving\nfocus, hover, destructive and disabled states live where they are\ncarried). Hover = the flat surface-muted fill (the select row language —\nthe mono console step; captures cannot show hover, the console family's\nown language decides); real keyboard focus = the unified ring, INSET so\nit wraps the row inside the panel's radius rather than the panel's padding."
+        },
+        {
+          "kind": "variable",
+          "name": "menuDividerStyles",
+          "default": "css` :host { display: block; height: 1px; margin: var(--tk-space-4) 0; background: var(--tk-menu-popover-divider, var(--tk-color-border-default)); } /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */ :host([hidden]) { display: none; } `",
+          "description": "tk-menu-divider — the 1px full-width group rule (capture-measured)."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "menuPopoverStyles",
+          "declaration": {
+            "name": "menuPopoverStyles",
+            "module": "src/menu-popover/menu-popover.css.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "menuPanelStyles",
+          "declaration": {
+            "name": "menuPanelStyles",
+            "module": "src/menu-popover/menu-popover.css.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "menuItemStyles",
+          "declaration": {
+            "name": "menuItemStyles",
+            "module": "src/menu-popover/menu-popover.css.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "menuDividerStyles",
+          "declaration": {
+            "name": "menuDividerStyles",
+            "module": "src/menu-popover/menu-popover.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/menu-popover/menu-popover.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-menu-popover — the anchored command menu (spec 19.1), grounded by the\ncaptures-v3/admin follow-up pack (f) 2026-09-30: one popover chrome matrix\nbehind the console's avatar-menu, table/list kebabs and page-header\noverflow (white panel, hairline, r12, dropdown shadow, ≈44px rows, 1px\ngroup dividers, red-text destructive rows, right-edge anchoring, zero\nyellow — the console's mono discipline).\n\nTHE TRIGGER IS SLOTTED (`slot=\"anchor\"`): the atom never draws a trigger —\nthe consumer's own button/avatar/kebab icon-button keeps its look; the\natom attaches aria-haspopup=\"menu\" + aria-expanded to it and toggles on\nits click. NO aria-controls is wired: the panel is a generated child of\nthis element's shadow tree (the select.ts single-tree idref lesson — an\nouter-tree anchor cannot resolve a shadow id, aria-valid-attr-value\nfails exactly there), so the pair stops at haspopup + expanded.\n\nPANEL MOUNTING (the frozen §9 overlay mold, tk-select verbatim): the\npanel is a GENERATED child of this element's shadow root carrying its own\nshadow root (`<style>` + header slot + default slot) so its styles never\nleak document-level (§6) and travel with it on the controller's fallback\nreparenting. Items/dividers/header are the CONSUMER's light children of\ntk-menu-popover, ROUTED into the panel on connect and on every childList\nmutation (a MutationObserver started in firstUpdated — §10 forbids\nconstruction-time DOM access): they become the panel's light children,\nprojected by its slots in authored order, in the same tree as each other.\n\nSEMANTICS — APG menu (spec 19.1 OQ-2 ruling: the captured rows are\nCOMMANDS): role=menu panel, role=menuitem rows with roving tabindex (the\natom promotes the current row to 0), real focus moves ArrowDown/ArrowUp\n(wrapping, disabled rows skipped) + Home/End; Escape closes and restores\nfocus to the anchor; Tab from a row closes with natural tab order;\noutside press closes and returns focus to the anchor; activating a row\n(click / Enter / Space) dispatches `select` ({ value: TkMenuItem }) and\ncloses. Focus does NOT trap — a menu is not a modal (trapFocus stays a\nModal/drawer capability, AD-12).\n\nSTATE: `open` is the §9 frozen overlay-surface property (reflects,\n`open-change` fires on every actual flip — the select lifecycle guards:\nnothing at initial mount, nothing on quiet disconnect teardown).",
+          "name": "TkMenuPopover",
+          "slots": [
+            {
+              "description": "The trigger: the consumer's own focusable control (button, avatar tile, kebab icon-button).",
+              "name": "anchor"
+            },
+            {
+              "description": "The rows: tk-menu-item (commands) and tk-menu-divider (group rules), authored in order.",
+              "name": "default"
+            },
+            {
+              "description": "Optional static block above the rows (the avatar-menu user block).",
+              "name": "header"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Menu open state — the frozen §9 overlay-surface property (reflects; `open-change` fires on every flip).",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name for the role=menu panel (axe name gate; defaults to «Меню»).",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "#panel",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLDivElement | null"
+              },
+              "default": "null",
+              "description": "The generated panel — a child of the shadow renderRoot (see the class doc), hidden when closed."
+            },
+            {
+              "kind": "field",
+              "name": "#overlayHandle",
+              "privacy": "private",
+              "type": {
+                "text": "TkOverlayHandle | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#positionHandle",
+              "privacy": "private",
+              "type": {
+                "text": "TkPositioningHandle | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#observer",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null",
+              "description": "Routes late-authored light children into the panel (started in firstUpdated)."
+            },
+            {
+              "kind": "field",
+              "name": "#pendingFocusEdge",
+              "privacy": "private",
+              "type": {
+                "text": "'first' | 'last' | null"
+              },
+              "default": "null",
+              "description": "Edge the opening interaction wants focused once the panel mounts ('first' | 'last'; interaction opens only)."
+            },
+            {
+              "kind": "field",
+              "name": "#hasRenderedOnce",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "True once updated() has run once: the open-change channel stays silent\non the FIRST pass whatever set `open` (attribute at upgrade, early\nproperty assignment) — §9 «nothing at initial mount». Select guards\nthis with the Lit old-value shape alone; here the flag makes the\nsilence independent of attribute-upgrade old-value semantics."
+            },
+            {
+              "kind": "field",
+              "name": "#onDocumentPointerDown",
+              "privacy": "private",
+              "description": "Document-level outside-press listener (bound once, added/removed with the panel)."
+            },
+            {
+              "kind": "field",
+              "name": "#uniqueId",
+              "privacy": "private",
+              "type": {
+                "text": "string | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#nextId",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "static": true,
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#id",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#menuName",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "description": "The menu's accessible name (the `label` prop, else the localized constant).",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#getPanel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLDivElement"
+                }
+              },
+              "description": "The generated panel: role=menu, own shadow root (styles + slots), hidden until open."
+            },
+            {
+              "kind": "method",
+              "name": "#routeChildren",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Routes light children into the panel: everything except the anchor\n(slot=\"anchor\") becomes the panel's light child — items/dividers into\nits default slot, slot=\"header\" blocks into its header slot, in authored\norder. Idempotent (already-routed nodes are panel children, not ours)."
+            },
+            {
+              "kind": "field",
+              "name": "#anchorElement",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "description": "The slotted trigger, resolved PULL-style (the tk-tooltip mold): the\ninitial slot assignment races slotchange in some engines, and consumers\nmay swap the anchor at any moment — so interactions resolve the anchor\nat USE time instead of caching a binding. All anchor wiring lives on\nthe HOST (the anchor is a light child: its composed events cross into\nthe host's tree, wherever the panel currently lives).",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#syncAnchorAria",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "(Re)syncs haspopup/expanded on the current anchor (idempotent, cheap)."
+            },
+            {
+              "kind": "method",
+              "name": "#pathHitsAnchor",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "Composed path crosses the anchor (inner targets included)."
+            },
+            {
+              "kind": "field",
+              "name": "#handleHostClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleHostKeydown",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#items",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TkMenuItem[]"
+                }
+              },
+              "description": "All row elements routed into the panel (authored order)."
+            },
+            {
+              "kind": "method",
+              "name": "#enabledItems",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TkMenuItem[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setCurrent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "TkMenuItem"
+                  }
+                }
+              ],
+              "description": "Roving truth: exactly `current` is tabbable (APG roving tabindex)."
+            },
+            {
+              "kind": "method",
+              "name": "#focusedItem",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TkMenuItem | null"
+                }
+              },
+              "description": "The focused row, whichever tree the panel lives in (shadow retargeting covered both ways)."
+            },
+            {
+              "kind": "method",
+              "name": "#focusEdge",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "edge",
+                  "type": {
+                    "text": "'first' | 'last'"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#stepFocus",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "direction",
+                  "type": {
+                    "text": "1 | -1"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#mountMenu",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#unmountMenu",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setOpen",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "next",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#close",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "{ returnFocus: boolean }"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#activate",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "TkMenuItem"
+                  }
+                }
+              ],
+              "description": "Activates a row: `select` dispatch, then close with focus restored to the anchor."
+            },
+            {
+              "kind": "field",
+              "name": "#handlePanelFocusin",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handlePanelKeydown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handlePanelClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleFocusout",
+              "privacy": "private",
+              "description": "Focus loss closes (the select contract): any focusout whose next target\nis outside the whole component (anchor included — it is a light child)\nand outside the panel closes the menu; focus then follows the NATURAL\ntab order (no forced return — that belongs to the outside-press row).\n`next === this` is the shadow-retargeted form of \"into this component's\nouter tree\" (the anchor): safe, stays open."
+            }
+          ],
+          "events": [
+            {
+              "name": "open-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "`{ value: boolean }` — the frozen §9 overlay-surface state event; composed, bubbles."
+            },
+            {
+              "name": "select",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "`{ value: TkMenuItem }` — a row was activated; composed, bubbles."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Menu open state — the frozen §9 overlay-surface property (reflects; `open-change` fires on every flip).",
+              "name": "open",
+              "default": "false",
+              "fieldName": "open"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name for the role=menu panel (axe name gate; defaults to «Меню»).",
+              "name": "label",
+              "fieldName": "label"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-menu-popover",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkMenuPopover",
+          "declaration": {
+            "name": "TkMenuPopover",
+            "module": "src/menu-popover/menu-popover.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-menu-popover",
+          "declaration": {
+            "name": "TkMenuPopover",
+            "module": "src/menu-popover/menu-popover.ts"
           }
         }
       ]

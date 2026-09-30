@@ -62,3 +62,22 @@ Epic 13's single reference source (13.2 navigation chrome, 13.3 data
 surfaces). Roster ratification recorded in
 `_bmad-output/implementation-artifacts/spec-13-1-admin-gap-map-capture-source.md`
 (Change Log 2).
+
+## Follow-up pack (f) — 2026-09-30 (open states; runbook: RUNBOOK-followup-captures.md)
+
+Second maintainer session (read-only, logged-in console), 5 PNG via chat:
+the 3 mandatory open states + bonus kebab on «Ваши счета» + the optional
+compact empty state — closes the «Not captured (honest absence)» line
+above. PII: opaque fills painted by the maintainer BEFORE delivery,
+verified per-frame on probe (log in `probe-notes.md` § 2026-09-30);
+values never transcribed. Outcome: **roster decision** — `tk-menu-popover`
+atom confirmed NEW (spec 19.1), avatar-menu = composition via header slot,
+full-page empty state stays ungrounded.
+
+| File | Content | Run-sheet slot |
+|---|---|---|
+| `admin-avatar-menu-open-2026-09-30.png` | header avatar → open panel: user block + item groups + «Выйти» | 1 |
+| `admin-kebab-open-2026-09-30.png` | payments table row «⋮» → commands panel | 2 |
+| `admin-overflow-open-2026-09-30.png` | page-header «…» → panel (top in frame) | 3 |
+| `admin-kebab-accounts-open-2026-09-30.png` | «Ваши счета» flat-row kebab → same panel mold | bonus |
+| `admin-empty-state-2026-09-30.png` | COMPACT empty block (icon + title + sub + action inline) | optional №4 |

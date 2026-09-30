@@ -65,6 +65,10 @@ const COMPONENTS: readonly SearchEntry[] = [
   { title: 'Data table', tag: 'tk-data-table', ru: 'Таблица данных', id: 'guides-data-table--page' },
   { title: 'Filter chips', tag: 'tk-filter-chips', ru: 'Фильтр-чипы', id: 'guides-filter-chips--page' },
   { title: 'Mega nav', tag: 'tk-navbar', ru: 'Мега-навигация', id: 'guides-mega-nav--page' },
+  // 19.1: the entry points at the COMPONENT story (the Components/ group),
+  // not a guides- page — the admin patterns live inside the MenuPopover
+  // stories themselves; a dedicated overview page stays out of 19.1 scope.
+  { title: 'MenuPopover', tag: 'tk-menu-popover', ru: 'Меню-поповер', id: 'components-menupopover--playground' },
   { title: 'Pagination', tag: 'tk-pagination', ru: 'Пагинация', id: 'guides-pagination--page' },
   { title: 'QR block', tag: 'tk-qr-block', ru: 'QR-блок', id: 'guides-qr-block--page' },
   { title: 'Stepper', tag: 'tk-stepper', ru: 'Шаги', id: 'guides-stepper--page' },

@@ -25,7 +25,7 @@ import { describe, expect, it } from 'vitest';
  * other's guard.
  *
  * Tripwires keep the scan non-vacuous:
- * - the pinned sheet count (33) fails loudly when a sheet joins or leaves
+ * - the pinned sheet count (37) fails loudly when a sheet joins or leaves
  *   the host-display family — joining forces the guard decision deliberately;
  * - a component directory whose `<name>.css.ts` exists but contributes zero
  *   css`` templates is a parse surprise, not a pass.
@@ -40,11 +40,12 @@ const COMPONENTS_SRC = join(REPO_ROOT, 'packages', 'components', 'src');
 
 /**
  * The pinned number of sheets that set a plain `:host { … display }` (8.1):
- * 27 component files, of which six carry TWO host-display sheets each
- * (select: trigger + menu; combobox-search/filter-chips: host + menu panel;
- * modal/tooltip/cookie-banner: host + surface) — 21 + 12 = 33.
+ * 28 component files — six carry TWO host-display sheets each (select:
+ * trigger + menu; combobox-search/filter-chips: host + menu panel;
+ * modal/tooltip/cookie-banner: host + surface) and menu-popover carries FOUR
+ * (host + generated panel + row + divider, spec 19.1) — 21 + 12 + 4 = 37.
  */
-const PINNED_HOST_DISPLAY_SHEETS = 33;
+const PINNED_HOST_DISPLAY_SHEETS = 37;
 
 interface SheetFinding {
   component: string;
@@ -110,18 +111,25 @@ describe('kit-wide :host([hidden]) guard (story 8.1, deferred-work 6.3 N6)', () 
     ).toEqual([]);
   });
 
-  it('tripwire: the host-display sheet roster is the pinned 33 — a new sheet joining the family forces a deliberate guard decision', () => {
+  it('tripwire: the host-display sheet roster is the pinned 37 — a new sheet joining the family forces a deliberate guard decision', () => {
     const findings = auditSheets();
     expect(findings).toHaveLength(PINNED_HOST_DISPLAY_SHEETS);
-    // 27 component files; six of them contribute a second host-display sheet.
-    expect(new Set(findings.map((f) => f.component)).size).toBe(27);
-    const doubled = findings.filter(
-      (f, i, all) => all.slice(0, i).some((prev) => prev.component === f.component),
-    );
-    expect(doubled.map((f) => f.component)).toEqual([
+    // 28 component files; six contribute a second host-display sheet and
+    // menu-popover contributes four (deduped — a 4-sheet component would
+    // otherwise list itself three times in the raw duplicate findings).
+    expect(new Set(findings.map((f) => f.component)).size).toBe(28);
+    const doubled = [
+      ...new Set(
+        findings
+          .filter((f, i, all) => all.slice(0, i).some((prev) => prev.component === f.component))
+          .map((f) => f.component),
+      ),
+    ];
+    expect(doubled).toEqual([
       'combobox-search',
       'cookie-banner',
       'filter-chips',
+      'menu-popover',
       'modal',
       'select',
       'tooltip',

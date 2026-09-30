@@ -139,6 +139,13 @@ const SWEEP: readonly SweepTarget[] = [
   { component: 'tk-tabs', group: 'VII', story: 'components-tabs--console-underline', stops: 1, minKitSurfaces: 4 },
   { component: 'tk-badge', group: 'VII', story: 'components-badge--console-tones', stops: 1, minKitSurfaces: 3 },
   { component: 'tk-progress-bar', group: 'VII', story: 'components-progressbar--thin-bars', stops: 0, minKitSurfaces: 0 },
+  // 19.1 — the anchored command menu (the admin follow-up family;
+  // MEASURED 2026-09-30 on the built docs bundle). The walk runs on the
+  // playground (closed menu: the slotted anchor is the single tab stop);
+  // the deep scan rides the OPEN story, where the routed rows are visible
+  // interactive surfaces (anchor + 4 rows, the divider carries no
+  // interaction).
+  { component: 'tk-menu-popover', group: 'VII', story: 'components-menupopover--playground', stops: 1, minKitSurfaces: 5, scanStory: 'components-menupopover--open' },
 ];
 
 /** The live focus-ring token color, resolved from the themed document root. */

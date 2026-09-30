@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `tk-menu-popover` + `tk-menu-item` / `tk-menu-divider` — the anchored
+  command menu (spec 19.1, admin follow-up): APG menu semantics (roving
+  tabindex with REAL focus moves, Home/End, Esc with focus return, outside
+  press close, Shift+Tab-from-first-row stays open) over the overlay
+  controller; right-edge anchoring via the new `alignment: 'start' | 'end'`
+  option in `computeFloatingPosition` (the matchAnchorWidth precedent — a
+  new option, not a contract change); `open`/`open-change` +
+  `select` (CONVENTIONS §9 — no imperative exceptions); `slot="header"`
+  user block, leading icon slot, `variant="destructive"` red-text rows,
+  44px rows over the captures' ≈40±2 (the A11y floor is law); panel chrome
+  on neutral tokens with `--tk-menu-popover-*` styling hooks. The admin
+  patterns (avatar-menu with header slot, table-kebab, header-overflow)
+  ship as story compositions, not separate components.
 - `pillkit-tj-fonts` — the ТЖ fonts carrier package (spec 18.3, queue
   v1.4.0-(d), maintainer rulings B/split/XCharter): bundled XCharter ×4
   faces (400 / 400 italic / 700 / 700 italic, woff2, no subsetting) — the
