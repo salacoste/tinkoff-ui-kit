@@ -48,8 +48,8 @@ axe в обеих темах, контраст, клавиатура, reduced-mo
 дистрибуцию через реестр npm неудобной — публикации не будет, `private: true`
 во всех пакетах остаётся постоянно (модель релиза — в `RELEASE.md`).
 Каноническая установка — pnpm-линк воркспейса из checkout'а репозитория;
-для воспроизводимости пинуйте релизный тег: `git clone --branch v1.3.0 …` или
-`git checkout v1.3.0` в существующем checkout'е (тег = версия пакета, см.
+для воспроизводимости пинуйте релизный тег: `git clone --branch v1.4.0 …` или
+`git checkout v1.4.0` в существующем checkout'е (тег = версия пакета, см.
 «Семверинг и changelog»):
 
 ```bash
@@ -61,11 +61,17 @@ packages:
   - .
   - ../tinkoff-ui-kit/packages/*
 EOF
-cd ../tinkoff-ui-kit && pnpm install && pnpm build && cd ../my-app
+cd ../tinkoff-ui-kit && pnpm install && pnpm build && cd ../my-app  # медленный реестр? добавьте --prefer-offline к pnpm install
 pnpm add -w pillkit-components pillkit-react pillkit-tokens --workspace
 pnpm add -w react@19.3.0 react-dom@19.3.0
 pnpm add -w -D vite
 ```
+
+Ловушка `pnpm init` (pnpm v12): он пишет блок `devEngines.packageManager`
+с caret-спекой, которую следующий же `pnpm add` отвергает — до установки
+пакетов кита удалите блок `devEngines` из `package.json` приложения (по
+ключу, не текстовой правкой всего файла). Встречено релизными гейтами
+v1.2.0 и v1.4.0 (протокол — `.playwright-cli/verify/v140-fresh-clone/NOTES.md`).
 
 Для vite — три строки dedupe (обязательно): воркспейс-линк даёт бандлеру
 два физических экземпляра `react` (ваш и локальную копию из чекаута кита),
