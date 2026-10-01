@@ -30,6 +30,7 @@ export * from './qr-block/index.js';
 export * from './segmented-radio/index.js';
 export * from './select/index.js';
 export * from './service-card/index.js';
+export * from './skeleton/index.js';
 export * from './stepper/index.js';
 export * from './store-badges/index.js';
 export * from './tabs/index.js';

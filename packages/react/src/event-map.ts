@@ -127,6 +127,9 @@ export const EVENT_MAP: Readonly<Record<string, Readonly<TkKitElementEventMap>>>
   'tk-accordion-item': {
     onOpenChange: 'open-change',
   },
+  // 'tk-skeleton': none at spec 21.2 — STATELESS DISPLAY: a decorative
+  // aria-hidden placeholder bone; nothing dispatches (the completeness
+  // guard's no-entry case, the tk-badge mold).
   // 'tk-toast': none at v4.3 — FIRE-AND-FORGET (spec 4.3 ruling): no `open`
   // channel and no kit events at all; a toast appears already visible,
   // never takes focus, and the slotted action serves its own native click

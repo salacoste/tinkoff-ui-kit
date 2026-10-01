@@ -54,6 +54,9 @@ const COMPONENTS: readonly SearchEntry[] = [
   { title: 'SegmentedRadio', tag: 'tk-segmented-radio', ru: 'Сегментный переключатель', id: 'components-segmentedradio--playground' },
   { title: 'Select', tag: 'tk-select', ru: 'Выпадающий список', id: 'components-select--playground' },
   { title: 'ServiceCard', tag: 'tk-service-card', ru: 'Сервисная карточка', id: 'components-servicecard--playground' },
+  // 21.2 (invest foundation wave): the loading-placeholder bone — GAP-MAP
+  // Tier A #4; entry points at the Components/ story.
+  { title: 'Skeleton', tag: 'tk-skeleton', ru: 'Скелетон', id: 'components-skeleton--playground' },
   { title: 'Tabs', tag: 'tk-tabs', ru: 'Табы', id: 'components-tabs--playground' },
   { title: 'ThumbnailPicker', tag: 'tk-thumbnail-picker', ru: 'Выбор плиткой', id: 'components-thumbnailpicker--playground' },
   { title: 'Toast', tag: 'tk-toast', ru: 'Тост', id: 'components-toast--playground' },

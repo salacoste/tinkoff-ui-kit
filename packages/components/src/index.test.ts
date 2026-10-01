@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { describe, expect, it } from 'vitest';
 
-import { TkAccordion, TkAccordionItem, TkButton, TkComboboxSearch, TkCookieBanner, TkDataTable, TkFilterChips, TkMenuDivider, TkMenuItem, TkMenuPopover, TkPagination, TkQrBlock, TkStepper, TkStoreBadges } from './index.js';
+import { TkAccordion, TkAccordionItem, TkButton, TkComboboxSearch, TkCookieBanner, TkDataTable, TkFilterChips, TkMenuDivider, TkMenuItem, TkMenuPopover, TkPagination, TkQrBlock, TkSkeleton, TkStepper, TkStoreBadges } from './index.js';
 
 /**
  * Package entry: every component's public surface is reachable from
@@ -69,5 +69,11 @@ describe('pillkit-components entry', () => {
       await customElements.whenDefined(tag);
       expect(customElements.get(tag)).toBe(klass);
     }
+  });
+
+  it('re-exports the skeleton atom (spec 21.2) and registers its tag', async () => {
+    expect(TkSkeleton).toBeDefined();
+    await customElements.whenDefined('tk-skeleton');
+    expect(customElements.get('tk-skeleton')).toBe(TkSkeleton);
   });
 });
