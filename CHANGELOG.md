@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — tk-note atom (spec 21.4, invest foundation wave)
+
+- tk-note: the quiet fine-print note (invest GAP-MAP Tier A #6) — the
+  permanent disclaimer block the invest catalogs carry. Two measured
+  tones: `neutral` = the white fine-print card on the consumer's muted
+  page with the optional «Показать/Скрыть» reveal (bonds grounding;
+  the atom owns the card here — unlike tk-empty-state), `info` = the
+  bare blue «Информация» label + fine print with NO card (currency
+  grounding). The atom ships no other tones — nothing else is
+  grounded.
+- Measurement overrides, honestly recorded: the spec's «серая заливка»
+  guess corrected to surface-base WHITE card on a muted page (the
+  first downscaled vision read inverted figure/ground — native-scale
+  re-read + direct pixel probes settled it); NO default icon (none of
+  the three groundings paints one); the live fine-print gray is
+  AA-fail (3.36:1) so the kit's text-secondary token wins — deviation
+  recorded; clamp frozen at 3 lines, clipping visual only (screen
+  readers read the whole disclaimer while closed).
+- Disclosure contract = tk-accordion-item verbatim: real button with
+  `aria-expanded`, no aria-controls (shadow panel), `open` reflects,
+  `open-change` ({ value }) on every actual flip — composed, bubbles,
+  silent at initial mount, quiet teardown.
+- Hook layer `--tk-note-{fill,radius,text,gap}` with token defaults
+  (fill surface-base, radius-lg); the measured table lives in the
+  sheet header. React wrapper (CEM) with EVENT_MAP onOpenChange, docs
+  search row (Note/Заметка), hidden-guard roster 42/32, ten baselines
+  + two getting-started re-mints (the new search tile, the 21.2
+  precedent) — full suite 2278/2278 green (commit 51cf0e7, CI run
+  36935953754).
+
 ### Added — tk-empty-state atom (spec 21.3, invest foundation wave)
 
 - tk-empty-state: the «nothing here yet» block (invest GAP-MAP Tier A
