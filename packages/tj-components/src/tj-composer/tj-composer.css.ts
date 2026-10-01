@@ -1,15 +1,16 @@
 import { css } from 'lit';
 
 /**
- * tj-composer styles (spec 16.4) — tokens ONLY; every structural non-token
- * value carries its FLAG inline (flag-don't-invent).
+ * tj-composer styles (spec 16.4 + the 2026-10-01 live-fidelity audit) —
+ * tokens ONLY; every structural non-token value carries its FLAG inline
+ * (flag-don't-invent).
  *
- * Height is DERIVED on-scale, never declared: padding-block 24 × 2 + avatar
- * 40 = 88 (the vision band 88–96 brackets it — no height FLAG, it composes
- * from scale parts). Radius is the one structural FLAG (probe-measured r20;
- * no card-family token carries 20 — `--tj-radius-chip` is pill geometry, not
- * a card radius; a `--tj-radius-composer` token is a maintainer ratification
- * candidate, NOT minted here — no new tokens this story).
+ * Height is DERIVED, never declared: padding-block 24 × 2 + avatar 50 = 98
+ * (live rect 760×98, audit 2026-10-01). Radius rides the CARD family token
+ * (--tj-radius-card = 25 — live br25; the old r20 FLAG is closed by the
+ * audit, no `--tj-radius-composer` token was ever minted). Padding-inline
+ * 29 and avatar 50 are measured off-scale literals, FLAGged per the
+ * prose-literal law.
  */
 export const composerStyles = css`
   :host {
@@ -27,12 +28,12 @@ export const composerStyles = css`
     width: 100%;
     align-items: center;
     gap: var(--tj-space-24); /* avatar → ghost-text gap (scale value) */
-    /* Height composes from scale parts: padding-block 24×2 + avatar 40 = 88
-       (the vision band 88–96 brackets it — derived, not declared). */
-    padding: var(--tj-space-24) var(--tj-space-32);
+    /* Height composes from parts: padding-block 24×2 + avatar 50 = 98
+       (live rect 760×98, audit 2026-10-01 — derived, not declared). */
+    padding: var(--tj-space-24) 29px; /* FLAG: inline 29 — measured live (audit 2026-10-01), off-scale literal; no token may be minted for it (prose-literal law) */
     background: var(--tj-color-card);
     border: none;
-    border-radius: 20px; /* FLAG: probe-measured r20 — no card-family token carries 20 (chip=20 is pill geometry, NOT a card radius); --tj-radius-composer is a ratification candidate, not minted here */
+    border-radius: var(--tj-radius-card); /* live br25 (audit 2026-10-01) = the card family — the r20 FLAG is closed */
     font-family: var(--tj-font-ui);
     text-align: left;
     cursor: pointer; /* the single native affordance touch — a button that opens, no hover art (unprobed) */
@@ -55,8 +56,8 @@ export const composerStyles = css`
 
   .composer__avatar ::slotted(img) {
     display: block;
-    width: var(--tj-space-40); /* avatar 40 — scale value (the reference's stroke-only placeholder is consumer art, not kit chrome) */
-    height: var(--tj-space-40);
+    width: 50px; /* FLAG: avatar 50 — measured live 50×50 (audit 2026-10-01), off-scale literal; the reference's stroke-only placeholder is consumer art, not kit chrome */
+    height: 50px;
     border-radius: var(--tj-radius-badge); /* round — the news-card avatar idiom */
     object-fit: cover;
   }

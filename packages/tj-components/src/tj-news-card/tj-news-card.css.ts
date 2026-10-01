@@ -19,8 +19,8 @@ import { css } from 'lit';
  *   mark/word-bone/second-title-line/meta widths).
  *
  * On-scale picks (unmeasured, the 16.1 H2-band mold — maintainer confirms at
- * the side-by-side vs the tj-rubric-news captures): the mark 40 / avatar 32
- * boxes (space-scale reads), the card inset 24, byline gap 12, the title
+ * the side-by-side vs the tj-rubric-news captures): the mark 40 box
+ * (space-scale read), the card inset 24, byline gap 12, the title
  * top offset 16, excerpt 12 / meta 16, the excerpt register (card-title
  * size 17/400 in the READING family — the spec's small-card register pick)
  * and its 24 leading. No backticks in css comments — they would terminate
@@ -86,8 +86,8 @@ export const newsCardStyles = css`
 
   .byline__avatar {
     flex: none;
-    width: var(--tj-space-32);
-    height: var(--tj-space-32);
+    width: 45px; /* FLAG: avatar 45 — live 45×45 (audit 2026-10-01), drift ahead of the frozen 2026-09-28 pack (20); the kit follows live on structural metrics. Off-scale literal, no token may be minted */
+    height: 45px;
     border-radius: var(--tj-radius-badge);
     overflow: hidden;
   }

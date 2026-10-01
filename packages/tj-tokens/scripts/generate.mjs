@@ -332,7 +332,7 @@ const TJ_CONFIG = {
       'Pixel-probed 2026-09-28 (verify/tj-tokens/NOTES.md): cards measure **25** / panels **30** — the vision trio 20/24/32 was deleted (a 9.1 repeat); `icon-tile` measured **7px** on the 30×30 rail tiles; `badge` is a 50% circle. Quiet geometry: r5 CTAs, not pills.',
     ],
     spacingIntro: [
-      '4-based scale plus the ТЖ layout anchors (reading column w764/w760, sidebar rail w290, main column ~770, header h72, container 1200). Article rhythm is BYO — the reading column is the unit of measure, not the grid.',
+      '4-based scale plus the ТЖ layout anchors (reading column w764/w760, sidebar rail w290, main column ~770, header h70, container 1200). Article rhythm is BYO — the reading column is the unit of measure, not the grid.',
     ],
     shadowsIntro: [
       'FLAT language — the 95-card census measured `box-shadow: none`; surfaces separate by color, not elevation. The single `overlay` shadow is the search-suggest panel extraction; the vision card lifts were deleted. Kept as-is in dark (theme-invariant per the probe battery; 17.2 re-verifies).',

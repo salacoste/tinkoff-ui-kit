@@ -1,0 +1,8 @@
+{
+  "surface": "https://t-j.ru/pro/ light, 1280x720, 2026-10-01",
+  "h1": {"fs":32, "fw":700, "lh":"normal", "ink":"#000", "Graphik": true},
+  "heroCard": {"cls":"_root_e67ic_6", "bg":"#8054FF", "w":1260, "h":600, "br":30, "pad":0, "DRIFT":"prior r~32 -> now 30"},
+  "tagChips": {"h":45, "br":15, "bg":"rgba(255,255,255,0.15)", "fs":16, "fw":400, "DRIFT":"prior alpha .18 -> now .15; h45 br15"},
+  "featuredTitles": {"fs":55, "fw":700, "lh":55, "Graphik": true},
+  "sectionCards": {"bgs":["#AC80F7","rgba #00947D"], "w":1180, "h":215, "pad":"25/40", "br":"30 30 0 0"}
+}

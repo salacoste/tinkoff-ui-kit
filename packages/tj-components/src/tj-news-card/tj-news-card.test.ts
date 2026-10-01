@@ -120,6 +120,10 @@ describe('tj-news-card slots', () => {
     expect(el.shadowRoot?.querySelector('.byline__mark')?.getAttribute('aria-hidden')).toBe('true');
     // The avatar wrapper is NOT aria-hidden — the consumer alt rides.
     expect(el.shadowRoot?.querySelector('.byline__avatar')?.hasAttribute('aria-hidden')).toBe(false);
+    // Geometry pin beside the byline aria pins: the avatar box is the measured
+    // 45×45 (audit 2026-10-01, live drift ahead of the 2026-09-28 pack).
+    expect(newsCardStyles.cssText).toContain('width: 45px');
+    expect(newsCardStyles.cssText).toContain('height: 45px');
     teardown();
   });
 

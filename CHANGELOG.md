@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — ТЖ live-fidelity round (spec 20.1, the 2026-10-01 two-validator audit)
+
+- tj-header: the header CTA radius corrected to the quiet r5
+  (`--tj-radius-cta`) — it was mis-pill'd at `--tj-radius-full`; live br5
+  confirmed on three surfaces (98×30, zero spread). Corrects the v1.4.0
+  ledger line «fully-rounded CTA pill».
+- tj-composer: card geometry to live — radius 20→25 (the `--tj-radius-card`
+  family; the open r20 FLAG closed by measurement), padding-inline 32→29,
+  avatar 40→50 — the derived height moves 88→98 (live rect 760×98).
+- tj-tokens: `--tj-space-header-h` 72→70px (live bar remeasured at rest,
+  1280×70; source-of-truth edit in DESIGN.md + regeneration, no hand edits).
+- Article pattern: H1 bottom margin 16→10 (computed on the live article) and
+  the H2 band bottom 24→25 (live rect 25px — the prose-rhythm literal family);
+  skeleton bones mirrored to keep the zero-layout-shift swap contract.
+- tj-news-card: byline avatar 32→45px (live drift adopted ahead of the frozen
+  2026-09-28 pack — the kit follows live on structural metrics).
+
+### Internal
+
+- Live-fidelity audit protocol: two validators (live computed/rects + kit
+  authoring truth) + orchestrator arbitration re-probing every §1 candidate;
+  2 of 4 «confirmed» deltas RETRACTED as measurement artifacts (chip
+  typography reads the inner painted span — Graphik 17/700 matches the kit;
+  the body link underline is transparent at rest on live, matching the kit's
+  mechanic — pixel-arbitrated). Protocol:
+  `.playwright-cli/verify/tj-live-fidelity-audit-2026-10-01/` (NOTES §7).
+
 ## [1.5.0] - 2026-10-01
 
 ### Added — v1.5.0 surface (the post-v1.4.0 window: admin follow-up + fonts carrier)

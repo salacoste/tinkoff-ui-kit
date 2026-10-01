@@ -103,16 +103,17 @@ const DEFAULT_CTA_LABEL = 'Написать';
  *
  * THE CTA: `cta-href`/`cta-label` render the header's OWN anchor (the
  * no-cross-compose norm — the tj-cta compact-inset mold re-implemented
- * here, never composed): 44×44 invisible hit floor, a fully-rounded 30px
- * visible pill via tokens (`--tj-radius-full` +
+ * here, never composed): 44×44 invisible hit floor, a quiet-r5 30px
+ * visible CTA via tokens (`--tj-radius-cta` +
  * `--tj-color-cta-fill`/`--tj-color-cta-ink`; dark re-resolves to
- * the inverted pill, zero branches — the 2026-09-28 capture's pill, NOT
- * the article CTA's 5px radius). Empty/unset `cta-href` → the anchor
- * renders WITHOUT the attribute — inert, no tab stop (the 16.1 mold).
+ * the inverted fill, zero branches — live br5 on three surfaces, audit
+ * 2026-10-01; the earlier «pill» read is corrected). Empty/unset
+ * `cta-href` → the anchor renders WITHOUT the attribute — inert, no tab
+ * stop (the 16.1 mold).
  *
  * STICKY + COMPRESS: `position: sticky; top: 0; z-index: var(--tj-z-nav)`
  * (the one sanctioned non-overlay z consumption); the bar's grid row goes
- * 72px → 56px on any scroll (h72/h56 structural FLAGs) over the 150ms fast
+ * 70px → 56px on any scroll (h70/h56 structural FLAGs) over the 150ms fast
  * token (instant under reduced motion — the token layer collapses the
  * duration, plus the belt below); the compress animates the GRID ROW, not
  * a layout box metric (the design-detector law — grid-template-rows is the

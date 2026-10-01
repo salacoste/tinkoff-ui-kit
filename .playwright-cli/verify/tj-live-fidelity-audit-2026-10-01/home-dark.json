@@ -1,0 +1,7 @@
+{
+  "surface": "https://t-j.ru/ dark (set-color-scheme dark), 1280x720, 2026-10-01",
+  "bodyBg": "#12151C",
+  "cards": "#20232A (br25)",
+  "ctaWrite": {"w":97.69, "h":30, "br":5, "bg":"#F5F5F9", "ink":"#000000", "INVERTED": true},
+  "navChip": {"bg":"#20232A", "ink":"#FFFFFF"}
+}

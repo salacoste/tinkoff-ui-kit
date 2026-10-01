@@ -120,7 +120,7 @@ Pixel-probed 2026-09-28 (verify/tj-tokens/NOTES.md): cards measure **25** / pane
 
 ## Spacing
 
-4-based scale plus the ТЖ layout anchors (reading column w764/w760, sidebar rail w290, main column ~770, header h72, container 1200). Article rhythm is BYO — the reading column is the unit of measure, not the grid.
+4-based scale plus the ТЖ layout anchors (reading column w764/w760, sidebar rail w290, main column ~770, header h70, container 1200). Article rhythm is BYO — the reading column is the unit of measure, not the grid.
 
 | Token | Value | Notes |
 | --- | --- | --- |
@@ -138,7 +138,7 @@ Pixel-probed 2026-09-28 (verify/tj-tokens/NOTES.md): cards measure **25** / pane
 | `--tj-space-column-reading-body` | `760px` |  |
 | `--tj-space-rail-sidebar` | `290px` |  |
 | `--tj-space-column-main` | `770px` |  |
-| `--tj-space-header-h` | `72px` |  |
+| `--tj-space-header-h` | `70px` |  |
 | `--tj-space-container` | `1200px` |  |
 
 ## Shadows

@@ -1,0 +1,19 @@
+{
+  "surface": "https://t-j.ru/ light, 1280x720, 2026-10-01",
+  "header": {"h":70, "w":1280, "pos":"sticky", "bg":"transparent", "blur":"none", "shadow":"none"},
+  "navChips": [
+    {"txt":"Учебник", "w":126.67, "h":40, "fs":16, "fw":400, "lh":"normal", "padX":[13,13], "padY":[5,5], "br":20, "bg":"#FFFFFF", "ink":"#000000"},
+    {"txt":"Сообщество (with avatar stack)", "w":212.41, "h":40, "fs":16, "fw":400, "padX":[13,13], "br":20, "bg":"#FFFFFF"}
+  ],
+  "navChipCount": 2,
+  "navDrift": "Для вас /my/ chip NOT present (prior pack had 3 nav items)",
+  "iconButtons": {"Поиск":"30x30", "Уведомления":"30x30", "тема":"30x30", "Авторизоваться":"77x30 text button"},
+  "ctaWrite": {"w":97.69, "h":30, "br":5, "bg":"#333333", "ink":"#FFFFFF", "fs":15, "fw":400, "lh":20, "ff":"Graphik", "pad":"15/15/5/5"},
+  "page": {"bodyBg":"#F0F0F0", "feedColX":405, "feedColW":760, "sidebarW":290},
+  "cards": {"borderRadius":25, "gaps": {"vBetweenTopLevelCards":20, "gridGap":"20px (418px 262px cols)"}},
+  "cardPadding": {"outer _card_lb4vp_5":"25px top/bottom", "content _foreground_blpgw_7":"30px sides"},
+  "type": {"sectionH2":"21/700/25 Graphik #000", "cardH3":"17/400/20 Graphik #000 (LIVE BLACK, prior said meta-colored)", "featuredH3variant":"21/700/25"},
+  "metaInk": {"time":"#808080 17/400"},
+  "avatars": {"byline":"20x20", "discussion":"40x40 r50%"},
+  "sidebar": {"navRect":"x0 y270 w290 h899", "itemH":44, "label":"17/400/20", "iconTile":"0x0 (lazy, not rendered)"}
+}

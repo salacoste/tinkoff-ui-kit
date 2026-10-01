@@ -1,0 +1,10 @@
+{
+  "surface": "https://t-j.ru/community/ light, 1280x720, 2026-10-01",
+  "h1": {"fs":38, "fw":700, "lh":45, "Сообщество": true},
+  "composerCard": {"cls":"_fakeForm_hl22p_3", "w":760, "h":98, "br":25, "pad":"24/29", "DRIFT":"prior r20 -> now 25"},
+  "composerGhostText": {"txt":"Написать пост или вопрос", "fs":17, "fw":400, "ink":"#808080"},
+  "postCardTitles": {"fs":24, "fw":700, "lh":30, "ink":"#000"},
+  "layout": "SINGLE 760px column at 1280 (x405), NO multi-column grid — prior claimed 'Выбор редакции grid'",
+  "cardGap": 20,
+  "cardRhythms": "tall cards ~606 + compact ~266 title spacing"
+}

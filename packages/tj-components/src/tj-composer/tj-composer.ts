@@ -37,11 +37,11 @@ export class TjOpenComposeEvent extends CustomEvent<null> {
  * Anatomy: (a) an `avatar` slot inside an aria-hidden wrapper — the user's
  * avatar is decorative HERE (identification rides the ghost text; slotted
  * alt text must not pollute the button's name — the 16.3 mark ruling
- * generalized), and (b) the ghost text. Height is DERIVED on-scale:
- * padding-block 24 × 2 + avatar 40 = 88 (the vision band 88–96 brackets it;
- * no height declaration at all). Radius is the one structural FLAG
- * (probe-measured r20; a `--tj-radius-composer` token is a maintainer
- * ratification candidate, NOT minted here).
+ * generalized), and (b) the ghost text. Height is DERIVED, never declared:
+ * padding-block 24 × 2 + avatar 50 = 98 (live rect 760×98, audit
+ * 2026-10-01). Radius rides `--tj-radius-card` (live br25 — the card
+ * family; the old r20 FLAG is closed by the audit). Padding-inline 29 and
+ * avatar 50 are measured off-scale literals, FLAGged in the sheet.
  *
  * `label` is a STRING CHANNEL (never reflects — the 16.1 bank freeze carried
  * over): the default is the reference copy «Написать пост или вопрос…»; a

@@ -231,7 +231,7 @@ const canvasStyles = html`
        stories — the CI axe gate owns the rendered truth, so they stay
        documented table facts for opt-in reference-fidelity consumers. */
     .tjart-title {
-      margin: 0 0 var(--tj-space-16);
+      margin: 0 0 10px; /* FLAG: computed live mb10 (audit 2026-10-01) — off-scale literal, no token may be minted (prose-literal law) */
       font-family: var(--tj-font-ui);
       font-size: var(--tj-text-article-h1-size);
       font-weight: var(--tj-text-article-h1-weight);
@@ -269,11 +269,11 @@ const canvasStyles = html`
       line-height: var(--tj-text-byline-leading);
       color: var(--tj-color-ink-300); /* the authored AA meta step — the restricted reference-time ink never renders in kit stories (see the chrome comment above) */
     }
-    /* The composed vertical band — canvas-owned (the 16.1 Composition mold):
-       H2/pull-quote spacing is UNMEASURED on the reference; the pick rides
-       the EXISTING scale only (40/24 H2, 32 pull-quote). */
+    /* The composed vertical band — canvas-owned (the 16.1 Composition mold),
+       now live-measured: H2 band 40/25 (rect 25px to the next block, audit
+       2026-10-01 — joins the prose-literal 25 family), pull-quote 32. */
     .tjart-article tj-prose h2 {
-      margin-block: var(--tj-space-40) var(--tj-space-24);
+      margin-block: var(--tj-space-40) 25px; /* FLAG: rect live 25 (audit 2026-10-01) — the prose rhythm literal family, no --tj-space-25 exists or may be minted */
     }
     .tjart-article tj-prose blockquote {
       margin-block: var(--tj-space-32);
@@ -386,11 +386,11 @@ const canvasStyles = html`
     .tjart-sk--title {
       width: 92%;
       height: calc(2 * var(--tj-text-article-h1-leading));
-      margin-bottom: var(--tj-space-16);
+      margin-bottom: 10px; /* FLAG: same measured mb10 as the live title — the zero-layout-shift contract */
     }
     /* Byline bones mirror the live flex ROW exactly (a block wrapper — inline
        spans' vertical margins don't stack like the live div's, off by the
-       title's 16px gap; the wrapper kills the drift class entirely). */
+       title's 10px gap; the wrapper kills the drift class entirely). */
     .tjart-sk-byline {
       display: flex;
       align-items: center;
@@ -426,7 +426,7 @@ const canvasStyles = html`
     .tjart-sk--h2 {
       width: 52%;
       height: var(--tj-text-article-h2-leading);
-      margin-block: var(--tj-space-40) var(--tj-space-24); /* the composed band (40/24) mirrored */
+      margin-block: var(--tj-space-40) 25px; /* the composed band (40/25) mirrored — same zero-layout-shift contract as the title bone */
     }
     .tjart-sk--quote {
       width: 78%;
@@ -741,8 +741,8 @@ export const Anatomy: Story = {
                 H2 38/700/45, цитата 35/400/50; ссылки внутри абзацев —
                 <code>&lt;tj-link&gt;</code> (двухповерхностный закон ссылок);
                 переносы — <code>hyphens: auto</code> при <code>lang="ru"</code>.
-                Вертикальный ритм H2/цитаты — выбор канвы (40/24 и 32 — в
-                масштабе существующей шкалы).
+                Вертикальный ритм H2/цитаты — полоса канвы (40/25 H2 по
+                живому замеру 2026-10-01, 32 цитата).
               </td>
             </tr>
             <tr>

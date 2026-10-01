@@ -9,20 +9,20 @@ import { css } from 'lit';
  * Visual spec: spec 16.5 + EXPERIENCE.md Header + the 2026-09-28 reference
  * capture — sticky site chrome on `--tj-color-page` blending into the page
  * (NO divider), white card pill chips, container-bound inner row, height
- * compressing 72→56 on any scroll over the fast duration. Capture-exact
+ * compressing 70→56 on any scroll over the fast duration. Capture-exact
  * anatomy; the few remaining unmeasured picks stay flagged (flag-don't-
  * invent; nothing pretends to be measured).
  *
  * Known structural (non-token) values, flagged per the flag-don't-invent
  * rule — the token sheet carries no counterpart:
- * - the 56px compressed height (h72 IS a token, h56 is not; the
+ * - the 56px compressed height (h70 IS a token, h56 is not; the
  *   compression target is unprobed),
  * - the chip pill's 40px height / 12px x-inset (REMEASURED 2026-09-30 on
  *   the stable captures — 7 nav chips × 2 pages, zero spread; queue (e)
  *   closing the 16.5 estimate) — the pill treatment itself is
  *   reference-licensed,
  * - the 44×44 theme-button hit floor + the CTA's 44×44 floor and its
- *   derived 7px inset-block (30px pill — remeasured, probe-notes-agreed) /
+ *   derived 7px inset-block (30px CTA — remeasured, probe-notes-agreed) /
  *   15px inline padding,
  * - the 24px glyph box of the decorative fallback (icon metric).
  *
@@ -56,7 +56,7 @@ export const headerStyles = css`
     top: 0;
     z-index: var(--tj-z-nav);
     display: grid;
-    grid-template-rows: var(--tj-space-header-h); /* h72 — the token IS the ТЖ anchor */
+    grid-template-rows: var(--tj-space-header-h); /* h70 — the token IS the ТЖ anchor (remeasured 70, audit 2026-10-01) */
     background: var(--tj-color-page);
     transition: grid-template-rows var(--tj-motion-duration-fast) var(--tj-motion-curve-standard);
   }
@@ -64,7 +64,7 @@ export const headerStyles = css`
   /* The compress: internal data-scrolled (NOT public API) flips at any
      scroll > 0 (TJ_HEADER_SCROLL_THRESHOLD_PX). */
   :host([data-scrolled]) .bar {
-    grid-template-rows: 56px; /* FLAG: compressed h56 — unprobed target, h72's quiet sibling */
+    grid-template-rows: 56px; /* FLAG: compressed h56 — unprobed target, h70's quiet sibling */
   }
 
   /* Reduced-motion belt: the token layer already collapses the duration to
@@ -166,13 +166,15 @@ export const headerStyles = css`
   }
 
   /* The header's OWN CTA — the compact-inset mold re-implemented here (the
-     no-cross-compose norm): a 44×44 invisible anchor, the visible pill
-     painted by ::before. The 2026-09-28 capture shows the header CTA as a
-     FULLY-ROUNDED 30px pill (98×30, identical on both captures; the 16.5
-     probe-notes already recorded h30) — NOT the article CTA's 5px
-     radius-cta: the pill runs the full radius token at a 30px height
-     (inset-block 7px = (44−30)/2). Dark flips fill/ink through the token
-     layer alone. NO hover state (the CTA ruling — unprobed). */
+     no-cross-compose norm): a 44×44 invisible anchor, the visible box
+     painted by ::before. QUIET r5 CONTROL (live-fidelity audit 2026-10-01:
+     br5 on three surfaces — home, article, /community/ — 98×30, the most
+     stable measurement of the audit, four probes with zero spread): the
+     header CTA runs --tj-radius-cta like the article CTA mold, NOT a pill.
+     The v1.4.0 ledger line «fully-rounded CTA pill» is corrected by that
+     audit; the 30px height stands (inset-block 7px = (44−30)/2). Dark flips
+     fill/ink through the token layer alone. NO hover state (the CTA ruling
+     — unprobed). */
   .bar__cta {
     box-sizing: border-box;
     display: inline-flex;
@@ -180,7 +182,7 @@ export const headerStyles = css`
     justify-content: center;
     height: 44px; /* FLAG: the 44×44 floor (compact-inset mold) */
     min-width: 44px; /* FLAG: same floor */
-    padding-inline: 15px; /* FLAG: measured pill x-padding (probe10) */
+    padding-inline: 15px; /* FLAG: measured CTA x-padding (probe10) */
     position: relative;
     background: transparent;
     text-decoration: none;
@@ -195,9 +197,9 @@ export const headerStyles = css`
   .bar__cta::before {
     content: '';
     position: absolute;
-    inset-block: 7px; /* (44−30)/2 — remeasured 30px pill (both captures + probe-notes agree) */
+    inset-block: 7px; /* (44−30)/2 — remeasured 30px CTA height (both captures + probe-notes agree) */
     inset-inline: 0;
-    border-radius: var(--tj-radius-full); /* fully rounded — the capture's pill ends */
+    border-radius: var(--tj-radius-cta); /* quiet r5 — live br5 ×3 surfaces (audit 2026-10-01); corrects the v1.4.0 «fully-rounded CTA pill» ledger line */
     background: var(--tj-color-cta-fill);
   }
 

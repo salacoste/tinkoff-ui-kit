@@ -17,9 +17,10 @@ import {
  * capture marks nothing), the STATELESS theme cycle (read-on-click off the
  * document root, auto = attribute REMOVAL, no matchMedia), the aria-live RU
  * announcements, the inert-CTA href rule, the scroll observer flipping the
- * internal data-scrolled flag, and the css.ts pins (sticky z token, h72→h56
- * compress over motion tokens, NO divider, card pill chips, fully-rounded
- * 30px CTA pill (remeasured 2026-09-30, spec 18.1), NO hover, zero theme branches).
+ * internal data-scrolled flag, and the css.ts pins (sticky z token, h70→h56
+ * compress over motion tokens, NO divider, card pill chips, quiet-r5 30px
+ * CTA (live br5 ×3 surfaces, audit 2026-10-01 — corrects the 18.1 pill read),
+ * NO hover, zero theme branches).
  *
  * happy-dom provides NO layout: scroll positions are stubbed globals and the
  * compress geometry is pinned at the css.ts level (real measurement lives in
@@ -350,7 +351,7 @@ describe('tj-header styles (css.ts pins)', () => {
     ]);
   });
 
-  it('the compress: h72 token base → 56px on data-scrolled, over the fast duration + standard curve', () => {
+  it('the compress: h70 token base → 56px on data-scrolled, over the fast duration + standard curve', () => {
     expect(cssText).toContain('display: grid');
     expect(cssText).toContain('grid-template-rows: var(--tj-space-header-h)');
     expect(cssText).toContain(':host([data-scrolled]) .bar');
@@ -391,11 +392,11 @@ describe('tj-header styles (css.ts pins)', () => {
     expect(cssText).not.toContain('text-decoration: underline');
   });
 
-  it('the CTA: 44 floor with the fully-rounded 30px capture pill (7px inset, 15px inline, cta tokens)', () => {
+  it('the CTA: 44 floor with the quiet-r5 30px capture CTA (7px inset, 15px inline, cta tokens)', () => {
     expect(cssText).toContain('.bar__cta::before');
     expect(cssText).toContain('inset-block: 7px');
     expect(cssText).toContain('padding-inline: 15px');
-    expect(cssText).toContain('border-radius: var(--tj-radius-full)');
+    expect(cssText).toContain('border-radius: var(--tj-radius-cta)');
     expect(cssText).toContain('background: var(--tj-color-cta-fill)');
     expect(cssText).toContain('color: var(--tj-color-cta-ink)');
   });

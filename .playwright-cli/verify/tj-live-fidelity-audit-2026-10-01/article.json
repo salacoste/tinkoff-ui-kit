@@ -1,0 +1,14 @@
+{
+  "surface": "https://t-j.ru/semeyana-new/ light, 1280x720, 2026-10-01 (finance/mortgage piece)",
+  "h1": {"fs":45, "fw":700, "lh":50, "ff":"Graphik", "ink":"#000", "w":764, "mt":0, "mb":10, "gapBelowFigure":60},
+  "columnW": 764,
+  "bylineTimeRow": {"fs":15, "fw":400, "ink":"#808080", "rowH":20, "twoRows": "42px block, 2px between"},
+  "lead": {"fs":27, "fw":400, "lh":35, "ff":"Charter", "mt":30, "mb":25},
+  "body": {"fs":21, "fw":400, "lh":30, "ff":"Charter", "ink":"#000", "mt":0, "mb":25},
+  "PARAGRAPH_SPACING": "visual gap between consecutive paragraphs = 25px EXACTLY (mb25 mt0, margin-collapse)",
+  "inBodyH2": {"fs":38, "fw":700, "lh":45, "ff":"Graphik", "computedMtMb":0, "wrapperOwnsSpacing": true, "visualGapH2toFirstP":25, "gapLastPtoH2":"135-215 (confounded by figures between sections)"},
+  "captionBlocks": {"fs":17, "mb":0},
+  "bodyLinks": {"color":"#1414CC rgb(20,20,204)", "textDecoration":"underline solid AT REST", "seen at fs27 and fs17", "DRIFT vs prior-gold-claim for article body"},
+  "pullQuote": "none in this article",
+  "figures": "full-col figures between sections (~715-738px tall), gaps to text 25px"
+}

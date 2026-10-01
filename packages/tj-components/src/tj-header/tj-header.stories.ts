@@ -20,7 +20,7 @@ if (!customElements.get('tjhh-theme-reset')) {
 
 /**
  * tj-header stories (spec 16.5): the sticky chrome — playground (scroll to
- * see the 72→56 compress), the theme contract (the stateless cycle flips the
+ * see the 70→56 compress), the theme contract (the stateless cycle flips the
  * WHOLE canvas — the attribute lives on the document root), and the FR-22
  * accessibility page.
  *
@@ -184,14 +184,16 @@ export const Playground: Story = {
         маркирует текущий раздел — непроверенное не изобретается), слот
         <code>actions</code> (интерьер потребителя — кит даёт только
         расстояние), встроенная кнопка темы и CTA «Написать»
-        (<code>cta-href</code> / <code>cta-label</code>; полностью скруглённая
-        пилюля 30px; пустой href → инертный якорь без атрибута). Полоса
+        (<code>cta-href</code> / <code>cta-label</code>; тихий радиус 5px
+        <code>--tj-radius-cta</code> при высоте 30px — живое br5 ×3
+        поверхностей, аудит 2026-10-01; пустой href → инертный якорь без
+        атрибута). Полоса
         сливается со страницей — разделителя НЕТ (референс). Прокрутите
-        страницу: любая прокрутка (>0) сжимает полосу 72 → 56 за токен
+        страницу: любая прокрутка (>0) сжимает полосу 70 → 56 за токен
         быстрой длительности; возврат наверх восстанавливает. z — только
         <code>var(--tj-z-nav)</code>.
       </p>
-      <div class="tjhh-filler">Страница длиннее экрана — прокрутите, чтобы увидеть сжатие 72 → 56</div>
+      <div class="tjhh-filler">Страница длиннее экрана — прокрутите, чтобы увидеть сжатие 70 → 56</div>
     </main>
   `,
 };
@@ -257,7 +259,7 @@ export const Anatomy: Story = {
             <td><code>header.bar</code></td>
             <td>
               Липкая полоса: <code>sticky; top: 0; z: var(--tj-z-nav)</code>,
-              высота 72 → 56 по <code>data-scrolled</code> (внутренний флаг,
+              высота 70 → 56 по <code>data-scrolled</code> (внутренний флаг,
               НЕ API), фон <code>--tj-color-page</code>, разделителя нет.
             </td>
           </tr>
@@ -299,8 +301,8 @@ export const Anatomy: Story = {
           <tr>
             <td><code>a.bar__cta</code></td>
             <td>
-              «Написать»: пол 44×44, видимая пилюля 30px полностью скруглённая
-              (<code>--tj-radius-full</code>), токены cta-fill/cta-ink;
+              «Написать»: пол 44×44, видимая кнопка 30px с тихим радиусом 5px
+              (<code>--tj-radius-cta</code>), токены cta-fill/cta-ink;
               пустой href → инертный якорь.
             </td>
           </tr>
@@ -334,7 +336,7 @@ export const Accessibility: Story = {
         nav-label 17/700). Кнопка темы —
         <code>&lt;button type="button"&gt;</code> 44×44 с именем
         «Переключить тему оформления»; глиф скрыт. CTA — якорь с полом 44×44
-        (видимая полностью скруглённая пилюля 30px внутри невидимого бокса).
+        (видимая 30px кнопка с тихим r5 внутри невидимого бокса).
         Пустой <code>cta-href</code> — инертный якорь: НЕ таб-стоп. Кольца
         фокуса 2px (токен) на каждом интерактиве.
       </p>
@@ -366,7 +368,7 @@ export const Accessibility: Story = {
           <tr>
             <td>Прокрутка</td>
             <td>
-              Сжатие 72 → 56 не меняет таб-порядок и не крадёт фокус; слушатель
+              Сжатие 70 → 56 не меняет таб-порядок и не крадёт фокус; слушатель
               пассивный (<code>passive: true</code>).
             </td>
           </tr>
@@ -421,7 +423,7 @@ export const Accessibility: Story = {
           <tr>
             <td><code>prefers-reduced-motion: reduce</code></td>
             <td>
-              Сжатие 72 → 56 мгновенное: токен длительности схлопывается в
+              Сжатие 70 → 56 мгновенное: токен длительности схлопывается в
               0ms токен-слоем + прямой <code>transition: none</code> в листе.
             </td>
           </tr>

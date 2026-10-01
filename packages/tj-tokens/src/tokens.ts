@@ -131,7 +131,7 @@ export const spaceTokens = {
   '--tj-space-column-reading-body': '760px',
   '--tj-space-rail-sidebar': '290px',
   '--tj-space-column-main': '770px',
-  '--tj-space-header-h': '72px',
+  '--tj-space-header-h': '70px',
   '--tj-space-container': '1200px',
 } as const;
 

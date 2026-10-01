@@ -207,12 +207,12 @@ spacing:
   '48': 48px
   '64': 64px
   # ТЖ layout anchors (computed): reading column w764/w760, sidebar rail w290,
-  # main content column ~770, header h~72
+  # main content column ~770, header h~70
   column-reading: 764px
   column-reading-body: 760px
   rail-sidebar: 290px
   column-main: 770px
-  header-h: 72px
+  header-h: 70px
   container: 1200px
 components:
   cta-write:
@@ -362,7 +362,7 @@ grotesque read was a wrapper artifact of suggest/footer/bubble surfaces.
 ## Layout & Spacing
 
 Reading column w764 (H1) / w760 (body); sidebar rail w290 (16 rubric entries, icon tiles 40px);
-main content column ~770; header ~72px. Card padding ~24; inter-card gap ~24; 8px base grid.
+main content column ~770; header ~70px. Card padding ~24; inter-card gap ~24; 8px base grid.
 Article BYO rhythm: the reading column is the unit of measure, not the grid.
 
 ## Elevation & Depth

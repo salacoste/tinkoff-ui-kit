@@ -211,19 +211,20 @@ describe('tj-composer css.ts pins', () => {
 
   it('consumes the card surface + scale tokens exactly (no height declaration)', () => {
     expect(cssText).toContain('background: var(--tj-color-card)');
-    expect(cssText).toContain('border-radius: 20px'); // the structural FLAG
-    expect(cssText).toContain('padding: var(--tj-space-24) var(--tj-space-32)');
+    expect(cssText).toContain('border-radius: var(--tj-radius-card)'); // live br25 (audit 2026-10-01) — the card family
+    expect(cssText).toContain('padding: var(--tj-space-24) 29px'); // inline 29 — measured off-scale literal
     expect(cssText).toContain('gap: var(--tj-space-24)');
-    expect(cssText).toContain('width: var(--tj-space-40)'); // avatar 40 — scale value
+    expect(cssText).toContain('width: 50px'); // avatar 50 — measured 50×50 (audit 2026-10-01)
     expect(cssText).toContain('border-radius: var(--tj-radius-badge)'); // avatar round
-    // Height DERIVES from the scale parts (24×2 + 40 = 88) — never declared
+    // Height DERIVES from the parts (24×2 + 50 = 98, live rect 760×98) —
+    // never declared
     // for the CARD. Scoped to the .composer RULE: the avatar's legit
-    // height:40 and any line-height must not defeat the pin, and a slipped
+    // height:50 and any line-height must not defeat the pin, and a slipped
     // height/min-height/max-height/block-size on the CARD fails it. (The
     // lens-hardened form — the bare not-contains missed height:96 etc.)
     const cardRule = cssText.match(/\.composer\s*\{[^}]*\}/);
     expect(cardRule).toBeTruthy();
-    expect(cardRule?.[0]).toContain('padding: var(--tj-space-24) var(--tj-space-32)');
+    expect(cardRule?.[0]).toContain('padding: var(--tj-space-24) 29px');
     expect(cardRule?.[0]).not.toMatch(/(?:min-|max-)?(?:height|block-size)\s*:/);
   });
 
