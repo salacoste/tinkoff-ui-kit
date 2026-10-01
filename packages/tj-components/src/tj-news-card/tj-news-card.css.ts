@@ -20,7 +20,8 @@ import { css } from 'lit';
  *
  * On-scale picks (unmeasured, the 16.1 H2-band mold — maintainer confirms at
  * the side-by-side vs the tj-rubric-news captures): the mark 40 box
- * (space-scale read), the card inset 24, byline gap 12, the title
+ * (space-scale read), the card inset 24 (now the --tj-news-card-padding
+ * fallback — see the .card hook below), byline gap 12, the title
  * top offset 16, excerpt 12 / meta 16, the excerpt register (card-title
  * size 17/400 in the READING family — the spec's small-card register pick)
  * and its 24 leading. No backticks in css comments — they would terminate
@@ -42,11 +43,20 @@ export const newsCardStyles = css`
   /* FLAT by census (the 95-card feed survey): no shadow property, no hover
      rule anywhere in this sheet (pinned by the unit suite). The whole card
      is ONE anchor — the row-as-link mold: title + byline + counts ride a
-     single tab stop. */
+     single tab stop.
+
+     Geometry hook --tj-news-card-padding (the bank progress-bar height
+     hook mold, story 13.3: an instance-level custom property, NOT a
+     design token — no generator round-trip). Default = the
+     article-adjacent uniform 24;
+     home/rubric FEED surfaces override to the live 25px 30px (audit
+     2026-10-01 §2 re-probe — layered 25px 0 / 0 30px on the 760-wide
+     feed cards). The skeleton card consumes the same hook: the
+     zero-layout-shift contract. */
   .card {
     display: block;
     box-sizing: border-box;
-    padding: var(--tj-space-24);
+    padding: var(--tj-news-card-padding, var(--tj-space-24));
     background: var(--tj-color-card);
     border-radius: var(--tj-radius-card);
     text-decoration: none;
@@ -158,10 +168,11 @@ export const newsCardStyles = css`
   /* Skeleton bones: meta ink at 12% alpha (the spec's named FLAG), NO
      animation (reference skeleton behavior unprobed — nothing invented).
      Shapes mirror the card anatomy: mark squircle + word bone + two title
-     lines + meta line. Widths are flagged on-scale picks. */
+     lines + meta line. Widths are flagged on-scale picks. Padding rides
+     the SAME hook as the live card — zero layout shift on the swap. */
   .card--skeleton {
     display: block;
-    padding: var(--tj-space-24);
+    padding: var(--tj-news-card-padding, var(--tj-space-24));
     background: var(--tj-color-card);
     border-radius: var(--tj-radius-card);
   }

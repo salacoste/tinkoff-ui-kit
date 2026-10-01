@@ -208,6 +208,15 @@ describe('tj-news-card css.ts pins', () => {
     expect(cssText).toContain('color: var(--tj-color-ink-300)');
   });
 
+  it('exposes the --tj-news-card-padding geometry hook on BOTH card faces (parity)', () => {
+    // Declaration-form pin ×2 (spec 20.2): the live anchor card AND the
+    // skeleton consume the hook with the uniform-24 fallback (audit
+    // 2026-10-01 §2 — feed surfaces override the live 25px 30px at the
+    // story level; the live↔skeleton swap never shifts layout).
+    const hook = 'padding: var(--tj-news-card-padding, var(--tj-space-24))';
+    expect(cssText.split(hook).length - 1).toBe(2);
+  });
+
   it('bones at the FLAGGED 12% meta-ink alpha, with NO animation', () => {
     expect(cssText).toContain('color-mix(in srgb, var(--tj-color-ink-300) 12%, transparent)');
     // Declaration-form pins: cssText keeps comments, so the prose may NAME

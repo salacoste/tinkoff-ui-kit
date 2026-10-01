@@ -109,6 +109,11 @@ const pageStyles = html`
       gap: var(--tj-space-24);
       max-width: var(--tj-space-column-reading-body);
       margin: var(--tj-space-32) auto 0;
+      /* Home-feed card inset — the live 25/30 reading (audit 2026-10-01 §2
+         re-probe: layered 25px 0 + 0 30px on the 760-wide feed cards; the
+         component default stays the article-adjacent uniform 24).
+         Off-scale literals — prose-literal law, no token may be minted. */
+      --tj-news-card-padding: 25px 30px;
     }
     .tjpat-caption {
       max-width: var(--tj-space-column-reading-body);
@@ -231,6 +236,10 @@ export const Demo: Story = {
         Референсная композиция «шапка + лента» в живых компонентах: шапка
         рубрики с обложкой, маркой и слоттированным <code>h1</code>, под ней
         лента из четырёх карточек (у каждой — теневой якорь на всю карту).
+        Внутренние отступы карточек ленты — живое чтение 25/30
+        (верх-низ/бока) через геометрический хук
+        <code>--tj-news-card-padding</code>; умолчание компонента —
+        равномерные 24 (колонка статьи).
         Каркас страницы собирается потребителем: <code>tj-header</code> и
         <code>tj-rail</code> сюда не подмешаны — их композиция живёт в
         <a href="?path=/story/tj-rail--chrome-composition" target="_top"

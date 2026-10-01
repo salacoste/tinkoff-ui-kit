@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — tj-news-card geometry hook (spec 20.2, audit §2 re-probe)
+
+- tj-news-card: `--tj-news-card-padding` instance-level custom property
+  (the `--tk-progress-bar-height` mold — a hook, NOT a design token);
+  default keeps the article-adjacent uniform 24, home/rubric FEED surfaces
+  override to the live 25px 30px (layered `25px 0` / `0 30px` on the
+  760-wide feed cards, re-probed 2026-10-01). The skeleton card consumes
+  the same hook — the zero-layout-shift swap contract holds under override.
+  First consumer: the rubric pattern demo (`TJ/Patterns/Rubric → Демо`).
+
 ### Fixed — ТЖ live-fidelity round (spec 20.1, the 2026-10-01 two-validator audit)
 
 - tj-header: the header CTA radius corrected to the quiet r5
