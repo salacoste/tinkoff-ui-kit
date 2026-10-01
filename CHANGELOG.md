@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — tk-skeleton atom (spec 21.2, invest foundation wave)
+
+- tk-skeleton: the loading-placeholder bone (invest GAP-MAP Tier A #4).
+  Three variants — `line` (100% × 12px) / `circle` (40 × 40) /
+  `rect` (100% × 80px), bogus values clamp to line (the badge mold);
+  `width`/`height` CSS-string attributes map to host inline style and
+  clear back to the shape default. Decorative by law: `aria-hidden` on
+  connect; the container contract (`aria-busy` on the consumer) is
+  demonstrated in the catalog-loading story with mirrored geometry
+  (zero-layout-shift).
+- Motion: opacity pulse 1↔0.5, 1.4s ease-in-out, killed by
+  prefers-reduced-motion. Shimmer stayed unproven (live probe missed the
+  pre-hydration frame three times — hydration outruns transport; the
+  spec's fallback: tj-news-card mold + census) → the fill is FLAT.
+- Hook: `--tk-skeleton-fill` (default surface-muted); px geometry is the
+  documented zero-hardcoded blind spot (the MENU_OFFSET_PX precedent).
+  React wrapper (CEM), docs search row, hidden-guard roster 40/30, six
+  new baselines + two re-minted getting-started legs (new search tile).
+
 ### Added — tk-accordion family (spec 21.1, invest foundation wave)
 
 - tk-accordion + tk-accordion-item: the disclosure atom of the invest

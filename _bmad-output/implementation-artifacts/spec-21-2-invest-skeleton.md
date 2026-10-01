@@ -1,6 +1,11 @@
 # Spec 21.2 — tk-skeleton атом (invest foundation wave, GAP-MAP A4)
 
-- **status:** DRAFT 2026-10-01 (AC frozen pending «go»; исполнения нет)
+- **status:** EXECUTED 2026-10-01 — коммит `cde959e`, CI-ран
+  36912573965 **success** (вердикт по run id после факта). Live-probe
+  честно провален ×3 (гидратация быстрее транспорта) → fallback по AC:
+  ТЖ-молд + census; полный compare 2224/2224 после минта 6 базлайнов
+  (+2 переминченных getting-started — новая плитка поиска); vision-ревью
+  montage PASS (FLAT fill подтверждён). Штамп close-out — этим же днём.
 - **baseline_commit:** голова Epic 21 на старте исполнения (zero-in-flight:
   вердикт рана 72939e9 + всех промежуточных снят)
 - **epic note:** Epic 21 «invest foundation wave», волновое исполнение
