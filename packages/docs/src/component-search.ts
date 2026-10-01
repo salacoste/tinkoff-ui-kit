@@ -43,6 +43,9 @@ const COMPONENTS: readonly SearchEntry[] = [
   { title: 'Badge', tag: 'tk-badge', ru: 'Бейдж', id: 'components-badge--playground' },
   { title: 'Button', tag: 'tk-button', ru: 'Кнопка', id: 'components-button--playground' },
   { title: 'Checkbox', tag: 'tk-checkbox', ru: 'Чекбокс', id: 'components-checkbox--playground' },
+  // 21.3 (invest foundation wave): the «nothing here yet» block — GAP-MAP
+  // Tier A #5; entry points at the Components/ story.
+  { title: 'EmptyState', tag: 'tk-empty-state', ru: 'Пустое состояние', id: 'components-emptystate--playground' },
   { title: 'FeatureCard', tag: 'tk-feature-card', ru: 'Фича-карточка', id: 'components-featurecard--playground' },
   { title: 'Footer', tag: 'tk-footer', ru: 'Подвал', id: 'components-footer--playground' },
   { title: 'Input', tag: 'tk-input', ru: 'Поле ввода', id: 'components-input--playground' },

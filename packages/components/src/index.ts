@@ -15,6 +15,7 @@ export * from './checkbox/index.js';
 export * from './combobox-search/index.js';
 export * from './cookie-banner/index.js';
 export * from './data-table/index.js';
+export * from './empty-state/index.js';
 export * from './feature-card/index.js';
 export * from './filter-chips/index.js';
 export * from './footer/index.js';

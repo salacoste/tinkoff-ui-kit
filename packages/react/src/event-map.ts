@@ -130,6 +130,10 @@ export const EVENT_MAP: Readonly<Record<string, Readonly<TkKitElementEventMap>>>
   // 'tk-skeleton': none at spec 21.2 — STATELESS DISPLAY: a decorative
   // aria-hidden placeholder bone; nothing dispatches (the completeness
   // guard's no-entry case, the tk-badge mold).
+  // 'tk-empty-state': none at spec 21.3 — STATELESS DISPLAY: the passive
+  // «nothing here yet» block; the action is a consumer's slotted link or
+  // button that serves its own native activation (the tk-skeleton/
+  // tk-service-card no-entry precedent).
   // 'tk-toast': none at v4.3 — FIRE-AND-FORGET (spec 4.3 ruling): no `open`
   // channel and no kit events at all; a toast appears already visible,
   // never takes focus, and the slotted action serves its own native click

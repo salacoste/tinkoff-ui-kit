@@ -25,7 +25,7 @@ import { describe, expect, it } from 'vitest';
  * other's guard.
  *
  * Tripwires keep the scan non-vacuous:
- * - the pinned sheet count (40) fails loudly when a sheet joins or leaves
+ * - the pinned sheet count (41) fails loudly when a sheet joins or leaves
  *   the host-display family — joining forces the guard decision deliberately;
  * - a component directory whose `<name>.css.ts` exists but contributes zero
  *   css`` templates is a parse surprise, not a pass.
@@ -40,13 +40,13 @@ const COMPONENTS_SRC = join(REPO_ROOT, 'packages', 'components', 'src');
 
 /**
  * The pinned number of sheets that set a plain `:host { … display }` (8.1):
- * 30 component files — seven carry TWO host-display sheets each (select:
+ * 31 component files — seven carry TWO host-display sheets each (select:
  * trigger + menu; combobox-search/filter-chips: host + menu panel;
  * modal/tooltip/cookie-banner: host + surface; accordion: host + item,
  * spec 21.1) and menu-popover carries FOUR (host + generated panel + row +
- * divider, spec 19.1) — 22 + 14 + 4 = 40.
+ * divider, spec 19.1) — 23 + 14 + 4 = 41.
  */
-const PINNED_HOST_DISPLAY_SHEETS = 40;
+const PINNED_HOST_DISPLAY_SHEETS = 41;
 
 interface SheetFinding {
   component: string;
@@ -112,13 +112,13 @@ describe('kit-wide :host([hidden]) guard (story 8.1, deferred-work 6.3 N6)', () 
     ).toEqual([]);
   });
 
-  it('tripwire: the host-display sheet roster is the pinned 40 — a new sheet joining the family forces a deliberate guard decision', () => {
+  it('tripwire: the host-display sheet roster is the pinned 41 — a new sheet joining the family forces a deliberate guard decision', () => {
     const findings = auditSheets();
     expect(findings).toHaveLength(PINNED_HOST_DISPLAY_SHEETS);
-    // 30 component files; seven contribute a second host-display sheet and
+    // 31 component files; seven contribute a second host-display sheet and
     // menu-popover contributes four (deduped — a 4-sheet component would
     // otherwise list itself three times in the raw duplicate findings).
-    expect(new Set(findings.map((f) => f.component)).size).toBe(30);
+    expect(new Set(findings.map((f) => f.component)).size).toBe(31);
     const doubled = [
       ...new Set(
         findings

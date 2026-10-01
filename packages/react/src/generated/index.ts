@@ -8,6 +8,7 @@ export * from './checkbox.js';
 export * from './combobox-search.js';
 export * from './cookie-banner.js';
 export * from './data-table.js';
+export * from './empty-state.js';
 export * from './feature-card.js';
 export * from './filter-chips.js';
 export * from './footer.js';

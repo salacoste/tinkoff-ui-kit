@@ -2985,6 +2985,191 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/empty-state/empty-state.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "emptyStateStyles",
+          "default": "css` :host { display: block; box-sizing: border-box; font-family: var(--tk-font-body); text-align: center; } /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */ :host([hidden]) { display: none; } .es { display: flex; flex-direction: column; align-items: center; gap: var(--tk-empty-state-gap, var(--tk-space-16)); } /* The disc is DECORATIVE (aria-hidden on the container — the service card icon mold): an empty muted circle by default, the consumer's glyph via the icon slot. Size/fill are hooks; the glyph inherits color so a currentColor SVG picks the muted tone up. */ .es__disc { box-sizing: border-box; display: grid; place-items: center; width: var(--tk-empty-state-disc-size, var(--tk-space-48)); height: var(--tk-empty-state-disc-size, var(--tk-space-48)); border-radius: 50%; background: var(--tk-empty-state-disc-fill, var(--tk-color-surface-muted)); color: var(--tk-empty-state-icon-color, var(--tk-color-text-secondary)); } /* Heading and its supporting line sit closer to each other than to the frame elements — the measured 9-vs-18 gap families. */ .es__text { display: flex; flex-direction: column; align-items: center; gap: var(--tk-empty-state-text-gap, var(--tk-space-8)); } .es__heading { margin: 0; font-family: var(--tk-font-heading); font-size: var(--tk-text-heading-6-size); font-weight: var(--tk-text-heading-6-weight); line-height: var(--tk-text-heading-6-leading); color: var(--tk-color-text-primary); } .es__description { margin: 0; font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-weight); line-height: var(--tk-text-body-m-leading); color: var(--tk-color-text-secondary); } /* The action zone only carries the rhythm; the slotted element (a tk-link per the live grounding — a button fits the same slot) owns its own color and interaction. */ .es__action { font-size: var(--tk-text-body-m-size); line-height: var(--tk-text-body-m-leading); } `",
+          "description": "tk-empty-state styles — tokens only (FR-1), zero theme branches (AD-3).\n\nGrounding (spec 21.3, GAP-MAP A5): the invest favorites capture\n(captures-v4/invest/favorites.png, measured at execution 2026-10-01) —\na centered stack inside a consumer card: gray disc ≈46px with a glyph,\n~18px gap, bold heading, ~9px, supporting line, ~17px, blue TEXT LINK\nas the action. Pixel table (capture → token, the spec's AC2):\n- disc 46px → var(--tk-space-48) (nearest scale step);\n- disc fill #f1f2f4 → surface-muted #F5F5F6 (kit token wins);\n- gaps 18/9/17 → 16 (space-16) with the heading↔description pair at 8\n  (space-8) — the two measured gap families, snapped to the scale;\n- heading ≈18px/500 → heading-6 (20/500, nearest heading token);\n- description ≈14px gray → body-m on text-secondary;\n- action #3477f6 → the slotted link's own token (--tk-color-link,\nNOT re-minted — the kit's link color is frozen).\nThe SECOND spec grounding (admin 926×258 «compact empty block») did\nnot survive its pixel check — the frame shows an account ROW with an\nopen kebab, not empty-state anatomy; the probe label was optimistic.\nOne live grounding stands; the console-compact idiom stays a\nstory-level derivation (hooks, no atom mode) — AC3's «one size» rule\nholds precisely because the second grounding collapsed.\n\nThe atom paints NO card (the favorites card is the consumer's); the\nrhythm rides the hook layer (CONVENTIONS §6, consumed WITH token\ndefaults): --tk-empty-state-gap, --tk-empty-state-text-gap,\n--tk-empty-state-disc-size, --tk-empty-state-disc-fill,\n--tk-empty-state-icon-color.\n\nNo backticks in css comments — they would terminate the css literal."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "emptyStateStyles",
+          "declaration": {
+            "name": "emptyStateStyles",
+            "module": "src/empty-state/empty-state.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/empty-state/empty-state.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-empty-state — the «nothing here yet» block (spec 21.3, invest\nfoundation wave): a decorative disc, a heading, a supporting line and\nan action, centered as a vertical stack. The atom paints NO card —\nthe favorites grounding draws the card at the consumer level, and the\nadmin-table compact lives in docs patterns, not in the element.\n\nThe action is a SLOT, not a prop: the live grounding carries a TEXT\nLINK as the CTA (favorites «Добавить бумаги»), and a button fits the\nsame mechanism — the element never assumes which one the consumer\nneeds (the composition discipline every passive card shares).\n\nSTATELESS (the display-component mold): no channel, nothing\ndispatches — the event-map no-entry case (tk-service-card precedent).\nNo keyboard contract: nothing focusable lives here; the slotted\naction carries its own native focus. SSR-compat (AD-10): rendered\nvia Lit templates only.",
+          "name": "TkEmptyState",
+          "slots": [
+            {
+              "description": "Decorative glyph inside the disc (the container is aria-hidden — nothing announced).",
+              "name": "icon"
+            },
+            {
+              "description": "Overrides the `heading` prop.",
+              "name": "heading"
+            },
+            {
+              "description": "The supporting line (body-m, secondary); renders only while carrying content — an empty flex item would fake the rhythm.",
+              "name": "description"
+            },
+            {
+              "description": "The CTA — a tk-link per the live grounding; a button fits the same slot.",
+              "name": "action"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "description": "Block heading (heading-6); the `heading` slot overrides.",
+              "attribute": "heading"
+            },
+            {
+              "kind": "field",
+              "name": "#headingSlotted",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Slot-assignment tracking: a named slot's content overrides its prop (tk-service-card pattern)."
+            },
+            {
+              "kind": "field",
+              "name": "#descriptionSlotted",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "#slotHasContent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLSlotElement"
+                  }
+                }
+              ],
+              "description": "A slot carries projectable content when an element or non-empty text is assigned."
+            },
+            {
+              "kind": "method",
+              "name": "#handleHeadingSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#handleDescriptionSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "description": "Block heading (heading-6); the `heading` slot overrides.",
+              "fieldName": "heading"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-empty-state",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkEmptyState",
+          "declaration": {
+            "name": "TkEmptyState",
+            "module": "src/empty-state/empty-state.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-empty-state",
+          "declaration": {
+            "name": "TkEmptyState",
+            "module": "src/empty-state/empty-state.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/empty-state/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/empty-state/empty-state.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/feature-card/feature-card.css.ts",
       "declarations": [
         {
@@ -4074,6 +4259,14 @@
           "declaration": {
             "name": "*",
             "module": "src/data-table/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/empty-state/index.js"
           }
         },
         {

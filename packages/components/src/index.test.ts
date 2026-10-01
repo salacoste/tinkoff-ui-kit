@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { describe, expect, it } from 'vitest';
 
-import { TkAccordion, TkAccordionItem, TkButton, TkComboboxSearch, TkCookieBanner, TkDataTable, TkFilterChips, TkMenuDivider, TkMenuItem, TkMenuPopover, TkPagination, TkQrBlock, TkSkeleton, TkStepper, TkStoreBadges } from './index.js';
+import { TkAccordion, TkAccordionItem, TkButton, TkComboboxSearch, TkCookieBanner, TkDataTable, TkEmptyState, TkFilterChips, TkMenuDivider, TkMenuItem, TkMenuPopover, TkPagination, TkQrBlock, TkSkeleton, TkStepper, TkStoreBadges } from './index.js';
 
 /**
  * Package entry: every component's public surface is reachable from
@@ -75,5 +75,11 @@ describe('pillkit-components entry', () => {
     expect(TkSkeleton).toBeDefined();
     await customElements.whenDefined('tk-skeleton');
     expect(customElements.get('tk-skeleton')).toBe(TkSkeleton);
+  });
+
+  it('re-exports the empty-state atom (spec 21.3) and registers its tag', async () => {
+    expect(TkEmptyState).toBeDefined();
+    await customElements.whenDefined('tk-empty-state');
+    expect(customElements.get('tk-empty-state')).toBe(TkEmptyState);
   });
 });
