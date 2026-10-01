@@ -1,6 +1,9 @@
 # Spec 21.1 — tk-accordion атом (invest foundation wave, GAP-MAP A1)
 
-- **status:** DRAFT 2026-10-01 (AC frozen pending «go»; исполнения нет)
+- **status:** EXECUTED 2026-10-01 (санкция «b + a»; спеки `6adbfed`, семья
+  `2d0861f` — 23 файла; гейты EXIT 0, unit 13/13, корневые 200/200,
+  полный visual 2206/2206 с 24 новыми базлайнами; **CI run 36899385609 =
+  success**, вердикт по API после факта)
 - **baseline_commit:** `72939e9` (recon-пакет captures-v4; CI-вердикт снимается
   по run id после пуша — zero-in-flight до старта исполнения)
 - **epic note:** открывает Epic 21 «invest foundation wave» — волновое

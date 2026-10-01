@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — tk-accordion family (spec 21.1, invest foundation wave)
+
+- tk-accordion + tk-accordion-item: the disclosure atom of the invest
+  GAP-MAP (Tier A #1, four independent groundings). Native `<button>`
+  trigger with `aria-expanded`; the open panel is a `role="region"`
+  labelled from the summary slot; each row is independent (no rotation
+  mode — no live grounding for it). §9 declarative channel: `open`
+  attribute + `open-change` event (silent on first render, quiet
+  teardown). FLAT motion: the chevron rotates with no transition.
+- Styling hooks: `--tk-accordion-divider-color` (container),
+  `--tk-accordion-chevron-color`, `--tk-accordion-row-hover` (item);
+  token-only defaults. The SBER «Частые вопросы» border card stays a
+  consumer-side pattern — the atom paints bare rows with hairline
+  dividers BETWEEN rows only (`::slotted(:not(:last-child))`).
+- React wrappers (CEM-generated) expose `onOpenChange` on both tags;
+  docs search row + 24 visual/axe baselines (4 stories × 2 themes).
+
 ### Added — tj-news-card geometry hook (spec 20.2, audit §2 re-probe)
 
 - tj-news-card: `--tj-news-card-padding` instance-level custom property
