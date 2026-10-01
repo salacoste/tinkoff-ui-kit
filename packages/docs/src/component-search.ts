@@ -57,6 +57,9 @@ const COMPONENTS: readonly SearchEntry[] = [
   { title: 'Note', tag: 'tk-note', ru: 'Заметка', id: 'components-note--playground' },
   { title: 'ProgressBar', tag: 'tk-progress-bar', ru: 'Индикатор прогресса', id: 'components-progressbar--playground' },
   { title: 'PromoCard', tag: 'tk-promo-card', ru: 'Промо-карточка', id: 'components-promocard--playground' },
+  // 21.5 (invest foundation wave): the read-only star rating — GAP-MAP
+  // Tier A #7; entry points at the Components/ story.
+  { title: 'Rating', tag: 'tk-rating', ru: 'Рейтинг', id: 'components-rating--playground' },
   { title: 'SegmentedRadio', tag: 'tk-segmented-radio', ru: 'Сегментный переключатель', id: 'components-segmentedradio--playground' },
   { title: 'Select', tag: 'tk-select', ru: 'Выпадающий список', id: 'components-select--playground' },
   { title: 'ServiceCard', tag: 'tk-service-card', ru: 'Сервисная карточка', id: 'components-servicecard--playground' },

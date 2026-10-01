@@ -4378,6 +4378,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/rating/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/segmented-radio/index.js"
           }
         },
@@ -8381,6 +8389,111 @@
           "declaration": {
             "name": "TkQrBlock",
             "module": "src/qr-block/qr-block.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/rating/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/rating/rating.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/rating/rating.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "ratingStyles",
+          "default": "css` /* Read-only display: an inline row riding the text flow next to the instrument's name/ISIN (the bonds grounding). The host IS the flex row — no wrapper span. */ :host { display: inline-flex; align-items: center; gap: var(--tk-space-4); color: var(--tk-rating-fill, var(--tk-color-yellow-100)); } /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */ :host([hidden]) { display: none; } .rating__star { flex: none; width: var(--tk-rating-size, 16px); height: var(--tk-rating-size, 16px); } .rating__star svg { display: block; width: 100%; height: 100%; fill: currentColor; } `",
+          "description": "tk-rating styles — tokens only (FR-1), zero theme branches (AD-3).\n\nPIXEL TABLE (spec 21.5, the bonds-list grounding — the ONLY real star\nwidget in the invest реке, .playwright-cli/captures-v4/invest/\nbonds-list.png, precise RGB scan):\n- star lobes ≈16px, step 20px → gap 4px = `--tk-space-4` exactly;\n- fill measures EXACTLY #FFDD2D (srgb 255,221,45) = `--tk-color-yellow-100`\n  byte-identical — the EXISTING kit yellow, nothing minted (AC3);\n- only FILLED integer stars render — right of every cluster the row is\n  clean page white, NO empty neutral slots (the reviews gap-7 lens pass\n  confirmed no second widget anywhere). MEASUREMENT OVERRIDE of AC3's\n  «пустая звезда — нейтраль» guess: no empty stars are drawn, so no\n  empty-color hook exists — documented in the spec's execution record;\n- values in the wild are integers 3–5; the 0.5 grid stays schema-only\n  (AC1) and renders as a single clip-path-partialed star.\n\nHook layer (`--tk-rating-*`, CONVENTIONS §6), consumed WITH defaults:\n- `--tk-rating-fill` star fill (default yellow-100 — the measured exact)\n- `--tk-rating-size` star box (default 16px — the measured lobes)\n\nStructural (non-token) flags (the flag-don't-invent rule): the 16px\ndefault size (no icon-size token exists) and the partial star's inline\n`clip-path: inset(0 N% 0 0)` — computed GEOMETRY from the value, not\ntheming (the progress-bar width ruling)."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ratingStyles",
+          "declaration": {
+            "name": "ratingStyles",
+            "module": "src/rating/rating.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/rating/rating.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-rating — the kit's read-only star rating (spec 21.5, invest\nfoundation wave, GAP-MAP A7).\n\nThe bond-catalog row's star cluster (bonds-list grounding): filled\nyellow stars under the instrument's name/ISIN. STATELESS DISPLAY (the\ntk-progress-bar ruling): `value` is an INPUT, not state — nothing\ndispatches (the completeness guard's no-entry case), and display-side\nmath CLAMPS into [0, 5] without mutating the prop: `value` 7 renders\nfive stars while the property keeps 7.\n\nMEASUREMENT OVERRIDES (both documented in the spec's execution record):\n- NO empty neutral slots: the live row paints only the filled integer\n  stars — the spec draft's «пустая нейтраль» guess dies to the pixels\n  (clean page white right of every cluster).\n- NO `count`: its grounding premise (the reviews page's platform cards)\n  did not survive the lens pass — the page is a leave-a-review promo\n  (census: «Оставьте отзыв…»), no counts, no store cards anywhere.\n  The AC tied count's existence to that grounding, so the prop dies\n  with it — a count surface is minted when a real реке row shows one.\n\nA11y (AC2): the HOST carries `role=\"img\"` (self-asserted at connect —\nthe React-19 law, the tk-menu-item idiom) with\n`aria-label=\"Рейтинг N из 5\"`, comma-decimal per RU convention. NOT\ninteractive: no tabindex, no focus, no pointer affordances — an\ninteractive rating input is explicitly out of scope (the spec's own\nroster ruling: ungrounded).\n\nPartial stars (the 0.5 schema grid; the wild values are integers):\nfloor(value) full stars plus ONE star clipped by an inline\n`clip-path: inset(0 N% 0 0)` — the width-percentage clip AC3 demands,\nno second SVG. value 0 renders zero stars; the named img remains.\n\nSSR-compat (AD-10): rendered via Lit templates only; the only\nimperative steps are the two host attribute writes in\nconnectedCallback/willUpdate, after the element exists.",
+          "name": "TkRating",
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Rating value — an INPUT, not state. Number data never reflects\n(CONVENTIONS §2); a non-numeric attribute reads NaN and displays as\n0 (the progress-bar non-finite guard).",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveValue",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "description": "The value in force: clamped into [0, 5]; non-finite reads as 0. The\nPROP is never touched (the stateless-display ruling).",
+              "readonly": true
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "Rating value — an INPUT, not state. Number data never reflects\n(CONVENTIONS §2); a non-numeric attribute reads NaN and displays as\n0 (the progress-bar non-finite guard).",
+              "name": "value",
+              "default": "0",
+              "fieldName": "value"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-rating",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkRating",
+          "declaration": {
+            "name": "TkRating",
+            "module": "src/rating/rating.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-rating",
+          "declaration": {
+            "name": "TkRating",
+            "module": "src/rating/rating.ts"
           }
         }
       ]
