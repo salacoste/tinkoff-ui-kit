@@ -1,0 +1,6 @@
+### Result
+"{\"title\":\"ИИС: открыть счет онлайн | Тинькофф Инвестиции\",\"h1\":\"Подтвердите заявку на открытие ИИС\",\"buttons\":11,\"links\":351,\"tables\":0,\"canvas\":0,\"svg\":12,\"inputs\":2,\"selects\":0,\"textareas\":0,\"tabs\":2,\"tablists\":1,\"menus\":0,\"dialogs\":1,\"details\":0,\"iframes\":2,\"videos\":0,\"carousel\":0,\"chartLike\":0,\"chips\":0,\"skeleton\":0,\"h2\":0,\"h3\":1,\"img\":5,\"forms\":0,\"scrollH\":2234,\"path\":\"/invest/create_iis/\"}"
+### Ran Playwright code
+```js
+await page.evaluate('() => (JSON.stringify((()=>{const q=s=>document.querySelectorAll(s).length;return {title:document.title.slice(0,120),h1:((document.querySelector("h1")||{}).textContent||"").trim().slice(0,100),buttons:q("button"),links:q("a"),tables:q("table"),canvas:q("canvas"),svg:q("svg"),inputs:q("input"),selects:q("select"),textareas:q("textarea"),tabs:q("[role=tab]"),tablists:q("[role=tablist]"),menus:q("[role=menu]"),dialogs:q("[role=dialog]"),details:q("details"),iframes:q("iframe"),videos:q("video"),carousel:q("[class*=carousel],[class*=slider],[class*=swiper]"),chartLike:q("canvas,[class*=chart]"),chips:q("[class*=badge],[class*=chip],[class*=tag]"),skeleton:q("[class*=skeleton],[class*=placeholder],[class*=shimmer]"),h2:q("h2"),h3:q("h3"),img:q("img"),forms:q("form"),scrollH:document.documentElement.scrollHeight,path:location.pathname}})()))');
+```

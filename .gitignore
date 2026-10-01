@@ -50,6 +50,8 @@ playwright-report/
 !.playwright-cli/captures-v2/
 # v3 per-vertical reference packs (spec 12.2; admin pack lands 13.1+) — dir whitelisted once, files land freely
 !.playwright-cli/captures-v3/
+# v4 invest-section recon pack (2026-10-01 round; 56 representative pages, PNG + census per page) — dir whitelisted once, files land freely
+!.playwright-cli/captures-v4/
 
 # OMC / Claude Code runtime state (skills, agents, settings.json stay tracked)
 .omc/
