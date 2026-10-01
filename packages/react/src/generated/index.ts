@@ -19,6 +19,7 @@ export * from './menu-item.js';
 export * from './menu-popover.js';
 export * from './modal.js';
 export * from './navbar.js';
+export * from './note.js';
 export * from './pagination.js';
 export * from './progress-bar.js';
 export * from './promo-card.js';

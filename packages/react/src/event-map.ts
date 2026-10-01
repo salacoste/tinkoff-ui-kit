@@ -127,6 +127,14 @@ export const EVENT_MAP: Readonly<Record<string, Readonly<TkKitElementEventMap>>>
   'tk-accordion-item': {
     onOpenChange: 'open-change',
   },
+  // Spec 21.4 — the §9 declarative channel on the note's collapsible tail:
+  // the FULL accordion-item disclosure contract rides along (open reflects,
+  // open-change fires on every flip, silent at initial mount) — the tail is
+  // the atom's primary interaction, not internal UI (unlike the filter-chips
+  // «Ещё» menu). Demanded mechanically by tests/event-map-completeness.test.ts.
+  'tk-note': {
+    onOpenChange: 'open-change',
+  },
   // 'tk-skeleton': none at spec 21.2 — STATELESS DISPLAY: a decorative
   // aria-hidden placeholder bone; nothing dispatches (the completeness
   // guard's no-entry case, the tk-badge mold).

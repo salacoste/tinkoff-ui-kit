@@ -52,6 +52,9 @@ const COMPONENTS: readonly SearchEntry[] = [
   { title: 'Link', tag: 'tk-link', ru: 'Ссылка', id: 'components-link--playground' },
   { title: 'Modal', tag: 'tk-modal', ru: 'Модальное окно', id: 'components-modal--playground' },
   { title: 'Navbar', tag: 'tk-navbar', ru: 'Шапка', id: 'components-navbar--playground' },
+  // 21.4 (invest foundation wave): the quiet fine-print note — GAP-MAP
+  // Tier A #6; entry points at the Components/ story.
+  { title: 'Note', tag: 'tk-note', ru: 'Заметка', id: 'components-note--playground' },
   { title: 'ProgressBar', tag: 'tk-progress-bar', ru: 'Индикатор прогресса', id: 'components-progressbar--playground' },
   { title: 'PromoCard', tag: 'tk-promo-card', ru: 'Промо-карточка', id: 'components-promocard--playground' },
   { title: 'SegmentedRadio', tag: 'tk-segmented-radio', ru: 'Сегментный переключатель', id: 'components-segmentedradio--playground' },

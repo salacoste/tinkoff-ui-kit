@@ -24,6 +24,7 @@ export * from './link/index.js';
 export * from './menu-popover/index.js';
 export * from './modal/index.js';
 export * from './navbar/index.js';
+export * from './note/index.js';
 export * from './pagination/index.js';
 export * from './progress-bar/index.js';
 export * from './promo-card/index.js';
