@@ -7,21 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
+## [1.5.0] - 2026-10-01
+
+### Added — v1.5.0 surface (the post-v1.4.0 window: admin follow-up + fonts carrier)
 
 - `tk-menu-popover` + `tk-menu-item` / `tk-menu-divider` — the anchored
-  command menu (spec 19.1, admin follow-up): APG menu semantics (roving
-  tabindex with REAL focus moves, Home/End, Esc with focus return, outside
-  press close, Shift+Tab-from-first-row stays open) over the overlay
-  controller; right-edge anchoring via the new `alignment: 'start' | 'end'`
-  option in `computeFloatingPosition` (the matchAnchorWidth precedent — a
-  new option, not a contract change); `open`/`open-change` +
-  `select` (CONVENTIONS §9 — no imperative exceptions); `slot="header"`
-  user block, leading icon slot, `variant="destructive"` red-text rows,
-  44px rows over the captures' ≈40±2 (the A11y floor is law); panel chrome
-  on neutral tokens with `--tk-menu-popover-*` styling hooks. The admin
-  patterns (avatar-menu with header slot, table-kebab, header-overflow)
-  ship as story compositions, not separate components.
+  command menu (spec 19.1, Epic 19 «admin follow-up», grounded on the
+  captures-v3/admin pack): APG menu semantics over the overlay controller
+  — roving tabindex with REAL focus moves (arrows wrap skipping disabled
+  rows, Home/End), Esc and outside press close with focus return to the
+  trigger, forward Tab closes naturally while Shift+Tab from the first
+  row keeps the menu open; right-edge anchoring via the new
+  `alignment: 'start' | 'end'` cross-axis option in
+  `computeFloatingPosition` (the matchAnchorWidth precedent — a new
+  option, not a contract change); `open` / `open-change` + `select`
+  event channels (CONVENTIONS §9 — no imperative exceptions);
+  `slot="header"` static user block, leading icon slot, red-text
+  `variant="destructive"` rows, 44px rows over the captures' ≈40±2 (the
+  A11y floor is law); panel chrome fully on neutral tokens with
+  `--tk-menu-popover-*` styling hooks. The admin patterns (avatar-menu
+  with header slot, table-kebab, header-overflow) ship as story
+  compositions, not separate components.
 - `pillkit-tj-fonts` — the ТЖ fonts carrier package (spec 18.3, queue
   v1.4.0-(d), maintainer rulings B/split/XCharter): bundled XCharter ×4
   faces (400 / 400 italic / 700 / 700 italic, woff2, no subsetting) — the
@@ -29,10 +35,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   terms (verbatim grant + Panov/Sharpe attribution in LICENSE-FONTS.md;
   the rename to "XCharter" is the license's rename clause at work).
   Graphik is deliberately absent — the Commercial Type EULA grants usage,
-  not redistribution — and travels as a commented `@font-face` recipe in
+  not redistribution — and travels as a commented face-recipe in
   `fonts.css`. The `--tj-font-reading` slot now leads with XCharter; the
   `pillkit-tj-*` trio stays zero-fonts by test (`tests/tj-fonts-policy.test.ts`
   re-scoped + a carrier describe pinning faces/manifest/licenses).
+  v1.5.0 is the FIRST TAG shipping bundled fonts in-tree.
 
 ### Fixed
 
@@ -42,6 +49,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   ((44−30)/2; the 16.5 probe-notes already recorded h30). Visual
   baselines intentionally NOT re-minted — the delta is sub-threshold
   (<1.5% pixel law); the computed truth is pinned in unit tests.
+
+### Internal
+
+- Batch-confirm ЧАСТЬ v1.4.0 CLOSED (delegated retro sitting, the v1.3.0
+  precedent): 136 suite-ТЖ + 3 per-component legs — all ✅, 0 flags, 0
+  overwrites; two registry corrections ratified.
+- README freshness (spec 18.2): tag pins moved to the current release,
+  the devEngines caret-spec trap and the `--prefer-offline` tip recorded.
+- Docs actualization (spec 18.4): 10 post-18.3 staleness sites
+  synchronized across README/LICENSE/package READMEs.
+- pnpm 12.5.1 lesson encoded in CLAUDE.md: a new workspace package needs
+  its lockfile `importers` entry verified BEFORE push (a local "Already
+  up to date" install lies; CI's `--frozen-lockfile` is stricter).
 
 ## [1.4.0] - 2026-09-30
 
