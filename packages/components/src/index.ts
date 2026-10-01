@@ -7,6 +7,7 @@
  * wrappers it feeds (packages/react, `pnpm gen`) stay in sync with these
  * exports.
  */
+export * from './accordion/index.js';
 export * from './article-card/index.js';
 export * from './badge/index.js';
 export * from './button/index.js';

@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { describe, expect, it } from 'vitest';
 
-import { TkButton, TkComboboxSearch, TkCookieBanner, TkDataTable, TkFilterChips, TkMenuDivider, TkMenuItem, TkMenuPopover, TkPagination, TkQrBlock, TkStepper, TkStoreBadges } from './index.js';
+import { TkAccordion, TkAccordionItem, TkButton, TkComboboxSearch, TkCookieBanner, TkDataTable, TkFilterChips, TkMenuDivider, TkMenuItem, TkMenuPopover, TkPagination, TkQrBlock, TkStepper, TkStoreBadges } from './index.js';
 
 /**
  * Package entry: every component's public surface is reachable from
@@ -51,6 +51,18 @@ describe('pillkit-components entry', () => {
       ['tk-menu-popover', TkMenuPopover],
       ['tk-menu-item', TkMenuItem],
       ['tk-menu-divider', TkMenuDivider],
+    ];
+    for (const [tag, klass] of pinned) {
+      expect(klass, `${tag} class re-exported`).toBeDefined();
+      await customElements.whenDefined(tag);
+      expect(customElements.get(tag)).toBe(klass);
+    }
+  });
+
+  it('re-exports the accordion family (spec 21.1) and registers their tags', async () => {
+    const pinned: Array<[string, unknown]> = [
+      ['tk-accordion', TkAccordion],
+      ['tk-accordion-item', TkAccordionItem],
     ];
     for (const [tag, klass] of pinned) {
       expect(klass, `${tag} class re-exported`).toBeDefined();

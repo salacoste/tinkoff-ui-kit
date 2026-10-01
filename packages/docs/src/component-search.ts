@@ -36,6 +36,9 @@ interface SearchEntry {
 }
 
 const COMPONENTS: readonly SearchEntry[] = [
+  // 21.1 (invest foundation wave): the accordion opens the Epic 21 roster —
+  // the first GAP-MAP Tier A atom; entry points at the Components/ story.
+  { title: 'Accordion', tag: 'tk-accordion', ru: 'Аккордеон', id: 'components-accordion--playground' },
   { title: 'ArticleCard', tag: 'tk-article-card', ru: 'Карточка статьи', id: 'components-articlecard--playground' },
   { title: 'Badge', tag: 'tk-badge', ru: 'Бейдж', id: 'components-badge--playground' },
   { title: 'Button', tag: 'tk-button', ru: 'Кнопка', id: 'components-button--playground' },

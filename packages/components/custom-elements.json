@@ -4,6 +4,235 @@
   "modules": [
     {
       "kind": "javascript-module",
+      "path": "src/accordion/accordion-item.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-accordion-item — the kit's Accordion row (spec 21.1, invest foundation\nwave GAP-MAP A1).\n\nOne disclosure row of a `<tk-accordion>`: a header line (bold question +\nthin chevron, ≈56–64px on the live site) and a content panel underneath.\nThe live invest surface renders these as JS toggles on `details:0` pages;\nthe kit follows the APG disclosure pattern instead — a real `<button>`\nheader with `aria-expanded`, Enter/Space/click all toggle (the button's\nnative keyboard contract — no keydown handler to duplicate it).\n\nSEMANTICS: NO `aria-controls` — the panel is a shadow child whose id is\nnot addressable from light DOM (the tk-select / tk-menu-popover precedent,\nspec 19.1). The panel carries `role=\"region\"` + an `aria-label` mirrored\nfrom the summary slot's text (the APG accordion guidance), and hides via\n`hidden` while closed — out of the accessibility tree entirely.\n\nSTATE (CONVENTIONS §9): `open` reflects and flips through the header\ninteraction; `open-change` ({ value }) fires on every actual FLIP —\ncomposed, bubbles, silent on the first render pass whatever set `open`\n(attribute at upgrade, early property assignment) and silent on teardown\n(the select lifecycle guards, the #hasRenderedOnce idiom of 19.1-5).\n\nRows are INDEPENDENT (the live catalogs' FAQ behavior — each opens on its\nown); a `single` rotation mode is deliberately out of scope (no live\ngrounding in the captures).",
+          "name": "TkAccordionItem",
+          "slots": [
+            {
+              "description": "The header line (the question). Falls back to an em-dash when empty.",
+              "name": "summary"
+            },
+            {
+              "description": "The panel body (the answer).",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Row open state — the §9 declarative channel (reflects; `open-change` fires on every flip).",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "#hasRenderedOnce",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "True once updated() has run once: the open-change channel stays silent\non the FIRST pass whatever set `open` — §9 «nothing at initial mount»\n(the menu-popover #hasRenderedOnce idiom)."
+            },
+            {
+              "kind": "field",
+              "name": "#summaryText",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The summary slot's real text — mirrors into the region's aria-label."
+            },
+            {
+              "kind": "method",
+              "name": "#handleHeaderClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncSummaryText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Slot presence (the badge rule): REAL content (an element or non-empty\ntext) counts. The trimmed text feeds the region's aria-label; an empty\nsummary degrades to the placeholder label rather than an unnamed\nregion. Checked at firstUpdated AND on every slotchange — the initial\nassignment does not reliably fire slotchange (the badge lesson)."
+            },
+            {
+              "kind": "method",
+              "name": "#handleSummarySlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "open-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "`{ value: boolean }` — the §9 declarative channel; composed, bubbles, silent at initial mount."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Row open state — the §9 declarative channel (reflects; `open-change` fires on every flip).",
+              "name": "open",
+              "default": "false",
+              "fieldName": "open"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-accordion-item",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkAccordionItem",
+          "declaration": {
+            "name": "TkAccordionItem",
+            "module": "src/accordion/accordion-item.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-accordion-item",
+          "declaration": {
+            "name": "TkAccordionItem",
+            "module": "src/accordion/accordion-item.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/accordion/accordion.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "accordionStyles",
+          "default": "css` :host { display: block; } /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */ :host([hidden]) { display: none; } .accordion { /* Vertical rhythm comes from the rows themselves (padding + line box); the container only owns the BETWEEN-rows hairlines. */ display: block; } /* Divider «between, not around» (bonds frames): every slotted item but the last carries a hairline bottom border. 1px is structural (header notes); the color rides the hook with the border-default neutral. */ .accordion ::slotted(tk-accordion-item:not(:last-child)) { border-bottom: 1px solid var(--tk-accordion-divider-color, var(--tk-color-border-default)); } `",
+          "description": "tk-accordion + tk-accordion-item styles — tokens only (FR-1), zero theme\nbranches (AD-3).\n\nVisual spec: spec 21.1 against the captures-v4 invest pack (the 4-report\nconsensus — bonds/etfs catalog rows, the SBER «Частые вопросы» block, the\naccount/IIS and IPO FAQ pages). Capture → token table:\n\n| capture (captures-v4/invest) | measurement | kit decision |\n|---|---|---|\n| bonds FAQ rows | 1px hairline BETWEEN rows, none around | container paints `::slotted(tk-accordion-item:not(:last-child))` border-bottom, 1px structural hairline (token sheet has no hairline step; the data-table precedent) |\n| SBER FAQ block | white bordered CARD around the whole list | NOT an atom mode — the card is the consumer's pattern wrapper (the 19.1 «no modes without a second grounding in one pattern» lesson); the demo story draws it with tokens. No `--tk-accordion-radius` hook is minted for it (an unused hook is dead code); recorded as the AC3 deviation note |\n| FAQ header rows | bold question left, thin gray chevron right, ≈56–64px tall | body-m bold; chevron = the select chevron icon recolored via the hook; padding-block 16px + the 24px body-m line box ≈56px — ABOVE the a11y floor, which is pinned as the min-height |\n| FAQ answers | regular text under the row | body-m regular, text-primary, bottom rhythm 16px |\n\n`--tk-accordion-*` HOOKS (CONVENTIONS §6): `--tk-accordion-divider-color`\n(container), `--tk-accordion-chevron-color` / `--tk-accordion-row-hover`\n(item) — each with the neutral default inline. No yellow anywhere: the\nsurface is deliberately neutral (spec AC3).\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule — the token sheet carries no counterpart:\n- the 1px hairline dividers (hairline borders are structural across the\n  kit: data-table, menu-popover group rules);\n- the 44px header min-height — the WCAG 2.5.5 floor, not a visual spec\n  value (the live rows run ≈56–64px and the sheet reaches them via\n  padding + line box, so the floor only ever guards degenerate content);\n- the 2px/2px focus ring geometry (the button.css.ts unified ring)."
+        },
+        {
+          "kind": "variable",
+          "name": "accordionItemStyles",
+          "default": "css` :host { display: block; } /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */ :host([hidden]) { display: none; } .item__header { /* Full-bleed row button: the width and the horizontal inset belong to the consumer's surface (page gutter or card padding), not the atom. */ box-sizing: border-box; display: flex; width: 100%; align-items: center; justify-content: space-between; gap: var(--tk-space-16); min-height: 44px; /* WCAG 2.5.5 floor — see the header notes */ padding: var(--tk-space-16) 0; border: 0; background: none; font-family: var(--tk-font-body); font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-bold-weight); line-height: var(--tk-text-body-m-leading); color: var(--tk-color-text-primary); text-align: left; cursor: pointer; } /* The unified focus ring — 2px token ring, offset 2px, never removed (button.css.ts). The offset ring on a full-width row is the kit's focus affordance; hover never replaces it. */ .item__header:focus-visible { outline: 2px solid var(--tk-color-focus-ring); outline-offset: 2px; } /* Quiet row hover (the live catalogs' faint row highlight): the semantic row-hover surface, hook-overridable. */ .item__header:hover { background: var(--tk-accordion-row-hover, var(--tk-color-surface-row-hover)); } .item__summary { min-width: 0; } /* Thin gray chevron (SBER frames) — the select field chevron icon, recolored through the hook. Rotation on :host([open]) mirrors the select's open-state flip; FLAT ruling: no transition (spec 21.1 out of scope — animation joins only with a live-measured round). */ .item__chevron { flex: none; display: inline-flex; color: var(--tk-accordion-chevron-color, var(--tk-color-gray-400)); } :host([open]) .item__chevron { transform: rotate(180deg); } .item__panel { padding-bottom: var(--tk-space-16); font-family: var(--tk-font-body); font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-weight); line-height: var(--tk-text-body-m-leading); color: var(--tk-color-text-primary); } /* display:block on the panel outranks the UA's [hidden] — restate it. The panel node STAYS in the DOM (hidden, never absent) so the default slot keeps receiving slotchange in every state (the progress-bar header lesson). */ .item__panel[hidden] { display: none; } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "accordionStyles",
+          "declaration": {
+            "name": "accordionStyles",
+            "module": "src/accordion/accordion.css.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "accordionItemStyles",
+          "declaration": {
+            "name": "accordionItemStyles",
+            "module": "src/accordion/accordion.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/accordion/accordion.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-accordion — the kit's Accordion container (spec 21.1, invest foundation\nwave GAP-MAP A1).\n\nA vertical list of `<tk-accordion-item>` disclosure rows — the invest\nsurface's most repeated block (bonds/etfs catalog FAQs, the SBER\n«Частые вопросы» card, account/IIS and IPO FAQ pages — 4 independent\nreports in the captures-v4 recon). The container owns ONLY the\nbetween-rows hairline rhythm («between, not around»: every slotted item\nbut the last carries the divider); everything interactive lives on the\nitem (the real `<button>` header, `aria-expanded`, the `open` /\n`open-change` §9 channel).\n\nNO container role by design: the list is plain flow content and each row\nis its own disclosure — the APG accordion needs no list semantics here,\nand a bare grouping keeps the items linearly readable (the live pages'\nscreen-reader reality).\n\nThe white bordered card some live FAQ blocks sit in (SBER) is the\nconsumer's pattern wrapper, NOT an atom mode — the atom paints bare rows\non the surrounding surface (bonds grounding); see the css header's\ncapture→token table for the recorded AC3 deviation note.",
+          "name": "TkAccordion",
+          "slots": [
+            {
+              "description": "The rows: tk-accordion-item elements, authored in order.",
+              "name": ""
+            }
+          ],
+          "members": [],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-accordion",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkAccordion",
+          "declaration": {
+            "name": "TkAccordion",
+            "module": "src/accordion/accordion.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-accordion",
+          "declaration": {
+            "name": "TkAccordion",
+            "module": "src/accordion/accordion.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/accordion/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/accordion/accordion.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/accordion/accordion-item.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/api-reference.ts",
       "declarations": [
         {
@@ -3783,6 +4012,14 @@
       "path": "src/index.ts",
       "declarations": [],
       "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/accordion/index.js"
+          }
+        },
         {
           "kind": "js",
           "name": "*",

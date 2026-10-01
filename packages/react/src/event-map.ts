@@ -114,6 +114,19 @@ export const EVENT_MAP: Readonly<Record<string, Readonly<TkKitElementEventMap>>>
     onOpenChange: 'open-change',
     onSelect: 'select',
   },
+  // Spec 21.1 — the §9 declarative channel on the accordion ROW: the item
+  // carries the disclosure state, the container owns none of its own (the
+  // completeness guard attributes dispatches by DIRECTORY, so the registry
+  // entry lands under 'tk-accordion' — where the composed+bubbling event
+  // is catchable on the container wrapper too; the item mapping gives the
+  // row wrapper its direct prop). Demanded mechanically by
+  // tests/event-map-completeness.test.ts.
+  'tk-accordion': {
+    onOpenChange: 'open-change',
+  },
+  'tk-accordion-item': {
+    onOpenChange: 'open-change',
+  },
   // 'tk-toast': none at v4.3 — FIRE-AND-FORGET (spec 4.3 ruling): no `open`
   // channel and no kit events at all; a toast appears already visible,
   // never takes focus, and the slotted action serves its own native click

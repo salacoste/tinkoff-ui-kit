@@ -45,7 +45,7 @@ const COMPONENTS_SRC = join(REPO_ROOT, 'packages', 'components', 'src');
  * modal/tooltip/cookie-banner: host + surface) and menu-popover carries FOUR
  * (host + generated panel + row + divider, spec 19.1) — 21 + 12 + 4 = 37.
  */
-const PINNED_HOST_DISPLAY_SHEETS = 37;
+const PINNED_HOST_DISPLAY_SHEETS = 39;
 
 interface SheetFinding {
   component: string;
@@ -114,10 +114,10 @@ describe('kit-wide :host([hidden]) guard (story 8.1, deferred-work 6.3 N6)', () 
   it('tripwire: the host-display sheet roster is the pinned 37 — a new sheet joining the family forces a deliberate guard decision', () => {
     const findings = auditSheets();
     expect(findings).toHaveLength(PINNED_HOST_DISPLAY_SHEETS);
-    // 28 component files; six contribute a second host-display sheet and
+    // 29 component files; seven contribute a second host-display sheet and
     // menu-popover contributes four (deduped — a 4-sheet component would
     // otherwise list itself three times in the raw duplicate findings).
-    expect(new Set(findings.map((f) => f.component)).size).toBe(28);
+    expect(new Set(findings.map((f) => f.component)).size).toBe(29);
     const doubled = [
       ...new Set(
         findings
@@ -126,6 +126,7 @@ describe('kit-wide :host([hidden]) guard (story 8.1, deferred-work 6.3 N6)', () 
       ),
     ];
     expect(doubled).toEqual([
+      'accordion',
       'combobox-search',
       'cookie-banner',
       'filter-chips',
