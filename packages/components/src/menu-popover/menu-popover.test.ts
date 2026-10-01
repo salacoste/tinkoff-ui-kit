@@ -526,11 +526,43 @@ describe('tk-menu-item', () => {
     item.click();
     expect(heard).toEqual([]);
   });
+
+  // The React-19 law (the v1.5.0 Flow-B gate catch): React's element creation
+  // discards constructor-time attributes, so the APG identity is asserted at
+  // CONNECT time and must survive any detach→reattach cycle — the move into
+  // the panel (routeChildren) is exactly such a cycle.
+  it('re-asserts role=menuitem and the roving default on every (re)connect (the React-19 law)', async () => {
+    const item = new TkMenuItem();
+    item.textContent = 'Переносимая строка';
+    document.body.appendChild(item);
+    await item.updateComplete;
+    expect(item.getAttribute('role')).toBe('menuitem');
+
+    item.remove(); // detach: attributes could in principle be swept
+    expect(item.getAttribute('role')).toBe('menuitem'); // nothing strips them silently
+
+    const panelHost = document.createElement('div');
+    document.body.appendChild(panelHost);
+    panelHost.appendChild(item); // reattach into another parent (the routing move)
+    await item.updateComplete;
+    expect(item.getAttribute('role')).toBe('menuitem');
+    expect(item.tabIndex).toBe(-1);
+  });
 });
 
 describe('tk-menu-divider', () => {
   it('is role=separator by construction', async () => {
     const divider = new TkMenuDivider();
+    document.body.appendChild(divider);
+    await divider.updateComplete;
+    expect(divider.getAttribute('role')).toBe('separator');
+  });
+
+  it('re-asserts role=separator on reattach (the React-19 law, same as tk-menu-item)', async () => {
+    const divider = new TkMenuDivider();
+    document.body.appendChild(divider);
+    await divider.updateComplete;
+    divider.remove();
     document.body.appendChild(divider);
     await divider.updateComplete;
     expect(divider.getAttribute('role')).toBe('separator');

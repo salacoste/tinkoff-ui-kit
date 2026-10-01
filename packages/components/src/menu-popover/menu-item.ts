@@ -12,9 +12,11 @@ import { menuItemStyles } from './menu-popover.css.js';
  * pattern), and the destructive variant as RED TEXT with no fill (the
  * kebab captures' «Удалить» rows — probe-notes § 2026-09-30).
  *
- * The element is APG-menu shaped BY CONSTRUCTION: role=menuitem, roving
+ * The element is APG-menu shaped BY CONTRACT: role=menuitem and roving
  * tabindex (-1 — tk-menu-popover promotes the current row to 0 and moves
- * real focus among rows), aria-disabled for the unselectable state.
+ * real focus among rows) are asserted at CONNECT time (constructor-time
+ * attributes do not survive React 19's element creation), aria-disabled for
+ * the unselectable state.
  * Activation (click / Enter / Space) is MEDIATED by tk-menu-popover, which
  * owns the `select` event and the open/close choreography — a bare item
  * outside a menu-popover renders and is focusable but dispatches nothing.
@@ -36,10 +38,13 @@ export class TkMenuItem extends LitElement {
   @property({ type: String, reflect: true })
   variant: 'default' | 'destructive' = 'default';
 
-  constructor() {
-    super();
-    // Self-attributes only (§10 construction safety): the APG identity and
-    // the roving default. tk-menu-popover promotes the current row to 0.
+  override connectedCallback(): void {
+    super.connectedCallback();
+    // Self-attributes at CONNECT time (§10 construction safety + the React-19
+    // law, caught by the v1.5.0 Flow-B gate): React creates custom elements so
+    // that constructor-time attributes never reach the committed node — the
+    // APG identity and the roving default must be (re)asserted on every
+    // connect. tk-menu-popover promotes the current row to 0.
     this.setAttribute('role', 'menuitem');
     this.tabIndex = -1;
   }

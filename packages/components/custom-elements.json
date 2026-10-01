@@ -4899,7 +4899,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "tk-menu-divider — the 1px full-width group rule inside `tk-menu-popover`\n(spec 19.1): the open captures show item groups separated by a hairline\nacross the whole panel width (probe-notes § 2026-09-30), the same\nlanguage the console's page headers use. role=separator by construction.",
+          "description": "tk-menu-divider — the 1px full-width group rule inside `tk-menu-popover`\n(spec 19.1): the open captures show item groups separated by a hairline\nacross the whole panel width (probe-notes § 2026-09-30), the same\nlanguage the console's page headers use. role=separator asserted at connect\ntime (constructor-time attributes do not survive React 19's element creation).",
           "name": "TkMenuDivider",
           "members": [],
           "superclass": {
@@ -4935,7 +4935,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "tk-menu-item — one command row of `tk-menu-popover` (spec 19.1), the\nfollow-up pack's grounded anatomy: ≈44px row (captures ≈40±2 — the A11y\nFloor's ≥44 target wins, see menu-popover.css.ts), 12px inline padding,\noptional leading 20px-class icon in the `icon` slot (the avatar-menu\npattern), and the destructive variant as RED TEXT with no fill (the\nkebab captures' «Удалить» rows — probe-notes § 2026-09-30).\n\nThe element is APG-menu shaped BY CONSTRUCTION: role=menuitem, roving\ntabindex (-1 — tk-menu-popover promotes the current row to 0 and moves\nreal focus among rows), aria-disabled for the unselectable state.\nActivation (click / Enter / Space) is MEDIATED by tk-menu-popover, which\nowns the `select` event and the open/close choreography — a bare item\noutside a menu-popover renders and is focusable but dispatches nothing.",
+          "description": "tk-menu-item — one command row of `tk-menu-popover` (spec 19.1), the\nfollow-up pack's grounded anatomy: ≈44px row (captures ≈40±2 — the A11y\nFloor's ≥44 target wins, see menu-popover.css.ts), 12px inline padding,\noptional leading 20px-class icon in the `icon` slot (the avatar-menu\npattern), and the destructive variant as RED TEXT with no fill (the\nkebab captures' «Удалить» rows — probe-notes § 2026-09-30).\n\nThe element is APG-menu shaped BY CONTRACT: role=menuitem and roving\ntabindex (-1 — tk-menu-popover promotes the current row to 0 and moves\nreal focus among rows) are asserted at CONNECT time (constructor-time\nattributes do not survive React 19's element creation), aria-disabled for\nthe unselectable state.\nActivation (click / Enter / Space) is MEDIATED by tk-menu-popover, which\nowns the `select` event and the open/close choreography — a bare item\noutside a menu-popover renders and is focusable but dispatches nothing.",
           "name": "TkMenuItem",
           "slots": [
             {
@@ -4969,14 +4969,6 @@
               "description": "Visual variant: `default` | `destructive` (red text, no fill).",
               "attribute": "variant",
               "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "tabIndex",
-              "type": {
-                "text": "number"
-              },
-              "default": "-1"
             }
           ],
           "attributes": [
