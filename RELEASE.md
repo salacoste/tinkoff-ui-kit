@@ -1183,4 +1183,180 @@ export default defineConfig({ resolve: { dedupe: ['react', 'react-dom'] } });
   (ретроспективно), SR-RUNSHEET живой VoiceOver, лицензии Graphik/Charter,
   36px FLAG, iOS/admin спот-чеки (HANDOFF §4).
 
+# Релиз v1.5.0 (post-v1.4.0 окно) — подготовлено Story 19.2 (2026-10-01)
+
+**Всё до тега подготовлено прогоном 19.2 по санкции мейнтейнера «go» на
+решение «следующий тег = v1.5.0»; тег ставит ТОЛЬКО мейнтейнер.** v1.5.0 =
+окно после v1.4.0: закрытие очереди мейнтейнера HANDOFF §4 ((a)
+ретро-batch-confirm ЧАСТЬ v1.4.0 делегированным присестом — 139 ног все ✅;
+(e) перемер чипов → **18.1** tj-header метрики; (d) рулинги Graphik/Charter
+→ **18.3** `pillkit-tj-fonts`; (f) follow-up капчи доставлены → **19.1**
+`tk-menu-popover`, Epic 19 «admin follow-up» открыт) + доки-гигиена
+(**18.2** README-freshness с пином тега v1.4.0, **18.4** актуализация — 10
+устареваний). Итог (ИЗМЕРЕНО на голове prep-окна): **40 компонентов**
+(30 банк + 10 ТЖ), корневой сюит **200/200**, полный visual compare
+**2182/2182 ног** (двухпроходный на голове 19.1), **562 базлайн-PNG сюиты
++ 12 регион-наборов ×2** (544 → 562: +18 menu-popover). **v1.5.0 — первый
+тег, везущий бандленные шрифты** (XCharter ×4, Bitstream-условия).
+Модель та же: **только GitHub, тег `v1.5.0` на `main`; npm — никогда**;
+`private: true` навсегда.
+
+## 12.1. Гейты до релиза (pre-flight v1.5.0)
+
+1. **CI зелёный на голове релиза — вердикт только по `gh run`**
+   (правило CLAUDE.md). Цепочка окна записана честно, ran-id-ами — все
+   GREEN: 18.1 `0c88291` = 36705793707; 18.2 `827f0c6` = 36709057024;
+   18.3 `fccfe44` → **RED за 26 с** (pnpm 12.5.1 не пишет пустой importer
+   для беззависимостного пакета, CIшный `--frozen-lockfile` строже
+   локального «Already up to date») → фикс `a485cab` = 36715355750;
+   штамп `8b1f0d9` = 36718261116; 18.4 `87538af` = 36721958634;
+   close-out `9bddd0b` = 36725989337; 19.1 `9bdd14d` = 36749011384
+   (52 файла, полный compare 2182/2182 в окне 19.1); штамп `5821874` =
+   36754900566 (= baseline_commit спеки 19.2). Вердикт головы 19.2 — по
+   её ran-id в спеке 19.2 (Verification).
+2. **Standing practice (CLAUDE.md):** после любого изменения собранного
+   дерева — ПОЛНЫЙ прогон, не scoped-ноги. В 19.1 полный compare гонялся
+   дважды (перенос Open-стори + переминт getting-started-индекса) — итог
+   **2182/2182, exit 0**. Окно 19.2 меняет собранное дерево (пин тега в
+   getting-started стори) → полный прогон обязателен и здесь.
+3. Локально на голове 19.2: `pnpm build && pnpm test && pnpm lint &&
+   pnpm typecheck` — всё зелёное (корневой сюит 200/200, из них 31 —
+   menu-popover 19.1).
+4. **Gen-drift после бампа:** `pnpm gen` → diff пуст, РОВНО ожидаемые
+   файлы (7 строк `package.json` + CHANGELOG) — CEM-манифесты не
+   встраивают версию пакета (проверено и в 17.5, и здесь на исполнении).
+5. **Батч-подтверждение v1.5.0-базлайнов:** окно добавило 18 PNG
+   (menu-popover, 19.1) + 2 регион-пары + переминты (open-стори 19.1 ×2,
+   getting-started ×2 — оба ЯВНЫЙ rm → update по закону) + переминт
+   getting-started 19.2 ×2 (пин тега). Реестр PNG-событий окна — в
+   CHANGELOG Internal и Implementation Notes спек 19.2. Мейнтейнерский
+   гейт: подтвердить 18+2+2 новых/переминченных перед тегом или принять
+   зафиксированное в спеках.
+6. **SR-спот-чеки:** SR-RUNSHEET-v1.4.0.md остаётся мейнтейнерским
+   (живой VoiceOver); для 19.1 механизуемая половина закрыта sweep-VII
+   строкой (1 стоп / ≥5 поверхностей, measured) + axe на всех 9 стори ×
+   обе темы. Может ехать ПОСЛЕ тега.
+
+## 12.2. Версия и CHANGELOG (прецедент §11.2) — ИСПОЛНЕНО в-story 19.2
+
+Исполнено 2026-10-01 (коммит `d760e44`):
+
+- `packages/{tokens,components,react}/package.json`: `1.4.0` → `1.5.0`
+  (банк ×3); `packages/tj-{tokens,components,react}/package.json`:
+  `1.4.0` → `1.5.0` (ТЖ ×3); `packages/tj-fonts/package.json`:
+  `1.4.0` → `1.5.0` (носитель шрифтов встал на поезд в 18.3 — v1.5.0
+  его ПЕРВЫЙ тег). Корневой `0.1.0` и docs `0.0.0` — вне релизного
+  контракта, не тронуты.
+- `CHANGELOG.md`: `[Unreleased]` → `[1.5.0] - 2026-10-01` (Added —
+  tk-menu-popover семейство + pillkit-tj-fonts; Fixed — tj-header
+  метрики; Internal — batch-confirm закрытие, README-freshness, docs
+  actualization, pnpm-lockfile урок) + свежий пустой `[Unreleased]`.
+- Проверка чистоты: diff = ровно 7 строк версий + CHANGELOG; `pnpm gen`
+  после бампа — zero drift; читателей полей версий нет (grep: `.version`
+  в packages/*/src + tests = 0; рендерящихся литералов версий в сторях —
+  только намеренный пин тега getting-started, см. §12.4-пин).
+
+## 12.3. Тег (мейнтейнер — единственный исполнитель)
+
+Прецедент §3/§4/§10.3/§11.3. Для v1.5.0 исполнение НЕ делегируется —
+только мейнтейнер, ПОСЛЕ своего явного «tag ok» (прямое указание в окне
+19.2-close; вердикт CI головы 19.2 должен быть GREEN на момент тега):
+
+```
+git tag -a v1.5.0 -m "pillkit v1.5.0 — admin follow-up: tk-menu-popover + the tj-fonts carrier (post-v1.4.0 window)" <head-19.2>
+git push origin v1.5.0
+```
+
+Никогда не `npm publish`; `private: true` не снимается (ЖЕЛЕЗНО). Теговый
+пуш CI не триггерит (workflow: push branches [main] only) —
+verdict-обязательство на последующий docs-коммит.
+
+## 12.4. Верификация релиза — свежий потребитель (Flow-B: банк рендерит НОВЫЙ атом; ТЖ/шрифты — референсы)
+
+Для v1.5.0 головная потребительская новинка — БАНКОВСКАЯ: свежий
+клон по тегу ставит банковскую тройку и рендерит `tk-menu-popover`
+(§10.4-молд банка + новая поверхность):
+
+```
+git clone --branch v1.5.0 https://github.com/salacoste/tinkoff-ui-kit
+cd my-app && pnpm init
+# pnpm-workspace.yaml: packages: [., ../tinkoff-ui-kit/packages/*]
+cd ../tinkoff-ui-kit && pnpm install && pnpm build && cd ../my-app
+pnpm add -w pillkit-tokens pillkit-components pillkit-react --workspace
+
+// vite.config.ts — ОБЯЗАТЕЛЬНО (урок релизного гейта v1.1.0):
+import { defineConfig } from 'vite';
+export default defineConfig({ resolve: { dedupe: ['react', 'react-dom'] } });
+```
+
+Acceptance (release-grade): `<tk-menu-popover>` с `slot="anchor"`-кнопкой
+и 3–5 `tk-menu-item` открывается кликом/↓, панель правым краем к триггеру
+(alignment 'end'), `select`-событие долетает, Esc возвращает фокус на
+триггер; React-обёртка `MenuPopover` рендерит то же (обёртки генерируются
+из CEM, `onOpenChange`/`onSelect` замаплены). Вторично (референсами, без
+повтора): ТЖ-ALONE census §11.4 (семейство не менялось) — но install-строка
+ТЖ-флоу теперь ЧЕТЫРЁХПАКЕТНАЯ по желанию потребителя:
+`pillkit-tj-tokens pillkit-tj-components pillkit-tj-react` +
+опционально `pillkit-tj-fonts` (первый тег с ним; после install
+`--tj-font-reading` резолвится в бандленный XCharter без consumer-side
+`@font-face` — файл шрифтов уже в дереве пакета). До тега — recipe-only.
+
+## 12.5. Драфт changelog v1.5.0 (EN — уже перенесён в CHANGELOG.md на §12.2; историческая запись)
+
+Дословно то, что легло в `CHANGELOG.md` под `[1.5.0] - 2026-10-01`
+(заголовки секций + первые строки; полные тексты — там):
+
+```
+### Added — v1.5.0 surface (the post-v1.4.0 window: admin follow-up + fonts carrier)
+- tk-menu-popover + tk-menu-item / tk-menu-divider — the anchored command
+  menu (spec 19.1, Epic 19 «admin follow-up», grounded on the
+  captures-v3/admin pack): APG menu semantics over the overlay controller…
+  alignment: 'start' | 'end' cross-axis option in computeFloatingPosition…
+- pillkit-tj-fonts — the ТЖ fonts carrier package (spec 18.3…): bundled
+  XCharter ×4 faces… v1.5.0 is the FIRST TAG shipping bundled fonts in-tree.
+
+### Fixed
+- tj-header pill metrics remeasured… nav chips 36→40px, CTA 36→30px…
+
+### Internal
+- Batch-confirm ЧАСТЬ v1.4.0 CLOSED… 136 + 3 legs — all ✅, 0 flags…
+- README freshness (spec 18.2)… docs actualization (spec 18.4)…
+- pnpm 12.5.1 lesson… new workspace package ⇒ lockfile importers BEFORE push.
+```
+
+## 12.6. Шрифты и право (НЕИЗМЕННО — напоминание + НОВОЕ ОКНА v1.5.0)
+
+- **DaytonaSans/DaytonaPragma — отдельно лицензированные бинарники**
+  (© Monotype Imaging / © ParaType), НЕ MIT: права потребителя определяет
+  ТОЛЬКО `packages/tokens/fonts/LICENSE-FONTS.md`. Без изменений с v1.0.0.
+- **JetBrains Mono — ТЕСТ-ТОЛЬКО** (пин детерминистских метрик моно) —
+  без изменений с v1.2.0.
+- **НОВОЕ v1.5.0 — XCharter едет В ДЕРЕВЕ:** `packages/tj-fonts/fonts/`
+  ×4 woff2 по Bitstream Charter условиям (дословный грант +
+  Panov/Sharpe атрибуция в LICENSE-FONTS.md; переименование в «XCharter» —
+  та самая rename-clause лицензии). Это ПЕРВЫЙ тег с бандленными
+  шрифтами после Daytona (v1.0.0). Graphik по-прежнему НЕ поставляется
+  (EULA Commercial Type без редистрибуции) — только закомментированный
+  face-рецепт. ТЖ-тройка остаётся zero-fonts по тесту (носитель —
+  отдельный пакет, тройка структурно не может его импортировать).
+- Товарный знак/ПД: свип 5.7 в силе; окно 19.1 прошло zero-hardcoded
+  трипваер + ПД-заливки captures-v3/admin проверены до укладки; стори-
+  контент — вымышленные имена/суммы (закон ПД).
+
+## 12.7. Что 19.1+19.2 уже проверили (не нужно повторять) + ПРУФ НЕИСПОЛНЕНИЯ
+
+- Гейты на голове 19.1 (`9bdd14d`, run 36749011384 GREEN): build/test/
+  lint/typecheck зелёные; корневой сюит 200/200; **полный compare
+  2182/2182** (двухпроходный; регион-спека menu-popover с геометрия-
+  пинами fixed/z-токен/ниже-якоря/flush-правые-края/≥270px); sweep-VII
+  строка measured. Штамп `5821874` = 36754900566 GREEN — baseline 19.2.
+- Гейты головы 19.2: локальная цепь EXIT 0 + полный compare после
+  переминта пина getting-started (ran-id в Verification спеки 19.2);
+  gen-drift ноль; версионные grep-пруфы пусты.
+- **НЕ ИСПОЛНЕНО (историческая запись, 2026-10-01 до тега): ТОЛЬКО
+  ТЕГ.** ПРУФЫ: `git tag -l` = `v1.0.0 v1.1.0 v1.2.0 v1.3.0 v1.4.0`
+  (без v1.5.0); npm-команды не запускались. Версии/CHANGELOG/§12/
+  пины/HANDOFF исполнены прогоном 19.2 — сужение §10.7→§11.7→§12.7
+  осознанное и видимое.
+
 

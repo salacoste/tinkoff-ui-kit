@@ -192,8 +192,8 @@ export const Page: Story = {
         закрытый учебный, и отдельно-лицензированные шрифты делают реестр
         неудобным каналом. Рабочий путь — pnpm-линк воркспейса из checkout'а
         репозитория; для воспроизводимости пинуйте релизный тег
-        (<code>git clone --branch v1.4.0 …</code> или
-        <code>git checkout v1.4.0</code> в существующем checkout'е):
+        (<code>git clone --branch v1.5.0 …</code> или
+        <code>git checkout v1.5.0</code> в существующем checkout'е):
       </p>
       <pre><code>git clone ${REPO_URL}
 cd my-app && pnpm init
