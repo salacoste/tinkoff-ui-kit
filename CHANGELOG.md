@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — tk-empty-state atom (spec 21.3, invest foundation wave)
+
+- tk-empty-state: the «nothing here yet» block (invest GAP-MAP Tier A
+  #5). Centered stack disc → heading → supporting line → action; the
+  atom paints NO card — the favorites grounding draws the card at the
+  consumer level, and the admin-table compact is a story-level hook
+  derivation (its probe label failed the pixel check: the frame was an
+  account row, so the spec's double grounding collapsed to one live
+  capture).
+- STATELESS display mold: the action is a SLOT (the live grounding
+  carries a text link — a button fits the same slot), nothing
+  dispatches (event-map no-entry), the disc is decorative
+  aria-hidden. `heading` prop with slot override via the
+  service-card slotchange machinery; the description wrapper renders
+  only while its slot carries content — a vision-review catch from the
+  first round (the line was passed as an attribute the atom never
+  read, so nothing rendered; an empty flex item would fake the
+  rhythm).
+- Hook layer `--tk-empty-state-{gap,text-gap,disc-size,disc-fill,
+  icon-color}` with token defaults; the measured favorites table
+  lives in the sheet header. React wrapper (CEM), docs search row,
+  hidden-guard roster 41/31, eight baselines — full suite 2248/2248
+  after the fix round (getting-started stayed under the 1.5% gate, no
+  re-mint per 5.4-F1).
+
 ### Added — tk-skeleton atom (spec 21.2, invest foundation wave)
 
 - tk-skeleton: the loading-placeholder bone (invest GAP-MAP Tier A #4).
