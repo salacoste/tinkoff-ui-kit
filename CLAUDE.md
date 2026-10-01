@@ -933,3 +933,34 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   лёг выдуманный ran-id-заполнитель — правило «вердикт только после
   факта» удержано на ревью самого себя; заполнитель = честная фраза
   «будет записан после существования», НЕ число.
+
+- **2026-10-01 — v1.5.0 RELEASED: «tag ok» → тег → Flow-B НАШЁЛ дефект →
+  фикс → тег ПЕРЕМЕЩЁН → раунд-2 PASS → штампы.** Штамп-коммит `9e3c32b`
+  (CI 36812781743 success) → по санкции «tag ok» аннотированный тег на
+  `9e3c32b` (tag-объект `b828a98c`; теговый пуш CI не триггерит). Flow-B
+  §12.4 раунд-1 (свежий потребитель по тегу, банковская тройка,
+  tk-menu-popover raw + React) **нашёл продуктовый дефект: в
+  React-композициях ряды без role**. Изоляция (/iso.html, dev+prod):
+  **ЗАКОН REACT 19 — атрибуты, выставленные в конструкторе кастомного
+  элемента, не доносят до закоммиченного узла** (элемент с отработавшим
+  ctor ≠ закоммиченный узел). Фикс `c7fe548`: роли/roving-дефолт в
+  `connectedCallback` (идемпотентно; перемещение рядов в панель =
+  detach→reattach — покрыто юнит-пинами «re-asserts on every
+  (re)connect»); gen → 200/200 → lint/typecheck EXIT 0 → docs build →
+  **полный compare 2182/2182** (атрибутный фикс пиксельно нейтрален) →
+  **CI 36820396725 = success**. Решение мейнтейнера «Перенести на
+  c7fe548»: тег ПЕРЕМЕЩЁН по §7 (`git tag -f -a` + force-push; новый
+  tag-объект `df4c3c8`, deref `c7fe548`, remote сверен; потребителей у
+  часового тега нет; запись в CHANGELOG). Раунд-2 на `c7fe548`:
+  **23/23 PASS** (роли обоих меню, Δright 0.00px / зазор 4.00px / ширина
+  280px, реальный фокус через `shadowRoot.activeElement`, select +
+  open-change c РАЗВЁРНУТЫМ detail.value CONVENTIONS §3, Esc +
+  фокус-возврат, dark rgb(26,26,26), консоль 0; ценсус pillkit-*@1.5.0;
+  prod 36 модулей). Пробы-уроки: getByRole СЛЕП к hidden-панелям
+  (a11y-tree) — закрытые проверки атрибутным локатором;
+  `document.activeElement` ретаргетится на host при фокусе в shadow —
+  читать `host.shadowRoot.activeElement`. Отклонение записано честно:
+  клон ЛОКАЛЬНЫЙ по тегу (транспорт ~2 МБ/мин, прецедент §11.4; remote
+  deref сверен ДО клона). Штампы: RELEASE §12.3/§12.4/§12.7 + CHANGELOG
+  + HANDOFF; пруфы `verify/v150-fresh-clone/` (probe.mjs, NOTES.md,
+  2 PNG). Остаётся мейнтейнерским: живой VO, iOS momentum-scroll.

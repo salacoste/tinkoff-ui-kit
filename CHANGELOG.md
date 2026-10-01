@@ -43,6 +43,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- tk-menu-item / tk-menu-divider: APG roles are asserted at connect time —
+  constructor-time host attributes do not survive React 19's element creation,
+  so React compositions received role-less rows (menuitem/separator) while the
+  Lit-template stories stayed correct. Caught by the v1.5.0 Flow-B
+  fresh-consumer gate; shipped in `c7fe548`, which the tag was moved to.
 - tj-header pill metrics remeasured against the stable reference captures
   (spec 18.1, queue v1.4.0-(e)): nav chips 36→40px (7 chips × 2 captures,
   zero spread), the header CTA pill 36→30px with its inset-block 4→7px
@@ -62,6 +67,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - pnpm 12.5.1 lesson encoded in CLAUDE.md: a new workspace package needs
   its lockfile `importers` entry verified BEFORE push (a local "Already
   up to date" install lies; CI's `--frozen-lockfile` is stricter).
+- Release note: the v1.5.0 tag was placed on `9e3c32b` («tag ok») and MOVED
+  to `c7fe548` the same day (RELEASE.md §7 — maintainer decision, zero
+  consumers at that age) so the release ships the React-surface fix; the
+  two-round Flow-B gate record — `.playwright-cli/verify/v150-fresh-clone/`.
 
 ## [1.4.0] - 2026-09-30
 
