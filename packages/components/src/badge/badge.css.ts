@@ -29,6 +29,20 @@ import { css } from 'lit';
  *   AA-override discipline (white on #E5372B = 4.3:1 FAILS at body-xs;
  *   ink on it = 3:1 fails worse) — the delta-discipline precedent, no
  *   new red token.
+ * - positive / negative (22.2, invest identity wave): TEXT-only financial
+ *   tones on NO fill. Grounding: the research hub's insider-deals table
+ *   paints the deal type as PLAIN sentence-case text (~12–13px, white
+ *   page background — «Покупка» ×4 green, «Продажа» ×1 red, NO pill
+ *   behind any of them; lens-verified 22.2), and paints ONLY the value,
+ *   never the background. The tones therefore ride the DELTA tokens
+ *   (delta-positive/negative) — the same tokens the quote-chip deltas
+ *   use, no mint. Two structural consequences, both deliberate:
+ *   (a) these are the FIRST theme-aware variants — the delta tokens
+ *   carry dark remaps, and with no fill there is no fill/text pair to
+ *   hold invariant; text follows the theme, correctly;
+ *   (b) the delta AA sanction is surface-base-only (the 22.1 ruling:
+ *   green-300 fails surface-muted at 4.210:1) — a tone badge on a
+ *   tinted surface is the consumer's leg to check.
  *
  * `--tk-badge-*` HOOKS (13.3, CONVENTIONS §6 — minted here; the family had
  * ZERO custom properties before): every variant consumes the SAME pair —
@@ -106,5 +120,19 @@ export const badgeStyles = css`
   :host([variant='attention']) .badge {
     background: var(--tk-badge-fill, var(--tk-color-red-300));
     color: var(--tk-badge-text, var(--tk-color-white));
+  }
+
+  /* --- Financial tones (22.2): text on NO fill — the live table paints the
+     value, not the background. The delta tokens remap in dark (the FIRST
+     theme-aware variants); the fill hook stays for consumer tints, but a
+     tint under a delta tone owns its AA leg (surface-base sanction). --- */
+  :host([variant='positive']) .badge {
+    background: var(--tk-badge-fill, transparent);
+    color: var(--tk-badge-text, var(--tk-color-delta-positive));
+  }
+
+  :host([variant='negative']) .badge {
+    background: var(--tk-badge-fill, transparent);
+    color: var(--tk-badge-text, var(--tk-color-delta-negative));
   }
 `;

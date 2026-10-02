@@ -13,13 +13,16 @@ import type { TkTab } from '../tabs/tabs.js';
  * adds the neutral/attention variants and the gray tab-count digit via the
  * freshly minted --tk-badge-* hooks (zero tabs code — custom properties
  * inherit through the shadow boundary onto the existing TkTab.badge chip).
+ * The 22.2 financial tones (positive/negative, invest identity wave) join
+ * the Variants/Theming/Accessibility canvases — measured grounding: the
+ * live insider-deals table paints the deal type as plain text, no pill.
  *
  * Story-canvas styling consumes var(--tk-*) tokens only (FR-1) — this file
  * sits inside the zero-hardcoded guard's scan root.
  */
 
 type BadgeArgs = {
-  variant: 'incentive' | 'stat' | 'neutral' | 'attention';
+  variant: 'incentive' | 'stat' | 'neutral' | 'attention' | 'positive' | 'negative';
   count: number | undefined;
   label: string;
 };
@@ -114,9 +117,9 @@ const meta: Meta<BadgeArgs> = {
   argTypes: {
     variant: {
       control: 'radio',
-      options: ['incentive', 'stat', 'neutral', 'attention'],
+      options: ['incentive', 'stat', 'neutral', 'attention', 'positive', 'negative'],
       description:
-        'Пара заливка/текст: incentive — зелёная с чернильным текстом (AA-пара 2.1), stat — чернильная с белым, neutral — серая gray-100/gray-600 (консоль), attention — red-300 с белым (AA-маппинг пака). Все не зависят от темы.',
+        'Пара заливка/текст: incentive — зелёная с чернильным текстом (AA-пара 2.1), stat — чернильная с белым, neutral — серая gray-100/gray-600 (консоль), attention — red-300 с белым (AA-маппинг пака). Четыре заливки не зависят от темы; positive/negative (22.2) — финансовые текстовые тоны без заливки, красятся дельта-токенами и темятся в dark.',
     },
     count: {
       control: 'number',
@@ -173,6 +176,23 @@ export const Variants: Story = {
           ${badge({ variant: 'neutral' }, 'Ожидает подписи')}<figcaption>neutral</figcaption>
         </figure>
         <figure>${badge({ variant: 'attention', count: 3 })}<figcaption>attention</figcaption></figure>
+      </div>
+      <h2>Финансовые тоны</h2>
+      <p class="tkbadge-note">
+        <code>positive</code>/<code>negative</code> (22.2) — текстовые тоны без
+        заливки: живая таблица инсайдерских сделок красит ТОЛЬКО значение
+        («Покупка» зелёным ×4, «Продажа» красным ×1 — обычный строчный текст
+        ~12–13px на белом фоне, БЕЗ пилюли; замер research-хаба). Токены те же
+        дельта-пары, что у чипов котировок; знак несёт контент, цвет — не
+        единственный носитель. Заливка прозрачная: подложка остаётся за
+        консьюмером, санкция дельт — surface-base (на тонированной поверхности
+        контраст проверяет консьюмер).
+      </p>
+      <div class="tkbadge-row">
+        <figure>${badge({ variant: 'positive' }, '+3,8%')}<figcaption>positive</figcaption></figure>
+        <figure>${badge({ variant: 'negative' }, '−2,95%')}<figcaption>negative</figcaption></figure>
+        <figure>${badge({ variant: 'positive' }, 'Покупка')}<figcaption>тип сделки</figcaption></figure>
+        <figure>${badge({ variant: 'negative' }, 'Продажа')}<figcaption>тип сделки</figcaption></figure>
       </div>
     </main>
   `,
@@ -296,16 +316,20 @@ export const Theming: Story = {
     <main class="tkbadge-canvas">
       <h1>Темизация</h1>
       <p class="tkbadge-note">
-        Обе пары Theme-инвариантны: green-100, ink-300, white и
+        Четыре заливки Theme-инвариантны: green-100, ink-300, white и
         text-on-primary не имеют тёмных замен в токеновом слое, поэтому чип
         рисуется одинаково на светлом и тёмном холсте (то же решение, что у
-        полосы progress-bar). Переключите контрол Theme — окружение
-        перестроится, чип останется собой.
+        полосы progress-bar). Исключение 22.2 — финансовые тоны: дельта-токены
+        несут тёмные ремапы, и без заливки держать инвариант нечего — текст
+        следует теме. Переключите контрол Theme — окружение перестроится,
+        заливки останутся собой, тоны перейдут в тёмные пары.
       </p>
       <div class="tkbadge-row">
         ${badge({ variant: 'incentive' }, '+20%')}
         ${badge({ variant: 'stat' }, '5%')}
         ${badge({ count: 99 })}
+        ${badge({ variant: 'positive' }, '+3,8%')}
+        ${badge({ variant: 'negative' }, '−2,95%')}
       </div>
     </main>
   `,
@@ -322,8 +346,11 @@ export const Accessibility: Story = {
         табстопа, роли button и обработчиков; клик/тап по чипу ничего не
         делает. Скринридер читает его как статический текст — в составе поля
         он объявляется после label (паттерн Input из EXPERIENCE.md).
-        Контраст всех четырёх пар проходит AA в обеих темах (экстракционные
-        значения пар — в DESIGN.md, блок Colors). Это
+        Контраст всех четырёх заливочных пар проходит AA в обеих темах
+        (экстракционные значения пар — в DESIGN.md, блок Colors); финансовые
+        тоны 22.2 несут пары дельта-токенов — санкция на surface-base, как у
+        дельт чипов котировок, и знак живёт в контенте: цвет не единственный
+        носитель. Это
         неинтерактивный элемент — чек-лист клавиатуры не применяется: чип
         никогда не появляется в порядке табуляции.
       </p>
@@ -332,6 +359,8 @@ export const Accessibility: Story = {
         ${badge({ variant: 'stat' }, 'Топ-1')}
         ${badge({ variant: 'neutral' }, 'Ожидает подписи')}
         ${badge({ variant: 'attention' }, '3')}
+        ${badge({ variant: 'positive' }, 'Покупка')}
+        ${badge({ variant: 'negative' }, 'Продажа')}
       </div>
     
       <h2>Протокол скринридер-проверки (VoiceOver / NVDA)</h2>

@@ -209,7 +209,7 @@ describe('tk-badge', () => {
       .map((style) => (style as { cssText?: string }).cssText ?? '')
       .join('\n')
       .replace(/\/\*[\s\S]*?\*\//g, '');
-    for (const variant of ['incentive', 'stat', 'neutral', 'attention']) {
+    for (const variant of ['incentive', 'stat', 'neutral', 'attention', 'positive', 'negative']) {
       const block = cssText.slice(cssText.indexOf(`:host([variant='${variant}']) .badge {`));
       expect(block, `the ${variant} rule exists`).toMatch(
         new RegExp(`:host\\(\\[variant='${variant}'\\]\\) \\.badge \\{`),
@@ -226,5 +226,40 @@ describe('tk-badge', () => {
     const attentionBlock = cssText.slice(cssText.indexOf(":host([variant='attention']) .badge {"));
     expect(attentionBlock).toContain('background: var(--tk-badge-fill, var(--tk-color-red-300))');
     expect(attentionBlock).toContain('color: var(--tk-badge-text, var(--tk-color-white))');
+  });
+
+  // --- Financial tones (22.2, invest identity wave) ---------------------------
+
+  it('positive/negative tones: join the union, reflect, and paint TEXT on NO fill — the measured insider-table ruling (no pill)', async () => {
+    expect(TkBadge.variants, 'the union carries both financial tones').toEqual(
+      expect.arrayContaining(['positive', 'negative']),
+    );
+
+    const positive = await mount({ variant: 'positive', label: 'Покупка' });
+    expect(positive.variant).toBe('positive');
+    expect(positive.getAttribute('variant')).toBe('positive');
+    expect(labelCell(positive)?.textContent).toContain('Покупка');
+
+    const negative = await mount({ variant: 'negative', count: 3 });
+    expect(negative.getAttribute('variant')).toBe('negative');
+    expect(countCell(negative)?.textContent).toBe('3');
+  });
+
+  it('the financial tones consume the DELTA tokens on a transparent fill — no new mint, first theme-aware variants (structural)', () => {
+    const cssText = TkBadge.styles
+      .map((style) => (style as { cssText?: string }).cssText ?? '')
+      .join('\n')
+      .replace(/\/\*[\s\S]*?\*\//g, '');
+    const rule = (v: string) =>
+      cssText.match(new RegExp(`:host\\(\\[variant='${v}'\\]\\) \\.badge \\{[^}]*\\}`))?.[0] ?? '';
+    expect(rule('positive')).toContain('background: var(--tk-badge-fill, transparent)');
+    expect(rule('positive')).toContain('color: var(--tk-badge-text, var(--tk-color-delta-positive))');
+    expect(rule('negative')).toContain('background: var(--tk-badge-fill, transparent)');
+    expect(rule('negative')).toContain('color: var(--tk-badge-text, var(--tk-color-delta-negative))');
+    // No fill-scale mint inside the tone rules: the tones ride the quote-chip
+    // delta pair verbatim — each rule carries exactly ONE color reference
+    // (the delta token) and no scale step of its own.
+    expect(rule('positive').match(/--tk-color-[a-z-]+/g)).toEqual(['--tk-color-delta-positive']);
+    expect(rule('negative').match(/--tk-color-[a-z-]+/g)).toEqual(['--tk-color-delta-negative']);
   });
 });
