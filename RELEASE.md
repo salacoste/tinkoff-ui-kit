@@ -1402,4 +1402,170 @@ Acceptance (release-grade): `<tk-menu-popover>` с `slot="anchor"`-кнопко�
   iOS momentum-scroll, оппортунистический batch-confirm прироста,
   Graphik-бриф.
 
+# Релиз v1.6.0 (invest waves окно) — подготовлено релизным циклом по Рулингу 1 (2026-10-02)
+
+**Всё до тега подготовлено прогоном по рулингу мейнтейнера 2026-10-02
+(бриф `brief-epic-23-invest-remainder-2026-10-02.md`, Рулинг 1: «v1.6.0
+полным циклом 19.2-молда ПЕРВЫМ»); тег ставит ТОЛЬКО мейнтейнер.** v1.6.0 =
+окно после v1.5.0: **invest-рекон** (16.6k URL → 56 страниц captures-v4 →
+GAP-MAP, `72939e9`) + **Epic 21 «invest foundation wave»** (21.1–21.6:
+accordion, skeleton, empty-state, note, rating, carousel) + **Epic 22
+«invest identity wave»** (22.1–22.6: quote-chip, badge финансовые тона,
+data-table финансовые ячейки, kv-list, instrument-hero + invest-стопы,
+promo-card ticket) + рулинги 2026-10-02 (бриф Epic 23 + 4 спеки-драфта,
+`fdd7b73`) + **финализация Graphik** (Рулинг 4 — диспо­зиция навсегда,
+записи в deferred-work/local-fonts/HANDOFF). Итог (ИЗМЕРЕНО на голове
+окна `fdd7b73`): **47 компонентов** (37 банк + 10 ТЖ), корневой сюит
+200/200, полный visual compare **2386/2386 ног** (на close-out 22.6),
+**654 базлайн-PNG сюиты**. Модель та же: **только GitHub, тег `v1.6.0`
+на `main`; npm — никогда**; `private: true` навсегда.
+
+## 13.1. Гейты до релиза (pre-flight v1.6.0)
+
+1. **CI зелёный на голове релиза — вердикт только по `gh run`**
+   (правило CLAUDE.md). Цепочка окна записана честно, ran-id-ами —
+   финальные GREEN каждого звена: рекон `72939e9` = 36894586088;
+   21.1 `2d0861f` = 36899385609; 21.2 `cde959e` = 36912573965;
+   21.3 `6a7c57d` = 36922911330; 21.4 `51cf0e7` = 36935953754;
+   21.5 `7a0a73c` = 36942600976; 21.6 `9c76c33` = 36945953950;
+   22.1 feat `7924576` RED (hex в прозе) → fix `16775b4` =
+   36978617447, штамп `ec07d45` = 36982656204; 22.2 `473c35f` =
+   36991193869 (штамп `04a2379`); 22.3+22.4 feat `c3423f3`+`b2413af`
+   RED 36998592194 (impeccable-regex на тест-прозе) → fix `cf58f05` =
+   37001997942, штампы `8a4e9ad`/`405226f`; 22.5 `79d8359` =
+   37010000366, штамп `74f712c` = 37017732146; 22.6 `51ba679` =
+   37025154083, штамп `e5795a2` = 37029588120; Epic 23 docs `fdd7b73`
+   = 37039009691 (= baseline_commit спек 23.x). Вердикт головы релиза —
+   по её ran-id в этом файле (§13.7).
+2. **Standing practice (CLAUDE.md):** после любого изменения собранного
+   дерева — ПОЛНЫЙ прогон. Окно v1.6.0 меняет собранное дерево (пин тега
+   в рендерящемся тексте getting-started стори — молд 19.2) → 2 базлайна
+   переминчиваются ЯВНО (rm → update) перед полным compare.
+3. Локально на голове релиза: `pnpm build && pnpm test && pnpm lint &&
+   pnpm typecheck` — всё зелёное (корневой сюит 200/200).
+4. **Gen-drift после бампа:** `pnpm gen` → diff пуст, РОВНО ожидаемые
+   файлы (7 строк `package.json` + CHANGELOG + релизные доки) —
+   CEM-манифесты не встраивают версию пакета (закон, проверен 17.5/19.2
+   и здесь на исполнении).
+5. **Батч-подтверждение v1.6.0-прироста:** окно добавило ~92 PNG
+   (Epic 21: 24+18+24+10+2+6+2+10+2 с переминтами; Epic 22: новые
+   каталоги quote-chip/kv-list/instrument-hero + расширения
+   badge/data-table/promo-card + getting-started цепочки). Весь прирост
+   уже механически проверен полными compare каждого звена (2386/2386 на
+   22.6); мейнтейнерский гейт — подтвердить по желанию или принять
+   зафиксированное в спеках.
+6. **SR-спот-чеки:** живые VO-присесты ЗАКРЫТЫ ОТКАЗОМ мейнтейнера
+   2026-10-01 («we dont do them») — mechanismsуемая половина (SR-пины +
+   axe обеих тем на всех стори) — финальная истина; после тега ничего
+   не ждёт.
+
+## 13.2. Версия и CHANGELOG (прецедент §12.2) — ИСПОЛНЕНО этим циклом
+
+Исполнено 2026-10-02 (коммит `chore(release): v1.6.0 — version +
+changelog`):
+
+- `packages/{tokens,components,react}/package.json`: `1.5.0` → `1.6.0`
+  (банк ×3); `packages/tj-{tokens,components,react}/package.json`:
+  `1.5.0` → `1.6.0` (ТЖ ×3); `packages/tj-fonts/package.json`:
+  `1.5.0` → `1.6.0`. Корневой `0.1.0` и docs `0.0.0` — вне релизного
+  контракта, не тронуты.
+- `CHANGELOG.md`: `[Unreleased]` → `[1.6.0] - 2026-10-02` (12 записей
+  Added: 21.1–21.6 + 22.1–22.6) + свежий пустой `[Unreleased]`.
+- Проверка чистоты: diff = ровно 7 строк версий + CHANGELOG; `pnpm gen`
+  после бампа — zero drift; читателей полей версий нет (grep: `.version`
+  в packages/*/src + tests = 0; рендерящихся литералов версий в сторях —
+  только намеренный пин тега getting-started).
+
+## 13.3. Тег (мейнтейнер — единственный исполнитель)
+
+Прецедент §12.3. Для v1.6.0 исполнение НЕ делегируется — только
+мейнтейнер, ПОСЛЕ своего явного «tag ok» (вердикт CI головы релиза
+должен быть GREEN на момент тега):
+
+```
+git tag -a v1.6.0 -m "pillkit v1.6.0 — invest waves: foundation atoms (accordion/skeleton/empty-state/note/rating/carousel) + the identity wave (quote-chip, financial badge/table cells, kv-list, instrument-hero, promo-card ticket)" <head-release>
+git push origin v1.6.0
+```
+
+Никогда не `npm publish`; `private: true` не снимается (ЖЕЛЕЗНО). Теговый
+пуш CI не триггерит (workflow: push branches [main] only) —
+verdict-обязательство на последующий docs-коммит.
+
+## 13.4. Верификация релиза — свежий потребитель (Flow-B: банк рендерит НОВЫЕ invest-атомы)
+
+Для v1.6.0 головные потребительские новинки — БАНКОВСКИЕ invest-атомы:
+свежий клон по тегу ставит банковскую тройку и рендерит
+`tk-instrument-hero` (22.5, атом с тоновыми stop-хуками) + вторично
+`tk-promo-card variant="ticket"` (22.6):
+
+```
+git clone --branch v1.6.0 https://github.com/salacoste/tinkoff-ui-kit
+cd my-app && pnpm init
+# pnpm-workspace.yaml: packages: [., ../tinkoff-ui-kit/packages/*]
+cd ../tinkoff-ui-kit && pnpm install && pnpm build && cd ../my-app
+pnpm add -w pillkit-tokens pillkit-components pillkit-react --workspace
+
+// vite.config.ts — ОБЯЗАТЕЛЬНО (урок релизного гейта v1.1.0):
+import { defineConfig } from 'vite';
+export default defineConfig({ resolve: { dedupe: ['react', 'react-dom'] } });
+```
+
+Acceptance (release-grade): `<tk-instrument-hero>` с тоновым семейством
+(проп tone/значения слотами) рендерит hero-блок с ценой/дельтой, ::
+slotted(h1..h6)-reset работает (первый в ките), `--tk-color-invest-*`
+стопы резолвятся; `<tk-promo-card variant="ticket">` — билет с
+центрированным значением и CTA=tk-button primary. React-обёртки
+(`InstrumentHero`/`PromoCard`) рендерят то же (CEM-генерация;
+закон v1.5.0: атрибуты — только в `connectedCallback`, НЕ в
+конструкторе — проверено раунд-1/2 §12.4). Вторично (референсами, без
+повтора): ТЖ-ALONE census §11.4 + четырёхпакетная install-строка с
+`pillkit-tj-fonts` §12.4 (семейство не менялось). До тега — recipe-only.
+
+## 13.5. Драфт changelog v1.6.0 (EN — уже в CHANGELOG.md на §13.2; историческая запись)
+
+12 записей Added под `[1.6.0] - 2026-10-02` (полные тексты — там):
+21.1 accordion family; 21.2 skeleton; 21.3 empty-state; 21.4 note;
+21.5 rating; 21.6 carousel; 22.1 quote-chip; 22.2 badge financial
+tones; 22.3 data-table financial cells; 22.4 kv-list; 22.5
+instrument-hero + `--tk-color-invest-*` stops; 22.6 promo-card ticket.
+
+## 13.6. Шрифты и право (НЕИЗМЕННО с v1.5.0 + ФИНАЛИЗАЦИЯ GRAPHIK)
+
+- **DaytonaSans/DaytonaPragma** — отдельно лицензированные бинарники
+  (© Monotype Imaging / © ParaType), НЕ MIT: права потребителя — только
+  `packages/tokens/fonts/LICENSE-FONTS.md`. Без изменений с v1.0.0.
+- **JetBrains Mono** — ТЕСТ-ТОЛЬКО (пин детерминистских метрик моно) —
+  без изменений с v1.2.0.
+- **XCharter ×4 woff2** — в дереве `packages/tj-fonts/` по Bitstream
+  Charter условиям — без изменений с v1.5.0.
+- **ФИНАЛИЗАЦИЯ v1.6.0 — Graphik-диспозиция закрыта рулингом
+  мейнтейнера 2026-10-02 (Рулинг 4: «оставить как есть навсегда»):**
+  XCharter остаётся reading-носителем `--tj-font-reading`; Graphik —
+  навсегда только закомментированный @font-face-рецепт в
+  `packages/tj-fonts/fonts.css` для держателей лицензии (EULA
+  Commercial Type без редистрибуции); бриф 2026-09-30 закрыт без
+  исполнения. Финальные записи: deferred-work.md + local-fonts README +
+  HANDOFF §4 (этот релиз).
+- Товарный знак/ПД: свип 5.7 в силе; окна 21/22 прошли zero-hardcoded
+  трипваер + ПД-заливки captures-v4 проверены до укладки; стори-контент
+  — вымышленные имена/суммы (закон ПД).
+
+## 13.7. Что окно 21/22 уже проверило (не нужно повторять) + ПРУФ НЕИСПОЛНЕНИЯ
+
+- Гейты каждого звена окна — см. ran-id-цепь §13.1; финальный полный
+  compare **2386/2386** на close-out 22.6 (`e5795a2`, run 37029588120
+  GREEN) + Epic 23 docs `fdd7b73` (run 37039009691 GREEN).
+- Гейты головы релиза: локальная цепь EXIT 0 + полный compare после
+  переминта пина getting-started (молд 19.2); gen-drift ноль;
+  версионные grep-пруфы пусты.
+- **НЕ ИСПОЛНЕНО (историческая запись, 2026-10-02 до тега): ТОЛЬКО
+  ТЕГ.** ПРУФЫ: `git tag -l` = `v1.0.0 v1.1.0 v1.2.0 v1.3.0 v1.4.0
+  v1.5.0` (без v1.6.0); npm-команды не запускались. Версии/CHANGELOG/
+  §13/пины/HANDOFF/Graphik-финализация исполнены этим циклом — сужение
+  §12.7→§13.7 осознанное и видимое.
+- Мейнтейнерские пункты ПОСЛЕ тега: Flow-B §13.4 (клон по тегу);
+  оппортунистический batch-confirm прироста. Живой VO/iOS закрыты
+  отказом; Graphik закрыт рулингом — очередь §4 HANDOFF пустеет до
+  нуля.
+
 
