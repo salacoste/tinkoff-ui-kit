@@ -7,6 +7,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — tk-carousel atom (spec 21.6, invest foundation wave)
+
+- tk-carousel: the horizontal card rail (invest GAP-MAP Tier A #2,
+  the recon's most repeated surface — census 46 + 95 + 5 rails).
+  Native scroll-snap container (NOT transform — the rail is a real
+  scroll region); default slot = the cards (the slot{display:flex}
+  row, the filter-chips trick); scrollbar hidden on every rail.
+- Chevrons «Назад/Вперёд»: round white 44px (the kit's A11y floor)
+  with shadow-dropdown, revealed on rail hover/focus-within
+  (opacity 0 + pointer-events none at rest, still in tab order) —
+  the live statics paint NO chrome, PROVEN by the threshold-corrected
+  pixel scan (thr 253 finally discriminates white circles from the
+  246–248 page gray the old 90%/96% scans structurally could not);
+  the first vision lens's "white circles" retracted — pixels won.
+  Page-step scroll (±clientWidth, smooth with reduced-motion guard),
+  edge disable, native keyboard scrolling (zero keydown handlers).
+- Dots: decorative (aria-hidden, non-clickable), measured geometry —
+  8px dots, 16px pitch, 16px under the rail; active = yellow-100
+  byte-identical to the live probe (existing token, no mint),
+  passive = gray-200 with the live #E0E2E4 off by 3 channel units
+  (deviation recorded in the sheet header, no token minted). No
+  autoplay, no aria-live. Card width stays consumer-side (measured
+  references 248/230/150 pinned in story prose). Hook layer
+  `--tk-carousel-{gap,dot,dot-active,dot-size,dot-gap,dot-offset,
+  chevron-radius,chevron-fill,chevron-color,chevron-shadow,
+  chevron-inset}`. STATELESS — no events (event-map no-entry).
+- host role="region" + aria-roledescription="карусель" + REQUIRED
+  label prop (self-attributes in connectedCallback, the React-19
+  law). React wrapper (CEM), docs search row (Carousel/Карусель),
+  hidden-guard roster 44/34. Visual: ten new baselines + two
+  getting-started re-mints (the new search tile, the 21.2
+  precedent) — full suite 2326/2326 green (commit 9c76c33, CI run
+  36945953950). Story review arbitrated by pixels: the lens's
+  "page scrollbar" claim retracted (zero wide gray rows), rail
+  clipping confirmed (roundel letters at exact 191px pitch), dot
+  counts follow geometry (2 for the 5-card rail — the live sber
+  showed exactly 2).
+
 ### Added — tk-rating atom (spec 21.5, invest foundation wave)
 
 - tk-rating: the read-only star rating (invest GAP-MAP Tier A #7) —
