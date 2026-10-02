@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-10-02
+
 ### Added — tk-promo-card ticket mode (spec 22.6, invest identity wave — the wave closes)
 
 - tk-promo-card `variant="ticket"`: the invest sidebar PRICE TICKET
