@@ -4559,6 +4559,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/kv-list/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/link/index.js"
           }
         },
@@ -5382,6 +5390,230 @@
           "declaration": {
             "name": "TkInput",
             "module": "src/input/input.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/kv-list/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/kv-list/kv-list.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/kv-list/kv-list-item.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/kv-list/kv-list-item.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-kv-list-item — one row of a `<tk-kv-list>` (spec 22.4, invest identity\nwave, GAP-MAP B4): gray label left, near-black value flush right, divided\nfrom its neighbors by the container's 1px hairline.\n\nThe label is the `label` prop OR the `label` slot (slotted content wins —\nthe slot's fallback IS the prop, the service-card slotchange mold). The\nvalue is slot-only: a value is markup (a toned span, a code fragment) far\nmore often than plain text, and the atom stays dumb.\n\nHINT (AC2): a `hint` string renders the gray circled «?» after the label\n— a real `<button type=\"button\">` (tab stop, the standard focus ring)\nwrapped in the kit's own `<tk-tooltip content=hint>`, which wires\naria-describedby from the button to its pill (hover/focus show with the\n300ms delay, click/tap toggle, Esc close — the tooltip's contract\nverbatim, NO duplicate behavior here). aria-expanded is deliberately\nabsent: the button requests a DESCRIPTION, it discloses nothing (the\ndisclosure contract belongs to tk-accordion-item). Without `hint` the\nicon, the button and the tab stop do not exist.\n\nSTATELESS: the row dispatches nothing (event-map no-entry); the only\nevents crossing it are the composed tooltip's own.",
+          "name": "TkKvListItem",
+          "slots": [
+            {
+              "description": "The label content (overrides the label prop).",
+              "name": "label"
+            },
+            {
+              "description": "The value content (right-aligned).",
+              "name": "value"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Row label — the slot's fallback (slotted content wins).",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "hint",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Hint text — presence renders the ⓘ button + tooltip.",
+              "attribute": "hint"
+            },
+            {
+              "kind": "field",
+              "name": "#labelText",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The label slot's real text — feeds the hint button's accessible name."
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveLabel",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "description": "The label in force for the hint's accessible name: the slot's text when\nslotted, the prop otherwise (the slot's fallback renders only while the\nslot carries no real content — the badge slot-presence rule).",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#syncLabelText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Slot presence (the badge rule): REAL content counts. Checked at\nfirstUpdated AND on every slotchange — the initial assignment does not\nreliably fire slotchange (the badge lesson)."
+            },
+            {
+              "kind": "field",
+              "name": "#handleLabelSlotChange",
+              "privacy": "private",
+              "readonly": true
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Row label — the slot's fallback (slotted content wins).",
+              "name": "label",
+              "default": "''",
+              "fieldName": "label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Hint text — presence renders the ⓘ button + tooltip.",
+              "name": "hint",
+              "default": "''",
+              "fieldName": "hint"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-kv-list-item",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkKvListItem",
+          "declaration": {
+            "name": "TkKvListItem",
+            "module": "src/kv-list/kv-list-item.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-kv-list-item",
+          "declaration": {
+            "name": "TkKvListItem",
+            "module": "src/kv-list/kv-list-item.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/kv-list/kv-list.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "kvListStyles",
+          "default": "css` :host { display: block; } /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */ :host([hidden]) { display: none; } .list { display: block; } /* Divider «between, not around» (the accordion mold): every slotted row but the last carries the hairline. 1px is structural (header notes); the color rides the hook with the border-table neutral. */ .list ::slotted(tk-kv-list-item:not(:last-child)) { border-bottom: 1px solid var(--tk-kv-list-divider, var(--tk-color-border-table)); } `",
+          "description": "tk-kv-list + tk-kv-list-item styles — tokens only (FR-1), zero theme\nbranches (AD-3).\n\nPIXEL TABLE (spec 22.4, the bond «Информация о выпуске» pass — 2x\nanatomy lens on the 1280px bond capture, .playwright-cli/captures-v4/\ninvest/bond-*.png; sibling groundings: future «Параметры фьючерса»\n(ALL rows carry the «?») + sber «Показатели акции» (delta-toned values)):\n\n| capture | measurement | kit decision |\n|---|---|---|\n| row pitch | 33–34px (divider-to-divider) | padding-block 4 + the 24px line box + 1px divider = 33px — the data-table literal-leading family |\n| label | ~16px regular gray #8d8d8d | body-m 400 text-secondary — 15px is the nearest scale step (1px down, recorded; no 16px token exists) |\n| value | ~16px weight 500–600 near-black, flush right | body-m bold 500 text-primary, `text-align: end` in a flex `space-between` row |\n| divider | 1px #e6e6e6, full row width | 1px `--tk-color-border-table` (rgba(0,16,36,.12) ≈ #e1e3e5 on white — the table sibling, near-identical) |\n| ⓘ icon | 14–16px SOLID gray circle (~#b0b0b0), white «?» glyph, ≈8px after the label | 16px capture literal, fill `--tk-color-gray-400` (#959ba4 — the nearest gray step by channel distance, the deviation recorded), white glyph, gap `--tk-space-8` |\n| heading | ~24px semibold above the rows | consumer-side (the pattern wrapper owns it — the 19.1 no-modes lesson) |\n\nDELTA VALUES stay consumer-side markup: the live «Показатели» paints\nvalues green/red, which is the 22.1/22.2 delta token pair riding the\nVALUE SLOT's content (`<span style=\"color: var(--tk-color-delta-positive)\">`),\nnot an atom prop — the atom never guesses a tone from text (the\nquote-chip ruling is deliberately NOT generalized: a spec list's values\nare consumer data).\n\n`--tk-kv-list-*` HOOKS (CONVENTIONS §6, AC3), each consumed WITH its\nmeasured/token default — NO mint:\n- `--tk-kv-list-divider` row divider color (border-table)\n- `--tk-kv-list-label` label color (text-secondary)\n- `--tk-kv-list-value` value color (text-primary)\n- `--tk-kv-list-gap` label↔icon gap (space-8 — the measured ≈8px)\n- `--tk-kv-list-icon` the «?» roundel fill (gray-400; the glyph stays\n  white — a light consumer tint would strand it, so the pair is fixed\n  by design and the hook owns the circle alone)\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule: the 1px hairlines (structural across the kit — data-table,\naccordion, menu-popover), the 24px line box (capture literal, the\ndata-table family), the 16px icon box (no icon-size token exists — the\nrating 16px precedent), and the -14px hint hit-area expansion (44px\nWCAG 2.5.5 floor around the 16px glyph — the stitch trick, pointer\nonly, the row rhythm untouched)."
+        },
+        {
+          "kind": "variable",
+          "name": "kvListItemStyles",
+          "default": "css` :host { display: block; } /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */ :host([hidden]) { display: none; } /* One line per row (live): label left, value flush right, the measured 33px pitch from padding + line box — rows GROW instead of clipping if a consumer's value wraps (§2 degrade). */ .item { display: flex; align-items: center; justify-content: space-between; gap: var(--tk-space-16); padding: var(--tk-space-4) 0; font-family: var(--tk-font-body); } .item__label { display: flex; align-items: center; gap: var(--tk-kv-list-gap, var(--tk-space-8)); min-width: 0; /* flex item discipline: long labels shrink, never push the value out */ font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-weight); line-height: 24px; /* capture literal — the data-table leading family */ color: var(--tk-kv-list-label, var(--tk-color-text-secondary)); } .item__value { flex: none; text-align: end; font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-bold-weight); line-height: 24px; /* capture literal — the data-table leading family */ color: var(--tk-kv-list-value, var(--tk-color-text-primary)); } /* The «?» roundel: a REAL button (tab stop, standard ring) painted as the measured solid gray circle with a white glyph. The glyph text is ignored by AT — the button's aria-label carries the name and the tooltip's aria-describedby carries the description. */ .item__hint { flex: none; position: relative; /* the hit-area expansion context */ display: inline-flex; align-items: center; justify-content: center; width: 16px; /* capture literal — the rating 16px precedent */ height: 16px; padding: 0; border: 0; border-radius: var(--tk-radius-full); background: var(--tk-kv-list-icon, var(--tk-color-gray-400)); color: var(--tk-color-white); font-family: var(--tk-font-body); font-size: var(--tk-text-body-xs-size); font-weight: var(--tk-text-body-m-bold-weight); line-height: 1; cursor: pointer; } /* 44px hit area around the 16px glyph (WCAG 2.5.5 floor) — the data-table stitch trick: pointer-only, paints nothing, keeps the 33px row rhythm. */ .item__hint::after { content: ''; position: absolute; inset: -14px; } /* The unified focus ring — 2px token ring, offset 2px (button.css.ts). */ .item__hint:focus-visible { outline: 2px solid var(--tk-color-focus-ring); outline-offset: 2px; } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "kvListStyles",
+          "declaration": {
+            "name": "kvListStyles",
+            "module": "src/kv-list/kv-list.css.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "kvListItemStyles",
+          "declaration": {
+            "name": "kvListItemStyles",
+            "module": "src/kv-list/kv-list.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/kv-list/kv-list.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-kv-list — the kit's key-value spec list (spec 22.4, invest identity\nwave, GAP-MAP B4): gray label left, near-black value flush right, 1px\nhairlines between rows — the bond page's «Информация о выпуске», the\nfuture page's «Параметры фьючерса», the stock page's «Показатели»\n(three independent groundings in the captures-v4 recon).\n\nThe container owns ONLY the between-rows hairline rhythm (the accordion\nmold: «between, not around» — every slotted item but the last carries\nthe divider); a row is `<tk-kv-list-item>` authored as a light-DOM\nchild (label prop/slot + value slot + the optional hint tooltip live\nthere).\n\nSEMANTICS RULING (AC4, measured at execution): the live block is bare\ndiv rows with NO list semantics (the bond capture's KV rows carry no\nrole); a native dl/dt/dd CANNOT cross the slot boundary (dt/dd without\na dl ancestor is an invalid tree), so the kit asserts the honest\nequivalent — `role=\"list\"` here + `role=\"listitem\"` on each item host:\nthe row count reaches assistive tech and every row reads\n«label value» in one breath. The heading above the live block is the\nconsumer's pattern wrapper, NOT an atom prop (the 19.1 no-modes\nlesson).\n\nSTATELESS (the rating ruling): the list is plain flow content — no\nchannels, no events (event-map no-entry); the only interactive surface\nin the family is the item's hint button, and its behavior belongs to\nthe composed tk-tooltip.",
+          "name": "TkKvList",
+          "slots": [
+            {
+              "description": "The rows: tk-kv-list-item elements, authored in order.",
+              "name": ""
+            }
+          ],
+          "members": [],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-kv-list",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkKvList",
+          "declaration": {
+            "name": "TkKvList",
+            "module": "src/kv-list/kv-list.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-kv-list",
+          "declaration": {
+            "name": "TkKvList",
+            "module": "src/kv-list/kv-list.ts"
           }
         }
       ]

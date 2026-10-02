@@ -53,6 +53,10 @@ const COMPONENTS: readonly SearchEntry[] = [
   { title: 'FeatureCard', tag: 'tk-feature-card', ru: 'Фича-карточка', id: 'components-featurecard--playground' },
   { title: 'Footer', tag: 'tk-footer', ru: 'Подвал', id: 'components-footer--playground' },
   { title: 'Input', tag: 'tk-input', ru: 'Поле ввода', id: 'components-input--playground' },
+  // 22.4 (invest identity wave): the key-value spec list — GAP-MAP B4
+  // (bond «Информация о выпуске» / future «Параметры» shape); entry points
+  // at the Components/ story.
+  { title: 'KvList', tag: 'tk-kv-list', ru: 'Список параметров', id: 'components-kvlist--playground' },
   { title: 'Link', tag: 'tk-link', ru: 'Ссылка', id: 'components-link--playground' },
   { title: 'Modal', tag: 'tk-modal', ru: 'Модальное окно', id: 'components-modal--playground' },
   { title: 'Navbar', tag: 'tk-navbar', ru: 'Шапка', id: 'components-navbar--playground' },

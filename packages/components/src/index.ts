@@ -21,6 +21,7 @@ export * from './feature-card/index.js';
 export * from './filter-chips/index.js';
 export * from './footer/index.js';
 export * from './input/index.js';
+export * from './kv-list/index.js';
 export * from './link/index.js';
 export * from './menu-popover/index.js';
 export * from './modal/index.js';

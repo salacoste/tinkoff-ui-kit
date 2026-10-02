@@ -14,6 +14,8 @@ export * from './feature-card.js';
 export * from './filter-chips.js';
 export * from './footer.js';
 export * from './input.js';
+export * from './kv-list.js';
+export * from './kv-list-item.js';
 export * from './link.js';
 export * from './menu-divider.js';
 export * from './menu-item.js';
