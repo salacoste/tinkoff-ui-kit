@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — tk-rating atom (spec 21.5, invest foundation wave)
+
+- tk-rating: the read-only star rating (invest GAP-MAP Tier A #7) —
+  the bond-catalog star cluster. STATELESS display: `value` 0–5
+  clamped display-side (prop untouched, the progress-bar mold); the
+  schema's 0.5 grid renders floor(value) full stars + ONE partial
+  star via inline clip-path inset — no second SVG.
+- Measurement overrides, honestly recorded: fill is EXACTLY
+  `--tk-color-yellow-100` (byte-equal probe — existing kit token, NO
+  new mint); star 16px, pitch 20 (gap 4 = space-4); only FILLED
+  stars render — the live row paints no empty neutral slots; the
+  spec's optional `count` died at the lens (the reviews page is a
+  promo with ZERO star widgets — census-inferred grounding
+  retracted), so no count text beside and no size presets.
+- A11y: `role="img"` self-asserted in connectedCallback (the
+  React-19 law), `aria-label` «Рейтинг N из 5» with RU comma-decimal,
+  recomputed in willUpdate on value change; NOT interactive — no
+  tabindex, no focus, no buttons in shadow (the read-only ruling).
+- React wrapper (CEM) with event-map no-entry (stateless), docs
+  search row (Rating/Рейтинг), hidden-guard roster 43/33. Visual:
+  six new baselines + two getting-started re-mints (the new search
+  tile, the 21.2 precedent) — full suite 2296/2296 green (commit
+  7a0a73c, CI run 36942600976).
+
 ### Added — tk-note atom (spec 21.4, invest foundation wave)
 
 - tk-note: the quiet fine-print note (invest GAP-MAP Tier A #6) — the
