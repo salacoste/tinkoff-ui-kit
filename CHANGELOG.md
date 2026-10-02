@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — tk-promo-card ticket mode (spec 22.6, invest identity wave — the wave closes)
+
+- tk-promo-card `variant="ticket"`: the invest sidebar PRICE TICKET
+  (GAP-MAP gap-2 #8) on the same passive card shell — gray label line
+  (new `label` prop + slot override), the big centered VALUE slot
+  (heading-5 + weight 700 literal, the 22.5 hero-name precedent), the
+  CTA through the EXISTING actions slot (the consumer's tk-button
+  primary — the measured pair IS the kit pair byte-exact), and a
+  presence-mold fine-print NOTE slot (body-m, 24px line-pitch capture
+  literal). White surface-base, 1px hairline all four sides, no media,
+  no gradients, no shadow; the tint anatomy (art/heading/description)
+  never renders in ticket mode; the register survives the 767 matrix
+  by specificity.
+- ONE new hook `--tk-promo-card-border` (default border-default — the
+  light value byte-exact to the probe, dark remapped to the
+  white-alpha step; the bare gray-200 scale step has no dark layer).
+  Pixel-probed anatomy, byte-identical across the stock/future/
+  currency pages; two contact-sheet lens claims refuted by probes (the
+  stack is CENTERED, not left-aligned; the CTA spans its own
+  21px-inset column, not the text measure).
+- Stories: the 3-instrument ticket group (fictional prices — the PD
+  gate) in Variants + the dark-theme ticket in Theming; baselines
+  re-minted explicitly (6 PNG; the API tables grew with the CEM
+  declarations). Unit 24/24 (+5); the a11y-sweep registry row 10→16
+  with the measured derivation (3 buttons + 3 links). Full suite
+  2386/2386 green (feat 51ba679, CI run 37025154083). Epic 22 «invest
+  identity wave» closes with this story (22.1–22.6, all CI green).
+
 ### Added — tk-instrument-hero atom + invest identity gradient tokens (spec 22.5, invest identity wave)
 
 - tk-instrument-hero: the instrument page's identity card — name +
