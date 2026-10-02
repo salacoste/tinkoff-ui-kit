@@ -53,6 +53,10 @@ const COMPONENTS: readonly SearchEntry[] = [
   { title: 'FeatureCard', tag: 'tk-feature-card', ru: 'Фича-карточка', id: 'components-featurecard--playground' },
   { title: 'Footer', tag: 'tk-footer', ru: 'Подвал', id: 'components-footer--playground' },
   { title: 'Input', tag: 'tk-input', ru: 'Поле ввода', id: 'components-input--playground' },
+  // 22.5 (invest identity wave): the instrument page identity card —
+  // GAP-MAP B2 (four measured gradient families, metric/logo/action
+  // slots); entry points at the Components/ sandbox.
+  { title: 'InstrumentHero', tag: 'tk-instrument-hero', ru: 'Герой инструмента', id: 'components-instrumenthero--playground' },
   // 22.4 (invest identity wave): the key-value spec list — GAP-MAP B4
   // (bond «Информация о выпуске» / future «Параметры» shape); entry points
   // at the Components/ story.

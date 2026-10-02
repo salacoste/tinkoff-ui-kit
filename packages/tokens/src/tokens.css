@@ -76,6 +76,18 @@
   --tk-color-tint-cream-raised: #E9E0D1;
   /* Measured (Story 9.1) — stepper badge fill `#8D6040` from the archived reference block (.playwright-cli/verify/stepper/reference-block.png; the 7.3 placeholder mapped it to tint-cream-raised). Theme-invariant (charcoal mold). AA REQUIRED: white numeral 5.413:1 ✓, on tint-cream 4.674:1 ✓; RECORDED-FAILING: on tint-cream-raised 4.136:1 (the badge never sits there — its card overlap is white). DESIGN.md Colors. */
   --tk-color-tint-brown: #8D6040;
+  /* Measured (Story 22.5) — instrument hero stock gradient start `#2E970A` (horizontal to `#257A08`), pixel-probed at the sber card rim (captures-v4/invest/stock-sber.png). Theme-invariant identity fill (charcoal mold). White text 3.785:1 on this stop, 5.434:1 on `#257A08` — the 28px/700 hero name clears AA-large on both; RECORDED-FAILING: white body-s on this stop 3.785:1 (< 4.5) — the live identity gradient is immutable, the site ships the same ratio; pinned as-measured. DESIGN.md Colors. */
+  --tk-color-invest-stock-a: #2E970A;
+  --tk-color-invest-stock-b: #257A08;
+  /* Measured (Story 22.5) — instrument hero bond gradient start `#009E4D` (135deg diagonal to `#00813E`), pixel-probed at the bond card corners (captures-v4/invest/bond-ru000a0jxts9.png). Theme-invariant identity fill. White text 3.500:1 on this stop, 4.991:1 on `#00813E` — the 28px/700 hero name clears AA-large on both; RECORDED-FAILING: white body-s on this stop 3.500:1 (< 4.5) — identity immutable, pinned as-measured. DESIGN.md Colors. */
+  --tk-color-invest-bond-a: #009E4D;
+  --tk-color-invest-bond-b: #00813E;
+  /* Measured (Story 22.5) — instrument hero dark family start `#0E0E0E` (to `#3B3B3B`), pixel-probed on the future card (captures-v4/invest/future-aez6.png); the etf card runs the same stops with a steeper vertical tilt — one minted family approximates both (recorded in the 22.5 sheet). Theme-invariant identity fill. White text 19.31:1 / 11.207:1 — every size clears AA. DESIGN.md Colors. */
+  --tk-color-invest-dark-a: #0E0E0E;
+  --tk-color-invest-dark-b: #3B3B3B;
+  /* Measured (Story 22.5) — instrument hero light gradient start `#EEF0F2` (horizontal to `#D1D3D5`, right stop edge-extrapolated), pixel-probed on the currency card (captures-v4/invest/currency-usd000utstom.png). Theme-invariant identity fill. Ink-300 text 11.06:1 / 8.42:1 — every size clears AA. DESIGN.md Colors. */
+  --tk-color-invest-light-a: #EEF0F2;
+  --tk-color-invest-light-b: #D1D3D5;
   /* Semantic alias — `blue-100`, added in Story 1.3: components consume semantics, not scales (AD-2/AD-3), and the dark layer needs a semantic name to override (`dark-link`). DESIGN.md Colors (TextLink). */
   --tk-color-link: #1771E6;
   /* Semantic alias — `red-100`, added in Story 1.3 alongside `link` so both themes expose error semantics (the dark layer overrides it with `dark-error`). DESIGN.md Colors. */

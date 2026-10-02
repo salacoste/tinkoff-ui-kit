@@ -14,6 +14,7 @@ export * from './feature-card.js';
 export * from './filter-chips.js';
 export * from './footer.js';
 export * from './input.js';
+export * from './instrument-hero.js';
 export * from './kv-list.js';
 export * from './kv-list-item.js';
 export * from './link.js';

@@ -104,6 +104,17 @@ colors:
   dark-delta-negative: '#F63434' # authored lightened delta red — verified 8.2: base 4.525 ✓ (sanctioned scope); hover composite #313131 3.382 / step1 4.136 fail per the closed 6.1 scope ruling (pinned, live-confirmed)
   dark-border-table: '#FFFFFF1F' # white-alpha hairline at the extracted divider's own alpha (0x1F ≈ 12% white mirrors rgba(0,16,36,0.12)), one step under dark-border — verified 8.2: composite #363636 on base (Δ+13.4 L*), 1.8 L* under the dark-border composite
   dark-surface-row-hover: '#FFFFFF1A' # white-alpha fill grammar — reuses the family's established fill step (dark-field, 10% white); verified 8.2: composite #313131 on base, text pairs on it 13.009/7.303 ✓
+  # v2.3 — invest identity gradient stops (22.5 instrument hero, captures-v4/invest
+  # pixel-probed at the card rims; theme-invariant identity fills, charcoal mold —
+  # no dark re-declaration, the hero card is the same surface in both themes)
+  invest-stock-a: '#2E970A' # sber hero left stop (horizontal gradient); white text 3.785:1 here — see Colors (Instrument hero gradients)
+  invest-stock-b: '#257A08' # sber hero right stop; white 5.434:1 ✓
+  invest-bond-a: '#009E4D' # bond hero TL stop (135deg diagonal to BR); white 3.500:1 here — see Colors
+  invest-bond-b: '#00813E' # bond hero BR stop; white 4.991:1 ✓
+  invest-dark-a: '#0E0E0E' # dark family start (future/etf hero); white 19.31:1 ✓
+  invest-dark-b: '#3B3B3B' # dark family end; white 11.207:1 ✓
+  invest-light-a: '#EEF0F2' # currency hero left stop (horizontal); ink-300 11.06:1 ✓
+  invest-light-b: '#D1D3D5' # currency hero right stop (edge-extrapolated); ink-300 8.42:1 ✓
 # v2.2 — AA-annotation machine truth (story 9.2): the AA-bearing color notes
 # (TOKENS.md Notes column + tokens.css comments) are GENERATED from this block,
 # not held as generator literals. Grammar per entry: kind (override | addition |
@@ -165,6 +176,26 @@ aa-annotations:
     status: verified
     story: '9.1'
     text: 'stepper badge fill `#8D6040` from the archived reference block (.playwright-cli/verify/stepper/reference-block.png; the 7.3 placeholder mapped it to tint-cream-raised). Theme-invariant (charcoal mold). AA REQUIRED: white numeral 5.413:1 ✓, on tint-cream 4.674:1 ✓; RECORDED-FAILING: on tint-cream-raised 4.136:1 (the badge never sits there — its card overlap is white). DESIGN.md Colors.'
+  invest-stock-a:
+    kind: measured
+    status: verified
+    story: '22.5'
+    text: 'instrument hero stock gradient start `#2E970A` (horizontal to `#257A08`), pixel-probed at the sber card rim (captures-v4/invest/stock-sber.png). Theme-invariant identity fill (charcoal mold). White text 3.785:1 on this stop, 5.434:1 on `#257A08` — the 28px/700 hero name clears AA-large on both; RECORDED-FAILING: white body-s on this stop 3.785:1 (< 4.5) — the live identity gradient is immutable, the site ships the same ratio; pinned as-measured. DESIGN.md Colors.'
+  invest-bond-a:
+    kind: measured
+    status: verified
+    story: '22.5'
+    text: 'instrument hero bond gradient start `#009E4D` (135deg diagonal to `#00813E`), pixel-probed at the bond card corners (captures-v4/invest/bond-ru000a0jxts9.png). Theme-invariant identity fill. White text 3.500:1 on this stop, 4.991:1 on `#00813E` — the 28px/700 hero name clears AA-large on both; RECORDED-FAILING: white body-s on this stop 3.500:1 (< 4.5) — identity immutable, pinned as-measured. DESIGN.md Colors.'
+  invest-dark-a:
+    kind: measured
+    status: verified
+    story: '22.5'
+    text: 'instrument hero dark family start `#0E0E0E` (to `#3B3B3B`), pixel-probed on the future card (captures-v4/invest/future-aez6.png); the etf card runs the same stops with a steeper vertical tilt — one minted family approximates both (recorded in the 22.5 sheet). Theme-invariant identity fill. White text 19.31:1 / 11.207:1 — every size clears AA. DESIGN.md Colors.'
+  invest-light-a:
+    kind: measured
+    status: verified
+    story: '22.5'
+    text: 'instrument hero light gradient start `#EEF0F2` (horizontal to `#D1D3D5`, right stop edge-extrapolated), pixel-probed on the currency card (captures-v4/invest/currency-usd000utstom.png). Theme-invariant identity fill. Ink-300 text 11.06:1 / 8.42:1 — every size clears AA. DESIGN.md Colors.'
 shadows:
   default: '0 4px 24px rgba(0,0,0,.12)'
   default-hover: '0 12px 36px rgba(0,0,0,.2)'
@@ -400,6 +431,7 @@ PRD improvement axis, fidelity checks cover visuals, not ratios):
 | Table deltas (v2, invest/stocks) | — | **overridden** — `delta-positive` = green-300 `#168821` (4.587:1 on white ✓; site `#00A328` = 3.350:1 fails) / `delta-negative` = red-300 `#C40B08` (6.179:1 ✓; site `#F52222` = 4.090:1 fails). **Scope ruling — deltas are sanctioned on base surfaces only; row-hover/tonal composites fail AA** for at least one leg per theme (green-300: row-hover composite `#F2F4F7` 4.163:1, surface-muted 4.210:1, surface-field 4.039:1; dark `#F63434`: row-hover composite `#313131` 3.382:1, tonal step 1 `#222222` 4.136:1; red-300 clears muted/field/hover at 5.671/5.441/5.608) — 6.2/6.4 hold deltas on unhovered rows or re-derive at 8.2. Dark first-pass **verified (8.2 dark sweep — both HELD)**: `dark-delta-positive` = green-100 `#39B54A` clears ALL three dark surfaces — base 6.533:1, step 1 5.972:1, hover composite `#313131` 4.883:1 (green-300 fails in dark at 3.794:1); `dark-delta-negative` `#F63434` 4.525:1 on base (sanctioned scope; hover `#313131` 3.382:1 / step 1 4.136:1 fail per the scope ruling — a hover-clearing red `#FF7B74` = 5.165:1 exists numerically but is +12.7 L* into the pastel error family, not a delta red; no red scale step passes: red-100 = 3.630:1, site `#F52222` = 4.255:1 on base) |
 | Warm-cream pairings (v2, business) | 4.87–15.90:1 | sanctioned: text-primary 10.911:1 / text-secondary 4.866:1 on `tint-cream`; text-primary 9.655:1 on `tint-cream-raised`; dark: 15.895 / 8.461 on `dark-tint-cream`, 14.680 / 7.989 on `dark-tint-cream-raised`. **text-secondary NOT sanctioned on `tint-cream-raised`** — 4.306:1 fails 4.5:1, use text-primary there (the v1 on-tint ruling precedent) |
 | Stepper badge brown (v2, business, 9.1) | 5.413:1 / 4.674:1 | REQUIRED: white numeral on `tint-brown` **5.413:1** ✓ (badge fill, both themes — `tint-brown` is theme-invariant, charcoal mold); `tint-brown` on `tint-cream` **4.674:1** ✓ (badge over page cream). RECORDED-FAILING: `tint-brown` on `tint-cream-raised` **4.136:1** (< 4.5) — the badge never sits on raised cream (its card-top overlap is white); pinned, not fixed |
+| Instrument hero gradients (v2.3, invest, 22.5) | 3.500–19.31:1 | Measured identity fills, theme-invariant (charcoal mold; pixel-probed at the card rims, captures-v4/invest). `invest-stock-a` `#2E970A` → `invest-stock-b` `#257A08` (horizontal): white 3.785:1 → 5.434:1 — name 28px/700 clears AA-large both stops ✓. `invest-bond-a` `#009E4D` → `invest-bond-b` `#00813E` (135deg): white 3.500:1 → 4.991:1 — AA-large ✓ both. `invest-dark-a` `#0E0E0E` → `invest-dark-b` `#3B3B3B`: white 19.31:1 → 11.207:1 ✓ all sizes. `invest-light-a` `#EEF0F2` → `invest-light-b` `#D1D3D5` (right stop edge-extrapolated): ink-300 11.06:1 → 8.42:1 ✓ all sizes. RECORDED-FAILING: white body-s on `invest-stock-a` **3.785:1** and on `invest-bond-a` **3.500:1** (< 4.5) — the live identity gradient is immutable (the site ships the same ratios); the hero ships them as-measured with the ratios pinned, and a consumer overriding the fill via `--tk-instrument-hero-bg` owns their own AA |
 
 ## Typography
 
