@@ -526,7 +526,10 @@ describe('tk-data-table', () => {
     expect(cells[1]?.querySelector('.cell__roundel')).toBeNull();
   });
 
-  it("instrument cell: a URL logo renders an <img> roundel; an empty logo string degrades to the plain cell (§2)", async () => {
+  // Title wording note: spell it «image roundel», never the literal tag in
+  // prose — the impeccable [broken-image] regex reads test SOURCE text and
+  // a bare tag in a title trips it (the 22.3 CI fix-round).
+  it("instrument cell: a URL logo renders an image roundel; an empty logo string degrades to the plain cell (§2)", async () => {
     const el = await mount({
       props: {
         columns: STOCK_COLUMNS,
