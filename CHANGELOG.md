@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — tk-kv-list atom (spec 22.4, invest identity wave)
+
+- tk-kv-list / tk-kv-list-item: the invest spec-list row (GAP-MAP B4
+  — the bond «Информация о выпуске» shape). A STATELESS container +
+  light-DOM rows mold (the accordion discipline): gray label left
+  (prop or slot — slotted wins, the fallback IS the prop), near-black
+  value slot flush right, 1px border-table hairlines BETWEEN rows
+  only (`::slotted :not(:last-child)`).
+- The hint prop renders the gray «?» roundel — a real tab-stop
+  `<button type="button">` (44px hit via `::after inset:-14px`)
+  composed inside the kit tk-tooltip, which wires aria-describedby
+  itself (300ms hover/focus, click-toggle, Esc — its contract
+  verbatim). A hint is a DESCRIPTION, not a disclosure:
+  aria-expanded never appears. No hint → no icon, no button, no tab
+  stop.
+- Semantics ruling: dl/dt/dd cannot cross the slot boundary — the
+  container self-asserts role=list, items role=listitem (the
+  tk-rating law). The block heading stays consumer-side (no-modes).
+- Grounded on the 2x bond anatomy (row pitch 33px = 4px padding +
+  24px capture-literal line box + 1px divider); measured→token
+  deviations (15px body-m vs the captured ~16px) recorded in the
+  sheet headers. Hook family exactly five
+  (`--tk-kv-list-{divider,label,value,gap,icon}`), no mints.
+  Delta-toned values stay consumer slot content (tokens 22.1/22.2).
+- Unit 10/10 (semantics, hint wiring, stateless no-channel,
+  structural pins incl. the pixel-arbitrated divider); hidden-guard
+  roster 45→47 sheets / 36 files; 18 new legs + getting-started
+  re-mint (the search tile). Full suite 2368/2368 green
+  (feat b2413af, CI run 37001997942).
+
 ### Added — tk-data-table financial cells (spec 22.3, invest identity wave)
 
 - Two per-cell conventions on the existing tk-data-table cell — no
