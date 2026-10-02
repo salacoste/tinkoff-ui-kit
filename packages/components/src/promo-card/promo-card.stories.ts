@@ -4,6 +4,7 @@ import { html } from 'lit';
 import { apiReferenceDoc } from '../api-reference.js';
 
 import '../button/button.js';
+import '../link/link.js';
 import './promo-card.js';
 
 /**
@@ -23,9 +24,10 @@ import './promo-card.js';
  */
 
 type CardArgs = {
-  variant: 'gray' | 'bluegray' | 'mint' | 'beige' | 'charcoal';
+  variant: 'gray' | 'bluegray' | 'mint' | 'beige' | 'charcoal' | 'ticket';
   heading: string;
   description: string;
+  label: string;
   skeleton: boolean;
 };
 
@@ -59,6 +61,21 @@ const cardCanvas = (args: Partial<CardArgs> = {}, { art = true } = {}) => html`
   >
     ${art ? artDemo : ''}
     <tk-button slot="actions" variant="secondary" size="card">Подробнее</tk-button>
+  </tk-promo-card>
+`;
+
+/** Ticket demo (22.6): the invest sidebar price ticket — FICTIONAL
+ *  instruments, dates and prices (the PD gate: live values are never
+ *  transcribed; only the anatomy is the reference's). The CTA is the
+ *  consumer's tk-button primary (the measured pair IS the kit pair); the
+ *  note's link is tk-link — consumer slot content, its color is its own. */
+const ticketCanvas = (label: string, value: string) => html`
+  <tk-promo-card variant="ticket" label=${label}>
+    <b slot="value">${value}</b>
+    <tk-button class="tkpc-ticket-cta" slot="actions" variant="primary">Открыть счет</tk-button>
+    <span slot="note">
+      Если у вас уже есть счет, <tk-link href="#">войдите в личный кабинет</tk-link>
+    </span>
   </tk-promo-card>
 `;
 
@@ -108,6 +125,21 @@ const canvasStyles = html`
     }
     .tkpc-canvas figure {
       margin: 0;
+    }
+    /* Ticket row (22.6): the sidebar register — the live ticket card is
+       247px wide (pixel-probe, verify/invest-ticket/NOTES.md); the row
+       mirrors it as the CONSUMER layout (the card itself is a
+       grid-agnostic block). */
+    .tkpc-tickets {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 247px));
+      gap: var(--tk-space-20);
+      max-width: var(--tk-space-container);
+    }
+    /* The live CTA runs the full content column (inset 21/21 — probe);
+       the consumer stretches the slotted button, the card never does. */
+    .tkpc-ticket-cta {
+      width: 100%;
     }
     /* Equal ring around the disc (gate v1.2.0, flag «разные отступы»):
        the old aspect-ratio 4/3 slab stretched to the disc height (96)
@@ -164,11 +196,13 @@ const meta: Meta<CardArgs> = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['gray', 'bluegray', 'mint', 'beige', 'charcoal'],
-      description: 'Тон поверхности; он же решает пару текста (пастель — тёмный, charcoal — белый).',
+      options: ['gray', 'bluegray', 'mint', 'beige', 'charcoal', 'ticket'],
+      description:
+        'Тон поверхности; он же решает пару текста (пастель — тёмный, charcoal — белый). ticket — вертикальный ценовой билет (22.6): лейбл/значение/CTA/приписка.',
     },
     heading: { control: 'text', description: 'Заголовок (heading-5); слот heading перекрывает.' },
     description: { control: 'text', description: 'Описание (body-m); слот description перекрывает.' },
+    label: { control: 'text', description: 'Билет (ticket): серая строка-лейбл (body-s); слот label перекрывает.' },
     skeleton: { control: 'boolean', description: 'Скелетон: серые gray-200 блоки вместо контента.' },
   },
 };
@@ -266,6 +300,21 @@ export const Variants: Story = {
           </tk-promo-card>
         </div>
       </section>
+      <section>
+        <h2>Финансовый билет (ticket, 22.6)</h2>
+        <p class="tkpc-note">
+          Вертикальный ценовой билет сайдбара инвестиций: белый surface-base,
+          волосяная gray-200 кромка (единственный хром), центрированный стек
+          лейбл → значение → CTA → приписка. Цифры и даты вымышленные
+          (ПД-гейт) — анатомия с трёх живых страниц (акция/фьючерс/валюта),
+          пиксель-пробы в verify/invest-ticket/NOTES.md.
+        </p>
+        <div class="tkpc-tickets">
+          ${ticketCanvas('Цена акции 12 мая 2026', '128,40 ₽')}
+          ${ticketCanvas('Цена фьючерса 3 июля 2026', '6 120 пт')}
+          ${ticketCanvas('Цена валюты 21 августа 2026', '71,20 ₽')}
+        </div>
+      </section>
     </main>
   `,
 };
@@ -291,12 +340,25 @@ export const Theming: Story = {
         <code>--tk-promo-card-padding</code>,
         <code>--tk-promo-card-padding-mobile</code>,
         <code>--tk-promo-card-cta-fill</code>,
-        <code>--tk-promo-card-cta-text</code>.
+        <code>--tk-promo-card-cta-text</code>,
+        <code>--tk-promo-card-border</code> (22.6: кромка билета).
       </p>
       <div class="tkpc-grid">
         ${cardCanvas({ variant: 'mint', heading: 'ОСАГО', description: 'Мята — измеренное значение эталона' })}
         ${cardCanvas({ variant: 'charcoal', heading: 'Платинум', description: 'Charcoal — белая пара' })}
       </div>
+      <section>
+        <h2>Билет в тёмной теме</h2>
+        <p class="tkpc-note">
+          Билет следует теме семантиками, без единой ветки в коде:
+          surface-base → тёмная поверхность, кромка border-default →
+          белая альфа-ступень, текст/лейбл — ремапами
+          text-primary/text-secondary.
+        </p>
+        <div class="tkpc-tickets">
+          ${ticketCanvas('Цена акции 12 мая 2026', '128,40 ₽')}
+        </div>
+      </section>
     </main>
   `,
 };

@@ -402,4 +402,140 @@ describe('tk-promo-card', () => {
       /padding:\s*var\(--tk-promo-card-padding-mobile, var\(--tk-space-24\)\)/,
     );
   });
+
+  // --- Ticket mode (Story 22.6 — spec 22.6, invest identity wave) ---
+
+  it('TICKET: joins the variant union and reflects; the tint anatomy does not render', async () => {
+    const el = await mount({ props: { variant: 'ticket' } });
+    expect(TkPromoCard.variants).toContain('ticket');
+    expect(el.getAttribute('variant')).toBe('ticket');
+    // The ticket stack replaces the tint body: no art zone, no heading,
+    // no description — even with the props set.
+    el.heading = 'Тинт-заголовок';
+    el.description = 'Тинт-описание';
+    await elementUpdated(el);
+    expect(el.shadowRoot?.querySelector('.card__art')).toBeNull();
+    expect(el.shadowRoot?.querySelector('.card__heading')).toBeNull();
+    expect(el.shadowRoot?.querySelector('.card__description')).toBeNull();
+    // The ticket anatomy: value + actions always, label/note by content.
+    expect(el.shadowRoot?.querySelector('.card__value')).toBeInstanceOf(Element);
+    expect(el.shadowRoot?.querySelector('slot[name="actions"]')).not.toBeNull();
+    expect(el.shadowRoot?.querySelector('.card__label')).toBeNull();
+    expect(el.shadowRoot?.querySelector('.card__note')).toBeNull();
+    // The hidden trackers keep the slotchange contract alive.
+    expect(el.shadowRoot?.querySelector('slot[name="label"]')).not.toBeNull();
+    expect(el.shadowRoot?.querySelector('slot[name="note"]')).not.toBeNull();
+    el.remove();
+  });
+
+  it('TICKET LABEL: prop renders the gray line; the slot overrides it (the heading mold)', async () => {
+    const el = await mount({ props: { variant: 'ticket', label: 'Цена акции 1 октября 2026' } });
+    const label = el.shadowRoot?.querySelector('.card__label');
+    expect(label?.textContent?.trim()).toBe('Цена акции 1 октября 2026');
+    const slotted = document.createElement('span');
+    slotted.setAttribute('slot', 'label');
+    slotted.textContent = 'Цена фьючерса';
+    el.appendChild(slotted);
+    await elementUpdated(el); // slotchange → requestUpdate
+    const labelAfter = el.shadowRoot?.querySelector('.card__label');
+    expect(labelAfter?.querySelector('slot')?.assignedNodes({ flatten: true })).toContain(slotted);
+    // Removing the slotted content falls back to the prop line again.
+    slotted.remove();
+    await elementUpdated(el);
+    expect(el.shadowRoot?.querySelector('.card__label')?.textContent?.trim()).toBe(
+      'Цена акции 1 октября 2026',
+    );
+    el.remove();
+  });
+
+  it('TICKET VALUE/NOTE slots project; the note is presence-mold (no node without content)', async () => {
+    const el = await mount({ props: { variant: 'ticket', label: 'Цена валюты' } });
+    const value = document.createElement('b');
+    value.setAttribute('slot', 'value');
+    value.textContent = '83,5 ₽';
+    el.appendChild(value);
+    await elementUpdated(el);
+    const valueSlot = el.shadowRoot?.querySelector<HTMLSlotElement>('.card__value slot');
+    expect(valueSlot?.assignedNodes({ flatten: true })).toContain(value);
+    // No note content → no note node (the empty-state slot-presence mold).
+    expect(el.shadowRoot?.querySelector('.card__note')).toBeNull();
+    const note = document.createElement('p');
+    note.setAttribute('slot', 'note');
+    note.textContent = 'Если у вас уже есть счет, войдите в личный кабинет';
+    el.appendChild(note);
+    await elementUpdated(el);
+    const noteSlot = el.shadowRoot?.querySelector<HTMLSlotElement>('.card__note slot');
+    expect(noteSlot?.assignedNodes({ flatten: true })).toContain(note);
+    note.remove();
+    await elementUpdated(el);
+    expect(el.shadowRoot?.querySelector('.card__note')).toBeNull();
+    el.remove();
+  });
+
+  it('TICKET CSS SET: surface-base fill, gray-200 hairline via the NEW border hook, centered body-s/heading-5-700/body-m-24px stack, space rhythm, stray-bleed guard — every rule gated on [variant=ticket]', () => {
+    const cssText = sheet();
+    // GATING INVARIANT: no ticket rule leaks to other variants — every
+    // .card__label/.card__value/.card__note selector is ticket-gated.
+    expect(cssText.match(/\.card__(label|value|note)/g) ?? []).toHaveLength(
+      (cssText.match(/\[variant='ticket'\]\) \.card__(label|value|note)/g) ?? []).length,
+    );
+
+    // CARD: white surface-base via the fill hook, the measured #E7E8EA
+    // hairline through the NEW hook over the border-default semantic
+    // (dark-remapped #FFFFFF24 — the bare gray-200 step has no dark layer;
+    // the one hook this story adds), the asymmetric padding register
+    // (24 top / 20 sides / 20 bottom), text re-anchored to text-primary
+    // (a ticket never pairs white).
+    const card = cssText.match(/:host\(\[variant='ticket'\]\) \.card\s*\{([^}]*)\}/)?.[1] ?? '';
+    expect(card).toMatch(/padding:\s*var\(--tk-promo-card-padding, var\(--tk-space-20\)\)/);
+    expect(card).toMatch(/padding-block-start:\s*var\(--tk-promo-card-padding, var\(--tk-space-24\)\)/);
+    expect(card).toMatch(/border:\s*1px solid var\(--tk-promo-card-border, var\(--tk-color-border-default\)\)/);
+    expect(card).toMatch(/background:\s*var\(--tk-promo-card-fill, var\(--tk-color-surface-base\)\)/);
+    expect(card).toMatch(/color:\s*var\(--tk-promo-card-text, var\(--tk-color-text-primary\)\)/);
+
+    // LABEL: body-s, the muted hook, centered, space-12 to the value.
+    const label = cssText.match(/:host\(\[variant='ticket'\]\) \.card__label\s*\{([^}]*)\}/)?.[1] ?? '';
+    expect(label).toMatch(/font-size:\s*var\(--tk-text-body-s-size\)/);
+    expect(label).toMatch(/color:\s*var\(--tk-promo-card-text-muted, var\(--tk-color-text-secondary\)\)/);
+    expect(label).toMatch(/margin:\s*0 0 var\(--tk-space-12\)/);
+    expect(label).toMatch(/text-align:\s*center/);
+
+    // VALUE: heading-5 + the live 700 literal (register 500 — the 22.5
+    // hero-name precedent), the text hook, centered.
+    const valueRule = cssText.match(/:host\(\[variant='ticket'\]\) \.card__value\s*\{([^}]*)\}/)?.[1] ?? '';
+    expect(valueRule).toMatch(/font-size:\s*var\(--tk-text-heading-5-size\)/);
+    expect(valueRule).toMatch(/font-weight:\s*700/);
+    expect(valueRule).toMatch(/color:\s*var\(--tk-promo-card-text, var\(--tk-color-text-primary\)\)/);
+    expect(valueRule).toMatch(/text-align:\s*center/);
+
+    // ACTIONS: the measured space-24 rhythm replaces the tint anatomy's
+    // margin-top:auto (content-sized stack), padding-top killed, and the
+    // stray-bleed guard (position:static — the ticket renders no art zone).
+    const actions = cssText.match(/:host\(\[variant='ticket'\]\) \.card__actions\s*\{([^}]*)\}/)?.[1] ?? '';
+    expect(actions).toMatch(/position:\s*static/);
+    expect(actions).toMatch(/margin-top:\s*var\(--tk-space-24\)/);
+    expect(actions).toMatch(/padding-top:\s*0/);
+
+    // NOTE: body-m with the measured 24px line pitch (capture literal —
+    // the data-table leading family), centered, space-24 under the CTA.
+    const note = cssText.match(/:host\(\[variant='ticket'\]\) \.card__note\s*\{([^}]*)\}/)?.[1] ?? '';
+    expect(note).toMatch(/font-size:\s*var\(--tk-text-body-m-size\)/);
+    expect(note).toMatch(/line-height:\s*24px/);
+    expect(note).toMatch(/margin:\s*var\(--tk-space-24\) 0 0/);
+    expect(note).toMatch(/text-align:\s*center/);
+
+    // The ticket stays FLAT and gradient-free: no shadow joins the sheet.
+    expect(cssText).not.toMatch(/box-shadow/);
+  });
+
+  it('TICKET CLAMP PATH: an invalid variant still degrades to gray (ticket never clamps away a tint)', async () => {
+    const el = await mount();
+    el.variant = 'ticket';
+    await elementUpdated(el);
+    expect(el.getAttribute('variant')).toBe('ticket');
+    el.variant = 'neon' as TkPromoCard['variant'];
+    await elementUpdated(el);
+    expect(el.getAttribute('variant')).toBe('gray'); // the §2 mold, unchanged by the union growth
+    el.remove();
+  });
 });

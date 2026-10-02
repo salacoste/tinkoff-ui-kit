@@ -42,6 +42,9 @@ import { css } from 'lit';
  *   EXPERIENCE responsive matrix's «card paddings drop one spacing step»;
  *   separate hook so a desktop override survives the breakpoint, the
  *   tk-navbar height-mobile precedent)
+ * - `--tk-promo-card-border` ticket hairline (Story 22.6; default
+ *   border-default — light value byte-exact to the measured #E7E8EA, dark
+ *   #FFFFFF24; the tint anatomy paints no border)
  * - `--tk-promo-card-cta-fill` charcoal CTA pill fill (default white) and
  *   `--tk-promo-card-cta-text` its label (default ink-300) — a PAIR, the
  *   footer-pill precedent. CHARCOAL CTA DELIVERY (review finding 1): the
@@ -95,6 +98,52 @@ import { css } from 'lit';
  * - NO-ART DEGRADE: without slotted art the zone stays collapsed
  *   (data-has-art unchanged) and the overlay pins over the tint — recorded
  *   acceptable (the no-art row).
+ *
+ * TICKET MODE (Story 22.6 — spec 22.6, invest identity wave): the invest
+ * sidebar PRICE TICKET (GAP-MAP gap-2 #8), pixel-probed on the three live
+ * instrument pages (stock/future/currency — the anatomy is byte-identical
+ * across all three: card y-band and pixel counts agree exactly;
+ * `.playwright-cli/verify/invest-ticket/NOTES.md`, the 22.5 arbitration
+ * mold — two contact-sheet lens claims refuted by probes: the stack is
+ * CENTERED, not left-aligned; the CTA spans its own 21px-inset column,
+ * not the text measure):
+ * - CARD: white surface-base, 1px hairline ALL FOUR sides through the
+ *   border-default semantic (light #E7E8EA — BYTE-EXACT to the probe; dark
+ *   #FFFFFF24, the 5.4 skeleton-fill precedent — the bare gray-200 step
+ *   has no dark remap) — the only ticket chrome), the
+ *   family radius register (xxl=xl=24 — arc fit r≈23.5–24.8), padding
+ *   24 top / 20 sides / 20 bottom (measured 25.5/21/20.5 — nearest steps,
+ *   Δ≤1.5 recorded). NO shadow (the FLAT law), no gradient — the spec's
+ *   «белый/поверхностный» letter confirmed.
+ * - LABEL: «Цена акции 1 октября 2026» band 10 rows ≈13.5–14px, core
+ *   #757575 → body-s (+1 recorded) on `text-secondary` (the live neutral
+ *   gray deviates from the token's blue-gray; both AA — the kv-list
+ *   gray-label precedent), centered, space-12 under → value.
+ * - VALUE: «275,79 ₽» digit band 18 rows → ≈25.4px, #333333, bold →
+ *   heading-5 24 (−1.4 recorded) + weight 700 LITERAL (register says 500 —
+ *   the 22.5 hero-name precedent), `text-primary` byte-exact, centered;
+ *   the suffix rides the same run (slot content).
+ * - CTA: the EXISTING actions slot — the consumer's tk-button primary (the
+ *   measured pair #FFDD2D + #333333 IS the kit's yellow-100/text-primary,
+ *   byte-exact; live h56 vs the kit button's 44 A11y floor — height stays
+ *   the button's own, recorded). margin-top space-24 (measured ≈22).
+ * - NOTE: two centered body-m lines, line pitch EXACTLY 24px → line-height
+ *   24px capture literal (the data-table leading family; the 1.5 register
+ *   would read 22.5). #333333 → `text-primary` (byte). The link inside is
+ *   CONSUMER slot content (tk-link — its #1771E6 is the kit's AA-tuned
+ *   pair; the live #126DF7 deviates, recorded); margin-top space-24
+ *   (measured ≈23.5).
+ * - MOBILE: the ticket KEEPS its padding under the 767 breakpoint — the
+ *   ticket card rule out-specifies the matrix's `.card` padding there and
+ *   no live measurement exists for a mobile ticket (recorded; the
+ *   -mobile hook still reaches a consumer override).
+ * - art-mode: the ticket renders NO art zone; the ticket actions rule
+ *   defensively resets `position` so a stray [art-mode='bleed'] can never
+ *   lift the CTA out of the stack (equal specificity, later source order).
+ * NEW HOOK: `--tk-promo-card-border` (ticket hairline, default
+ * border-default) —
+ * the one hook this story adds; every other value rides existing hooks or
+ * tokens (no mints, the spec's letter).
  *
  * Known structural (non-token) values, flagged per the flag-don't-invent
  * rule: the 767px breakpoint (the navbar's mobile flip), the skeleton
@@ -313,6 +362,76 @@ export const promoCardStyles = css`
     margin-block-end: calc(-1 * var(--tk-promo-card-padding, var(--tk-space-32)));
     border-radius: 0 0 var(--tk-promo-card-radius, var(--tk-radius-xxl))
       var(--tk-promo-card-radius, var(--tk-radius-xxl));
+  }
+
+  /* --- Ticket mode (Story 22.6) — see the header's TICKET MODE section for
+     the probe record. Every rule gated on [variant='ticket']; placed AFTER
+     the bleed section so the equal-specificity actions rule wins by source
+     order (the stray-bleed guard below). The ticket card rule also
+     out-specifies the 767 matrix's plain .card padding (specificity, not a
+     media duplicate — the ticket keeps its register under the breakpoint,
+     header record). --- */
+
+  /* White card + the measured hairline through the border-default semantic
+     (light #E7E8EA — BYTE-EXACT to the probe; dark #FFFFFF24, the 5.4
+     skeleton-fill precedent — the bare gray-200 scale step has no dark
+     remap and would paint a bright rim in dark theme), the asymmetric
+     padding register (24 top / 20 sides / 20 bottom), the text hook
+     defaults re-anchored to text-primary (a ticket never pairs white). */
+  :host([variant='ticket']) .card {
+    padding: var(--tk-promo-card-padding, var(--tk-space-20));
+    padding-block-start: var(--tk-promo-card-padding, var(--tk-space-24));
+    border: 1px solid var(--tk-promo-card-border, var(--tk-color-border-default));
+    background: var(--tk-promo-card-fill, var(--tk-color-surface-base));
+    color: var(--tk-promo-card-text, var(--tk-color-text-primary));
+  }
+
+  /* The gray label line: body-s, the muted hook, centered; space-12 to the
+     value (the measured head-block rhythm). */
+  :host([variant='ticket']) .card__label {
+    margin: 0 0 var(--tk-space-12);
+    font-size: var(--tk-text-body-s-size);
+    font-weight: var(--tk-text-body-s-weight);
+    line-height: var(--tk-text-body-s-leading);
+    color: var(--tk-promo-card-text-muted, var(--tk-color-text-secondary));
+    text-align: center;
+  }
+
+  /* The value: heading-5 + the live 700 bold (structural literal, header
+     note), the text hook, centered — the measured 25.4px digit band rides
+     the 24px register step (−1.4 recorded). */
+  :host([variant='ticket']) .card__value {
+    font-family: var(--tk-font-heading);
+    font-size: var(--tk-text-heading-5-size);
+    font-weight: 700;
+    line-height: var(--tk-text-heading-5-leading);
+    color: var(--tk-promo-card-text, var(--tk-color-text-primary));
+    text-align: center;
+  }
+
+  /* The CTA row: the consumer's tk-button primary slotted through the
+     EXISTING actions slot. margin-top replaces the tint anatomy's
+     margin-top:auto (the ticket is content-sized — nothing pins bottom);
+     padding-top:0 kills the tint rhythm; position:static defensively
+     neutralizes the bleed overlay for a stray [art-mode='bleed'] (the
+     ticket renders no art zone — header record). */
+  :host([variant='ticket']) .card__actions {
+    position: static;
+    margin-top: var(--tk-space-24);
+    padding-top: 0;
+  }
+
+  /* The fine-print note: centered body-m with the measured 24px line pitch
+     (capture literal — the data-table leading family; the 1.5 register
+     reads 22.5). Presence-mold: no wrapper renders without slotted
+     content (the element tracks it via slotchange). */
+  :host([variant='ticket']) .card__note {
+    margin: var(--tk-space-24) 0 0;
+    font-size: var(--tk-text-body-m-size);
+    font-weight: var(--tk-text-body-m-weight);
+    line-height: 24px;
+    color: var(--tk-promo-card-text, var(--tk-color-text-primary));
+    text-align: center;
   }
 
   /* --- The EXPERIENCE responsive matrix: <768px card padding drops one

@@ -4,8 +4,8 @@ import type { PropertyValues } from 'lit';
 
 import { promoCardStyles } from './promo-card.css.js';
 
-/** Card tint union — the five reference marketing surfaces (EXPERIENCE PromoCard). */
-export type TkPromoCardVariant = 'gray' | 'bluegray' | 'mint' | 'beige' | 'charcoal';
+/** Card tint union — the five reference marketing surfaces (EXPERIENCE PromoCard) + the `ticket` mode (Story 22.6). */
+export type TkPromoCardVariant = 'gray' | 'bluegray' | 'mint' | 'beige' | 'charcoal' | 'ticket';
 
 /** Art placement union — art TOP inside the padding (top) or the full-bleed BOTTOM zone (bleed, Story 10.3). */
 export type TkPromoArtMode = 'top' | 'bleed';
@@ -53,25 +53,44 @@ export type TkPromoArtMode = 'top' | 'bleed';
  * reduced-motion path is trivially the same render (noted; motion tokens
  * stay unconsumed).
  *
+ * TICKET MODE (Story 22.6, spec 22.6 — invest identity wave): the sidebar
+ * PRICE TICKET of the invest instrument pages (GAP-MAP gap-2 #8). The SAME
+ * element renders a DIFFERENT anatomy behind `variant="ticket"`: a gray
+ * label line (the `label` prop, the heading/description slot-override
+ * mold), the big centered VALUE (`value` slot), the CTA through the
+ * EXISTING `actions` slot (the consumer's tk-button primary — the live
+ * #FFDD2D pill IS the kit pair), and a fine-print NOTE (`note` slot,
+ * presence-mold — no node without slotted content). White surface-base
+ * card + gray-200 hairline, centered stack, no tint gradients — the
+ * measured anatomy lives in the css header (pixel-probed,
+ * .playwright-cli/verify/invest-ticket/NOTES.md). The tint anatomy's
+ * heading/description/art do NOT render in ticket mode; `art-mode` is
+ * ignored (the ticket renders no art zone — the sheet's ticket actions
+ * rule defensively neutralizes the bleed overlay).
+ *
  * STATELESS (the display-component mold): no channel, no controlled pair,
  * nothing dispatches — the event-map no-entry case (tk-footer precedent).
  * SSR-compat (AD-10): rendered via Lit templates only; the slotchange
  * listener is event-driven post-mount access, never construction-time.
  *
  * @tag tk-promo-card
- * @attr {gray|bluegray|mint|beige|charcoal} variant - Tint variant; also decides text pairing (default `gray`).
- * @attr {top|bleed} art-mode - Art placement: `top` (default) inside the padding above the body, or `bleed` — the full-bleed bottom zone with the floating-pill actions overlay (CSS-only mode; invalid clamps to `top`).
+ * @attr {gray|bluegray|mint|beige|charcoal|ticket} variant - Tint variant; also decides text pairing (default `gray`). `ticket` renders the invest sidebar price-ticket anatomy (Story 22.6).
+ * @attr {top|bleed} art-mode - Art placement: `top` (default) inside the padding above the body, or `bleed` — the full-bleed bottom zone with the floating-pill actions overlay (CSS-only mode; invalid clamps to `top`). Ignored by the `ticket` anatomy.
  * @attr {boolean} skeleton - Border-default placeholder blocks matching the final layout (light value = gray-200's hex).
  * @prop {string} [heading] - Card heading (heading-5); the `heading` slot overrides.
  * @prop {string} [description] - Card description (body-m); the `description` slot overrides.
+ * @prop {string} [label] - Ticket mode: the gray label line (body-s); the `label` slot overrides.
  * @slot art - Card art, TOP (projected imgs get loading=lazy decoding=async enforced).
  * @slot heading - Overrides the `heading` prop.
  * @slot description - Overrides the `description` prop.
- * @slot actions - The CTA (compose a tk-button secondary — white pill); pinned bottom-center.
+ * @slot label - Ticket mode: overrides the `label` prop.
+ * @slot value - Ticket mode: the big centered value line (heading-5 bold).
+ * @slot note - Ticket mode: the fine-print note under the CTA (body-m, centered; renders only while slotted).
+ * @slot actions - The CTA (tint anatomy: a tk-button secondary — white pill, pinned bottom-center; ticket anatomy: a tk-button primary — the yellow full-column CTA).
  */
 export class TkPromoCard extends LitElement {
-  /** Tint variant union (CONVENTIONS §2: literal unions, never forking booleans). */
-  static readonly variants = ['gray', 'bluegray', 'mint', 'beige', 'charcoal'] as const;
+  /** Tint variant union (CONVENTIONS §2: literal unions, never forking booleans) + the 22.6 ticket mode. */
+  static readonly variants = ['gray', 'bluegray', 'mint', 'beige', 'charcoal', 'ticket'] as const;
 
   /** Art placement union (Story 10.3) — the same CONVENTIONS §2 literal-union mold. */
   static readonly artModes = ['top', 'bleed'] as const;
@@ -95,6 +114,10 @@ export class TkPromoCard extends LitElement {
   @property({ type: String })
   description?: string;
 
+  /** Ticket mode (22.6): the gray label line — string DATA (never reflects); the `label` slot overrides it. */
+  @property({ type: String })
+  label?: string;
+
   /** Skeleton state: border-default placeholder blocks matching the final layout (light value = gray-200's hex). */
   @property({ type: Boolean, reflect: true })
   skeleton = false;
@@ -104,6 +127,12 @@ export class TkPromoCard extends LitElement {
   /** Slot-assignment tracking: a named slot's content overrides its prop (Lit fallback cannot see it). */
   #headingSlotted = false;
   #descriptionSlotted = false;
+
+  /** Ticket mode (22.6): the same override tracking for the label, and the
+   * note's presence-mold tracking (no prop — the wrapper renders only while
+   * the slot carries content, the empty-state mold). */
+  #labelSlotted = false;
+  #noteSlotted = false;
 
   /**
    * Enum clamp — the CONVENTIONS §2 error strategy (tk-button/tk-link mold):
@@ -134,6 +163,16 @@ export class TkPromoCard extends LitElement {
 
   #handleDescriptionSlotChange(event: Event): void {
     this.#descriptionSlotted = this.#slotHasContent(event.target as HTMLSlotElement);
+    this.requestUpdate();
+  }
+
+  #handleLabelSlotChange(event: Event): void {
+    this.#labelSlotted = this.#slotHasContent(event.target as HTMLSlotElement);
+    this.requestUpdate();
+  }
+
+  #handleNoteSlotChange(event: Event): void {
+    this.#noteSlotted = this.#slotHasContent(event.target as HTMLSlotElement);
     this.requestUpdate();
   }
 
@@ -181,6 +220,35 @@ export class TkPromoCard extends LitElement {
     }
     const hasHeading = this.#headingSlotted || (this.heading ?? '').length > 0;
     const hasDescription = this.#descriptionSlotted || (this.description ?? '').length > 0;
+
+    // Ticket anatomy (22.6): the tint body's heading/description/art do NOT
+    // render — a different stack (label → value → CTA → note) takes over the
+    // same passive card shell. The note is presence-mold (no node without
+    // slotted content); the label rides the heading/description prop+slot
+    // override machinery.
+    if (this.variant === 'ticket') {
+      const hasLabel = this.#labelSlotted || (this.label ?? '').length > 0;
+      return html`
+        <article class="card">
+          ${hasLabel
+            ? html`<div class="card__label">
+                <slot name="label" @slotchange=${this.#handleLabelSlotChange}>${this.label}</slot>
+              </div>`
+            : html`<slot name="label" @slotchange=${this.#handleLabelSlotChange} hidden></slot>`}
+          <div class="card__value">
+            <slot name="value"></slot>
+          </div>
+          <div class="card__actions">
+            <slot name="actions"></slot>
+          </div>
+          ${this.#noteSlotted
+            ? html`<div class="card__note">
+                <slot name="note" @slotchange=${this.#handleNoteSlotChange}></slot>
+              </div>`
+            : html`<slot name="note" @slotchange=${this.#handleNoteSlotChange} hidden></slot>`}
+        </article>
+      `;
+    }
     return html`
       <article class="card">
         <div class="card__art">

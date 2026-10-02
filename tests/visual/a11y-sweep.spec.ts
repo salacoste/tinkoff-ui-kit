@@ -122,13 +122,15 @@ const SWEEP: readonly SweepTarget[] = [
   //     contract). MEASURED 2026-09-26 on the built docs bundle: the button
   //     row's 11 kit stops = 9 size×variant inner buttons + the 2 href-mode
   //     anchors (ring parity is class-level `.button` CSS, so the anchor
-  //     stops verify the SAME ring contract); the promo-card row's 10 kit
-  //     stops = 5 tint CTAs + 2 no-art CTAs + 3 bleed CTAs (the skeleton
-  //     cards render NO actions slot — their slotted buttons stay
-  //     unprojected light DOM, hence zero stops). Story chrome rides along
-  //     unasserted (the existing rule).
+  //     stops verify the SAME ring contract); the promo-card row's 16 kit
+  //     stops = 5 tint CTAs + 2 no-art CTAs + 3 bleed CTAs + the 22.6
+  //     ticket group (3 × tk-button primary + 3 × tk-link — the ticket
+  //     note's link is a real focus stop; the skeleton cards render NO
+  //     actions slot — their slotted buttons stay unprojected light DOM,
+  //     hence zero stops). Story chrome rides along unasserted (the
+  //     existing rule).
   { component: 'tk-button', group: 'VI', story: 'components-button--variants-and-sizes', stops: 11, minKitSurfaces: 11 },
-  { component: 'tk-promo-card', group: 'VI', story: 'components-promocard--variants', stops: 10, minKitSurfaces: 10 },
+  { component: 'tk-promo-card', group: 'VI', story: 'components-promocard--variants', stops: 16, minKitSurfaces: 16 },
   // --- Group VII: the 13.x console family (story 14.1 — the 11.1
   //     second-row-per-component precedent again; MEASURED 2026-09-27 on
   //     the built docs bundle). The v2 pattern pages (Console chrome /
