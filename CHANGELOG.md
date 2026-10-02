@@ -7,6 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — tk-instrument-hero atom + invest identity gradient tokens (spec 22.5, invest identity wave)
+
+- tk-instrument-hero: the instrument page's identity card — name +
+  superscript ticker, an OPTIONAL metric block (label over value;
+  absent on the ETF/currency anatomy), the 96px logo disc at the
+  right rail, and the consumer's favorite-star ACTION slot (the kit
+  never owns portfolio state — display-only, stateless, zero events).
+- 8 NEW theme-invariant stop tokens
+  `--tk-color-invest-{stock,bond,dark,light}-{a,b}` — the four
+  measured gradient families (stock 90°, bond the 135° diagonal, dark
+  the etf approximation, light with an ink-300 text flip) ride the
+  token layer, not inline literals (FR-1; the spec's «inline» letter
+  corrected at execution). AA honesty pinned in TOKENS.md: body-s
+  white on the green a-stops is RECORDED-FAILING (the live identity
+  fill is immutable; the 28px/700 name clears AA-large); the live
+  85%/50% text alphas raised to full white before pinning.
+- Hook family exactly seven
+  (`--tk-instrument-hero-{bg,radius,padding,min-height,logo-size,
+  logo-inset,gap}`); text polarity THEME-INVARIANT (scale tokens, no
+  dark remap — the light card stays ink-read in dark theme). Heading
+  semantics: the name renders a DIV, the h-level is the consumer's
+  (the name slot accepts a real heading) — plus the kit's FIRST
+  `::slotted(h1..h6)` UA-chrome reset: a slotted heading keeps its
+  document semantics but drops the ~42px sizing and ~35px margins
+  that would break the measured 28px band.
+- Review-lens round (2/2 budget): the dropped star slot attribute
+  (all four cards starless — a bare default-slot child rendered
+  nothing) and the missing title/logo-disc corridor (long names ran
+  under the disc) both caught, fixed, and pinned; four further lens
+  readings overruled with evidence (the disc inset IS the measured
+  46px, superscript ticker by design, neutral-monogram contrast
+  acceptable, grid anatomy). Unit 10/10; hidden-guard 47→48 sheets /
+  37 files; 18 new legs; token-reference--colors ×2 re-minted (8 new
+  swatches, the 9.1/11.2 mint precedent) + getting-started ×2. Full
+  suite 2386/2386 green (feat 79d8359, CI run 37010000366).
+
 ### Added — tk-kv-list atom (spec 22.4, invest identity wave)
 
 - tk-kv-list / tk-kv-list-item: the invest spec-list row (GAP-MAP B4
