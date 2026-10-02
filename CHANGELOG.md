@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — tk-badge financial tones (spec 22.2, invest identity wave)
+
+- tk-badge: `positive` / `negative` financial TEXT tones on NO fill —
+  the live insider-deals table paints the deal type as plain
+  sentence-case text («Покупка» ×4 green, «Продажа» ×1 red, NO pill —
+  lens-verified), so the tones ride the DELTA tokens verbatim (no
+  mint) and the fill stays a consumer hook (transparent default).
+- First THEME-AWARE badge variants: the delta tokens carry dark
+  remaps, and with no fill there is no pair to hold invariant — text
+  follows the theme. The four fill variants stay theme-invariant
+  (unchanged ruling, unchanged rules).
+- The delta AA sanction stays surface-base-only (the 22.1 ruling:
+  green-300 fails surface-muted at 4.210:1) — a tone badge on a
+  tinted surface is the consumer's leg; the sign lives in the
+  content, color is never the sole carrier.
+- Stories: Variants gains the «Финансовые тоны» group (+3,8% / −2,95%
+  / Покупка / Продажа with the measured note), Theming carries the
+  theme-aware exception row, Accessibility extends the tone-pairs
+  note. No new story; four re-minted canvases (×2 themes) + api
+  (follows the CEM @attr) = eight badge baselines re-minted.
+- Unit: union/reflect/clamp over the six-value union + a structural
+  css test — transparent fill, exactly ONE delta token per rule (no
+  scale mint). CEM regenerated. Full suite 2350/2350 green
+  (feat 473c35f, CI run 36991193869).
+
 ### Added — tk-quote-chip atom (spec 22.1, invest identity wave)
 
 - tk-quote-chip: the market-data chip family (invest GAP-MAP A3 — the
