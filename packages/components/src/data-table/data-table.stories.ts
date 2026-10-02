@@ -16,6 +16,12 @@ import type { TkDataTableColumn, TkDataTableRow } from './data-table.js';
  * FULL roving keyboard checklist + an SR-protocol section
  * (maintainer-side execution).
  *
+ * The 22.3 financial cells join Variants as a measured group: the
+ * insider-deals demo (instrument roundels, colored deal-type links,
+ * value+caption) and the ideas demo (linked rows + the green right
+ * column) — fictional companies/people/numbers (the PD gate), the live
+ * shapes only.
+ *
  * Motion: the only transition is the row hover fill — motion token
  * throughout, collapsed to 0ms under prefers-reduced-motion by the token
  * layer (no component media query). No synthetic :hover states beyond the
@@ -304,6 +310,112 @@ export const Variants: Story = {
       <figure>
         ${dataTable({ rows: [] })}
         <figcaption>rows=[]: нулевое состояние «Нет данных» (не пустота), без rowgroup</figcaption>
+      </figure>
+      <h2>Финансовые ячейки (22.3)</h2>
+      <p class="tkd-note">
+        Замер живой таблицы «Инсайдерские сделки» (research-хаб, линза
+        22.3): раундэл 48px, отступ раундэл→имя ≈17px (шаг space-16), имя
+        обычные 15px, тикер серым вторичным, «Тип сделки» — плоский текст
+        без пилюли и подчёркивания («Покупка» ×4 зелёным, «Продажа» ×1
+        красным). В ките это конвенции НА существующем интерфейсе ячейки:
+        <code>logo: 'letter'</code> — моном-раундэл из тикера (нейтральная
+        пара бейджа; брендовые заливки — актив консьюмера, ПД-гейт),
+        <code>href</code> на ячейке — цветная ссылка-значение, тон несёт
+        <code>delta</code>; «Доля» — существующая анатомия
+        значение+подпись, числа — существующий <code>align: 'end'</code>.
+        Компании, люди и цифры вымышленные.
+      </p>
+      <figure>
+        ${dataTable({
+          caption: 'Инсайдерские сделки',
+          columns: [
+            { key: 'company', header: 'Компания', width: '1.6fr' },
+            { key: 'insider', header: 'Инсайдер', width: '1.2fr' },
+            { key: 'type', header: 'Тип сделки' },
+            { key: 'date', header: 'Дата', width: '150px' },
+            { key: 'amount', header: 'Сумма', align: 'end', width: '150px' },
+            { key: 'share', header: 'Доля', align: 'end', width: '140px' },
+          ],
+          rows: [
+            {
+              cells: {
+                company: { primary: 'ТехноПром', secondary: 'TPRG', logo: 'letter' },
+                insider: { primary: 'Анна Соколова', secondary: 'Член совета директоров' },
+                type: { primary: 'Покупка', href: '/invest/insider/deals/1/', delta: 'positive' },
+                date: { primary: '14 августа 2026' },
+                amount: { primary: '2 578 875 ₽' },
+                share: { primary: '0,04909', secondary: '% портфеля' },
+              },
+            },
+            {
+              cells: {
+                company: { primary: 'Балтийский Лизинг', secondary: 'BALT', logo: 'letter' },
+                insider: { primary: 'Игорь Мельник', secondary: 'Директор' },
+                type: { primary: 'Покупка', href: '/invest/insider/deals/2/', delta: 'positive' },
+                date: { primary: '2 сентября 2026' },
+                amount: { primary: '812 340 ₽' },
+                share: { primary: '0,015', secondary: '% портфеля' },
+              },
+            },
+            {
+              cells: {
+                company: { primary: 'Северный Кофе', secondary: 'SVKF', logo: 'letter' },
+                insider: { primary: 'Ольга Рябова', secondary: 'Вице-президент' },
+                type: { primary: 'Продажа', href: '/invest/insider/deals/3/', delta: 'negative' },
+                date: { primary: '21 августа 2026' },
+                amount: { primary: '1 204 500 ₽' },
+                share: { primary: '0,0228', secondary: '% портфеля' },
+              },
+            },
+            {
+              cells: {
+                company: { primary: 'Кама Моторс', secondary: 'KMMT', logo: 'letter' },
+                insider: { primary: 'Тимур Валеев', secondary: 'Финансовый директор' },
+                type: { primary: 'Покупка', href: '/invest/insider/deals/4/', delta: 'positive' },
+                date: { primary: '30 июля 2026' },
+                amount: { primary: '45 900 ₽' },
+                share: { primary: '0,0009', secondary: '% портфеля' },
+              },
+            },
+          ],
+        })}
+        <figcaption>
+          «Инсайдерские сделки» (22.3): инертные строки, раундэл-моном + тикер,
+          цветная ссылка «Тип сделки», «Доля» = значение + подпись «% портфеля»
+        </figcaption>
+      </figure>
+      <figure>
+        ${dataTable({
+          caption: 'Инвестиционные идеи',
+          columns: [
+            { key: 'idea', header: 'Идея', width: '1fr' },
+            { key: 'potential', header: 'Потенциал', align: 'end', width: '160px' },
+          ],
+          rows: [
+            {
+              href: '/invest/ideas/tprg/',
+              cells: {
+                idea: { primary: 'ТехноПром: расширение линии терминалов', secondary: '12 сентября · Собственная аналитика' },
+                potential: { primary: '+18 %', secondary: 'прогноз 12 мес', delta: 'positive' },
+              },
+            },
+            {
+              href: '/invest/ideas/svkf/',
+              cells: {
+                idea: { primary: 'Северный Кофе: сеть в регионах-миллионниках', secondary: '28 августа · Собственная аналитика' },
+                potential: { primary: '+9 %', secondary: 'прогноз 12 мес', delta: 'positive' },
+              },
+            },
+            {
+              href: '/invest/ideas/kmmt/',
+              cells: {
+                idea: { primary: 'Кама Моторс: гособоронзаказ в шапке заказа', secondary: '3 июля · Собственная аналитика' },
+                potential: { primary: '+24 %', secondary: 'прогноз 12 мес', delta: 'positive' },
+              },
+            },
+          ],
+        })}
+        <figcaption>«Инвестиционные идеи» (22.3): связанные строки (стич), идея + серые дата·источник, зелёная правая колонка</figcaption>
       </figure>
     </main>
   `,

@@ -24,6 +24,17 @@ export interface TkDataTableColumn {
  * secondary 13/20. `delta` applies the delta semantic color to BOTH lines
  * of this cell (the sign lives in the data string — «color carries
  * direction»); no delta → text-primary/text-secondary.
+ *
+ * The 22.3 financial-cell conventions (the insider-deals / market-data
+ * shapes) ride the SAME interface — no new cell elements:
+ * - `logo` — the instrument anatomy (a): roundel + the two-line stack
+ *   (name over ticker). `'letter'` renders the neutral monogram roundel
+ *   seeded from the ticker's first grapheme (the quote-chip letter rule —
+ *   brand fills are consumer assets, PD keeps the kit neutral); any other
+ *   non-empty string is an image URL rendered inside the circle.
+ * - `href` — the colored-link anatomy (d): the primary line becomes a
+ *   real `<a>` painted by the `delta` tone (Покупка/Продажа) or the link
+ *   token when no delta rides the cell.
  */
 export interface TkDataTableCell {
   /** Primary line (15/24) — the row's first cell renders it as the link text. */
@@ -32,6 +43,19 @@ export interface TkDataTableCell {
   secondary?: string;
   /** Direction semantic painted on BOTH lines of the cell. */
   delta?: 'positive' | 'negative';
+  /**
+   * Instrument roundel (22.3): `'letter'` → the neutral monogram (the
+   * ticker's first grapheme); a non-empty image URL → an `<img>` roundel.
+   * Absent → the plain typographic cell.
+   */
+  logo?: 'letter' | (string & {});
+  /**
+   * Cell-level link (22.3): renders the primary line as a real anchor
+   * colored by the delta tone (or the link token without one). Ignored in
+   * the first cell of a linked row — the row anchor owns that cell (the
+   * stitch priority ruling).
+   */
+  href?: string;
 }
 
 /**
@@ -86,9 +110,23 @@ export const TK_DATA_TABLE_DEFAULT_EMPTY_TEXT = 'Нет данных';
  * css module header).
  *
  * SCOPE FENCES (v2): no selection channel, no sorting (headers static), no
- * virtualization (long lists scroll naturally), no brand-logo column type;
- * narrow viewports scroll the host (`overflow-x: auto`) against the
- * table's min-width — columns never reflow.
+ * virtualization (long lists scroll naturally), no brand-logo column TYPE
+ * (the 22.3 roundel is a per-CELL convention on the existing interface,
+ * not a column kind); narrow viewports scroll the host (`overflow-x: auto`)
+ * against the table's min-width — columns never reflow.
+ *
+ * FINANCIAL CELLS (22.3, invest identity wave — spec 22.3): two per-cell
+ * conventions on the existing `TkDataTableCell`, no new elements:
+ * - instrument: `logo` lays the cell out as roundel + the existing
+ *   two-line stack (name over ticker; the live insider table: 48px roundel,
+ *   ~17px gap → space-16, name regular 15px — the primary anatomy as
+ *   measured, lens-verified 22.3);
+ * - colored link: `cell.href` renders the primary line as a real anchor
+ *   painted by the delta tone (the live deal-type column: «Покупка» /
+ *   «Продажа», plain text, no pill — the 22.2 badge ruling's twin). In a
+ *   LINKED row the first cell stays the row anchor's (stitch priority);
+ *   elsewhere the cell link is a plain native anchor — the roving contract
+ *   only ever manages row anchors (`a[data-index]`).
  *
  * STATELESS against the consumer (no channel, nothing dispatches) but
  * SSR-compat (AD-10): rendered via Lit templates only; focus moves happen
@@ -286,6 +324,18 @@ export class TkDataTable extends LitElement {
     return cell?.delta === 'positive' || cell?.delta === 'negative' ? cell.delta : undefined;
   }
 
+  /**
+   * The roundel's monogram glyph (22.3): the TICKET's (`secondary`) first
+   * grapheme uppercased — the quote-chip letter rule (a ticker seed reads
+   * «S» for SBER where the company name would read «С»); falls back to
+   * `primary`, then to the quote-chip's dash placeholder.
+   */
+  #letterOf(cell: TkDataTableCell | undefined): string {
+    const seed = cell?.secondary || cell?.primary || '';
+    const first = [...seed][0] ?? '';
+    return (first || '—').toUpperCase();
+  }
+
   #renderHeaderRow(): TemplateResult {
     return html`
       <div class="row row--header" role="row" style="grid-template-columns: ${this.#gridTemplate()}">
@@ -311,19 +361,42 @@ export class TkDataTable extends LitElement {
           const delta = this.#deltaOf(cell);
           const deltaClass = delta ? ` cell--delta-${delta}` : '';
           const alignClass = column.align === 'end' ? ' cell--align-end' : '';
+          const logo = typeof cell?.logo === 'string' && cell.logo.length > 0 ? cell.logo : null;
+          const instrumentClass = logo ? ' cell--instrument' : '';
           const primary = cell?.primary != null ? String(cell.primary) : '';
           const secondary = cell?.secondary != null ? String(cell.secondary) : '';
-          return html`<div class="cell${deltaClass}${alignClass}" role="cell">
-            ${columnIndex === 0 && href
+          // The row anchor owns the FIRST cell of a linked row (stitch
+          // priority — a cell href there would nest two competing
+          // navigations); elsewhere a cell href renders the colored link.
+          const rowAnchorHere = columnIndex === 0 && href !== null;
+          const cellHref =
+            !rowAnchorHere && typeof cell?.href === 'string' && cell.href.length > 0
+              ? cell.href
+              : null;
+          const primaryNode = cellHref
+            ? html`<a class="cell__link" href=${cellHref}>${primary}</a>`
+            : rowAnchorHere
               ? html`<a
                   class="row__link"
                   data-index=${index}
-                  href=${href}
+                  href=${href as string}
                   tabindex=${index === this.#activeIndex ? '0' : '-1'}
                   >${primary}</a
                 >`
-              : html`<span class="cell__primary">${primary}</span>`}
+              : html`<span class="cell__primary">${primary}</span>`;
+          const lines = html`
+            ${primaryNode}
             ${secondary ? html`<span class="cell__secondary">${secondary}</span>` : nothing}
+          `;
+          return html`<div class="cell${deltaClass}${alignClass}${instrumentClass}" role="cell">
+            ${logo
+              ? html`<span class="cell__roundel" aria-hidden="true"
+                    >${logo === 'letter'
+                      ? this.#letterOf(cell)
+                      : html`<img src=${logo} alt="" />`}</span
+                  >
+                  <span class="cell__stack">${lines}</span>`
+              : lines}
           </div>`;
         })}
       </div>

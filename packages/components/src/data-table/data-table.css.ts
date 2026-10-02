@@ -37,18 +37,39 @@ import { css } from 'lit';
  *   `:focus-within` letter of the spec would ring on every click-focus.
  *   :has() is evergreen-supported (chromium ≥105) and declarative — the
  *   recorded kit pick of the CSS state over a JS-mirrored attribute.
+ * - FINANCIAL CELLS (22.3, the research-hub insider-deals pass — every
+ *   value below is lens/pixel-measured on the 1280px research capture):
+ *   roundel 48×48 (x=252–300, area ≈πr²), roundel→name gap ≈17px → the
+ *   space-16 step, name REGULAR ~15px (cap 11px — the existing primary
+ *   15/24 anatomy, no new type), ticker the existing secondary 13/20,
+ *   row pitch 64–82px against the kit's 81px min-height (fits), deal-type
+ *   link PLAIN sentence-case text ~12–13px with NO underline and NO pill
+ *   (the 22.2 badge ruling's twin — the kit paints it on the primary-line
+ *   anatomy at 15/24; the live 12–13px rides the hub's denser band, a
+ *   recorded delta, not a code axis), «Доля» value+caption = the EXISTING
+ *   two-line anatomy (no duplicate), numeric columns right-aligned = the
+ *   existing `align: 'end'`.
  *
  * Per-component custom properties (`--tk-data-table-*`, CONVENTIONS §6),
  * each consumed WITH its literal/structural default:
  * - `--tk-data-table-row-min-height` body row height (default 81px — the
  *   capture literal; a themed table can re-rhythm without a new token)
+ * - `--tk-data-table-roundel-size` instrument roundel box (default 48px —
+ *   the insider-table measurement; 22.3)
+ * - `--tk-data-table-roundel-gap` roundel→stack gap (default space-16 —
+ *   the nearest token step to the measured ≈17px; 22.3)
+ * - `--tk-data-table-roundel-fill` / `--tk-data-table-roundel-text` the
+ *   monogram roundel's pair (default the badge neutral gray-100/gray-600
+ *   — theme-INVARIANT: the raw gray scale carries no dark remaps, the
+ *   four badge fills' ruling; 22.3)
  *
  * Known structural (non-token) values, flagged per the flag-don't-invent
  * rule: the 81px row height and 24px/20px line-heights (capture literals,
  * NOTES §E), the 640px table min-width (the narrow-viewport fence — below
  * it the host scrolls, columns never reflow; picked for the three-column
- * reference anatomy), and the 4px inter-line gap (the token step nearest
- * the measured 6px line-box gap; sub-pixel against 81px rows).
+ * reference anatomy), the 4px inter-line gap (the token step nearest
+ * the measured 6px line-box gap; sub-pixel against 81px rows), and the
+ * 48px roundel default (22.3 capture literal riding its size hook).
  */
 
 export const dataTableStyles = css`
@@ -151,15 +172,94 @@ export const dataTableStyles = css`
   }
 
   /* Deltas (6.1 semantics): the direction color paints BOTH lines of the
-     cell — the reference's ₽-line and %-line share it (§E). */
+     cell — the reference's ₽-line and %-line share it (§E). The 22.3
+     colored link is a THIRD member of the same groups: a delta-toned cell
+     paints its link with the direction color (the link token never
+     competes with the semantic). */
   .cell--delta-positive .cell__primary,
-  .cell--delta-positive .cell__secondary {
+  .cell--delta-positive .cell__secondary,
+  .cell--delta-positive .cell__link {
     color: var(--tk-color-delta-positive);
   }
 
   .cell--delta-negative .cell__primary,
-  .cell--delta-negative .cell__secondary {
+  .cell--delta-negative .cell__secondary,
+  .cell--delta-negative .cell__link {
     color: var(--tk-color-delta-negative);
+  }
+
+  /* --- The 22.3 financial cells ----------------------------------------------
+     Instrument anatomy (a): the cell flips to a row — roundel + the SAME
+     two-line stack (primary/secondary untouched inside .cell__stack). */
+
+  .cell--instrument {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--tk-data-table-roundel-gap, var(--tk-space-16));
+  }
+
+  .cell__stack {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--tk-space-4);
+    min-width: 0; /* long names shrink inside the track, never blow it */
+  }
+
+  /* The roundel box (48px measured): a consumer logo sized into the
+     circle, or the letter fallback painting the same box. The gray pair
+     is theme-INVARIANT (no dark remaps on the raw scale — the badge
+     fills' ruling); a consumer brand tint rides the fill/text hooks. */
+  .cell__roundel {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--tk-data-table-roundel-size, 48px);
+    height: var(--tk-data-table-roundel-size, 48px);
+    border-radius: var(--tk-radius-full);
+    overflow: hidden;
+    background: var(--tk-data-table-roundel-fill, var(--tk-color-gray-100));
+    color: var(--tk-data-table-roundel-text, var(--tk-color-gray-600));
+    font-size: var(--tk-text-body-l-size);
+    font-weight: var(--tk-text-body-l-bold-weight);
+    line-height: 1;
+  }
+
+  .cell__roundel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Colored link (d): the primary line as a REAL anchor, base-painted by
+     the link token, tone-painted by the delta groups above. PLAIN at rest
+     — the live deal-type column paints no underline (the 22.2 no-pill
+     ruling's twin); hover underlines for the affordance the flat paint
+     hides. position:relative is load-bearing: positioned elements paint
+     in TREE order, and this anchor sits in a LATER cell than the row
+     anchor's ::after stitch — so in a linked row the cell link stays
+     clickable above the whole-row overlay (the stitch priority ruling:
+     the row anchor keeps the first cell, the cell link wins where it
+     renders). The roving layer never touches it (a[data-index] only). */
+  .cell__link {
+    align-self: flex-start; /* the focus ring hugs the text, not the track */
+    position: relative;
+    font-size: var(--tk-text-body-m-size);
+    font-weight: var(--tk-text-body-m-weight);
+    line-height: 24px;
+    color: var(--tk-color-link);
+    text-decoration: none;
+  }
+
+  .cell__link:hover {
+    text-decoration: underline;
+  }
+
+  .cell__link:focus-visible {
+    outline: 2px solid var(--tk-color-focus-ring);
+    outline-offset: 2px;
+    border-radius: var(--tk-radius-xs);
   }
 
   /* --- The row-as-link stitch (the 3.9 article-card pick) ------------------

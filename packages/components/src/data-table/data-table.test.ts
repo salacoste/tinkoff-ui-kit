@@ -106,13 +106,17 @@ describe('tk-data-table', () => {
     expect(cssText).toMatch(/min-height:\s*var\(--tk-data-table-row-min-height,\s*81px\)/);
     expect(cssText).toMatch(/border-bottom:\s*1px solid var\(--tk-color-border-table\)/);
     // Font pin (lens B1): the primary 15/24 typography group keys on the
-    // class the template actually renders — .row__link, NOT a dead
-    // .cell__link — so the row-name anchor receives the spec's primary
-    // size/leading directly instead of inheriting the page's ambient font.
+    // class the template actually renders — .row__link — so the row-name
+    // anchor receives the spec's primary size/leading directly instead of
+    // inheriting the page's ambient font. (B1's original blanket ban on
+    // `.cell__link` guarded against a DEAD selector; 22.3 makes the class
+    // real — the colored-link anchor — so the ban narrows to what B1 meant:
+    // the shared primary GROUP stays two-member, the link carries its own
+    // rule below.)
     expect(cssText).toMatch(
       /\.cell__primary,\s*\.row__link\s*\{[^}]*font-size:\s*var\(--tk-text-body-m-size\)[^}]*line-height:\s*24px/,
     );
-    expect(cssText).not.toMatch(/\.cell__link/);
+    expect(cssText).not.toMatch(/\.cell__primary,\s*\.row__link,/);
     expect(cssText).toMatch(/\.row--link:hover\s*\{[^}]*background:\s*var\(--tk-color-surface-row-hover\)/);
     expect(cssText).toMatch(/--tk-color-delta-positive/);
     expect(cssText).toMatch(/--tk-color-delta-negative/);
@@ -123,7 +127,14 @@ describe('tk-data-table', () => {
     // identical to a plain /#00A328|#F52222/.
     const siteHex = (digits: string): string => `#${digits}`;
     expect(cssText).not.toMatch(/nth-child/);
-    expect(cssText).not.toMatch(/var\(--tk-color-gray-100\)/);
+    // The gray-100 ban narrows to the ROW paint (its target was zebra
+    // striping): the 22.3 monogram roundel consumes the badge-neutral
+    // gray pair by design — the one sanctioned use, inside its own rule.
+    const rowRule = cssText.match(/^ {2}\.row\s*\{([^}]*)\}/m)?.[1] ?? '';
+    expect(rowRule).not.toMatch(/gray-100/);
+    expect(cssText).toMatch(
+      /\.cell__roundel\s*\{[^}]*background:\s*var\(--tk-data-table-roundel-fill,\s*var\(--tk-color-gray-100\)\)/,
+    );
     expect(cssText).not.toMatch(new RegExp([siteHex('00A328'), siteHex('F52222')].join('|')));
   });
 
@@ -480,5 +491,170 @@ describe('tk-data-table', () => {
     await elementUpdated(el);
     expect(result).toBe(true); // not even preventDefaulted
     expect(anchors(el)[0]?.getAttribute('tabindex')).toBe(before);
+  });
+
+  // --- Financial cells (22.3, invest identity wave) ---------------------------
+
+  it("instrument cell: logo='letter' renders the roundel + stack layout, the monogram seeded from the TICKER (the quote-chip letter rule)", async () => {
+    const el = await mount({
+      props: {
+        columns: STOCK_COLUMNS,
+        rows: [
+          {
+            cells: {
+              name: { primary: 'Сбербанк', secondary: 'SBER', logo: 'letter' },
+              price: { primary: '318,44 ₽' },
+              change: { primary: '+1,46 %', delta: 'positive' },
+            },
+          },
+        ],
+      },
+    });
+    const cells = Array.from(bodyRows(el)[0]?.querySelectorAll('[role="cell"]') ?? []);
+    const nameCell = cells[0];
+    expect(nameCell?.className).toContain('cell--instrument');
+    const roundel = nameCell?.querySelector('.cell__roundel');
+    expect(roundel, 'the roundel renders').toBeInstanceOf(Element);
+    expect(roundel?.getAttribute('aria-hidden')).toBe('true'); // decorative — the ticker sits beside it
+    expect(roundel?.textContent?.trim()).toBe('S'); // secondary (ticker) seeds, uppercased
+    // The two-line stack moves INSIDE the wrapper; the primary/secondary
+    // anatomy is untouched.
+    expect(nameCell?.querySelector('.cell__stack .cell__primary')?.textContent).toBe('Сбербанк');
+    expect(nameCell?.querySelector('.cell__stack .cell__secondary')?.textContent).toBe('SBER');
+    // No logo → the plain typographic cell (class pin).
+    expect(cells[1]?.className).not.toContain('cell--instrument');
+    expect(cells[1]?.querySelector('.cell__roundel')).toBeNull();
+  });
+
+  it("instrument cell: a URL logo renders an <img> roundel; an empty logo string degrades to the plain cell (§2)", async () => {
+    const el = await mount({
+      props: {
+        columns: STOCK_COLUMNS,
+        rows: [
+          {
+            cells: {
+              name: { primary: 'ТехноПром', secondary: 'TPRG', logo: '/logos/tprg.svg' },
+              price: { primary: '12,40 ₽' },
+            },
+          },
+          {
+            cells: {
+              name: { primary: 'Пустой logo', secondary: 'EMPT', logo: '' },
+              price: { primary: '1,00 ₽' },
+            },
+          },
+        ],
+      },
+    });
+    const img = bodyRows(el)[0]?.querySelector('.cell__roundel img');
+    expect(img?.getAttribute('src')).toBe('/logos/tprg.svg');
+    expect(img?.getAttribute('alt')).toBe(''); // decorative — the name is the accessible text
+    // Empty string reads as absent — no roundel, no instrument class.
+    const plain = Array.from(bodyRows(el)[1]?.querySelectorAll('[role="cell"]') ?? [])[0];
+    expect(plain?.className).not.toContain('cell--instrument');
+    // No logo, no secondary → the monogram falls back to the primary seed.
+    const mono = await mount({
+      props: {
+        columns: [{ key: 'name', header: 'Название' }],
+        rows: [{ cells: { name: { primary: 'Озон', logo: 'letter' } } }],
+      },
+    });
+    expect(bodyRows(mono)[0]?.querySelector('.cell__roundel')?.textContent?.trim()).toBe('О');
+  });
+
+  it('colored link: cell.href renders a real anchor as the primary line, delta-toned by the cell semantic (the deal-type anatomy)', async () => {
+    const el = await mount({
+      props: {
+        columns: STOCK_COLUMNS,
+        rows: [
+          {
+            cells: {
+              name: { primary: 'ТехноПром', secondary: 'TPRG', logo: 'letter' },
+              price: { primary: '318,44 ₽' },
+              change: { primary: 'Покупка', href: '/invest/insider/deals/1/', delta: 'positive' },
+            },
+          },
+          {
+            cells: {
+              name: { primary: 'Балтийский Лизинг', secondary: 'BALT' },
+              price: { primary: '48,10 ₽' },
+              change: { primary: 'Продажа', href: '/invest/insider/deals/2/', delta: 'negative' },
+            },
+          },
+        ],
+      },
+    });
+    const link = bodyRows(el)[0]?.querySelectorAll('[role="cell"]')[2]?.querySelector('a.cell__link');
+    expect(link, 'the colored link renders in a non-first cell').toBeInstanceOf(HTMLAnchorElement);
+    expect(link?.getAttribute('href')).toBe('/invest/insider/deals/1/');
+    expect(link?.textContent).toBe('Покупка');
+    expect(link?.hasAttribute('data-index')).toBe(false); // never part of the roving set
+    // The delta classes ride the CELL (both-lines groups) and the sheet
+    // paints the link as a third member of each delta color group.
+    const changeCell = bodyRows(el)[0]?.querySelectorAll('[role="cell"]')[2];
+    expect(changeCell?.className).toContain('cell--delta-positive');
+    const cssText = sheet();
+    expect(cssText).toMatch(
+      /\.cell--delta-positive \.cell__primary,\s*\.cell--delta-positive \.cell__secondary,\s*\.cell--delta-positive \.cell__link\s*\{[^}]*delta-positive/,
+    );
+    expect(cssText).toMatch(
+      /\.cell--delta-negative \.cell__primary,\s*\.cell--delta-negative \.cell__secondary,\s*\.cell--delta-negative \.cell__link\s*\{[^}]*delta-negative/,
+    );
+  });
+
+  it('stitch priority: the row anchor owns the FIRST cell of a linked row; a cell link elsewhere renders beside it (two anchors, one roving set)', async () => {
+    const el = await mount({
+      props: {
+        columns: STOCK_COLUMNS,
+        rows: [
+          {
+            href: '/invest/ideas/1/',
+            cells: {
+              name: { primary: 'Идея: ТехноПром', secondary: 'TPRG', href: '/invest/ignored-cell-href/' },
+              price: { primary: '12,40 ₽' },
+              change: { primary: '+18 %', href: '/invest/ideas/1/rationale/', delta: 'positive' },
+            },
+          },
+        ],
+      },
+    });
+    const cells = Array.from(bodyRows(el)[0]?.querySelectorAll('[role="cell"]') ?? []);
+    // First cell: the ROW anchor wins — no nested colored link renders.
+    expect(cells[0]?.querySelector('a.row__link')).toBeInstanceOf(HTMLAnchorElement);
+    expect(cells[0]?.querySelector('a.cell__link')).toBeNull();
+    expect(cells[0]?.querySelector('.cell__primary')).toBeNull();
+    // Third cell: the colored link renders alongside the row anchor.
+    expect(cells[2]?.querySelector('a.cell__link')?.getAttribute('href')).toBe(
+      '/invest/ideas/1/rationale/',
+    );
+    // Exactly ONE roving anchor; the cell link stays out of the set.
+    expect(anchors(el)).toHaveLength(1);
+    expect(anchors(el)[0]?.classList.contains('row__link')).toBe(true);
+  });
+
+  it('financial-cell structural pins: roundel hooks + neutral pair, colored-link affordances (22.3)', () => {
+    const cssText = sheet();
+    // Roundel: 48px measured default on the size hook, full radius, the
+    // theme-invariant badge-neutral pair, letter sized body-l bold.
+    expect(cssText).toMatch(
+      /\.cell__roundel\s*\{[^}]*width:\s*var\(--tk-data-table-roundel-size,\s*48px\)[^}]*border-radius:\s*var\(--tk-radius-full\)/,
+    );
+    expect(cssText).toMatch(
+      /\.cell__roundel\s*\{[^}]*color:\s*var\(--tk-data-table-roundel-text,\s*var\(--tk-color-gray-600\)\)/,
+    );
+    expect(cssText).toMatch(
+      /\.cell--instrument\s*\{[^}]*gap:\s*var\(--tk-data-table-roundel-gap,\s*var\(--tk-space-16\)\)/,
+    );
+    // Colored link: link-token base, PLAIN at rest (the live plain-text
+    // ruling), underline only on hover, the standard focus ring, and the
+    // load-bearing position:relative that keeps it clickable above the
+    // row stitch (tree-order paint).
+    expect(cssText).toMatch(
+      /\.cell__link\s*\{[^}]*position:\s*relative[^}]*color:\s*var\(--tk-color-link\)[^}]*text-decoration:\s*none/,
+    );
+    expect(cssText).toMatch(/\.cell__link:hover\s*\{[^}]*text-decoration:\s*underline/);
+    expect(cssText).toMatch(
+      /\.cell__link:focus-visible\s*\{[^}]*outline:\s*2px solid var\(--tk-color-focus-ring\)/,
+    );
   });
 });
