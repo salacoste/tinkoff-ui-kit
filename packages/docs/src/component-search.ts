@@ -61,6 +61,10 @@ const COMPONENTS: readonly SearchEntry[] = [
   { title: 'Note', tag: 'tk-note', ru: 'Заметка', id: 'components-note--playground' },
   { title: 'ProgressBar', tag: 'tk-progress-bar', ru: 'Индикатор прогресса', id: 'components-progressbar--playground' },
   { title: 'PromoCard', tag: 'tk-promo-card', ru: 'Промо-карточка', id: 'components-promocard--playground' },
+  // 22.1 (invest identity wave): the market-data chip family — GAP-MAP
+  // A3, the only market-data answer in the kit; entry points at the
+  // Components/ story.
+  { title: 'QuoteChip', tag: 'tk-quote-chip', ru: 'Чип котировки', id: 'components-quotechip--playground' },
   // 21.5 (invest foundation wave): the read-only star rating — GAP-MAP
   // Tier A #7; entry points at the Components/ story.
   { title: 'Rating', tag: 'tk-rating', ru: 'Рейтинг', id: 'components-rating--playground' },

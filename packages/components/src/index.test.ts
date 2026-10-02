@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { describe, expect, it } from 'vitest';
 
-import { TkAccordion, TkAccordionItem, TkButton, TkComboboxSearch, TkCookieBanner, TkDataTable, TkEmptyState, TkFilterChips, TkMenuDivider, TkMenuItem, TkMenuPopover, TkNote, TkPagination, TkQrBlock, TkRating, TkSkeleton, TkStepper, TkStoreBadges } from './index.js';
+import { TkAccordion, TkAccordionItem, TkButton, TkComboboxSearch, TkCookieBanner, TkDataTable, TkEmptyState, TkFilterChips, TkMenuDivider, TkMenuItem, TkMenuPopover, TkNote, TkPagination, TkQrBlock, TkQuoteChip, TkRating, TkSkeleton, TkStepper, TkStoreBadges } from './index.js';
 
 /**
  * Package entry: every component's public surface is reachable from
@@ -93,5 +93,11 @@ describe('pillkit-components entry', () => {
     expect(TkRating).toBeDefined();
     await customElements.whenDefined('tk-rating');
     expect(customElements.get('tk-rating')).toBe(TkRating);
+  });
+
+  it('re-exports the quote-chip atom (spec 22.1) and registers its tag', async () => {
+    expect(TkQuoteChip).toBeDefined();
+    await customElements.whenDefined('tk-quote-chip');
+    expect(customElements.get('tk-quote-chip')).toBe(TkQuoteChip);
   });
 });
