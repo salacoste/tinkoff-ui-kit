@@ -42,6 +42,10 @@ const COMPONENTS: readonly SearchEntry[] = [
   { title: 'ArticleCard', tag: 'tk-article-card', ru: 'Карточка статьи', id: 'components-articlecard--playground' },
   { title: 'Badge', tag: 'tk-badge', ru: 'Бейдж', id: 'components-badge--playground' },
   { title: 'Button', tag: 'tk-button', ru: 'Кнопка', id: 'components-button--playground' },
+  // 21.6 (invest foundation wave): the horizontal card carousel — GAP-MAP
+  // Tier A #2, the recon's most repeated surface; entry points at the
+  // Components/ story.
+  { title: 'Carousel', tag: 'tk-carousel', ru: 'Карусель', id: 'components-carousel--playground' },
   { title: 'Checkbox', tag: 'tk-checkbox', ru: 'Чекбокс', id: 'components-checkbox--playground' },
   // 21.3 (invest foundation wave): the «nothing here yet» block — GAP-MAP
   // Tier A #5; entry points at the Components/ story.

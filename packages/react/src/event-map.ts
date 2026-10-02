@@ -141,6 +141,10 @@ export const EVENT_MAP: Readonly<Record<string, Readonly<TkKitElementEventMap>>>
   // 'tk-rating': none at spec 21.5 — STATELESS READ-ONLY DISPLAY: the
   // bond-row star cluster; `value` is an input clamped display-side and
   // nothing dispatches (the tk-progress-bar/tk-badge no-entry precedent).
+  // 'tk-carousel': none at spec 21.6 — DERIVED SCROLL STATE: the rail's
+  // position is geometry the consumer can read off the element, not a
+  // §9 channel (the tk-rating no-entry precedent); the dots are
+  // decorative and the chevrons serve their own native clicks.
   // 'tk-empty-state': none at spec 21.3 — STATELESS DISPLAY: the passive
   // «nothing here yet» block; the action is a consumer's slotted link or
   // button that serves its own native activation (the tk-skeleton/

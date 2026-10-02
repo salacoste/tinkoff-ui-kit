@@ -1034,6 +1034,232 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/carousel/carousel.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "carouselStyles",
+          "default": "css` :host { display: block; } /* :host display above out-ranks the UA [hidden] rule — enforce hidden (the 8.1 kit-wide sweep). */ :host([hidden]) { display: none; } .carousel { position: relative; } /* The frame positions the chevrons over the RAIL only — the dots row below must not drag the vertical center down. */ .carousel__frame { position: relative; } /* Native scroll-snap scroller. The SLOT is the flex row: slotted cards are the slot's flat-tree children, so gap + flex live ON it (the filter-chips .row mold, moved one level down for light-DOM cards). Scrollbars hidden — the grounded rails carry none (the chevrons/dots are the navigation). */ .carousel__rail { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; } .carousel__rail::-webkit-scrollbar { display: none; } .carousel__rail > slot { display: flex; gap: var(--tk-carousel-gap, 41px); } .carousel__rail ::slotted(*) { flex: none; scroll-snap-align: start; } /* The circular white chevron — revealed on rail hover/focus (the measured contract: statics paint none). opacity, NOT display, so the buttons stay in the TAB ORDER for keyboard users and reveal on their own :focus-visible. 44px = the kit's A11y floor (the menu-popover rows law); the shadow is the dropdown token the spec names. */ .carousel__chev { position: absolute; inset-block: 0; margin-block: auto; margin-inline: 0; padding: 0; border: none; width: 44px; height: 44px; border-radius: var(--tk-carousel-chevron-radius, var(--tk-radius-full)); background: var(--tk-carousel-chevron-fill, var(--tk-color-surface-base)); color: var(--tk-carousel-chevron-color, var(--tk-color-text-secondary)); box-shadow: var(--tk-carousel-chevron-shadow, var(--tk-shadow-dropdown)); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-standard); } .carousel__chev--prev { inset-inline-start: var(--tk-carousel-chevron-inset, 0px); } .carousel__chev--next { inset-inline-end: var(--tk-carousel-chevron-inset, 0px); } .carousel__frame:hover .carousel__chev, .carousel__frame:focus-within .carousel__chev, .carousel__chev:focus-visible { opacity: 1; pointer-events: auto; } /* Revealed-but-disabled edge state: present but dimmed — never a hard disappearance inside an active hover. */ .carousel__frame:hover .carousel__chev:disabled, .carousel__frame:focus-within .carousel__chev:disabled { opacity: 0.35; } .carousel__chev:disabled { cursor: default; } /* Dot pagination — DECORATIVE by the spec's ruling (aria-hidden, non-interactive): the chevrons + native scroll are the navigation. Active = the existing yellow (byte-identical to the live probe); inactive = gray-200 with the recorded 3-unit deviation. */ .carousel__dots { display: flex; gap: var(--tk-carousel-dot-gap, var(--tk-space-8)); margin-block-start: var(--tk-carousel-dot-offset, var(--tk-space-16)); } .carousel__dot { flex: none; width: var(--tk-carousel-dot-size, 8px); height: var(--tk-carousel-dot-size, 8px); border-radius: var(--tk-radius-full); background: var(--tk-carousel-dot, var(--tk-color-gray-200)); } .carousel__dot--active { background: var(--tk-carousel-dot-active, var(--tk-color-yellow-100)); } `",
+          "description": "tk-carousel styles (spec 21.6, invest foundation wave).\n\nMEASURED TABLE (captures-v4/invest, deterministic ImageMagick\nconnected-component scans, 2026-10-02 — the grounding lens's claims\nwere re-verified pixel-by-pixel and its «white chevron circles» were\nRETRACTED as hallucination):\n\n| fact | value | source |\n|---|---|---|\n| card gap | 41px recommendations + education (both rails, both gaps, zero spread); 45px stock-sber | CC scan of card interiors (x-run deltas) |\n| dot diameter | 8px | 8×8 CC blob, byte-exact |\n| dot pitch | 16px center-to-center = 8 dot + 8 gap | probe at y5286–5294 |\n| dots offset | 16px below the rail bottom (card bottom y5270 → dot band y5286) | stock-sber |\n| dot active | #FFDD2D = `--tk-color-yellow-100` BYTE-IDENTICAL | probe core pixel |\n| dot inactive | live #E0E2E4 → kit gray-200 #E7E8EA (3-unit deviation, NO token minted) | probe core pixel |\n| chevrons | NOT PAINTED in any static frame — threshold-corrected scan (≥253 on the #F6F7F8 rails finds zero 16–48px white circles; the white pages carry zero isolated gray glyphs outside text rows). The live site reveals them on hover/focus; the atom ships the reveal contract with the kit's 44px A11y floor + `--tk-shadow-dropdown` (the spec's «существующий dropdown-токен») | scan + spec ruling |\n| scrollbar | hidden on every grounded rail (zero frames carry one) | scans |\n\nCard WIDTH and the rail's edge peek stay CONSUMER-side (the measured\nreferences — 248px rec/edu, 230px sber — live in the stories); the\natom owns only the chrome above.\n\nThe scroll is NATIVE (overflow-x + scroll-snap on the rail) — the\ntransform-track architecture is out of scope by the spec's own law,\nand this sheet pins zero `transform` anywhere."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "carouselStyles",
+          "declaration": {
+            "name": "carouselStyles",
+            "module": "src/carousel/carousel.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/carousel/carousel.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-carousel — the kit's horizontal card carousel (spec 21.6, invest\nfoundation wave, GAP-MAP A2: the most repeated candidate of the whole\nrecon — tk-scroll-row ≡ tk-carousel ≡ horizontal card carousel is ONE\nprimitive, census 46+95+5 rails across three pages).\n\nArchitecture: a NATIVE scroll-snap scroller — `overflow-x: auto` +\n`scroll-snap-type: x mandatory` on the rail, light-DOM cards as the\ndefault slot's flat-tree flex children. NO transform track, NO\nvirtualization, NO autoplay, NO loop (all out of scope by the spec's\nown rulings). The keyboard stays NATIVE: card links tab through the\nlight DOM on their own and the browser's arrow-key scrolling needs no\nduplicate — the atom adds no key handlers at all.\n\nChrome (all measured, see the css sheet's header table):\n- chevron prev/next — circular, white on the dropdown shadow token,\n  revealed on rail hover/focus (statics on the live site paint none —\n  the threshold-corrected scans are the proof); page-step scrolling\n  (± the rail's clientWidth); `disabled` at the edges.\n- `dots` — decorative pagination dots (aria-hidden, NON-clickable):\n  8px, 16px pitch, active = the existing yellow (byte-identical to\n  the live probe), 16px under the rail.\n\nSemantics: the HOST is `role=\"region\"` with\n`aria-roledescription=\"карусель\"` and `aria-label` from the REQUIRED\n`label` property — a carousel without a name is an axe violation, so\nthe prop is contract-mandatory. NO aria-live (the spec's ruling: no\nlive region for scroll position).\n\nSTATE: none dispatches — scroll position is derived, not a §9\nchannel (the rating no-entry precedent).\n\nSSR-compat (AD-10): rendered via Lit templates only; the imperative\nsteps (host attribute writes, scroll sync) run after the element\nexists.",
+          "name": "TkCarousel",
+          "slots": [
+            {
+              "description": "The cards (light DOM; width/height and card chrome are consumer-side).",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "REQUIRED accessible name — the region is unnamed without it.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "dots",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Paint the decorative dot pagination (aria-hidden, non-clickable).",
+              "attribute": "dots"
+            },
+            {
+              "kind": "field",
+              "name": "#canPrev",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Derived scroll state — never a §9 channel, nothing dispatches."
+            },
+            {
+              "kind": "field",
+              "name": "#canNext",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "#pages",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "1"
+            },
+            {
+              "kind": "field",
+              "name": "#active",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#resizeObserver",
+              "privacy": "private",
+              "type": {
+                "text": "ResizeObserver | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#rail",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncFromRail",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Recompute the derived state from the live rail geometry."
+            },
+            {
+              "kind": "method",
+              "name": "#handleSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#handleScroll",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#scroll",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "direction",
+                  "type": {
+                    "text": "1 | -1"
+                  }
+                }
+              ],
+              "description": "Page-step scroll: one rail viewport per click (the spec's AC)."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "REQUIRED accessible name — the region is unnamed without it.",
+              "name": "label",
+              "default": "''",
+              "fieldName": "label"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Paint the decorative dot pagination (aria-hidden, non-clickable).",
+              "name": "dots",
+              "default": "false",
+              "fieldName": "dots"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-carousel",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkCarousel",
+          "declaration": {
+            "name": "TkCarousel",
+            "module": "src/carousel/carousel.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-carousel",
+          "declaration": {
+            "name": "TkCarousel",
+            "module": "src/carousel/carousel.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/carousel/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/carousel/carousel.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/checkbox/checkbox.css.ts",
       "declarations": [
         {
@@ -4227,6 +4453,14 @@
           "declaration": {
             "name": "*",
             "module": "src/button/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/carousel/index.js"
           }
         },
         {
