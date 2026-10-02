@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — tk-data-table financial cells (spec 22.3, invest identity wave)
+
+- Two per-cell conventions on the existing tk-data-table cell — no
+  new elements (the slot-oriented ruling): `logo` lays a cell out as
+  roundel + the existing two-line stack ('letter' = the neutral
+  monogram roundel seeded from the ticker's first grapheme, the
+  quote-chip rule; brand fills stay consumer assets per PD; a URL
+  renders an <img> roundel), and `cell.href` renders the primary
+  line as a real anchor painted by the delta tone (Покупка/Продажа —
+  the live plain-text no-pill ruling) or the link token.
+- Measured on the research-hub insider table: 48px roundel (capture
+  literal → hook), ~17px gap → space-16, name regular 15px, rows in
+  the 81px rhythm. value+caption and signed-value stay the EXISTING
+  two-line + delta anatomy (verified, not duplicated); end-alignment
+  is the existing column convention.
+- Hooks `--tk-data-table-roundel-{size,gap,fill,text}` (badge-neutral
+  gray pair, theme-invariant), no mints. position:relative keeps the
+  link clickable above the row stitch; the first cell of a linked
+  row stays the row anchor's (stitch priority), the roving layer
+  only ever manages a[data-index]. The B1/gray-100 unit pins
+  narrowed to what they meant — the rendered link and the roundel
+  pair are now the sanctioned uses.
+- Stories: the Variants canvas gains «Финансовые ячейки» — insider
+  deals (monogram roundels, colored deal links, share value+caption,
+  end-aligned numerics) + ideas (linked rows, green right column);
+  fictional companies/people/numbers (PD). Variants baselines
+  re-minted ×2 themes; api untouched. Unit +5. Full suite 2350/2350
+  green at its head (feat c3423f3). First CI round tripped the
+  impeccable [broken-image] regex on a literal tag written in a TEST
+  TITLE — prose rephrase in the fix-round cf58f05; CI run 37001997942
+  GREEN.
+
 ### Added — tk-badge financial tones (spec 22.2, invest identity wave)
 
 - tk-badge: `positive` / `negative` financial TEXT tones on NO fill —

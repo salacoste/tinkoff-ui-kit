@@ -1,7 +1,8 @@
 # Spec 22.2 — tk-badge финансовые тоны (invest identity wave, GAP-MAP VARIANT)
 
 - **status:** EXECUTED 2026-10-02 (feat 473c35f; CI run 36991193869 GREEN;
-  close-out — этот штамп)
+  close-out — этот штамп; docs-head CI run 36995146690 GREEN —
+  зафиксировано штампом 22.3)
 - **baseline_commit:** 3706cc9 (голова close-out 21.6; zero-in-flight)
 - **epic note:** Epic 22 «invest identity wave», sequencing §2: «badge
   pos/neg tones» — часть market-data конвенций (GAP-MAP VARIANT

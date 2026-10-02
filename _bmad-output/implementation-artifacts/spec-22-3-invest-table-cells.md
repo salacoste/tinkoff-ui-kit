@@ -1,6 +1,7 @@
 # Spec 22.3 — tk-data-table финансовая ячейка (invest identity wave, GAP-MAP VARIANT)
 
-- **status:** DRAFT 2026-10-02 (AC frozen pending «go»; исполнения нет)
+- **status:** EXECUTED 2026-10-02 (feat c3423f3 + fix-round cf58f05;
+  CI run 37001997942 GREEN; close-out — этот штамп)
 - **baseline_commit:** 3706cc9 (голова close-out 21.6; zero-in-flight)
 - **epic note:** Epic 22 «invest identity wave», sequencing §2:
   «data-table financial-cell pack (one coherent market-data story)».
@@ -45,3 +46,57 @@
 - Sortable headers/aria-sort, sticky header, группировка секций,
   виртуализация (VARIANT backlog дальше), «Еще N»-пагинация строк,
   инлайн-редактирование.
+
+## Execution record (2026-10-02)
+
+- **AC1 анатомии (замеры — линза по research-hub insider-таблице):**
+  (a) instrument: круглый раундэл 48px (capture literal →
+  `--tk-data-table-roundel-size`), зазор до текста ~17px → space-16,
+  имя regular 15px — существующая primary-анатомия two-line стека,
+  ряд ложится в ритм 81px. `logo='letter'` → нейтральный
+  монограммный раундэл из первой графемы тикера (правило quote-chip;
+  бренд-заливки = ассеты консьюмера, ПД держит кит нейтральным);
+  `logo=URL` → img-раундэл. (d) colored-link: `cell.href` рендерит
+  primary-строку настоящим `<a>`; тон — дельта-токен при заданной
+  семантике, иначе link-токен. Подтверждение развилки 22.2: живое
+  красит сделку обычным текстом без пилюли — цвет только на значении.
+  (b) value+caption и (c) signed-value — СУЩЕСТВУЮЩИЕ two-line +
+  дельта-анатомии (сверены, НЕ дублированы); (e) align-end —
+  существующая колоночная конвенция (сверена, дубля нет).
+- **Реализация:** слет-ориентированно — конвенции на существующем
+  TkDataTableCell, НОВЫХ элементов-ячеек нет; hooks
+  `--tk-data-table-roundel-{size,gap,fill,text}` (пара = badge-neutral
+  gray, theme-invariant), минта НЕТ. `position:relative` держит
+  ссылку кликабельной над стичем строки (paint по порядку дерева);
+  первая ячейка linked-строки остаётся якорем строки (приоритет
+  стича), roving-слой управляет только `a[data-index]`. Эволюция
+  пинов: B1 и gray-100 unit-пины сужены до смысла (мёртвых селекторов
+  и зебры нет) — санкционированные применения теперь рендер-ссылка и
+  пара раундэла.
+- **AC3 стори:** группа «Финансовые ячейки» в существующем Variants:
+  insider deals (инертные строки, монограммные раундэлы, цветные
+  ссылки сделок Покупка/Продажа, value+caption доли портфеля,
+  правые численные) + ideas (linked-строки + зелёная правая колонка);
+  компании/люди/цифры вымышлены (ПД). Variants-базлайны переминчены
+  ×2 темы; api НЕ тронут (CEM-таблица рендерит пропы элемента, не
+  поля ячеек). НОВОЙ стори нет.
+- **AC4 тесты:** unit +5 (letter-seed из тикера, img-режим +
+  деградация §2, дельта-тон ссылки, приоритет стича, структурные
+  пины hooks); ростер hidden-guard НЕ рос (лист тот же). Полный
+  локальный прогон 2350/2350.
+- **Урок (components-datatable-id):** id ноги = sanitized EXPORT name
+  — `name=` в мете только лейбл; census/visual-ноги data-table живут
+  под `components-datatable--*` по экспорту, не по русскому имени.
+- **Урок (impeccable — CI fix-round):** run 36998592194 RED по шагу
+  impeccable-детектора: `[broken-image]` сработал на ЛИТЕРАЛ тега в
+  заголовке теста (рендер-код со `src=${logo}` не флагнут, комменты
+  стрипаются). Фикс-раунд cf58f05: проза без голого тега («image
+  roundel» + вординг-комментарий в тесте). Правило окна: детектор —
+  CI-гейт → локальный прогон `impeccable detect` по КАЖДОМУ
+  изменённому файлу до пуша (в zsh мультифайловый вызов через xargs
+  -n1 — ункводед $FILES не сплитится, EXIT=1 «unscannable»).
+- **Цикл:** feat c3423f3 → push 04a2379..b2413af (в одном пакете с
+  22.4, zero-in-flight после GREEN-штампа 22.2) → CI run 36998592194
+  RED (impeccable-проза) → fix cf58f05 → CI run 37001997942 GREEN →
+  этот штамп. Попутно зафиксирован docs-head вердикт 22.2: run
+  36995146690 GREEN. Задача закрыта.
