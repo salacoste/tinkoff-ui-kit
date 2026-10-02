@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — tk-quote-chip atom (spec 22.1, invest identity wave)
+
+- tk-quote-chip: the market-data chip family (invest GAP-MAP A3 — the
+  kit's only answer to the whole live market-data section). Four forms,
+  one element: `pill` (default — the hub band's bare mini-quote:
+  roundel + bold price + toned Δ%), `inline` (the blue $TOKEN in-body
+  link form), `box` (the attached single-quote widget — surface-base
+  fill + hairline), `overflow` (the «Ещё N» count pill, slot content).
+- Grounding: the hub ticker band pixel pass (roundel 24px, gap 6px,
+  price ~13–14px semibold, delta ~11px, content ≈72px, pitch 136px
+  with decorative stem glyphs ruled page-chrome). Three lens claims
+  refuted by probes («white stadium pills» — interior probes equal the
+  band background: the hub chip is BARE content; «white logo ring»;
+  «gap 10–12px» — actually ≈64). Pill default paints NOTHING (fill
+  hook for consumer tints — the beige/blue CC hunts over the news
+  capture found zero pill-sized tints, so none was minted or guessed);
+  overflow = lightblue-100 (nearest scale step); box = flagged kit
+  derivation keeping the delta pair AA-sanctioned on surface-base.
+- Delta tone DERIVED from the string's own sign (+ → up, −/− → down,
+  unsigned → flat/text-secondary) — no `direction` prop, color never
+  the sole carrier; raw live delta greens/reds REJECTED for the
+  AA-carrying tokens; U+2212 and ASCII hyphen both parse as minus.
+- href → a real `<a>` (tk-link underline behavior, focus ring), no
+  href → a neutral span; name → title; empty logo slot → letter
+  roundel from the ticker's first grapheme (badge neutral pair).
+  Hooks `--tk-quote-chip-{fill,radius,gap,text,delta-size}`.
+  STATELESS — event-map no-entry.
+- React wrapper (CEM), docs search row (QuoteChip/Чип котировки),
+  hidden-guard roster 45/35. Visual: eight new baselines (4 stories ×
+  2 themes), no existing baseline touched — full suite 2349/2349
+  green (feat 7924576 + fix 16775b4, CI run 36978617447; the first
+  push caught a prose hex via the zero-hardcoded scanner and CEM
+  cssText drift — run 36977874617 RED, fixed and re-verified).
+
 ### Added — tk-carousel atom (spec 21.6, invest foundation wave)
 
 - tk-carousel: the horizontal card rail (invest GAP-MAP Tier A #2,
