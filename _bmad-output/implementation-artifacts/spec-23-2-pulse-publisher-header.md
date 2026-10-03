@@ -1,6 +1,7 @@
 # Spec 23.2 — tk-publisher-header «Профиль в Пульсе» (invest remainder wave, GAP-MAP B14)
 
-- **status:** DRAFT 2026-10-02 (AC frozen pending «go»; исполнения нет)
+- **status:** EXECUTED 2026-10-03 (feat dd72bb7, CI run 37121875386
+  GREEN с первого пуша; close-out штамп — этот коммит)
 - **baseline_commit:** e5795a2 (голова close-out 22.6; zero-in-flight, CI GREEN)
 - **epic note:** Epic 23 «invest remainder», brief
   `planning-artifacts/briefs/brief-epic-23-invest-remainder-2026-10-02.md`
@@ -52,3 +53,43 @@
   издателя, обложка-баннер профиля, лента постов, инлайн-строки
   «Интересное в Пульсе» (это другой паттерн — P-класс остатков),
   иконная система как таковая (глифы остаются слот-контентом).
+
+## Execution record (2026-10-03)
+
+- **Grounding → PIXEL TABLE.** Полная анатомия строки издателя
+  замерена на captures-v4/invest/stock-sber.png (строка y1227-1270):
+  аватар d35, гэп 24, имя 20px/700, meta 13px secondary, гэп плашек
+  2px. Таблица замеров живёт в шапке publisher-header.css.ts (молд
+  invest-hero). Две chip-пары пробами: зелёный диск #36C578 на
+  бледном #CDF1DD, синяя галка #428BF9 на #D0E2FE. Vision-галлюцинации
+  опровергнуты пробами дважды (см. сквозной урок: пиксели > наводящий
+  промпт) — «зелёная галочка + зелёный аватар» не существует, реальная
+  пара зелёный/синий.
+- **Арх-девиация AC3 (SLOT POLICY, задокументирована в jsdoc).** AC3
+  читался «кит рисует носители-чипы»; исполнение — ГОЛЫЙ повторяемый
+  слот `badge`: Лит не распределяет один слот в несколько обёрток, а
+  плашки ровно это (несколько дисков в одной строке). Чип = слот-контент
+  консьюмера на КИТОВЫХ токенах (--tk-color-invest-badge-*), кит владеет
+  только раскладкой/гэпом. Канонические svg-чипы — в сторях. Пин
+  слот-политики — в юните (STATELESS + слоты).
+- **Токены.** 4 измерённые семантики invest-badge (ink+backdrop ×2),
+  чернила theme-invariant (декоративные не-текстовые глифы, 1.4.11),
+  бэкдрапы dark first-pass (#1E3B2A / #1E2C4A, tint-* молд) через
+  DARK_OVERRIDES. aa-annotations 16 entries (kind: measured). Реестровые
+  пины обновлены осознанно: tokens index.test 25 dark-семантик,
+  contrast.test 25, hidden-guard 50 sheets / 39 компонентов,
+  tokens-drift 16 block names.
+- **Тесты.** 9/9 юнитов (анатомия, name prop+slot override, DIV-не-heading,
+  meta presence ×3, STATELESS, пин ровно 4 хуков с дефолтами,
+  типографика, законы hidden/0 motion/0 theme branches). gen: CEM +13
+  упоминаний, React-обёртка сгенерирована. Корневые гейты 200/200,
+  react 70/70, lint/typecheck/build зелёные.
+- **Визуально.** Полный минт 2440 passed → полный compare 2440 passed
+  (14.6m каждый). 6 НОВЫХ PNG (playground/variants/api × light/dark);
+  token-reference--colors ×2 переминтованы ОСОЗНАННО (4 добавленных
+  свотча; пиксельная локализация: y0-200 идентичны, ниже — вставка +
+  сдвиг, высота 3229→3393). Линза 2/2 vision-бюджета: variants — 5
+  инстансов соответствуют задумке, дефектов нет; colors — страница цела.
+- **Цикл.** Zero-in-flight соблюдён: пуш dd72bb7 только после GREEN
+  37118423243 (docs 23.1). Вердикт 37121875386 — success по run-level
+  conclusion (урок 23.1 о substring-поллерах применён). #85 completed.
