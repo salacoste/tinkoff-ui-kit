@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — instrument page assembly pattern (spec 23.4, invest remainder wave — the wave closes)
+
+- Invest/Instrument page «Инструментальная страница»: the wave's CLOSING
+  composition — the whole two-column instrument page out of the wave's
+  atoms (zero new components, zero token edits, zero registry pins).
+  Main: tk-instrument-hero (the h1 rides the name SLOT — document
+  semantics, the anti-empty-h1 ruling), the timeframe toolbar
+  (tk-segmented-radio, sr-only label) + tk-chart, «Показатели бумаги»
+  (tk-tabs + tk-kv-list rows with delta spans on the 22.1/22.2 delta
+  tokens), «Частые вопросы» (tk-accordion), «Новости»
+  (tk-article-card); sidebar: the price ticket (tk-promo-card ticket,
+  22.6) + tk-publisher-header (23.2) + the summary forecast
+  (tk-feature-card).
+- The layout recipe is pinned as VISIBLE PROSE in the story (consumer
+  CSS, not kit surface): a 2-column grid (fluid main + the 247px
+  sidebar — the live ticket width, spec 22.6) collapsing under 1024px
+  to sidebar-below-main; the sidebar rides `position: sticky; top:
+  var(--tk-space-24); align-self: start`, with the two documented
+  stickiness traps written out (sticky dies inside an overflow-clipping
+  ancestor; the grid default `align-self: stretch` makes a short
+  sidebar main-tall and defeats the stick).
+- Ships in BOTH themes with zero composition edits — the pure
+  semantics-layer test of the whole invest line (full-bleed canvas on
+  the active theme's surface-base, the 23.3 mold). Headings: exactly
+  one h1 (the hero name slot), every section an h2 — pinned by axe in
+  both themes. All data fictional (the PD gate); RU content, EN story
+  meta. Epic 23 «invest remainder» closes with this story.
+
 ### Added — trade form composition pattern (spec 23.3, invest remainder wave)
 
 - Invest/Trade form «Торговый бланк»: the buy/sell ticket as a PATTERN
