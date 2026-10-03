@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — tk-chart, the static SVG price chart (spec 23.1, invest remainder wave)
+
+- tk-chart: the instrument page's price chart (GAP-MAP B1) as a STATELESS
+  atom — points in, graphics out (the tk-rating mold; crosshair, hover
+  tooltips, zoom and live updates stay consumer-side by the epic ruling).
+  Series area = linear gradient over the EXISTING `--tk-color-invest-*-{a,b}`
+  identity stops (nothing minted: the bond capture measured the fill stops
+  byte-identical to the 22.5 tokens); four tone families (stock/bond/dark/
+  light, the tk-instrument-hero mold); quiet inner-only gridlines; dashed
+  reference line gated to the visible domain; optional static last-value
+  badge pill (the live badge is a hover tooltip that never paints in static
+  captures — geometry pinned to kit conventions, a documented mint).
+- The axis formatter is kit-owned (the one spec-sanctioned exception to
+  «numbers stay with the consumer»): nice 1/2/2.5/5×10^k steps, 3–5 ticks,
+  NBSP thousands grouping, RU comma decimals with trailing-zero trim, and
+  тыс./млн abbreviations at overflow — one convention against the live
+  bond page's raw floats («19999999,00000», the recorded negative).
+- A11y: role="img" self-asserted at connect (the React-19 law) with a
+  derived RU aria-label («График, N точек, последнее значение X», correct
+  plurals) or the `label` override; static by definition — zero motion.
+- Hook layer: exactly nine `--tk-chart-*` variables (stops, series, grid,
+  axis, reference, badge fill/text, height) with token defaults; clamps for
+  empty / single-point / non-finite / degenerate-range series.
+
 ## [1.6.0] - 2026-10-02
 
 ### Added — tk-promo-card ticket mode (spec 22.6, invest identity wave — the wave closes)

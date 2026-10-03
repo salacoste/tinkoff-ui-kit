@@ -5,6 +5,7 @@ export * from './article-card.js';
 export * from './badge.js';
 export * from './button.js';
 export * from './carousel.js';
+export * from './chart.js';
 export * from './checkbox.js';
 export * from './combobox-search.js';
 export * from './cookie-banner.js';

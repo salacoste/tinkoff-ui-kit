@@ -12,6 +12,7 @@ export * from './article-card/index.js';
 export * from './badge/index.js';
 export * from './button/index.js';
 export * from './carousel/index.js';
+export * from './chart/index.js';
 export * from './checkbox/index.js';
 export * from './combobox-search/index.js';
 export * from './cookie-banner/index.js';

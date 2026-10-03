@@ -46,6 +46,9 @@ const COMPONENTS: readonly SearchEntry[] = [
   // Tier A #2, the recon's most repeated surface; entry points at the
   // Components/ story.
   { title: 'Carousel', tag: 'tk-carousel', ru: 'Карусель', id: 'components-carousel--playground' },
+  // 23.1 (invest remainder wave): the static SVG price chart — GAP-MAP B1;
+  // entry points at the Components/ story.
+  { title: 'Chart', tag: 'tk-chart', ru: 'График', id: 'components-chart--playground' },
   { title: 'Checkbox', tag: 'tk-checkbox', ru: 'Чекбокс', id: 'components-checkbox--playground' },
   // 21.3 (invest foundation wave): the «nothing here yet» block — GAP-MAP
   // Tier A #5; entry points at the Components/ story.
