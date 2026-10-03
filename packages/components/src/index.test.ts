@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { describe, expect, it } from 'vitest';
 
-import { TkAccordion, TkAccordionItem, TkButton, TkComboboxSearch, TkCookieBanner, TkDataTable, TkEmptyState, TkFilterChips, TkMenuDivider, TkMenuItem, TkMenuPopover, TkNote, TkPagination, TkQrBlock, TkQuoteChip, TkRating, TkSkeleton, TkStepper, TkStoreBadges } from './index.js';
+import { TkAccordion, TkAccordionItem, TkButton, TkComboboxSearch, TkCookieBanner, TkDataTable, TkEmptyState, TkFigure, TkFilterChips, TkMenuDivider, TkMenuItem, TkMenuPopover, TkNote, TkPagination, TkQrBlock, TkQuoteChip, TkRating, TkSkeleton, TkStepper, TkStoreBadges } from './index.js';
 
 /**
  * Package entry: every component's public surface is reachable from
@@ -99,5 +99,11 @@ describe('pillkit-components entry', () => {
     expect(TkQuoteChip).toBeDefined();
     await customElements.whenDefined('tk-quote-chip');
     expect(customElements.get('tk-quote-chip')).toBe(TkQuoteChip);
+  });
+
+  it('re-exports the figure atom (spec 24.7 — the only new atom of the pattern wave) and registers its tag', async () => {
+    expect(TkFigure).toBeDefined();
+    await customElements.whenDefined('tk-figure');
+    expect(customElements.get('tk-figure')).toBe(TkFigure);
   });
 });

@@ -12,6 +12,7 @@ export * from './cookie-banner.js';
 export * from './data-table.js';
 export * from './empty-state.js';
 export * from './feature-card.js';
+export * from './figure.js';
 export * from './filter-chips.js';
 export * from './footer.js';
 export * from './input.js';

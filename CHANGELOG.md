@@ -7,6 +7,130 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — research longread + tk-figure, the wave's only new atom (spec 24.7, pattern wave 24a closes)
+
+- **tk-figure** — the captioned media block, the B6 (gap-8 research
+  iframes) + A8 (gap-5 terminal videos) FUSION and the ONLY new atom of
+  the wave: a passive figure frame around slot-borne media (iframe /
+  img / video) with an optional caption. The atom owns the aspect box
+  (the `--tk-figure-ratio` hook, 16/9 default — the live embed shape),
+  the radius, the muted load backdrop and the caption line
+  (presence-molded: no content → no figcaption node). Lazy enforcement
+  (the promo-card art mold, extended): slotted iframes get
+  loading=lazy; imgs at ANY nesting depth get loading=lazy +
+  decoding=async. STATELESS — zero events, no event-map entry by
+  design. Full catalog cycle: hooks, unit tests (aspect contract, lazy
+  attributes, caption presence, structural pins, stateless pin), CEM →
+  React wrapper (`Figure`) → docs search row, package-root roster.
+- **Invest/Research «Исследование»** — the wave's closing composition:
+  byline row (a plain consumer line — the publisher-header avatar disc
+  is NOT reused without a pin), h1, lead, prose on the BANK registers
+  (NOT tj-prose — the gap-8 ruling), a figure stream demonstrating the
+  fusion TWICE (a currentColor inline-SVG chart view + a video view),
+  section tabs, the closing ИИР note (the 23.3 formula). Demo media are
+  neutral stubs — NO live embed URLs (the PD gate; zero-media).
+
+### Added — active-filter strip (spec 24.6)
+
+- **Invest/Filter strip «Активные фильтры»** — the «Активные фильтры
+  [n]» row with «Сбросить» / «Все фильтры» links between the filter
+  panel and the results (the gap-1 bonds/etfs shape). The strip is a
+  CONSUMER row out of tk-badge + tk-link — tk-filter-chips has no
+  summary/count/reset composition of its own. The chip model pinned in
+  the prose: tk-filter-chips is SINGLE-select per group, so the live
+  multi-filter page maps to N chip groups (one axis = one element) with
+  an «Все» default; active = a group off its default; count = the
+  number of such groups; 0 → the strip hides (the presence mold). The
+  strip is a VIEW over the same state, never a second source of truth;
+  aria-live announcements; the mini-table refilters live. The canvas
+  mounts with ONE axis active via a story-only SelectDollarOnMount driver
+  (the TypeOnMount precedent) — a native chip click after mount — because
+  a presence mold mounted all-default would baseline a canvas where the
+  strip never paints; the lens round of 24.6 caught exactly that, and
+  «Сбросить» still walks the 0 → hidden direction interactively.
+
+### Added — load-more hybrid (spec 24.5)
+
+- **Invest/Load more «Показать ещё и пейджер»** — «Показать ещё» and the
+  pager SHARING one feed, the whole hybrid riding ONE existing atom:
+  tk-pagination's built-in `show-more` bar (its `load-more` event fires
+  WITHOUT changing the page — exactly the hybrid contract). Rules
+  pinned in the prose: the bar appends the NEXT portion to the end of
+  the visible feed; a pager jump REPLACES the feed with that page's
+  block (the accumulated tail resets — the pager stays the source of
+  truth for position). The append is announced via aria-live; the feed
+  rides tk-data-table with inert rows.
+
+### Added — stat-tile row (spec 24.4)
+
+- **Invest/Stat tiles «Показатели»** — the big-number marketing register
+  (gap-7's bordered «12 лет»-style row + gap-1 hub's ONE dark inverted
+  card): an auto-fit minmax grid of bordered tiles — consumer glyph
+  row, heading-register VALUE, visible body-s label — with ONE tile on
+  the theme-invariant charcoal + white pairs (the hero mold: stays dark
+  in BOTH themes — a theme-invariant block, not a dark-theme mode).
+  Semantics: role=list/listitem (the kv-list mold); every figure
+  FICTIONAL (the live numbers are a SHAPE reference only, never
+  transcribed).
+
+### Added — lead form, standalone + embed (spec 24.3)
+
+- **Invest/Lead form «Лид-форма»** — phone + consent + CTA, the most
+  repeated form shape on the invest surfaces, in BOTH variants on one
+  canvas: (а) the standalone hero cluster (wide surface-BASE card with
+  hairline, full-width CTA — the business-landing form-card mold; NOT
+  muted: the tk-link «Назад» rides --tk-color-link tuned to
+  surface-base (4.62 AA), 4.24 on muted — the v1.4.0 law "links never
+  sit on muted boxes", caught by the first-mint axe leg) and (б) the
+  320px embed «iframe view» (no hero chrome, name field added) — the
+  variant difference is consumer CSS
+  only. REAL `<form>`s (the live page has none — the kit does it
+  right): Enter submits, the CTA goes through requestSubmit() (the
+  web-component caveat pinned in the prose: a shadow button is not
+  form-associated), the CTA is disabled until consent, the phone mask
+  is STORY-level demo logic (NOT a kit feature — Epic 25 VARIANT),
+  incomplete numbers surface through tk-input's error channel, and the
+  submit fires the sanctioned imperative toast — nothing leaves the
+  page.
+
+### Added — options screener (spec 24.2)
+
+- **Invest/Screener «Скринер опционов»** — the parametric filter panel +
+  option-chain result table (gap-5: 12 inputs on the live catalog, not
+  one inside a `<form>`). The panel is a REAL native form — label+input
+  pairs, the call/put toggle as a radiogroup, Enter-in-field submits,
+  «Применить» through requestSubmit(), «Сбросить» clears and refilters.
+  Filter state is the demo consumer's closure (the 23.3 mold); the
+  chain table rides tk-data-table with INERT rows (chain data is not
+  navigation); the count output is aria-live; the keyboard checklist is
+  pinned in the visible prose. Every contract, price, volume and yield
+  is fictional (the PD gate).
+
+### Added — pricing surfaces: plan cards + comparison matrix (spec 24.1, pattern wave 24a opens)
+
+- Invest/Pricing «Тарифные планы»: the plan-card ROW — tk-feature-card
+  tint bodies with the fee headline (heading-4 register) + feature
+  checklist + CTA arriving as SLOT CONTENT (the atom gets no
+  price-line of its own — the fee register is a pinned consumer
+  recipe, not a new atom); consumer check glyphs on the brand yellow;
+  the row is `grid auto-fit minmax(264px, 1fr)`.
+- Invest/Pricing «Сравнение планов»: the comparison MATRIX — the live
+  page has tables=0, so the matrix is CSS-grid DIVS with the APG
+  table-on-div role grid laid on top: role=table on the grid,
+  role=row per row, role=columnheader on plan heads, role=rowheader
+  on the feature column (the first-column scope equivalent),
+  role=cell on values; every check glyph carries an sr-only
+  «Включено» — the icon is decorative, the meaning is text. Sections
+  (Комиссии/Сервис/Аналитика) switch via tk-tabs — the live
+  tab-sectioned shape. Column alignment recipe (every row re-declares
+  the SAME grid template + min-width: 0 cells) and the narrow-canvas
+  horizontal scroll are pinned in the visible prose.
+- Both stories ship in BOTH themes with zero composition edits; one
+  visible h1 per canvas; axe green in both themes on the first mint
+  (the 23.4 registration sweep ran pre-mint: 0 unregistered tags).
+  All plan names, fees and cell values are fictional (the PD gate);
+  RU content, EN story meta. Pattern wave 24a opens with this story.
+
 ### Added — instrument page assembly pattern (spec 23.4, invest remainder wave — the wave closes)
 
 - Invest/Instrument page «Инструментальная страница»: the wave's CLOSING
