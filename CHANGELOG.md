@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — tk-publisher-header, the instrument page publisher row (spec 23.2, invest remainder wave)
+
+- tk-publisher-header: the invest instrument page's publisher block
+  (GAP-MAP B2) as a passive layout atom — avatar slot (35px disc,
+  radius-full, tint-gray backdrop, overflow-clipped), name line
+  (heading-6 + 700, slot with prop fallback, UA-chrome reset for
+  slotted h1–h6 so a consumer's real heading carries no browser
+  margin), the badges row and the meta line (body-s, text-secondary,
+  presence via @slotchange — the hero metric mold), action slot pinned
+  right by margin-left auto. Stateless: no roles, no tabindex, no
+  buttons.
+- SLOT POLICY deviation (recorded in the jsdoc): the verified/official
+  chips are SLOT CONTENT on kit tokens, not kit wrappers — Lit never
+  distributes one slot into several wrappers, and the chips are exactly
+  that (svg discs riding the badges row). The kit ships the canonical
+  chip svgs in the stories; consumers own their placement.
+- Tokens: four measured `--tk-color-invest-badge-*` semantics
+  (verified/official ink + backdrop, pixel-probed on the sber
+  instrument page publisher row) — theme-invariant inks (decorative
+  non-text glyphs, WCAG 1.4.11), the backdrops re-declared dark
+  (first-pass, the tint-* mold). Registered in the aa-annotations
+  ledger (16 entries, measured/verified, story 23.2).
+- Hook layer: exactly four `--tk-publisher-header-*` variables
+  (avatar size/gap, badge gap) with token defaults.
+
 ### Added — tk-chart, the static SVG price chart (spec 23.1, invest remainder wave)
 
 - tk-chart: the instrument page's price chart (GAP-MAP B1) as a STATELESS

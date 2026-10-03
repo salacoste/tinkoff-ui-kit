@@ -88,6 +88,12 @@
   /* Measured (Story 22.5) — instrument hero light gradient start `#EEF0F2` (horizontal to `#D1D3D5`, right stop edge-extrapolated), pixel-probed on the currency card (captures-v4/invest/currency-usd000utstom.png). Theme-invariant identity fill. Ink-300 text 11.06:1 / 8.42:1 — every size clears AA. DESIGN.md Colors. */
   --tk-color-invest-light-a: #EEF0F2;
   --tk-color-invest-light-b: #D1D3D5;
+  /* Measured (Story 23.2) — the publisher verification chip green glyph disc `#36C578` (a d12 cluster) on the pale ring `#CDF1DD`, pixel-probed on the sber instrument page publisher row (captures-v4/invest/stock-sber.png, y1227-1270). Non-text status glyph — AA-text not applicable (decorative per WCAG 1.4.11, beside the labeled name); theme-invariant ink, the backdrop re-declares dark (`#1E3B2A` first-pass, tint-* mold). DESIGN.md Colors. */
+  --tk-color-invest-badge-verified: #36C578;
+  --tk-color-invest-badge-verified-backdrop: #CDF1DD;
+  /* Measured (Story 23.2) — the publisher official chip blue glyph `#428BF9` (check figure) on the pale ring `#D0E2FE`, same row/scan as the verified chip (captures-v4/invest/stock-sber.png, y1227-1270). Non-text status glyph — same AA ruling; theme-invariant ink, the backdrop re-declares dark (`#1E2C4A` first-pass). DESIGN.md Colors. */
+  --tk-color-invest-badge-official: #428BF9;
+  --tk-color-invest-badge-official-backdrop: #D0E2FE;
   /* Semantic alias — `blue-100`, added in Story 1.3: components consume semantics, not scales (AD-2/AD-3), and the dark layer needs a semantic name to override (`dark-link`). DESIGN.md Colors (TextLink). */
   --tk-color-link: #1771E6;
   /* Semantic alias — `red-100`, added in Story 1.3 alongside `link` so both themes expose error semantics (the dark layer overrides it with `dark-error`). DESIGN.md Colors. */
@@ -283,6 +289,8 @@
   --tk-color-border-table: #FFFFFF1F;
   /* Verified — Story 8.2 dark sweep: `#FFFFFF1A` composites to `#313131` on dark-base (pinned tests/contrast.test.ts:281) — Δ+11.1 L* over base, a visible-but-gentle transient step; the row's text pairs on the composite pass (text-primary 13.009:1, text-secondary 7.303:1) and the delta pair rides the 6.1 scope ruling (3.382/4.883 — the negative leg's documented state, confirmed live). Same 10% white as the dark-field fill family. DESIGN.md Colors. */
   --tk-color-surface-row-hover: #FFFFFF1A;
+  --tk-color-invest-badge-verified-backdrop: #1E3B2A;
+  --tk-color-invest-badge-official-backdrop: #1E2C4A;
 }
 
 /*

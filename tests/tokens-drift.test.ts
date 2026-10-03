@@ -252,7 +252,7 @@ describe('token-pipeline drift (spec 1.2 review)', () => {
     const blockNames = new Set(
       [...statusLine.matchAll(/`?([a-z0-9-]+)`? \(Story \d+\.\d+\)/g)].map((match) => `--tk-color-${match[1]}`),
     );
-    expect(blockNames.size, 'the derived status line names no block entries — anchor moved').toBe(14);
+    expect(blockNames.size, 'the derived status line names no block entries — anchor moved').toBe(16);
     for (const [name, literal] of TOKEN_NOTE_LITERALS) {
       expect(aaBearing(literal), `${name} literal is AA-bearing — must derive from the aa-annotations block`).toBe(
         false,

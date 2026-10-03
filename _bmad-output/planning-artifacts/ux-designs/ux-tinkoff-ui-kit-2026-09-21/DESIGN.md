@@ -115,6 +115,17 @@ colors:
   invest-dark-b: '#3B3B3B' # dark family end; white 11.207:1 ✓
   invest-light-a: '#EEF0F2' # currency hero left stop (horizontal); ink-300 11.06:1 ✓
   invest-light-b: '#D1D3D5' # currency hero right stop (edge-extrapolated); ink-300 8.42:1 ✓
+  # v2.4 — publisher verification chip pairs (23.2 publisher header, captures-v4/
+  # invest/stock-sber.png publisher row y1227-1270 pixel-probed; non-text status
+  # glyphs — AA-text n/a, decorative per WCAG 1.4.11 beside the labeled name;
+  # chip inks theme-invariant, pale backdrops re-declared dark — first-pass mint,
+  # the tint-* mold, no live dark capture of the profile header)
+  invest-badge-verified: '#36C578' # green glyph disc d12 on the pale ring — see Colors (Publisher chips)
+  invest-badge-verified-backdrop: '#CDF1DD' # green chip pale ring
+  invest-badge-official: '#428BF9' # blue glyph (check figure) — see Colors (Publisher chips)
+  invest-badge-official-backdrop: '#D0E2FE' # blue chip pale ring
+  dark-invest-badge-verified-backdrop: '#1E3B2A' # dark first-pass, bright ink stays
+  dark-invest-badge-official-backdrop: '#1E2C4A' # dark first-pass, bright ink stays
 # v2.2 — AA-annotation machine truth (story 9.2): the AA-bearing color notes
 # (TOKENS.md Notes column + tokens.css comments) are GENERATED from this block,
 # not held as generator literals. Grammar per entry: kind (override | addition |
@@ -196,6 +207,16 @@ aa-annotations:
     status: verified
     story: '22.5'
     text: 'instrument hero light gradient start `#EEF0F2` (horizontal to `#D1D3D5`, right stop edge-extrapolated), pixel-probed on the currency card (captures-v4/invest/currency-usd000utstom.png). Theme-invariant identity fill. Ink-300 text 11.06:1 / 8.42:1 — every size clears AA. DESIGN.md Colors.'
+  invest-badge-verified:
+    kind: measured
+    status: verified
+    story: '23.2'
+    text: 'the publisher verification chip green glyph disc `#36C578` (a d12 cluster) on the pale ring `#CDF1DD`, pixel-probed on the sber instrument page publisher row (captures-v4/invest/stock-sber.png, y1227-1270). Non-text status glyph — AA-text not applicable (decorative per WCAG 1.4.11, beside the labeled name); theme-invariant ink, the backdrop re-declares dark (`#1E3B2A` first-pass, tint-* mold). DESIGN.md Colors.'
+  invest-badge-official:
+    kind: measured
+    status: verified
+    story: '23.2'
+    text: 'the publisher official chip blue glyph `#428BF9` (check figure) on the pale ring `#D0E2FE`, same row/scan as the verified chip (captures-v4/invest/stock-sber.png, y1227-1270). Non-text status glyph — same AA ruling; theme-invariant ink, the backdrop re-declares dark (`#1E2C4A` first-pass). DESIGN.md Colors.'
 shadows:
   default: '0 4px 24px rgba(0,0,0,.12)'
   default-hover: '0 12px 36px rgba(0,0,0,.2)'

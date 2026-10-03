@@ -32,6 +32,7 @@ export * from './note/index.js';
 export * from './pagination/index.js';
 export * from './progress-bar/index.js';
 export * from './promo-card/index.js';
+export * from './publisher-header/index.js';
 export * from './quote-chip/index.js';
 export * from './qr-block/index.js';
 export * from './rating/index.js';

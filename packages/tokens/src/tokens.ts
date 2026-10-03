@@ -67,6 +67,10 @@ export const colorTokens = {
   '--tk-color-invest-dark-b': '#3B3B3B',
   '--tk-color-invest-light-a': '#EEF0F2',
   '--tk-color-invest-light-b': '#D1D3D5',
+  '--tk-color-invest-badge-verified': '#36C578',
+  '--tk-color-invest-badge-verified-backdrop': '#CDF1DD',
+  '--tk-color-invest-badge-official': '#428BF9',
+  '--tk-color-invest-badge-official-backdrop': '#D0E2FE',
   '--tk-color-link': '#1771E6',
   '--tk-color-error': '#E01F19',
   '--tk-color-error-on-field': '#D3120E',
@@ -97,6 +101,8 @@ export const darkColorTokens = {
   '--tk-color-delta-negative': '#F63434',
   '--tk-color-border-table': '#FFFFFF1F',
   '--tk-color-surface-row-hover': '#FFFFFF1A',
+  '--tk-color-invest-badge-verified-backdrop': '#1E3B2A',
+  '--tk-color-invest-badge-official-backdrop': '#1E2C4A',
 } as const;
 
 /** Typography tokens — per-slot size/weight/leading/tracking plus the family slots (values: DESIGN.md `typography`; mono from the `fonts` block, story 9.1). */

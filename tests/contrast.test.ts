@@ -227,10 +227,12 @@ const AA_PAIRS: readonly AaPair[] = [
 ];
 
 describe('WCAG AA contrast — mechanized DESIGN.md table (spec 1.3)', () => {
-  it('consumes the generated darkColorTokens map with all 23 semantic overrides', () => {
+  it('consumes the generated darkColorTokens map with all 25 semantic overrides', () => {
     // Named guard: if generation drops or shrinks the dark map, this fails
     // here instead of surfacing as lookup noise in the pair tests.
-    expect(Object.keys(darkColorTokens)).toHaveLength(23);
+    // 23→25 (Story 23.2): the publisher chip backdrops re-declared dark
+    // (first-pass mint, the tint-* mold).
+    expect(Object.keys(darkColorTokens)).toHaveLength(25);
   });
 
   it.each(AA_PAIRS)('$theme: $name', (pair) => {

@@ -83,7 +83,7 @@ describe('pillkit-tokens generated maps', () => {
   it('carries the derived aa-annotations ledger with zero open [ASSUMPTION] flags (story 9.2)', () => {
     const md = readFileSync(new URL('./TOKENS.md', import.meta.url), 'utf8');
     expect(md).toContain('`aa-annotations:` block');
-    expect(md).toContain('14 verified / 0 open `[ASSUMPTION]` flags');
+    expect(md).toContain('16 verified / 0 open `[ASSUMPTION]` flags');
   });
 });
 
@@ -130,7 +130,7 @@ describe('pillkit-tokens dark layer (Story 1.3)', () => {
     expect(darkSection).toContain('--tk-color-tint-beige: #2A2620;');
   });
 
-  it('declares EXACTLY the 23 mapped semantic colors + 6 shadow-none tokens — nothing else', () => {
+  it('declares EXACTLY the 25 mapped semantic colors + 6 shadow-none tokens — nothing else', () => {
     const expected = [
       '--tk-color-surface-base',
       '--tk-color-surface-muted',
@@ -156,6 +156,10 @@ describe('pillkit-tokens dark layer (Story 1.3)', () => {
       '--tk-color-delta-negative',
       '--tk-color-border-table',
       '--tk-color-surface-row-hover',
+      // 23.2 additions — the publisher chip backdrops (dark first-pass,
+      // the tint-* mold; the chip inks stay theme-invariant).
+      '--tk-color-invest-badge-verified-backdrop',
+      '--tk-color-invest-badge-official-backdrop',
       ...Object.keys(shadowTokens),
     ].sort();
     expect([...darkNames].sort()).toEqual(expected);

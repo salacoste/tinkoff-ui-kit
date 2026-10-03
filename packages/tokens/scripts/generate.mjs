@@ -123,6 +123,12 @@ const DARK_OVERRIDES = [
   { name: '--tk-color-delta-negative', source: 'dark-delta-negative' },
   { name: '--tk-color-border-table', source: 'dark-border-table' },
   { name: '--tk-color-surface-row-hover', source: 'dark-surface-row-hover' },
+  // 23.2 additions — the publisher chip backdrops re-declared dark
+  // (first-pass mint, the tint-* mold — no live dark capture of the
+  // profile header; the chip inks stay theme-invariant, see
+  // DARK_INVARIANTS below).
+  { name: '--tk-color-invest-badge-verified-backdrop', source: 'dark-invest-badge-verified-backdrop' },
+  { name: '--tk-color-invest-badge-official-backdrop', source: 'dark-invest-badge-official-backdrop' },
 ];
 
 /**

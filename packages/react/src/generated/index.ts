@@ -28,6 +28,7 @@ export * from './note.js';
 export * from './pagination.js';
 export * from './progress-bar.js';
 export * from './promo-card.js';
+export * from './publisher-header.js';
 export * from './qr-block.js';
 export * from './quote-chip.js';
 export * from './rating.js';

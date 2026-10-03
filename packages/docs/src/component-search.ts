@@ -49,6 +49,10 @@ const COMPONENTS: readonly SearchEntry[] = [
   // 23.1 (invest remainder wave): the static SVG price chart — GAP-MAP B1;
   // entry points at the Components/ story.
   { title: 'Chart', tag: 'tk-chart', ru: 'График', id: 'components-chart--playground' },
+  // 23.2 (invest remainder wave): the «Профиль в Пульсе» publisher row —
+  // GAP-MAP B14; avatar disc + bold name with verification chips +
+  // subscriber meta + the consumer's follow action (stateless).
+  { title: 'PublisherHeader', tag: 'tk-publisher-header', ru: 'Заголовок издателя', id: 'components-publisherheader--playground' },
   { title: 'Checkbox', tag: 'tk-checkbox', ru: 'Чекбокс', id: 'components-checkbox--playground' },
   // 21.3 (invest foundation wave): the «nothing here yet» block — GAP-MAP
   // Tier A #5; entry points at the Components/ story.
