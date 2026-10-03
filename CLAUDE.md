@@ -1014,3 +1014,28 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   факта, zero-in-flight на пуше). ТЕГ v1.6.0 НЕ ПОСТАВЛЕН — ждёт явного
   «tag ok» мейнтейнера (§13.3); npm-команд не было; после тега — Flow-B
   §13.4 (клон по тегу, tk-instrument-hero + ticket).
+
+- **2026-10-02/03 — v1.6.0 RELEASED: «tag ok» → тег → Flow-B ПРОЙДЕН
+  раунд-1 без дефектов.** По явной санкции «tag ok» аннотированный тег
+  `v1.6.0` поставлен на `a283e3d` (tag-объект `64cbe75c`; remote сверен
+  deref ДО клона; теговый пуш CI не триггернул; предусловия: HEAD CI
+  GREEN 37050974098, дерево чисто; npm-команд не было; перемещений не
+  было). **Flow-B §13.4 (2026-10-03):** свежий клон по тегу (локальный
+  file-транспорт, честное отклонение по прецеденту §12.4), census =
+  ровно семёрка @1.6.0; потребитель по README-рецепту (devEngines-ловушка
+  снята, vite dedupe); прод-билд 638 мс exit 0. **Гейт 15/15 PASS —
+  продуктовых дефектов НЕТ (раунд-1 = единственный):** hero-анатомия/
+  tone-reflect/metric-блок с slot-presence/slotted-h2 override (AC3)/
+  identity-градиент на `:host` (#2e970a→#257a08); ticket label/value/
+  note + CTA `.button::before` rgb(255,221,45); React-обёртки — пропсы
+  переживают создание элемента (закон v1.5.0-цикла живёт в атомах);
+  консоль ноль; dark remap `--tk-color-surface-base` `#fff`→`#1a1a1a`.
+  Probe-раунды честно 10→12→14→15: все промежуточные провалы —
+  probe-баги (угаданные селекторы; `slot.textContent` слеп к assigned-
+  узлам — читать `assignedNodes({flatten:true})`; краска на псевдо-слоях
+  `.button::before`/`:host`). **Транспорт-урок: `pnpm add` БЕЗ флага
+  висел >100 мин (0.74 CPU-сек, node_modules пуст) — `--prefer-offline`
+  поставил за 318 мс; оффлайн-стор — первый ход при медленном реестре.**
+  Пруфы `verify/v160-fresh-clone/` (NOTES + probe + consumer-файлы +
+  скриншоты ×2 темы); штампы RELEASE §13.3/§13.4/§13.7 + HANDOFF §4(a)
+  закрыт. Очередь §4 = только оппортунистический batch-confirm прироста.

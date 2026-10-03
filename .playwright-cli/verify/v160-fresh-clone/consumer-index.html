@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <title>Flow-B v1.6.0 — invest atoms</title>
+  </head>
+  <body>
+    <h1>Flow-B v1.6.0 — invest waves</h1>
+    <section id="raw">
+      <h2>Raw custom elements</h2>
+      <div class="row" id="raw-heroes">
+        <tk-instrument-hero id="hero-raw" name="Северсталь" ticker="CHMF" tone="stock" metric-label="Изменение за день">
+          <span slot="metric">+1,24%</span>
+          <button slot="action" aria-label="Добавить в портфель" id="hero-star">★</button>
+        </tk-instrument-hero>
+        <tk-instrument-hero name="ОФЗ 26238" ticker="SU26238RMFS4" tone="bond">
+          <h2 slot="name" id="hero-slotted-h2">ОФЗ 26238 (слот)</h2>
+        </tk-instrument-hero>
+      </div>
+      <div class="row" id="raw-tickets">
+        <tk-promo-card id="ticket-raw" variant="ticket" label="Купить по цене">
+          <b slot="value">277,65 ₽</b>
+          <tk-button class="ticket-cta" slot="actions" variant="primary">Купить</tk-button>
+          <span slot="note">Не является индивидуальной инвестиционной рекомендацией</span>
+        </tk-promo-card>
+      </div>
+    </section>
+    <section id="react-root">
+      <h2>React wrappers (CEM-generated)</h2>
+    </section>
+    <script type="module" src="/main.tsx"></script>
+  </body>
+</html>
