@@ -1,6 +1,6 @@
 # Spec 23.1 — tk-chart статичный SVG-чарт (invest remainder wave, GAP-MAP B1)
 
-- **status:** DRAFT 2026-10-02 (AC frozen pending «go»; исполнения нет)
+- **status:** EXECUTED 2026-10-03 (feat beb997d + fix 6996a2e, CI run 37116770409 GREEN; close-out штамп — этот коммит)
 - **baseline_commit:** e5795a2 (голова close-out 22.6; zero-in-flight, CI GREEN)
 - **epic note:** Epic 23 «invest remainder», brief
   `planning-artifacts/briefs/brief-epic-23-invest-remainder-2026-10-02.md`
@@ -58,3 +58,69 @@
   рулингу), вертикальная навигация по оси, анимация отрисовки, тулбар
   таймфреймов как китовый компонент (композиция в стори из существующих
   чипов), терминальный хром (imagery-only, DOM-каптуры нет).
+
+## Execution record (close-out 2026-10-03)
+
+- **AC1 vs исполнение:** атом `tk-chart` исполнен буквально —
+  `points` (property-only, объекты не рефлектятся), `tone` (reflect,
+  4 семейства по молду tk-instrument-hero), `reference`, `badge`,
+  `x-every`, `label`; STATELESS — ноль событий, ноль канала
+  (юнит-пин «no tabindex / no buttons / no [role] children»). Один
+  scale-движок: nice-лестница 1/2/2.5/5×10^k, 3–5 тиков, climb-loop
+  `while count>5: step=niceStep(step*2)` (млн-диапазон садится на
+  шаги 500k, не 800k); клампы пустой/одноточечной/невалидной/
+  вырожденной серии.
+- **ГЛАВНЫЙ УРОК ИСТОРИИ — svg-namespace:** первый минт красил НОЛЬ
+  пикселей внутри `<svg>` при полностью зелёном DOM (заливка/линия/
+  сетка/референс отсутствовали, красились только HTML-соседи).
+  Корень: вложенные `html`-шаблоны внутри svg-контекста Лит строит
+  через `document.createElement('template')` — парсер никогда не в
+  foreign-content режиме, элементы получаются HTML-неймспейсными
+  unknowns: querySelector матчит, атрибуты ставятся, юниты зелёные,
+  краски нет. Фикс: тег `svg` из `'lit'` для всех 4 вложенных
+  шаблонов + пин `expect(…namespaceURI).toBe('http://www.w3.org/2000/svg')`
+  в юните (happy-dom неймспейсы различает — пин с зубами). Зелёные
+  пиксели 0 → 103 472. Урок записан в персистентную память
+  (lit-svg-namespace-pitfall) — ловушка невидима всем кодовым гейтам,
+  кроме краски.
+- **Урок AA-сеток:** 1px non-scaling stroke на дробной y садится на
+  два ряда растра по ~50% бленда (#E7E8EA × #F5F5F6 = #EEEF0F) —
+  точного hex не существует в принципе; пиксельные пробы ищут
+  бленд-семейство, не точный цвет (первый «сетка не красится после
+  фикса» был ложным следом неверных проб).
+- **Grounding-замеры (bond-каптура):** canvas 536×183 — viewBox и
+  дефолт хука высоты; стопы заливки измерены БАЙТ-ИДЕНТИЧНО
+  существующим identity-стопам 22.5 — минта НЕТ (диверженс-клауза
+  AC1 не сработала). Девиации записаны в jsdoc класса: линия — тёмный
+  стоп тона (gradient-stroke требует paint-server на инстанс);
+  сетка — border-default (in-plot над заливкой не изолируем);
+  бейдж — статичная пилюля последнего значения (живая — hover-
+  tooltip, в статике не существует; геометрия — kit-конвенции,
+  честный минт); оси — СНАРУЖИ плота (правая колонка/нижний ряд,
+  AA-safe в обеих темах против живого in-plot сиденья); форматтер
+  осей — китовский пин ОДНОЙ конвенции против живых сырых флоотов
+  («19999999,00000», записанный негатив).
+- **AC4:** role="img" self-assert в connectedCallback (React-19 law);
+  derived aria-label с RU-плюрализацией (точка/точки/точек) и
+  пересчётом на смену данных; `label` — wholesale override. Девиация
+  от буквы спеки: svg aria-hidden вместо in-plot title/desc —
+  дублировали бы host label; записана в jsdoc.
+- **AC5:** стори 6 исторей (playground/directions/layers/
+  axis-overflow/clamps/api), данные вымышленные (ПД-гейт); базлайны
+  НОВЫЕ 12 PNG (6×2 темы) переминтчены явно + 2 ре-минта
+  getting-started page (новый атом в реестре страницы).
+- **AC6:** unit 17 новых (клампы/скейл/форматтер/референс-гейтинг/
+  бейдж/aria/x-метки/stateless/tone-reflect/9-хук css-пин с
+  NAMESPACE PIN); hidden-guard реестр пополнен tk-chart; полный
+  локальный compare 2422/2422 GREEN (14.6 мин).
+- **AC7/цикл:** юнит → gen (CEM +253 строк) → build/typecheck/lint →
+  минты явно → compare → pathspec feat beb997d (26 файлов) → push →
+  CI раунд 1 **RED 37116472407** (gen-drift: jsdoc-правка класса
+  после последнего `pnpm gen` — CEM description отстал) → fix
+  6996a2e (`pnpm gen`; проверено: api-reference НЕ рендерит class
+  description ⇒ api-базлайны от CEM-дрейфа не зависят) → CI run
+  **37116770409 GREEN** (gates + Visual/axe compare 2422 + impeccable
+  0 blockers). Замечание для будущих поллеров: локальный греп
+  «failure» в шагах ловит ИМЯ шага «Upload visual-run artifacts on
+  failure» — вердикт только по run-level `conclusion`. Задача #84
+  закрыта.
