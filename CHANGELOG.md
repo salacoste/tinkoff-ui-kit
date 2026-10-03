@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — trade form composition pattern (spec 23.3, invest remainder wave)
+
+- Invest/Trade form «Торговый бланк»: the buy/sell ticket as a PATTERN
+  story over existing atoms only — zero new components, zero token
+  edits, zero registry pins. Side (tk-segmented-radio Купить/Продажа,
+  story-level state), amount (tk-input + the ₽ suffix riding the
+  EXISTING badge slot — the AC4 ruling: no input variant minted), the
+  lots mini-pattern «− значение +» (tk-button secondary compact, the
+  44px target register; sr-only accessible names — a bare «−» names
+  nothing), side-driven CTA (tk-button primary), the portfolio star
+  (the 22.5 slot-button mold, aria-pressed consumer state), and the
+  ИИР note (tk-note info tone — the legal formula, not PD content).
+- Grounding honest (no DOM capture exists — the live ticket sits
+  behind terminal auth, GAP-MAP Deferred): every geometry is a kit
+  register pick, not a measurement; a future terminal capture re-opens
+  the pattern as its own story.
+- A11y contract pinned by the visible keyboard checklist: one tab stop
+  on the side group (arrows flip side, selection follows focus), real
+  buttons with aria-labels, the live lots value on <output
+  aria-live="polite">, a label+input amount pair; the visual suite
+  runs axe on the story in both themes.
+
 ### Added — tk-publisher-header, the instrument page publisher row (spec 23.2, invest remainder wave)
 
 - tk-publisher-header: the invest instrument page's publisher block
