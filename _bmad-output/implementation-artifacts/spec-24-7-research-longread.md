@@ -54,3 +54,34 @@
   нужны slice-пробы живого), интерактивные чарты (23.1 out),
   видео-плеер как атом (B5 — не в волне), медиа-хостинг в ките
   (zero-media), тёмная инверсия research-страницы (нет заземления).
+
+## Execution record (2026-10-03)
+
+- tk-figure: пассивный figure-каркас слот-медиа (iframe/img/video) с
+  опциональной подписью; аспект-бокс (--tk-figure-ratio, 16/9),
+  радиус, muted-подложка, подпись presence-молдом (нет контента → нет
+  figcaption-узла); lazy-энфорсмент (iframe → loading=lazy; img на
+  любой глубине → lazy + decoding=async); STATELESS — event-map
+  no-entry. Полный цикл: хуки, юниты, CEM → React Figure → docs
+  search row, ростер пакета.
+- Research longread: byline (обычная потребительская строка —
+  avatar-диск publisher-header НЕ переиспользуется без пина), h1, лид,
+  проза на BANK-регистрах (НЕ tj-prose — закон gap-8), стрим из ДВУХ
+  figure (currentColor inline-SVG + video), секционные tk-tabs,
+  закрывающая ИИР-нота (формула 23.3); медиа — нейтральные стабы, БЕЗ
+  live-URL (ПД, zero-media).
+- Линзы: research 1/2 + figure--playground 1/2, обе чистые; ниты —
+  артефакты iframe-стаба носителя стори (Canvas прячет
+  muted-подложку), не дефекты атома; паддинг атома един.
+- ВОЛНА ЗАКРЫЛАСЬ ТРИПВАЙРОМ: CI 37142771921 RED — hidden-guard ростер
+  50 → 51 (figure.css.ts вступил в семейство host-display щитов; сам
+  :host([hidden]) guard на месте) — осознанный бамп пина 50→51 щитов /
+  39→40 файлов, фикс ad8e93e → CI GREEN 37143064533. Второй латентный
+  урок: pnpm-рекурсия падает на первом же пакете — react-нога (stale
+  dist) вскрылась только ПОЛНЫМ локальным гейтом; правило: после
+  нового компонента — rebuild dist + полный pnpm test до пуша.
+- Минт: figure playground+api 4 базлайна + research 2, обе темы, axe
+  GREEN.
+- Эфир: fde2bc5 + ad8e93e, CI GREEN 37143064533, суита 2512/2512
+  (счётчик: +6 ног на сторю-юнит × 10 юнитов волны = +60 к 2452).
+  #94 completed. Волна 24a закрыта.
