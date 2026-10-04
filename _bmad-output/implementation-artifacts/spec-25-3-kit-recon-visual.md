@@ -1,7 +1,7 @@
 # Spec 25.3 — визуальный референс: скриншот-галереи доков (kit recon)
 
-- **status:** DRAFT 2026-10-04 (AC frozen по форме; список страниц —
-  по итогу 25.2)
+- **status:** CLOSED 2026-10-04 — code-head CI run **37227729767**
+  GREEN (коммит 9a1011a; verdict после факта)
 - **baseline_commit:** ff0e423
 - **epic note:** Epic 25, brief `brief-epic-25-kit-ecosystem-recon-2026-10-04.md`
   (Решение 2 — класс «визуальный референс»; Playwright-слой).
