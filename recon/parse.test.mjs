@@ -10,6 +10,7 @@ import { cssVars, flattenTokenJson, parseCem } from './lib/extract.mjs';
 import { normalizeRepoUrl } from './lib/github.mjs';
 import { latestSnapshot, renderKitReport, renderSummary } from './report.mjs';
 import { appendSnapshot, buildSnapshot } from './lib/snapshot.mjs';
+import { luminance, planData } from './visual.mjs';
 
 describe('parseCem', () => {
   it('extracts components with props, events and slots', () => {
@@ -200,6 +201,22 @@ describe('report renderers', () => {
     const doc = renderSummary([{ entry: { ...entry, anchor: true }, snap }], '2026-10-04T00:00:00Z');
     expect(doc).toContain('| probe ⚓ | lit | 2.0.0 | ✅ | 1 | 10 |');
     expect(doc).toContain('Kits: 1.');
+  });
+});
+
+describe('visual plan helpers', () => {
+  it('parses the fenced yaml plan', () => {
+    const plan = planData('# t\n\n```yaml\nkits:\n  - id: probe\n    dark: { mode: media }\n    surfaces:\n      - { name: gallery, url: "https://x.test/" }\n```\n');
+    expect(plan.kits[0].surfaces[0].name).toBe('gallery');
+  });
+
+  it('computes wcag luminance and rejects unparseable or transparent colors', () => {
+    expect(luminance('rgb(255, 255, 255)')).toBeCloseTo(1);
+    expect(luminance('rgb(0, 0, 0)')).toBeCloseTo(0);
+    expect(luminance('transparent')).toBeNull();
+    // transparent roots must not read as black (carbon false-dark lesson)
+    expect(luminance('rgba(0, 0, 0, 0)')).toBeNull();
+    expect(luminance('rgba(20, 20, 20, 1)')).toBeCloseTo(0.008, 2);
   });
 });
 

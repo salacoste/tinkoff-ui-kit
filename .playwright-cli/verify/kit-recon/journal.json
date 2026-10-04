@@ -1,0 +1,38 @@
+[
+  {
+    "kit": "spectrum",
+    "surface": "gallery",
+    "theme": "light",
+    "path": "/Users/r2d2/Documents/Code_Projects/ui-kits/tinkoff-ui/.playwright-cli/verify/kit-recon/spectrum-gallery-light.png"
+  },
+  {
+    "kit": "spectrum",
+    "surface": "gallery",
+    "theme": "dark",
+    "skipped": "dark not engaged (min luminance Infinity; prefers-color-scheme ignored and no toggle probed)"
+  },
+  {
+    "kit": "spectrum",
+    "surface": "button",
+    "theme": "light",
+    "path": "/Users/r2d2/Documents/Code_Projects/ui-kits/tinkoff-ui/.playwright-cli/verify/kit-recon/spectrum-button-light.png"
+  },
+  {
+    "kit": "spectrum",
+    "surface": "button",
+    "theme": "dark",
+    "skipped": "dark not engaged (min luminance Infinity; prefers-color-scheme ignored and no toggle probed)"
+  },
+  {
+    "kit": "spectrum",
+    "surface": "field",
+    "theme": "light",
+    "path": "/Users/r2d2/Documents/Code_Projects/ui-kits/tinkoff-ui/.playwright-cli/verify/kit-recon/spectrum-field-light.png"
+  },
+  {
+    "kit": "spectrum",
+    "surface": "field",
+    "theme": "dark",
+    "skipped": "dark not engaged (min luminance Infinity; prefers-color-scheme ignored and no toggle probed)"
+  }
+]

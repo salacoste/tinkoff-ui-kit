@@ -1,0 +1,55 @@
+# IM passports (spec 25.3 AC4)
+
+| png | WxH | bytes | mean | std |
+|---|---|---|---|---|
+| antd-button-light.png | 1280x15024 | 1650804 | 0.978047 0.104974 |
+| antd-gallery-dark.png | 1280x7348 | 374458 | 0.986934 0.0735243 |
+| antd-gallery-light.png | 1280x7348 | 306832 | 0.98982 0.0637236 |
+| antd-table-dark.png | 1280x37240 | 2705882 | 0.132117 0.0877278 |
+| antd-table-light.png | 1280x55808 | 4667243 | 0.984866 0.0859568 |
+| carbon-button-light.png | 1280x44235 | 2798568 | 0.948106 0.119049 |
+| carbon-gallery-light.png | 1280x3686 | 163483 | 0.872046 0.286711 |
+| carbon-input-light.png | 1280x19441 | 1344881 | 0.933566 0.151853 |
+| mantine-button-light.png | 1280x16892 | 1692721 | 0.977539 0.0961508 |
+| mantine-gallery-light.png | 1280x19293 | 1711364 | 0.980231 0.0958926 |
+| mantine-table-light.png | 1280x13992 | 1374825 | 0.98113 0.0891851 |
+| mui-button-dark.png | 1280x10616 | 1423767 | 0.0894114 0.096685 |
+| mui-button-light.png | 1280x10616 | 1402456 | 0.868249 0.310527 |
+| mui-gallery-dark.png | 1280x5248 | 521424 | 0.0811277 0.0745632 |
+| mui-gallery-light.png | 1280x5248 | 526317 | 0.985713 0.0839997 |
+| mui-input-dark.png | 1280x18575 | 2104398 | 0.0875732 0.0908524 |
+| mui-input-light.png | 1280x18575 | 2060388 | 0.908494 0.263258 |
+| polaris-gallery-dark.png | 1280x2031 | 301385 | 0.106312 0.134577 |
+| polaris-gallery-light.png | 1280x2031 | 289277 | 0.971418 0.111614 |
+| polaris-webcomponents-dark.png | 1280x18219 | 2535869 | 0.129004 0.136051 |
+| polaris-webcomponents-light.png | 1280x18219 | 2523795 | 0.835021 0.301603 |
+| radix-accordion-dark.png | 1280x8454 | 973016 | 0.1046 0.113263 |
+| radix-accordion-light.png | 1280x8454 | 958915 | 0.971189 0.121385 |
+| radix-dialog-dark.png | 1280x8429 | 895935 | 0.096093 0.0890438 |
+| radix-dialog-light.png | 1280x8429 | 883243 | 0.976531 0.110083 |
+| radix-gallery-dark.png | 1280x2732 | 414794 | 0.0928026 0.120069 |
+| radix-gallery-light.png | 1280x2732 | 407596 | 0.975848 0.121901 |
+| shadcn-button-dark.png | 1280x9461 | 583352 | 0.0513465 0.0628645 |
+| shadcn-button-light.png | 1280x9461 | 582113 | 0.990294 0.0656514 |
+| shadcn-gallery-dark.png | 1280x1676 | 151571 | 0.0567881 0.104554 |
+| shadcn-gallery-light.png | 1280x1676 | 150335 | 0.982418 0.111539 |
+| shadcn-input-dark.png | 1280x9140 | 572118 | 0.0513873 0.0626149 |
+| shadcn-input-light.png | 1280x9140 | 568248 | 0.990471 0.0655003 |
+| shoelace-button-dark.png | 1280x10688 | 961991 | 0.117289 0.0874725 |
+| shoelace-button-light.png | 1280x10688 | 961922 | 0.970696 0.11284 |
+| shoelace-dialog-dark.png | 1280x8021 | 803517 | 0.118175 0.0928176 |
+| shoelace-dialog-light.png | 1280x8021 | 784574 | 0.965908 0.118928 |
+| shoelace-gallery-dark.png | 1280x3945 | 559624 | 0.1322 0.122929 |
+| shoelace-gallery-light.png | 1280x3945 | 563433 | 0.934265 0.154416 |
+| shoelace-input-dark.png | 1280x12769 | 1081855 | 0.114939 0.0816332 |
+| shoelace-input-light.png | 1280x12769 | 1080637 | 0.975375 0.104341 |
+| spectrum-button-light.png | 1280x8907 | 938495 | 0.976234 0.10508 |
+| spectrum-field-light.png | 1280x7752 | 815720 | 0.978347 0.0981349 |
+| spectrum-gallery-light.png | 1280x3583 | 245502 | 0.984357 0.103522 |
+| taiga-button-dark.png | 1280x3588 | 314565 | 0.156642 0.0973534 |
+| taiga-button-light.png | 1280x3588 | 342922 | 0.975512 0.110066 |
+| taiga-gallery-light.png | 1280x800 | 182126 | 0.789243 0.250619 |
+| taiga-input-dark.png | 1280x2918 | 280973 | 0.154087 0.0910642 |
+| taiga-input-light.png | 1280x2918 | 310334 | 0.984374 0.0884365 |
+| taiga-table-dark.png | 1280x5361 | 421064 | 0.149353 0.081918 |
+| taiga-table-light.png | 1280x5361 | 462483 | 0.986292 0.0807114 |
