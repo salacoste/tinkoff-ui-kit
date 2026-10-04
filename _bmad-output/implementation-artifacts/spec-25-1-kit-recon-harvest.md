@@ -1,7 +1,6 @@
 # Spec 25.1 — machine-harvest конвейер + dogfood + пилот Taiga (kit recon)
 
-- **status:** EXECUTED 2026-10-04 (local gates GREEN; CI verdict pending —
-  this spec file rides the same commit as the tool)
+- **status:** CLOSED 2026-10-04 (executed + CI run 37214077995 GREEN)
 - **baseline_commit:** ff0e423
 - **epic note:** Epic 25, brief `brief-epic-25-kit-ecosystem-recon-2026-10-04.md`
   (Решения 1–4; история-фундамент эпика).
@@ -116,8 +115,14 @@ repo-only. Поправки ростера по факту достижимос�
 линта); `pnpm -w typecheck` EXIT 0; `pnpm test` — 21 файл / **213 тестов**
 (включая 13 recon-ног) — GREEN. Идемпотентность (AC4): повторные
 `--kit self` / `--kit taiga` без force → оба `skipped`, снапшоты не
-изменены. Visual не затронут (dev-only). CI-вердикт: pending (пуш этого
-коммита; обновляется ниже по факту).
+изменены. Visual не затронут (dev-only).
+
+**CI-вердикт (после факта):** коммит `10639cc` (17 файлов, +1111) —
+**run 37214077995 = success** (снят `gh run view` по завершении; пуш
+следующего коммита — только после этого вердикта, zero-in-flight).
+
+**Status: CLOSED 2026-10-04.** Все AC исполнены; отклонения (curl vs
+node-fetch) обоснованы и записаны; ростер frozen — вход для 25.2.
 
 **Коммит-состав.** `recon/**` (кроме gitignored `.cache/`),
 `recon/snapshots/{self,taiga}.jsonl`, `recon/capability.md`,
