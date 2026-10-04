@@ -36,6 +36,11 @@ const LONG_TRAIL: TkBreadcrumbItem[] = [
 
 const canvasStyles = html`
   <style>
+    /* Full-bleed story idiom: the visual harness paints no body background
+       in dark, so the page behind the centered canvas must wear the token. */
+    body {
+      background: var(--tk-color-surface-base);
+    }
     .tkbc-canvas {
       box-sizing: border-box;
       display: flex;
