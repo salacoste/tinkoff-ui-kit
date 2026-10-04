@@ -1,7 +1,6 @@
 # Spec 25.2 — ростер-прогон машинным слоем + метрики активности (kit recon)
 
-- **status:** EXECUTED 2026-10-04 (local gates GREEN; CI verdict pending —
-  this spec file rides the same commit as the run artifacts)
+- **status:** CLOSED 2026-10-04 (executed + CI run 37219706642 GREEN)
 - **baseline_commit:** ff0e423
 - **epic note:** Epic 25, brief `brief-epic-25-kit-ecosystem-recon-2026-10-04.md`
   (Решение 1 — ростер; Решение 2 — класс «метрики активности»).
@@ -92,3 +91,10 @@ dogfood (Verification): повтор `--kit self`/`--kit taiga` без force —
 `recon/lib/{downloads,github,snapshot}.mjs`, `recon/parse.test.mjs`,
 `recon/snapshots/*.jsonl` (11), `_bmad-output/planning-artifacts/
 kit-recon-2026-10/` (12 файлов), эта спека.
+
+**CI-вердикт (после факта):** коммит `29994ae` (30 файлов, +785/−21) —
+**run 37219706642 = success** (zero-in-flight соблюдён: пуш только после
+GREEN предыдущего `fb3875a`/37216602275).
+
+**Status: CLOSED 2026-10-04.** Вход для 25.3 (визуальные галереи) —
+полный снапшот-датасет 11 китов + отчёты.
