@@ -1,10 +1,11 @@
-// Harvest CLI (spec 25.1 AC1): `node recon/harvest.mjs --kit <id>` builds a
-// KitSnapshot from registry metadata + the published tarball and appends it
-// (idempotently) to recon/snapshots/<kit>.jsonl.
+// Harvest CLI (spec 25.1 AC1 + 25.2 AC2): `node recon/harvest.mjs --kit <id>`
+// builds a KitSnapshot from registry metadata + the published tarball and
+// appends it (idempotently) to recon/snapshots/<kit>.jsonl.
 //
 // Targets:
 //   --kit self     dogfood: `pnpm pack` the local components package
 //   --kit <roster> registry packument + tarball download
+//   --all          whole frozen roster, force (activity-enriched lines)
 //   --list         roster summary
 //   --capability   regenerate recon/capability.md from jsDelivr listings
 //
@@ -21,7 +22,9 @@ import { promisify } from 'node:util';
 import { parse as parseYaml } from 'yaml';
 
 import { flatListing, classifyListing, renderCapabilityDoc } from './lib/capability.mjs';
+import { downloadsLastMonth, downloadsRange } from './lib/downloads.mjs';
 import { parseCem, extractTokens, scanPackage } from './lib/extract.mjs';
+import { githubStats, normalizeRepoUrl } from './lib/github.mjs';
 import { fetchPackument, packumentMeta, tarballUrl } from './lib/registry.mjs';
 import { buildSnapshot, persistSnapshot } from './lib/snapshot.mjs';
 import { extract, materialize } from './lib/tarball.mjs';
@@ -38,7 +41,7 @@ async function loadRoster() {
   return parseYaml(raw);
 }
 
-/** argv parsing: `--kit x [--force] [--file tgz]` / `--list` / `--capability`. */
+/** argv parsing: `--kit x [--force] [--file tgz]` / `--all` / `--list` / `--capability`. */
 function parseArgs(argv) {
   const args = { _: [] };
   for (let i = 0; i < argv.length; i += 1) {
@@ -46,6 +49,7 @@ function parseArgs(argv) {
     if (token === '--kit') args.kit = argv[++i];
     else if (token === '--force') args.force = true;
     else if (token === '--file') args.file = argv[++i];
+    else if (token === '--all') args.all = true;
     else if (token === '--list') args.list = true;
     else if (token === '--capability') args.capability = true;
     else args._.push(token);
@@ -76,6 +80,7 @@ async function harvestSelf(rosterEntry, force) {
     source: 'pnpm pack (local workspace)',
   };
   const snapshot = buildSnapshot({ kit: rosterEntry.id, npm: null, version: scan.packageJson.version, meta, scan, cemResult, tokenResult });
+  await attachActivity(snapshot, rosterEntry);
   return persistSnapshot(SNAPSHOTS, snapshot, { force });
 }
 
@@ -93,6 +98,75 @@ async function harvestRegistry(rosterEntry, force) {
   const cemResult = scan.cem ? parseCem(scan.cem) : { components: [], notes: [`no CEM in tarball (family: ${rosterEntry.family})`] };
   const tokenResult = await extractTokens(scan, fs);
   const snapshot = buildSnapshot({ kit: rosterEntry.id, npm: rosterEntry.npm, version: meta.version, meta, scan, cemResult, tokenResult });
+  await attachActivity(snapshot, rosterEntry);
+  return persistSnapshot(SNAPSHOTS, snapshot, { force });
+}
+
+/** Attach activity layers (spec 25.2 AC3/AC4) to a built snapshot, in place.
+ *  Failures are recorded honestly (error objects + notes), never silent zeros. */
+async function attachActivity(snapshot, rosterEntry) {
+  snapshot.meta.activity = {};
+  if (snapshot.npm) {
+    const point = await downloadsLastMonth(snapshot.npm);
+    if (point.ok) {
+      snapshot.meta.activity.downloads = { lastMonth: point.downloads, window: `${point.start}..${point.end}` };
+    } else {
+      snapshot.meta.activity.downloads = { error: point.error };
+      snapshot.notes.push(`downloads point failed: ${point.error}`);
+    }
+    if (rosterEntry.anchor) {
+      const to = new Date().toISOString().slice(0, 10);
+      const from = new Date(Date.now() - 179 * 86400000).toISOString().slice(0, 10);
+      const range = await downloadsRange(snapshot.npm, from, to);
+      if (range.ok) {
+        // daily series kept in the snapshot — release-cadence fodder for 25.4
+        snapshot.meta.activity.downloadsRange = { from: range.start, to: range.end, total: range.total, series: range.series };
+      } else {
+        snapshot.meta.activity.downloadsRange = { error: range.error };
+        snapshot.notes.push(`downloads range failed: ${range.error}`);
+      }
+    }
+  } else {
+    snapshot.meta.activity.downloads = { skipped: 'not distributed via npm' };
+  }
+  const repo = rosterEntry.repo ?? normalizeRepoUrl(snapshot.meta.repository);
+  if (repo) {
+    try {
+      snapshot.meta.activity.github = await githubStats(repo);
+    } catch (error) {
+      snapshot.meta.activity.github = { repo, error: String(error?.message ?? error) };
+      snapshot.notes.push(`github layer failed for ${repo}: ${String(error?.message ?? error)}`);
+    }
+  } else {
+    snapshot.meta.activity.github = { skipped: 'no github repository resolvable' };
+  }
+  return snapshot;
+}
+
+/** Repo-only target (spec 25.2 AC2): no tarball exists — a stub snapshot
+ *  carrying the honest note plus whatever the activity layers can get. */
+async function harvestRepoOnly(rosterEntry, force) {
+  const emptyScan = {
+    packageJson: {},
+    cem: null,
+    cemPath: null,
+    dtsPaths: [],
+    dtsComponentPaths: [],
+    tokenJsonPaths: [],
+    themePaths: [],
+    stylesheetPaths: [],
+    readme: null,
+  };
+  const snapshot = buildSnapshot({
+    kit: rosterEntry.id,
+    npm: null,
+    version: null,
+    meta: { source: 'repo-only (no npm package)', repository: `https://github.com/${rosterEntry.repo}` },
+    scan: emptyScan,
+    cemResult: { components: [], notes: ['repo-only target — no published tarball to harvest'] },
+    tokenResult: { tokens: [], notes: [] },
+  });
+  await attachActivity(snapshot, rosterEntry);
   return persistSnapshot(SNAPSHOTS, snapshot, { force });
 }
 
@@ -131,8 +205,28 @@ async function main() {
     await runCapability(roster);
     return;
   }
+  if (args.all) {
+    let failures = 0;
+    for (const entry of roster.kits) {
+      process.stdout.write(`harvesting ${entry.id}… `);
+      try {
+        const result = entry.family === 'self'
+          ? await harvestSelf(entry, true)
+          : entry.npm
+            ? await harvestRegistry(entry, true)
+            : await harvestRepoOnly(entry, true);
+        const snapshot = JSON.parse(result.lines.at(-1));
+        console.log(`${result.action}: v${snapshot.version ?? 'n/a'}, components=${snapshot.components.length}, dtsComponents=${snapshot.artifactsFound.dtsComponents}`);
+      } catch (error) {
+        failures += 1;
+        console.log(`FAIL ${String(error?.message ?? error)}`);
+      }
+    }
+    if (failures > 0) process.exitCode = 1;
+    return;
+  }
   if (!args.kit) {
-    console.error('usage: node recon/harvest.mjs --kit <id> [--force] | --list | --capability');
+    console.error('usage: node recon/harvest.mjs --kit <id> [--force] | --all | --list | --capability');
     process.exitCode = 1;
     return;
   }
@@ -154,7 +248,7 @@ async function main() {
   console.log(
     `${result.action}: ${snapshot.kit}@${snapshot.version} — components=${snapshot.components.length}, tokens=${snapshot.tokens.length}, cem=${snapshot.artifactsFound.cem}, dts=${snapshot.artifactsFound.dtsCount}\n  -> ${result.path}`,
   );
-  console.log(snapshot.notes.map((n) => `  note: ${n}`).join('\n'));
+  if (snapshot.notes.length > 0) console.log(snapshot.notes.map((n) => `  note: ${n}`).join('\n'));
 }
 
 main().catch((error) => {

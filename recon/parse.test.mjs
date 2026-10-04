@@ -5,7 +5,10 @@
 import { describe, expect, it } from 'vitest';
 
 import { classifyListing, renderCapabilityDoc } from './lib/capability.mjs';
+import { sumRange } from './lib/downloads.mjs';
 import { cssVars, flattenTokenJson, parseCem } from './lib/extract.mjs';
+import { normalizeRepoUrl } from './lib/github.mjs';
+import { latestSnapshot, renderKitReport, renderSummary } from './report.mjs';
 import { appendSnapshot, buildSnapshot } from './lib/snapshot.mjs';
 
 describe('parseCem', () => {
@@ -87,12 +90,21 @@ describe('appendSnapshot idempotency', () => {
     expect(result.lines).toHaveLength(1);
   });
 
-  it('appends a new version and honors --force', () => {
+  it('appends a new version and replaces in place on --force', () => {
     const bumped = appendSnapshot(existing, { kit: 'taiga', npm: '@taiga-ui/core', version: '4.1.0' });
     expect(bumped.action).toBe('appended');
     expect(bumped.lines).toHaveLength(2);
     const forced = appendSnapshot(existing, { kit: 'taiga', npm: '@taiga-ui/core', version: '4.0.0' }, { force: true });
-    expect(forced.action).toBe('appended');
+    expect(forced.action).toBe('replaced');
+    expect(forced.lines).toHaveLength(1);
+    expect(JSON.parse(forced.lines[0]).version).toBe('4.0.0');
+  });
+
+  it('collapses stale duplicate lines of the same version on --force', () => {
+    const dupes = [...existing, '{"kit":"taiga","npm":"@taiga-ui/core","version":"4.0.0"}'];
+    const forced = appendSnapshot(dupes, { kit: 'taiga', npm: '@taiga-ui/core', version: '4.0.0' }, { force: true });
+    expect(forced.action).toBe('replaced');
+    expect(forced.lines).toHaveLength(1);
   });
 });
 
@@ -130,6 +142,64 @@ describe('buildSnapshot d.ts component heuristic', () => {
       cemResult: { components: [{ name: 'TkFoo', tag: 'tk-foo', props: [], events: [], slots: [] }], notes: [] },
     });
     expect(snap.notes).toEqual([]);
+  });
+});
+
+describe('activity-layer helpers', () => {
+  it('sums a daily downloads series', () => {
+    expect(sumRange([{ downloads: 10 }, { downloads: '15' }, {}, { downloads: 5 }])).toBe(30);
+  });
+
+  it('normalizes repository fields to owner/repo and rejects non-github hosts', () => {
+    expect(normalizeRepoUrl('git+https://github.com/taiga-family/taiga-ui.git')).toBe('taiga-family/taiga-ui');
+    expect(normalizeRepoUrl('https://github.com/mui/material-ui')).toBe('mui/material-ui');
+    expect(normalizeRepoUrl('github.com/ant-design/ant-design')).toBe('ant-design/ant-design');
+    expect(normalizeRepoUrl({ url: 'git://github.com/mantinedev/mantine.git' })).toBe('mantinedev/mantine');
+    expect(normalizeRepoUrl('https://gitlab.com/foo/bar')).toBeNull();
+    expect(normalizeRepoUrl(null)).toBeNull();
+  });
+});
+
+describe('report renderers', () => {
+  const snap = {
+    kit: 'probe',
+    npm: 'probe-core',
+    version: '2.0.0',
+    fetchedAt: '2026-10-04T00:00:00Z',
+    meta: {
+      license: 'MIT',
+      repository: 'https://github.com/acme/probe',
+      releasesTotal: 40,
+      releasesLast12mo: 9,
+      activity: {
+        downloads: { lastMonth: 1234, window: 'a..b' },
+        github: { repo: 'acme/probe', stars: 42, forks: 7, openIssues: 3, contributors: 5, releases: [{ tag: 'v2', publishedAt: '2026-09-01T00:00:00Z' }] },
+      },
+    },
+    artifactsFound: { cem: true, dtsCount: 10, dtsComponents: 0, tokenJsonCount: 1, themeFiles: [], stylesheets: 2, readme: true },
+    components: [{ name: 'PFoo', tag: 'p-foo', props: [], events: [], slots: [] }],
+    tokens: [{ name: 'p.color', value: '#fff', source: 'tokens-json' }],
+    notes: ['typed tokens: 1 entry'],
+  };
+  const entry = { id: 'probe', family: 'lit', anchor: false };
+
+  it('latestSnapshot takes the JSONL tail', () => {
+    const older = JSON.stringify({ ...snap, version: '1.0.0' });
+    expect(latestSnapshot([older, JSON.stringify(snap)]).version).toBe('2.0.0');
+  });
+
+  it('renders a per-kit report with identity, artifacts, activity, notes', () => {
+    const doc = renderKitReport(snap, entry);
+    expect(doc).toContain('# probe');
+    expect(doc).toContain('CEM **yes**');
+    expect(doc).toContain('⭐ 42');
+    expect(doc).toContain('- typed tokens: 1 entry');
+  });
+
+  it('renders a SUMMARY row per kit with the anchor mark', () => {
+    const doc = renderSummary([{ entry: { ...entry, anchor: true }, snap }], '2026-10-04T00:00:00Z');
+    expect(doc).toContain('| probe ⚓ | lit | 2.0.0 | ✅ | 1 | 10 |');
+    expect(doc).toContain('Kits: 1.');
   });
 });
 

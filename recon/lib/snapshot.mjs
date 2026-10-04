@@ -56,25 +56,34 @@ export function buildSnapshot({ kit, npm, version, meta, scan, cemResult, tokenR
 
 /**
  * Idempotent JSONL append: a snapshot for the same {kit, npm, version} is
- * skipped unless the stored one was fetched with a different tool state
- * (force). Pure over (lines, snapshot) so tests exercise it hermetically.
+ * skipped unless `force` — then the prior line is REPLACED in place (one
+ * line per kit@version, last tool state wins; a duplicate would break
+ * downstream consumers). Pure over (lines, snapshot) so tests exercise it
+ * hermetically.
  *
  * @param {string[]} lines existing JSONL lines
  * @param {any} snapshot
  * @param {{force?: boolean}} [options]
- * @returns {{lines: string[], action: 'appended'|'skipped'}}
+ * @returns {{lines: string[], action: 'appended'|'replaced'|'skipped'}}
  */
 export function appendSnapshot(lines, snapshot, options = {}) {
-  const already = lines.some((line) => {
+  const fresh = JSON.stringify(snapshot);
+  const isSameVersion = (line) => {
     try {
       const prior = JSON.parse(line);
       return prior.kit === snapshot.kit && prior.npm === snapshot.npm && prior.version === snapshot.version;
     } catch {
       return false;
     }
-  });
-  if (already && !options.force) return { lines, action: 'skipped' };
-  return { lines: [...lines, JSON.stringify(snapshot)], action: 'appended' };
+  };
+  const matches = lines.map((line, i) => (isSameVersion(line) ? i : -1)).filter((i) => i !== -1);
+  if (matches.length === 0) return { lines: [...lines, fresh], action: 'appended' };
+  if (!options.force) return { lines, action: 'skipped' };
+  // Replace the FIRST match in place and drop any stale duplicates of the
+  // same version (legacy from the pre-25.2 append-on-force semantics).
+  const next = lines.filter((_, i) => !matches.includes(i));
+  next.splice(matches[0], 0, fresh);
+  return { lines: next, action: 'replaced' };
 }
 
 /**
@@ -89,6 +98,6 @@ export function persistSnapshot(snapshotsDir, snapshot, options = {}) {
   const path = join(snapshotsDir, `${snapshot.kit}.jsonl`);
   const lines = existsSync(path) ? readFileSync(path, 'utf8').split('\n').filter(Boolean) : [];
   const result = appendSnapshot(lines, snapshot, options);
-  if (result.action === 'appended') writeFileSync(path, result.lines.join('\n') + '\n');
+  if (result.action !== 'skipped') writeFileSync(path, result.lines.join('\n') + '\n');
   return { path, ...result };
 }
