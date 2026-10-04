@@ -5,6 +5,6 @@ import { defineConfig } from 'vitest/config';
 // suites are not re-run from the root invocation.
 export default defineConfig({
   test: {
-    include: ['tests/**/*.test.ts'],
+    include: ['tests/**/*.test.ts', 'recon/**/*.test.mjs'],
   },
 });

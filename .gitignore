@@ -35,6 +35,10 @@ build/
 coverage/
 .playwright/
 
+# Kit-recon working cache (snapshots/ and roster.yml stay tracked; spec 25.1)
+recon/.cache/
+recon/.cache/**
+
 # Playwright visual-harness run artifacts (baselines under tests/visual/ stay tracked)
 test-results/
 playwright-report/

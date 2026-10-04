@@ -86,6 +86,8 @@ export default tseslint.config(
       '.impeccable/**',
       '.omc/**',
       '.playwright-cli/**',
+      // extracted recon tarballs are foreign code, not lint targets
+      'recon/.cache/**',
     ],
   },
   ...tseslint.configs.recommended,

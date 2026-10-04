@@ -13,6 +13,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test:visual": "pnpm --filter pillkit-docs build && node tests/visual/run.mjs",
     "test:visual:update": "pnpm --filter pillkit-docs build && playwright test --update-snapshots",
+    "recon:harvest": "node recon/harvest.mjs",
     "gen": "pnpm --filter pillkit-components gen:manifest && pnpm --filter pillkit-react gen:wrappers && pnpm --filter pillkit-tj-components gen:manifest && pnpm --filter pillkit-tj-react gen:wrappers",
     "check:gen": "pnpm gen && git diff --exit-code -- packages/components/custom-elements.json packages/react/src/generated packages/tj-components/custom-elements.json packages/tj-react/src/generated && test -z \"$(git status --porcelain -- packages/components/custom-elements.json packages/react/src/generated packages/tj-components/custom-elements.json packages/tj-react/src/generated)\"",
     "gen:tokens": "pnpm --filter pillkit-tokens gen:tokens",

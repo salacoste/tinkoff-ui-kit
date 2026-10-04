@@ -1,0 +1,59 @@
+# Kit-recon roster (spec 25.1; frozen at 25.1 close-out after the capability matrix)
+#
+# Each kit: id (snapshot file name), npm name or repo (repo-only targets get a
+# capability row but no tarball harvest), family tag, anchor flag.
+# The `self` entry is the dogfood target — our own published trio, packed
+# locally (the kit distributes via git tags; npm publish never happens).
+
+status: frozen # 2026-10-04, capability matrix landed (recon/capability.md); @polaris/tokens 404 -> corrected to the live @shopify/polaris-tokens
+
+kits:
+  - id: taiga
+    npm: "@taiga-ui/core"
+    family: angular
+    anchor: true
+
+  - id: shoelace
+    npm: "@shoelace-style/shoelace"
+    family: lit
+
+  - id: spectrum
+    npm: "@spectrum-web-components/base"
+    family: lit
+    # Recon finding (25.1 capability matrix): `base` is the family root but a
+    # shell on npm — components ship as ~60 per-component packages, so a single
+    # tarball can never carry the family. Recorded as-is; 25.2 harvests base.
+
+  - id: mui
+    npm: "@mui/material"
+    family: react
+
+  - id: antd
+    npm: "antd"
+    family: react
+
+  - id: mantine
+    npm: "@mantine/core"
+    family: react
+
+  - id: shadcn
+    npm: null
+    repo: "shadcn-ui/ui"
+    family: react
+
+  - id: carbon
+    npm: "@carbon/styles"
+    family: tokens
+
+  - id: polaris
+    npm: "@shopify/polaris-tokens"
+    family: tokens
+
+  - id: radix
+    npm: "radix-ui"
+    family: headless
+
+  - id: self
+    npm: null
+    local: "pillkit-components"
+    family: self
