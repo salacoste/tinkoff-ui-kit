@@ -47,3 +47,18 @@
   tk-stepper/B8 — Epic 25); logo-cloud прошедших размещений (minor —
   рецепт в прозе, без стори); live-статусы размещения; подписка на
   уведомления; сортировка/фильтр календаря.
+
+## Execution record (2026-10-04)
+
+- ipo-calendar: 5 placement-карт (раундэл-монограм, dl окно/диапазон,
+  secondary compact CTA) + результаты на tk-feature-card с табами
+  Октябрь/Сентябрь 2026; месяцы h3 под h2-секциями (h1→h2→h3).
+- НАХОДКА (3 раунда axe): тона tk-badge positive/negative проваливают
+  color-contrast AA на ВСЕХ тинтах feature-card (mint/bluegray/beige/
+  gray; all-gray контрольный прогон тоже RED). Фикс-рецепт:
+  readout-чип .ip-result__body — строка «цена + бейдж» на
+  var(--tk-color-surface-base) внутри тинт-карточки, тинты
+  возвращены. Запинено в прозе стори и CHANGELOG.
+- Минт 4/4 после фикса, линзы 2/2 PASS (чип читается в обеих темах),
+  compare детерминирован. Эфир волны: 9c936ef, CI GREEN 37182715344.
+  #99 completed.

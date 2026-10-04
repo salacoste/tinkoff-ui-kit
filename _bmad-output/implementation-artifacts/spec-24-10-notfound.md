@@ -38,3 +38,14 @@
   поиск по сайту (живое НЕ имеет — пин); кнопка «На главную» как
   button (живое имеет ссылки, не кнопки); хром шапки/футера (страница
   почти chromeless — пин gap-8).
+
+## Execution record (2026-10-04)
+
+- notfound: стаб «lost sheet» на currentColor+surface-base,
+  aria-hidden; h1 в heading-2; 6 tk-link standalone в два ряда.
+  Негативные пины подтверждены пробой: 0 inputs / 0 buttons / 0 forms
+  внутри #storybook-root (3 кнопки скаффолда SB — вне корня;
+  методика SCOPE-на-root запинена в CHANGELOG).
+- Минт 4/4 с первого раза, axe чист в обеих темах, линзы 2/2 PASS,
+  compare детерминирован. Эфир волны: 9c936ef, CI GREEN 37182715344.
+  #97 completed.

@@ -44,3 +44,15 @@
 - tk-button icon-only круглый VARIANT (Epic 25); реферальная логика/
   генерация ссылок (демо-ссылка); QR (qr-block уже в ките — отдельная
   история); счётчики приглашённых.
+
+## Execution record (2026-10-04)
+
+- reward-tiers: 4 тира (auto-fit minmax(150px,1fr), суммы +50/+150/
+  +750/+1 500 ₽ в heading-4 — вымышленные), CTA primary card → тост;
+  .rw-field нативный readonly input (value читается SR, aria-label);
+  копия — navigator.clipboard.writeText с фолбэк-тостом; 3 круглых
+  share-кнопки с геометрическими стабами; иконки currentColor.
+  Токен-промах (surface-inverse/text-inverse не существуют) закрыт
+  парой yellow-100 + text-on-primary.
+- Минт 4/4, линзы 2/2 PASS, compare детерминирован. Эфир волны:
+  9c936ef, CI GREEN 37182715344. #98 completed.
