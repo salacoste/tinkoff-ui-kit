@@ -1140,3 +1140,49 @@ Playwright visual/axe harness. Planning artifacts (PRD/UX/architecture/epics) li
   (a)(b) закрыты, (c) batch-confirm санкционирован и исполняется тем же
   окном — закрывается своей записью, (d) 24T подтверждён планом, (e)
   новый рекон).
+
+## Epic 25 — kit-ecosystem recon (2026-10-04/05, 4/4 stories, все CI GREEN)
+
+Домен назван мейнтейнером («нас интересуют именно библиотеки»); рулинги
+Q&A: ростер Taiga-якорь + 6–10 эталонов; фокус все три класса данных;
+носитель снапшоты в репо (НЕ CI-cron); внедрение BMAD-спека-история.
+
+- **25.1 machine-harvest** — feat `10639cc` CI 37214077995; штамп
+  `fb3875a` CI 37216602275. `recon/` ESM-конвейер (http/registry/
+  tarball/extract/snapshot/capability; весь HTTP на curl-транспорте —
+  node-undici падает ConnectTimeout на registry при живом curl);
+  dogfood self 45/45 CEM; taiga 5.26.0 cem=false честно, 93
+  dtsComponents (path-эвристика); capability-матрица: CEM публикуют
+  только shoelace и self; roster frozen; eslint ignore `recon/.cache`.
+- **25.2 roster-run** — feat `29994ae` CI 37219706642; штамп `2026215`
+  CI 37222271943. `--all` 11/11; downloads point всем + 180d series
+  якорю; gh api stars/releases/contributors (кап 100+ честно); 11
+  отчётов + SUMMARY (сходимость юнитом); JSONL force =
+  replace-in-place + коллапс дублей. radix 60.9M dl/30d; shoelace
+  534K при 0 релизов 12+ мес; shadcn 125k звёзд repo-only.
+- **25.3 visual-galleries** — feat `9a1011a` CI 37227729767; штамп
+  `70a0797` CI 37230073338. `recon/visual.mjs` (PLAN.md yaml-fence →
+  Playwright; dark = emulateMedia + люминация-верификация непрозрачных
+  фонов ≤0.5, чужой кит не перекрашиваем) + `recon/composite.mjs`
+  (Node-execFile IMv7). 51 PNG/10 китов (self исключён — своя сюита
+  и есть референс); дарки настоящие у 7, light-only carbon/mantine/
+  spectrum честно; 2 ложных дара пойманы паспортами (identical
+  mean/std) и rm явно; баг `rgba(0,0,0,0)`→«чёрный» исправлен
+  alpha-aware парсингом + тест; vision 10 чтений (1/кит, бюджет
+  чист). Нарушения в NOTES.md честно: `--only`-перезапуски
+  переминтовали 12 PNG без явного rm; journal per-run.
+- **25.4 synthesis (закрыл эпик)** — feat `c93b5ea` CI **37232913092**;
+  штамп — этот коммит. `BENCHMARK.md`: 48 категорий номенклатуры
+  (инвентари из тех же кэш-тарболов + 2 vision-чтения shadcn/polaris),
+  CEM-глубина machine (shoelace 6.2/1.9/1.8 vs self 3.3/0.4/1.6),
+  токен-архитектуры, активность, визуальные регистры; 15 находок:
+  **adopt ×5 (slider, switch, spinner, textarea, avatar — «form-control
+  completeness wave» = корм следующего брифа)**, watch ×7, skip-by-laws
+  ×2 (icons рулинг 23.2; shadcn registry vs npm-never), chart in-kit =
+  дифференциатор беречь. Идемпотентность перепроверена (`--kit
+  shoelace` → skipped, нулевой дифф). Ноль правок продукт-кода.
+
+Датасет эпика: `_bmad-output/planning-artifacts/kit-recon-2026-10/`
+(11 снапшотов JSONL + 11 отчётов + SUMMARY + BENCHMARK) +
+`.playwright-cli/verify/kit-recon/` (~85 МБ). Новых историй без
+брифа мейнтейнера не открывать; 24T ждёт терминальных капчур.

@@ -1,7 +1,7 @@
 # Spec 25.4 — синтез: бенчмарк-матрица + gap-отчёт (kit recon, closes Epic 25)
 
-- **status:** DRAFT 2026-10-04 (AC frozen по форме; содержание — по
-  данным 25.2/25.3)
+- **status:** CLOSED 2026-10-05 — code-head CI run **37232913092**
+  GREEN (коммит c93b5ea; verdict после факта)
 - **baseline_commit:** ff0e423
 - **epic note:** Epic 25, brief `brief-epic-25-kit-ecosystem-recon-2026-10-04.md`
   (замыкает эпик; корм для СЛЕДУЮЩЕГО брифа — без него историй не
