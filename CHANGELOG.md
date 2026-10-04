@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.0] - 2026-10-04
+
 ### Added — gift certificate + promo-code entry (spec 24.15, pattern wave 24b closes)
 
 - **Invest/Gift certificate «Вам подарили долю»** — gap-7's gift page:

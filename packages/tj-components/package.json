@@ -1,6 +1,6 @@
 {
   "name": "pillkit-tj-components",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Lit custom elements core for the ТЖ sub-kit of pillkit — tj-* editorial components (news cards, rubric chrome, rail) rendered via Shadow DOM and themed with --tj-* custom properties. Scaffolded at story 15.1; components land in epic 16.",
   "keywords": [
     "pillkit",

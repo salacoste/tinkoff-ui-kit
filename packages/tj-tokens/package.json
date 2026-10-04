@@ -1,6 +1,6 @@
 {
   "name": "pillkit-tj-tokens",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Design tokens for the ТЖ sub-kit of pillkit — the --tj-* custom-property system (light base + native-dark [data-tj-theme=\"dark\"] overrides, AA-verified pairs). Scaffolded at story 15.1; the generated layer lands at 15.2.",
   "keywords": [
     "pillkit",

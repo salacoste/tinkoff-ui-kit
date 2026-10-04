@@ -1,6 +1,6 @@
 {
   "name": "pillkit-tj-react",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "React 19 adapters for the ТЖ sub-kit of pillkit — wrappers to be generated from the Custom Elements Manifest of pillkit-tj-components via @lit/react; event handlers receive unwrapped detail payloads. Scaffolded at story 15.1; wrappers land with epic 16.",
   "keywords": [
     "pillkit",
