@@ -7,6 +7,192 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — gift certificate + promo-code entry (spec 24.15, pattern wave 24b closes)
+
+- **Invest/Gift certificate «Вам подарили долю»** — gap-7's gift page:
+  the CERTIFICATE CARD (the lead-form 24.3 mold — surface-base,
+  hairline all four sides): heading-register title, the fictional
+  share, the nominal, the OPTIONAL sender (presence mold: no value →
+  no node) and the serial-number stub — READABLE by screen readers
+  (never aria-hidden), its letter tracking the consumer-CSS
+  demonstration of code tracking (the mono slot stays docs-only by
+  the 11.2 ruling; tk-input's field lives in the shadow root, out of
+  consumer CSS reach — no atom edits).
+- The PROMO CONTRACT (the 24.2/24.3 caveats): a REAL native form —
+  Enter submits, the CTA goes through requestSubmit() (a shadow button
+  is not form-associated), a short code surfaces through tk-input's
+  error channel (probe-verified both directions: «ABC» → the error
+  line, «DEMO-2026-OK» → the sanctioned toast), nothing leaves the
+  page. The uncontrolled tk-input keeps its value in the shadow field —
+  the demo consumer tracks the latest string through value-change
+  events (the 24.2 screener closure mold), never host.value.
+- HONEST GROUNDING recorded in the visible prose: gift-certificate /
+  promo-code is CENSUS-INFERRED, not image-verified — every geometry
+  is a kit REGISTER pick, not a measurement (GAP-MAP Deferred). NO
+  countdown is claimed anywhere (no live evidence). All names and
+  numbers are FICTIONAL (the PD gate).
+
+### Added — the «Другие бумаги компании» securities rail (spec 24.14)
+
+- **Invest/Securities rail «Другие бумаги компании»** — gap-2's bond
+  page side section: tk-carousel (21.6, contract untouched — snap,
+  chevrons, dots) carrying SAME-ISSUER securities cards on the
+  instrument page frame (fluid main + the 247px rail, the 22.6 ticket
+  mold; collapses under 1024px to an ordinary section). The card
+  anatomy: name + ticker, TWO stat blocks (price + Δ% on the 22.1/22.2
+  delta tokens — sign in the content, color never the sole carrier; NO
+  monospace alignments, the kit number convention) and the navigation.
+- **The card is ONE anchor (AC4)**: the whole card is a native `<a>`
+  whose accessible name computes from its VISIBLE semantics — name,
+  ticker, both stat labels and values read into the link name (probe-
+  verified: «Демо-Облигация Бридж 01 DMBR01 Цена 998,40 ₽ Изм. дня
+  +0,12 %»). A tk-link inside the card would nest interactive elements
+  (the legal-doc 24.9 lesson) — the card-level anchor replaces the
+  link row. Cards are bordered surface-base boxes, no fills — the
+  24.12 readout finding respected by construction. All securities,
+  prices and deltas are FICTIONAL (the PD gate).
+
+### Added — the feed's social pair: quote-repost + strategy authors (spec 24.13)
+
+- **Invest/Feed social «Репост-цитата и авторы стратегий»** — two
+  sections, one canvas, bank atoms only (FR-17: the Т-Журнал variant of
+  the authors row is a VARIANT→ТЖ note for Epic 25, families never
+  mix). (а) The QUOTE-REPOST (gap-4): an outer feed card in the 24.8
+  anatomy carrying a nested INSET — border + surface-muted backdrop +
+  the smaller body-s register — with the quoted post's author line and
+  body. Nesting is ONE level (the live pulse never goes deeper);
+  the inset is a single PASSIVE blockquote: no links, no buttons of its
+  own, and the quoted header stays semantically inside the article
+  card — a plain line, never a heading level of its own (h1 → h2 → h3
+  card headlines, no skips).
+- (б) STRATEGY AUTHORS (gap-2 #12 / gap-4 «Медиа»): widget rows —
+  avatar monogram roundel (never a live photo, the PD gate) + name +
+  gray fictional metrics + the subscribe control. The roster named the
+  tk-button secondary compact REGISTER; the SEMANTICS demand native
+  (the 24.8 «Нравится» precedent): aria-pressed sits on the very
+  element the reader activates. Pressed flips to the kit's PRIMARY
+  pairing (yellow + ink, theme-invariant) with the label swap
+  «Подписаться» ↔ «Вы подписаны», a currentColor check glyph and a
+  role=status announcement.
+- RENDER GUARD (pre-mint probe catch): re-rendering a container that
+  Storybook itself populated leaves its nodes behind — two role=status
+  lines after the first toggle. The interactive host now mounts EMPTY
+  and a story-only DriveFirstPaint directive (the 24.8
+  DriveFirstAppend mold) drives the first paint on commit; litRender is
+  the only writer of the subtree.
+
+### Added — IPO placements calendar (spec 24.12)
+
+- **Invest/IPO calendar «Календарь размещений»** — gap-7's richest
+  capture: the month-grouped PLACEMENT cards (ticker monogram roundel —
+  the data-table mold, never a live logo; name + ticker; a «Окно заявок»
+  dl of window dates and the «12–16 ₽» price range; the secondary
+  compact CTA) and the RESULTS half on tk-tabs (Октябрь/Сентябрь 2026 —
+  live sectioning, both primary surfaces stay in the resting canvas)
+  riding tk-feature-card tint bodies with the monogram in the art slot.
+- **KIT FINDING (three axe rounds, pinned in the prose)**: the financial
+  TEXT tones of tk-badge (positive/negative on the delta tokens) are
+  calibrated for NEUTRAL surfaces — on EVERY feature-card tint
+  (mint/bluegray/beige/gray) they fail axe color-contrast AA; the
+  all-gray control run still failed, ruling out a two-tone fix. Consumer
+  recipe recorded: the «price + badge» readout rides a BASE-SURFACE chip
+  (surface-base fill + radius + tight padding, the `.ip-result__body`
+  mold) INSIDE the tinted card — the tints stay, the AA survives. The
+  22.1 «delta sanctions are surface-base-only» ruling now has its
+  pattern-level corollary.
+- HEADINGS (AC2): months are h3 — the calendar is navigated by headings,
+  not dividers — under the two h2 sections (h1 → h2 → h3, no skips).
+  Numbers ride the kit convention (RU comma, NBSP groups); the delta's
+  SIGN lives in the badge content. Windows, tickers, prices and
+  percentages are FICTIONAL (the PD gate).
+
+### Added — referral reward tiers + share/copy-link widget (spec 24.11)
+
+- **Invest/Reward tiers «Приводите друзей»** — the mgm page's tiered
+  reward tiles (image-verified gap-7) and the share-link widget the QR
+  block never covered. Tiers: bordered tiles on the stat-tiles mold —
+  «За N друзей» label + the sum in the heading register (NO dark tile
+  here). COPY CONTRACT: the press is a real navigator.clipboard write
+  (demo — nothing leaves the page) with a fallback toast when the
+  buffer is unavailable; the link rides the readonly field as its VALUE
+  (screen-reader-readable), the icon is decorative and the accessible
+  name sits on the very button pressed. WHY NATIVE CONTROLS IN
+  CONSUMER CLOTHES (the 24.8 «Нравится» precedent): the copy button
+  and the round share buttons are icon-only — aria-label must live on
+  the activated element, and tk-button's shadow button does not carry
+  the host attribute over; tk-input's readonly exists only through
+  disabled (grayed paint + aria-disabled — the wrong register for a
+  copy field). The atomic icon-only VARIANT and the readonly prop are
+  Epic 25 notes. The CTA is a real tk-button; sums, link and targets
+  are fictional.
+
+### Added — 404 «Такой страницы нет» (spec 24.10)
+
+- **Invest/Not found** — the nearly chromeless notfound (gap-8's 978 px
+  live frame): a centered, vertically-calm composition — a decorative
+  illustration stub (a token-tinted «lost sheet» inline-SVG, aria-hidden;
+  the live raster art is never transcribed — the PD gate), the single
+  h1, a support line and two rows of hub links (tk-link standalone).
+  THE NEGATIVE PINS are the story's subject: 0 inputs, 0 buttons, 0
+  forms — the live «404 with search» hypothesis was refuted by the
+  census, and the DOM sweep (scoped to the story root; Storybook's own
+  scaffold buttons live outside it) fixes the absences. Links are the
+  only interactivity; the tab order is the reading order.
+
+### Added — legal/doc page + tk-breadcrumb, the wave's one new atom (spec 24.9)
+
+- **tk-breadcrumb** — the crumb trail: gap-8 counted ZERO implementations
+  repo-wide, so the «Инвестиции / Раскрытие информации» opener of the
+  invest inner pages joins the kit (Решение 5 companion atom). A
+  nav[aria-label] landmark (the pagination label mold, «Хлебные крошки»
+  default) over ol/li stops: DATA-DRIVEN via the `items` prop (label +
+  href per stop), the LAST stop renders as aria-current="page" plain
+  text — never a link to itself — and the chevrons between stops are
+  decorative (aria-hidden). Anchors ride the link token with tk-link's
+  own affordance recipe (no rest underline, the line faded in on
+  hover/focus-visible over the motion tokens). Degrades (§2): non-array
+  items render nothing (no empty landmark); an href-less middle stop
+  becomes plain text, never a dead anchor. STATELESS. Hooks:
+  --tk-breadcrumb-{gap,separator,color}. Full catalog cycle: unit tests
+  (landmark semantics, ol/li structure, aria-current terminal, href
+  passthrough, §2 degrades, decorative chevrons, structural pins,
+  stateless pin), CEM → React wrapper (`Breadcrumb`) → docs search row,
+  package-root roster, hidden-guard tripwire 51→52.
+- **Invest/Legal doc «Раскрытие информации»** — the dense fine-print
+  column (~16 px body-m) with numbered/lettered enumerations and inline
+  tk-links. REGISTER RULING pinned in the prose: tj-prose is the WRONG
+  tool (editorial Charter 21/30) — legal prose is consumer CSS on the
+  kit registers. h2/h3 = 0 on the live page — paragraphs open with BOLD
+  LEADS, not headings. Full-width yellow «Скачать PDF» (tk-button,
+  demo toast), and the for-deponents half: two doc-row blocks — svg
+  icon + bold link title + gray meta, ROWS not cards. The rows are
+  plain hover surfaces (div), never anchors wrapping tk-link (no
+  nested interactive).
+- **Docs search row for tk-figure (24a latent fix)** — the 24.7
+  execution record claimed a component-search entry that never landed
+  (the file's history jumps from 23.2 straight past the wave). Row
+  added alongside the wave.
+
+### Added — infinite-scroll feed (spec 24.8, pattern wave 24b opens)
+
+- **Invest/Pulse feed «Бесконечная лента»** — the single-column card
+  stream with NO pagination, «Показать ещё» or footer: the page keeps
+  appending as the reader nears the edge (the live news/pulse runs
+  21 694 / 16 515 px, both ending mid-card — gap-2). NO new atom — the
+  recon classified the feed as consumer layout; the recipe is pinned in
+  the prose: a sentinel at the stream's edge + IntersectionObserver
+  append + a role=status status line. The kit rides along via
+  tk-quote-chip (pill + the overflow «Ещё N» form). Feed-card anatomy
+  (the gap-2 uniform pin): author row (monogram disc, channel, gray
+  time) → bold headline → optional cover → body line → ticker-chip row
+  → action bar over a hairline divider. The like control is a NATIVE
+  button in consumer clothes — aria-pressed belongs on the element the
+  reader activates, and tk-button's shadow `<button>` leaves the host
+  attribute unread. Determinism guard (the 24.6 lesson, generalized):
+  a story-only directive drives the FIRST append on mount and the
+  observer arms only after a real scroll — the resting baseline never
+  races observer timing, regardless of viewport height.
+
 ### Added — research longread + tk-figure, the wave's only new atom (spec 24.7, pattern wave 24a closes)
 
 - **tk-figure** — the captioned media block, the B6 (gap-8 research

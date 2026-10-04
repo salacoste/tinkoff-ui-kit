@@ -747,6 +747,107 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/breadcrumb/breadcrumb.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "breadcrumbStyles",
+          "default": "css` :host { display: block; box-sizing: border-box; font-family: var(--tk-font-body); } /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */ :host([hidden]) { display: none; } .breadcrumb__list { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tk-breadcrumb-gap, var(--tk-space-8)); margin: 0; padding: 0; list-style: none; } .breadcrumb__item { display: flex; align-items: center; gap: var(--tk-breadcrumb-gap, var(--tk-space-8)); } /* The decorative chevron between stops — currentColor so the separator hook drives it; aria-hidden in the template (a divider, not content). */ .breadcrumb__separator { display: inline-flex; color: var(--tk-breadcrumb-separator, var(--tk-color-text-secondary)); } .breadcrumb__separator svg { display: block; } /* The trail's links — tk-link's recipe (the capture pin): --tk-color-link always, rest = NO visible underline, the line painted transparent and faded in on hover/focus-visible on the motion tokens. */ .breadcrumb__link { font-size: var(--tk-text-body-s-size); font-weight: var(--tk-text-body-s-weight); line-height: var(--tk-text-body-s-leading); color: var(--tk-color-link); text-decoration: underline; text-decoration-color: transparent; transition: text-decoration-color var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-standard); cursor: pointer; -webkit-tap-highlight-color: transparent; } .breadcrumb__link:hover, .breadcrumb__link:focus-visible { text-decoration-color: currentColor; } /* The current stop — plain text, NEVER a link to itself. */ .breadcrumb__current { font-size: var(--tk-text-body-s-size); font-weight: var(--tk-text-body-s-weight); line-height: var(--tk-text-body-s-leading); color: var(--tk-breadcrumb-color, var(--tk-color-text-primary)); } `",
+          "description": "tk-breadcrumb styles — tokens only (FR-1), zero theme branches (AD-3).\n\nGrounding (spec 24.9, gap-8): the invest inner pages open with the\n«Инвестиции / Раскрытие информации» crumb trail — zero implementations\nrepo-wide until this atom. The trail is a quiet nav line: links in the\nlink token, the CURRENT page in plain text (never a link to itself),\ndecorative chevrons between the stops.\n\nThe hook layer (CONVENTIONS §6, consumed WITH token defaults):\n- --tk-breadcrumb-gap       the rhythm between stops AND between a\n                            chevron and its stop (default space-8)\n- --tk-breadcrumb-separator the chevron color (default text-secondary)\n- --tk-breadcrumb-color     the current (non-link) stop's color\n                            (default text-primary)\n\nThe link affordance is tk-link's own recipe transplanted onto the trail\nanchors: --tk-color-link always, NO rest underline, the line painted in\na transparent decoration color that fades in on hover/focus-visible on\nthe motion tokens (collapsing to 0s under prefers-reduced-motion) —\nnever a popped-in line. Register: body-s, the quiet nav line.\n\nNo backticks in css comments — they would terminate the css literal."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "breadcrumbStyles",
+          "declaration": {
+            "name": "breadcrumbStyles",
+            "module": "src/breadcrumb/breadcrumb.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/breadcrumb/breadcrumb.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-breadcrumb — the crumb trail (spec 24.9, pattern wave 24b): the\n«Инвестиции / Раскрытие информации» opener of the invest inner pages —\ngap-8 counted ZERO implementations repo-wide, so the trail joins the kit\nas the wave's one companion atom (Решение 5).\n\nWHAT THE ATOM OWNS: the nav landmark with its accessible name (the\npagination mold — a `label` attr, «Хлебные крошки» by default), the\nol/li structure, the aria-current=\"page\" terminal (the LAST stop is\nplain text — never a link to itself), and the decorative chevrons\nbetween stops. WHAT IT DOES NOT: routing semantics (the hrefs are\nconsumer DATA rendered as native anchors — the atom never intercepts\nthem), any state (STATELESS — zero events, the display-component mold;\nno event-map entry by design).\n\nDEGRADE (§2, never throws): a non-array `items` renders nothing at all\n(an empty nav landmark would be noise); a non-last stop without an href\ndegrades to plain text rather than a dead anchor; the last stop ignores\nany href it carries — current is current.\n\nSSR-compat (AD-10): rendered via Lit templates only.",
+          "name": "TkBreadcrumb",
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The nav landmark's accessible name.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "TkBreadcrumbItem[]"
+              },
+              "description": "The trail, outermost first; the last entry renders as the current page."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "The nav landmark's accessible name.",
+              "name": "label",
+              "fieldName": "label"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-breadcrumb",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkBreadcrumb",
+          "declaration": {
+            "name": "TkBreadcrumb",
+            "module": "src/breadcrumb/breadcrumb.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-breadcrumb",
+          "declaration": {
+            "name": "TkBreadcrumb",
+            "module": "src/breadcrumb/breadcrumb.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/breadcrumb/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/breadcrumb/breadcrumb.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/button/button.css.ts",
       "declarations": [
         {
@@ -4896,6 +4997,14 @@
           "declaration": {
             "name": "*",
             "module": "src/badge/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/breadcrumb/index.js"
           }
         },
         {

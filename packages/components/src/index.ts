@@ -10,6 +10,7 @@
 export * from './accordion/index.js';
 export * from './article-card/index.js';
 export * from './badge/index.js';
+export * from './breadcrumb/index.js';
 export * from './button/index.js';
 export * from './carousel/index.js';
 export * from './chart/index.js';

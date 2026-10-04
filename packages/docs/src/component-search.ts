@@ -42,6 +42,9 @@ const COMPONENTS: readonly SearchEntry[] = [
   { title: 'ArticleCard', tag: 'tk-article-card', ru: 'Карточка статьи', id: 'components-articlecard--playground' },
   { title: 'Badge', tag: 'tk-badge', ru: 'Бейдж', id: 'components-badge--playground' },
   { title: 'Button', tag: 'tk-button', ru: 'Кнопка', id: 'components-button--playground' },
+  // 24.9 (pattern wave 24b): the crumb trail — gap-8's zero-implementations
+  // opener of the invest inner pages; entry points at the Components/ story.
+  { title: 'Breadcrumb', tag: 'tk-breadcrumb', ru: 'Хлебные крошки', id: 'components-breadcrumb--playground' },
   // 21.6 (invest foundation wave): the horizontal card carousel — GAP-MAP
   // Tier A #2, the recon's most repeated surface; entry points at the
   // Components/ story.
@@ -58,6 +61,11 @@ const COMPONENTS: readonly SearchEntry[] = [
   // Tier A #5; entry points at the Components/ story.
   { title: 'EmptyState', tag: 'tk-empty-state', ru: 'Пустое состояние', id: 'components-emptystate--playground' },
   { title: 'FeatureCard', tag: 'tk-feature-card', ru: 'Фича-карточка', id: 'components-featurecard--playground' },
+  // 24.7 (pattern wave 24a): the captioned media block — the B6+A8 fusion,
+  // the wave's only atom; entry points at the Components/ story. (Row added
+  // in 24b: the 24.7 execution record claimed it, but the entry never
+  // landed — the file's history jumps from 23.2 straight past the wave.)
+  { title: 'Figure', tag: 'tk-figure', ru: 'Медиа-блок с подписью', id: 'components-figure--playground' },
   { title: 'Footer', tag: 'tk-footer', ru: 'Подвал', id: 'components-footer--playground' },
   { title: 'Input', tag: 'tk-input', ru: 'Поле ввода', id: 'components-input--playground' },
   // 22.5 (invest identity wave): the instrument page identity card —
