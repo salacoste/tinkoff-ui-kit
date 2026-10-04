@@ -1601,4 +1601,135 @@ instrument-hero + `--tk-color-invest-*` stops; 22.6 promo-card ticket.
   пруфы `verify/v160-fresh-clone/`). Остаётся оппортунистический
   batch-confirm прироста — единственный живой пункт очереди §4.
 
+## 14.1. Гейты до релиза (pre-flight v1.7.0)
+
+1. **CI зелёный на каждом звене окон 23/24 — вердикты по API после
+   факта** (правило CLAUDE.md; все id перепроверены `gh run list` при
+   этом prep-цикле): Epic 23 — 23.1 feat `beb997d` RED 37116472407
+   (CEM-дрейф после svg-namespace-фикса) → `6996a2e` = 37116770409,
+   штамп `0a7a74b` = 37118423243; 23.2 feat `dd72bb7` = 37121875386,
+   штамп `6ca69f9` = 37123841810; 23.3 feat `c170daa` = 37126104757,
+   штамп `d4012fc` = 37127883084; 23.4 feat `35b12be` = 37133167464,
+   штамп `331a246` = 37135465134 (Эпик 23 закрыт). 24a — бриф+спеки
+   `1534f83` = 37139042754; feat `fde2bc5` RED 37142771921
+   (hidden-guard трипвайр 50→51 — осознанный подъём 24a) → `ad8e93e` =
+   37143064533 GREEN; штамп `977fa40` = 37145399846. 24b — спеки
+   `45204ab` = 37147844261; feat `9c936ef` = 37182715344 GREEN с
+   первого пуша; штамп `6d82cc7` = 37184666709 (Эпик 24 закрыт).
+   Вердикт головы релиза — по её ran-id в §14.7 (штампом после пуша).
+2. **Standing practice (CLAUDE.md):** окно меняет собранное дерево (пин
+   тега в рендерящемся тексте getting-started — молд 19.2/§13.1) → 2
+   базлайна переминчиваются ЯВНО (rm → update) перед полным compare.
+3. Локально на голове релиза: `pnpm build && pnpm test && pnpm lint &&
+   pnpm typecheck` — всё зелёное (корневой сюит 200/200; components
+   900; react 70).
+4. **Gen-drift после бампа:** `pnpm gen` → zero drift; ожидаемые файлы
+   цикла — ровно 7 строк `package.json` + CHANGELOG + релизные доки
+   (RELEASE/HANDOFF/README + пин стори + description пакета) — CEM не
+   встраивает версию (закон 17.5/19.2/13.2).
+5. **Прирост базлайнов окон 23/24:** сюита 2386 → **2572** (+186 ног:
+   4 стори Эпика 23 + 15 паттерн-сторий + переминты
+   getting-started/token-reference цепочек). Весь прирост механически
+   проверен полными compare звеньев (финал 2572/2572 на `6d82cc7`);
+   мейнтейнерский batch-confirm — по желанию (очередь §4 HANDOFF).
+6. **SR-спот-чеки:** закрыты отказом мейнтейнера 2026-10-01 —
+   механизуемая половина (SR-пины + axe обеих тем на всех стори)
+   финальна; после тега ничего не ждёт.
+
+## 14.2. Версия и CHANGELOG (прецедент §13.2) — ИСПОЛНЕНО этим циклом
+
+Исполнено 2026-10-04 (коммит `chore(release): v1.7.0 — version +
+changelog`):
+
+- `packages/{tokens,components,react}/package.json` и
+  `packages/tj-{tokens,components,react,fonts}/package.json`:
+  `1.6.0` → `1.7.0` (ровно 7 строк). Корневой `0.1.0` и docs `0.0.0`
+  — вне релизного контракта, не тронуты.
+- `CHANGELOG.md`: `[Unreleased]` → `[1.7.0] - 2026-10-04` (19 записей
+  Added: 23.1–23.4 + 24.1–24.15) + свежий пустой `[Unreleased]`.
+- `README.md`: пины тега `v1.6.0` → `v1.7.0` (клон/checkout +
+  «Семверинг»); **счётчик банка 37 → 41** — СВЕРЕН КАТАЛОГАМИ
+  (`packages/components/src/*` = 42 каталога − `overlays` =
+  41 компонент; ранний close-out 24b называл «39-й атом» — это была
+  арифметическая ошибка: не были посчитаны tk-chart и
+  tk-publisher-header Эпика 23; ошибка поймана именно этим
+  счётчиковым свипом и исправлена до коммита), всего 51 (41 + 10 ТЖ).
+- `packages/components/package.json` description: «19 tk-* components»
+  → «41 tk-* …» — застарелое поле с v1.0.0-эры, поймано тем же свипом
+  (18.4-прецедент stale-claim).
+- Пин тега в getting-started стори (docs) → 2 базлайна переминчены
+  явно (см. §14.1.2).
+
+## 14.3. Тег (мейнтейнер — единственный исполнитель)
+
+Прецедент §13.3. Для v1.7.0 исполнение НЕ делегируется — только
+мейнтейнер, ПОСЛЕ своего явного «tag ok» (вердикт CI головы релиза
+должен быть GREEN на момент тега):
+
+```
+git tag -a v1.7.0 -m "pillkit v1.7.0 — invest remainder + pattern waves: tk-chart, tk-publisher-header, tk-figure, tk-breadcrumb + 15 pattern compositions (pricing, screener, lead form, stat tiles, load-more, filter strip, research longread, infinite feed, legal doc, 404, referral tiers, IPO calendar, social feed, securities rail, gift certificate)" <head-release>
+git push origin v1.7.0
+```
+
+Никогда не `npm publish`; `private: true` не снимается (ЖЕЛЕЗНО). Теговый
+пуш CI не триггерит (workflow: push branches [main] only) —
+verdict-обязательство на последующий docs-коммит.
+
+## 14.4. Верификация релиза — свежий потребитель (Flow-B: банк рендерит НОВЫЕ атомы v1.7.0)
+
+Головной атом релиза — `tk-chart` (23.1, статичный SVG с тон-семействами
+и kit-owned форматтером оси); рядом — `tk-figure` (24.7) и `tk-breadcrumb`
+(24.9) как вторичные новинки; `tk-publisher-header` (23.2) — референсом.
+Рецепт = §13.4 дословно (clone --branch v1.7.0 → census @1.7.0 ×7 →
+прод-билд vite с dedupe → рендер raw + React-обёрткой).
+
+Acceptance (release-grade): `<tk-chart>` с точками рендерит SVG-полилинию
+серии + тихие линии сетки, тон-семейство резолвится в `--tk-color-invest-*`
+стопы, ось форматируется по китовой конвенции (NBSP-группы, RU-запятая),
+`role="img"` + производный aria-label на месте; `<tk-breadcrumb items=…>`
+рендерит nav > ol > li, терминал — aria-current="page", шевроны
+aria-hidden; `<tk-figure>` держит аспект-хук 16/9 + caption-presence.
+React-обёртки (`Chart`/`Breadcrumb`/`Figure`) рендерят то же — пропсы
+переживают создание элемента (закон React 19/v1.5.0: атрибуты только в
+`connectedCallback`). Консоль ноль; dark remap жив. До тега — recipe-only.
+
+## 14.5. Драфт changelog v1.7.0 (EN — уже в CHANGELOG.md на §14.2; историческая запись)
+
+19 записей Added под `[1.7.0] - 2026-10-04` (полные тексты — там):
+23.1 chart; 23.2 publisher-header; 23.3 trade form pattern; 23.4
+instrument page assembly (закрыл Эпик 23); 24.1 pricing; 24.2 screener;
+24.3 lead form; 24.4 stat tiles; 24.5 load-more; 24.6 filter strip;
+24.7 research + tk-figure; 24.8 infinite feed; 24.9 legal doc +
+tk-breadcrumb; 24.10 404; 24.11 referral tiers; 24.12 IPO calendar;
+24.13 social pair; 24.14 securities rail; 24.15 gift certificate
+(закрыл Эпик 24). Итог релиза: 41 банк-атом (+4: chart,
+publisher-header, figure, breadcrumb), 46 React-врапперов, сюита 2572.
+
+## 14.6. Шрифты и право (НЕИЗМЕННО с v1.6.0)
+
+- DaytonaSans/DaytonaPragma — отдельно лицензированные бинарники, НЕ
+  MIT; XCharter ×4 — в `packages/tj-fonts/` по Bitstream-условиям;
+  Graphik — закрыт рулингом «навсегда как есть» (§13.6). Без изменений.
+- Товарный знак/ПД: окна 23/24 прошли zero-hardcoded трипваер (включая
+  ловушку `&#8201;` → hex-литерал, пойманную и вычищенную в 24.15);
+  стори-контент — вымышленные имена/суммы/тикеры (закон ПД). Терминал
+  не транскрибирован — 24T заблокирован на капчурах мейнтейнера
+  (чек-лист `captures-v5/TERMINAL-CAPTURE-CHECKLIST.md`, ПД-редакция ДО
+  передачи).
+
+## 14.7. Что окна 23/24 уже проверили (не нужно повторять) + ПРУФ НЕИСПОЛНЕНИЯ
+
+- Гейты каждого звена — ran-id-цепь §14.1; финальный полный compare
+  **2572/2572** на close-out волны 24b (`6d82cc7`, run 37184666709
+  GREEN). Локальная цепь головы релиза — §14.1.3 (исполняется этим
+  циклом; вердикт CI головы будет запечатан штампом ниже после пуша —
+  вымышленные ran-id запрещены законом 19.2).
+- **НЕ ИСПОЛНЕНО (запись до тега): ТОЛЬКО ТЕГ.** ПРУФЫ: `git tag -l` =
+  `v1.0.0 … v1.6.0` (без v1.7.0); npm-команды не запускались.
+  Версии/CHANGELOG/§14/пины/счётчики/HANDOFF исполнены этим циклом.
+- Мейнтейнерские пункты ПОСЛЕ тега: Flow-B §14.4 (клон по тегу);
+  оппортунистический batch-confirm прироста (+186 ног). 24T — по
+  доставке терминальных капчур (отдельная мини-волна, не гейт релиза).
+
+
 
