@@ -101,7 +101,7 @@ interface ChartScale {
  * - canvas 536×183 (x 228–763) — the viewBox and the default height hook;
  * - area fill = HORIZONTAL→DIAGONAL gradient light-left → dark-right;
  *   the left stop measures EXACTLY `--tk-color-invest-bond-a` (0,158,77)
- *   and the right stop EXACTLY `--tk-color-invest-bond-b` (0,128,62) —
+ *   and the right stop EXACTLY `--tk-color-invest-bond-b` (0,129,62) —
  *   the 22.5 identity stops REUSED, nothing minted (the AC's divergence
  *   clause did not fire);
  * - the series line is pixel-indistinguishable from the fill's top edge

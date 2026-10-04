@@ -29,7 +29,7 @@ import { css } from 'lit';
  * bond-ru000a0jxts9.png): canvas 536×183; gradient light-left → dark-right
  * ≈ «to top right», kit = 0,1 → 1,0 (horizontal diagonal); left stop
  * EXACTLY `--tk-color-invest-bond-a` (0,158,77), right stop EXACTLY
- * `--tk-color-invest-bond-b` (0,128,62).
+ * `--tk-color-invest-bond-b` (0,129,62).
  *
  * THEME: zero theme branches (AD-3) — every default routes through a
  * semantic token that already carries its dark remap (border-default,
