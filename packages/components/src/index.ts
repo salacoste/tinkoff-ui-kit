@@ -48,6 +48,7 @@ export * from './stepper/index.js';
 export * from './store-badges/index.js';
 export * from './switch/index.js';
 export * from './tabs/index.js';
+export * from './textarea/index.js';
 export * from './thumbnail-picker/index.js';
 export * from './toast/index.js';
 export * from './tooltip/index.js';

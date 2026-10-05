@@ -36,6 +36,13 @@ export const EVENT_MAP: Readonly<Record<string, Readonly<TkKitElementEventMap>>>
     // like every kit event). Fires when a user edit fills every cell.
     onComplete: 'complete',
   },
+  // Spec 24T.1 (grounded on the terminal notes widget) — the multiline
+  // sibling's string state channel (§4 contract on `value`, the same
+  // mapping tk-input carries; demanded mechanically by
+  // tests/event-map-completeness.test.ts).
+  'tk-textarea': {
+    onValueChange: 'value-change',
+  },
   // Story 2.3 — value-change (the §4 contract) + open-change (the §9 frozen
   // overlay-surface state event every floating surface carries; demanded
   // mechanically by tests/event-map-completeness.test.ts).

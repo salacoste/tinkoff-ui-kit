@@ -5526,6 +5526,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/textarea/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/thumbnail-picker/index.js"
           }
         },
@@ -14080,6 +14088,432 @@
           "declaration": {
             "name": "TkTabs",
             "module": "src/tabs/tabs.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/textarea/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/textarea/textarea.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/textarea/textarea.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "textareaStyles",
+          "default": "css` :host { display: block; } /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */ :host([hidden]) { display: none; } /* Disabled (EXPERIENCE State Patterns): 40% opacity on the whole control, no pointer events at the host boundary. The inner textarea is aria-disabled + readonly (kept focusable — the aria-disabled pattern). */ :host([disabled]) { opacity: 0.4; pointer-events: none; } /* --- Label: static, always visible (the input-family register verbatim). --- */ .label { display: block; margin: 0 0 var(--tk-space-8); font-family: var(--tk-font-body); font-size: var(--tk-text-body-m-size); font-weight: var(--tk-text-body-m-bold-weight); line-height: var(--tk-text-body-m-leading); color: var(--tk-color-text-primary); cursor: pointer; } .label__star { margin-inline-start: var(--tk-space-4); } /* Visually-hidden label mode (sr-only prop) — the family utility verbatim. */ .label--sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; } /* --- Field box ON the native control (no wrapper: no badge slot, and the growth height must sit on the box that scrolls). The autosize mechanism writes inline height between the hooks' floor and ceiling; overflow past the ceiling hands off to the native scrollbar. --- */ .field__control { box-sizing: border-box; display: block; width: 100%; min-height: var(--tk-textarea-min-height, 32px); max-height: var(--tk-textarea-max-height, 112px); margin: 0; border: 1px solid var(--tk-color-border-default); border-radius: var(--tk-radius-md); background: var(--tk-color-surface-field); /* Grounded box metrics (24T): the FULL box (border included) grows 16·n+16 — 32/48/64… — so the block padding is (16−2)/2 = 7px over the 1px hairlines. Structural literals, no token counterparts (the same flag class as the input's 52px height). */ padding: 7px var(--tk-space-16); overflow-y: auto; resize: none; font-family: var(--tk-font-body); /* The grounded notes typography: fs 13 rides the body-s SIZE token, but the line step is a 16px literal — the token's 1.5 multiplier gives 19.5px and the live notes field is measurably denser (24T). */ font-size: var(--tk-text-body-s-size); line-height: 16px; color: var(--tk-color-text-primary); -webkit-appearance: none; appearance: none; } /* The family's unified focus ring — 2px token ring, offset 2px, drawn on the field box itself (the control IS the box here). */ .field__control:focus-visible { outline: 2px solid var(--tk-color-focus-ring); outline-offset: 2px; } .field__control::placeholder { color: var(--tk-color-gray-500); opacity: 1; } /* Consumer/internal error: the border pair of the family (the message block below carries the copy). */ .field__control--error { border-color: var(--tk-color-error-on-field); } /* --- Error message (the family markup verbatim). --- */ .error { display: flex; align-items: flex-start; gap: var(--tk-space-4); margin: var(--tk-space-8) 0 0; font-family: var(--tk-font-body); font-size: var(--tk-text-body-s-size); line-height: var(--tk-text-body-s-leading); color: var(--tk-color-error-on-field); } .error__icon { flex: none; width: 16px; height: 16px; margin-block-start: 0.5px; } `",
+          "description": "tk-textarea styles — tokens only (FR-1), the input family's field box\nwith this atom's own VERTICAL axis. Every color, radius and duration\nconsumes a `var(--tk-*)` custom property; zero theme branches (AD-3).\n\nVisual spec: the family registers (surface-field fill, radius-md,\nborder-default hairline, gray-500 placeholder, the unified focus ring)\n+ the 24T measured grounding\n(.playwright-cli/captures-v5/terminal/terminal-notes-textarea-*.png,\nDOM terminal-notes-editor-dom.txt): fs 13 / lh 16 (body-s), the 16·n+16\nFULL-box growth envelope — 32px at one line, 48 at two — driven INLINE by\nthe autosize mechanism. The family's 52px fixed height\nis deliberately NOT here: the grounded notes widget is a compact\ngrowing form (its own vertical register, recorded in spec 24T.1).\n\nPer-component hooks (CONVENTIONS §6 grammar, exactly two — the growth\nenvelope; border/focus/error/label are NOT hooks for the same reason as\nthe input's closed set):\n- `--tk-textarea-min-height`  growth floor   (default 32px — one line)\n- `--tk-textarea-max-height`  growth ceiling (default 112px — six lines;\n  beyond it the native scrollbar takes over via overflow-y: auto)\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule: the 8px block padding and 16px inline padding (the field inset\nliterals, same class as the input's), the 16px error-icon box and 1.5px\nstroke (icon metrics)."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "textareaStyles",
+          "declaration": {
+            "name": "textareaStyles",
+            "module": "src/textarea/textarea.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/textarea/textarea.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-textarea — the multiline sibling of tk-input (spec 24T.1, grounded in\nthe 24T terminal notes widget: `.playwright-cli/captures-v5/terminal/`).\n\nGROUNDING (measured, not register picks): the live terminal notes field\nis a 1-row textarea (`rows=1`, placeholder «Добавьте заметку», soft\n`maxlength=1000`) whose height is driven inline by content — 32px at one\nline, 48px at two — on fs 13 / lh 16 (body-s). The kit's field box keeps\nthe input family's registers (surface-field fill, radius-md,\nborder-default hairline, the unified focus ring), but the VERTICAL axis\nis this atom's own: an auto-growing content box, NOT the family's 52px\nfixed height. Height formula: `16·n + 16` (the FULL border-box: 16px\nline steps over 7+7 block padding + the 2px hairlines), enforced as CSS\n`min-height`/`max-height` hooks so consumers\nresize the growth envelope without touching the growth mechanism.\n\nAUTOSIZE (the live widget's own mechanics): `resize: none`, and on every\ninput/update the control's height is re-measured from `scrollHeight`\n(`height:auto` → measure → set), clamped by the CSS envelope — beyond the\nenvelope the native vertical scrollbar takes over (`overflow-y: auto`).\nThe max-rows prop from the draft spec was CUT in favor of this single\nCSS channel (one source of truth for the envelope; see the spec Change\nLog) — `--tk-textarea-max-height` is the only growth limit.\n\nFAMILY CONTRACT (frozen at 2.1, inherited verbatim): uncontrolled initial\nvalue = `defaultValue` (ignored after the first update); controlled =\nSTRICT — the element renders exactly `value`, typing emits `value-change`\nand applies nothing locally; removing `value` releases to uncontrolled\nseeded from the last controlled value. Validation fires on blur\n(required-only, against the control's LIVE text); the message ties via\n`aria-describedby`; the error never steals focus. The badge slot is NOT\ncarried over: no grounded multiline surface shows one (the spec's\nfamily-minimalism ruling).\n\nAccessible-name technique: the native `<label for>` association (the\ntextarea is a single control — no aria-labelledby chain is needed, unlike\nthe input's badge-carrying field). IME guard: composition input events\nare skipped entirely; the event after compositionend commits normally.\n\nSSR-compat (AD-10): a native `<textarea>` in the shadow root via Lit\ntemplates; imperative DOM lives in `updated()`, never at construction.",
+          "name": "TkTextarea",
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Visible label above the field (empty/absent = placeholder names the field).",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "In-field hint; never replaces the label.",
+              "attribute": "placeholder"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Controlled value channel — STRICT semantics (frozen at 2.1, the family\ncontract): property-only (`attribute: false`), the element renders\nexactly this; typing emits `value-change` and applies nothing locally.\nRemoving the value releases the field to uncontrolled, seeded from the\nlast controlled value."
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Initial value for the UNCONTROLLED mode; ignored after the first update.",
+              "attribute": "default-value"
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Required: label asterisk + aria-required + the internal on-blur check.",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "srOnly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Visually-hidden label mode (the input-family sr-only utility, verbatim).",
+              "attribute": "sr-only",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Consumer-driven error message: renders the error state immediately\n(overriding any internal error) and clears when the prop clears.\nEmpty string = no error.",
+              "attribute": "error"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disabled: 40% opacity, no pointer events, aria-disabled (wins over everything).",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Pass-through: the native textarea's name.",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "maxlength",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Pass-through: the native soft character limit (absent = unlimited).",
+              "attribute": "maxlength"
+            },
+            {
+              "kind": "field",
+              "name": "#uncontrolledValue",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Live uncontrolled state (the truth whenever `value` is not provided)."
+            },
+            {
+              "kind": "field",
+              "name": "#lastControlledValue",
+              "privacy": "private",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Last string ever provided through the controlled channel — the seed on release."
+            },
+            {
+              "kind": "field",
+              "name": "#isControlled",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the controlled channel has ever supplied a value."
+            },
+            {
+              "kind": "field",
+              "name": "#internalError",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Internal on-blur required error (null = none)."
+            },
+            {
+              "kind": "field",
+              "name": "#uniqueId",
+              "privacy": "private",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Per-instance id root (the label's `for` target)."
+            },
+            {
+              "kind": "field",
+              "name": "#nextId",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "static": true,
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#id",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveValue",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "description": "The value in force: exactly `value` when controlled, the internal state otherwise.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#controlValue",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "description": "The shadow control's LIVE text ('' before the first render). Blur\nvalidation reads THIS, never `#effectiveValue` (the family contract: a\nlagging controlled consumer must not trip a false required error).",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#syncHeight",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Autosize (the live widget's mechanics, spec 24T.1 AC2): collapse to\n`auto`, measure `scrollHeight` (content + padding — the 16·n+16\nenvelope's inner half), then set the FULL box height: the control is\nborder-box, so the hairlines ride on top of the measurement. The CSS\n`min-height`/`max-height` hooks clamp the box without any JS numbers,\nand `overflow-y: auto` hands overflow to the native scrollbar once\ncontent passes the envelope — happy-dom reports scrollHeight 0, which\nsimply collapses to the `auto` height (the 1-row min-height floor\nholds the visual)."
+            },
+            {
+              "kind": "method",
+              "name": "#emitValueChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "`detail: { value }` with the unwrapped string; composed + bubbles (CONVENTIONS §3)."
+            },
+            {
+              "kind": "method",
+              "name": "#handleInput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "Typing: uncontrolled updates the internal state; both modes emit and\nre-measure. The re-measure runs DIRECTLY on the input event — the live\nwidget's own mechanics — because typing may not schedule any Lit update\n(uncontrolled mode changes no reactive property), and the controlled\nmode must NOT schedule one over the live text (the §4 caret sanity:\n`updated()` would re-sync the control back to the controlled value\nmid-typing). An inline style write needs no update cycle either way.\nControlled applies nothing else locally. IME: composition input events\nare skipped (no commit, no emission, no measure); the event following\ncompositionend delivers the committed text."
+            },
+            {
+              "kind": "method",
+              "name": "#handleBlur",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Blur validation (the family contract: validation fires on blur): the\nrequired check sets/clears the INTERNAL error against the LIVE text;\nwhitespace-only counts as empty. It never steals focus."
+            },
+            {
+              "kind": "field",
+              "name": "#message",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "description": "The message in force: the consumer `error` prop overrides the internal\none. Null-tolerant for React conditional props.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#renderError",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The error block — the family markup verbatim (calm icon + copy, id-referenced)."
+            }
+          ],
+          "events": [
+            {
+              "name": "value-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "`{ value }` with the unwrapped new string; composed, bubbles; silent on first render (§9)."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Visible label above the field (empty/absent = placeholder names the field).",
+              "name": "label",
+              "fieldName": "label"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "In-field hint; never replaces the label.",
+              "name": "placeholder",
+              "fieldName": "placeholder"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Initial value for the UNCONTROLLED mode; ignored after the first update.",
+              "name": "default-value",
+              "fieldName": "defaultValue"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Required: label asterisk + aria-required + the internal on-blur check.",
+              "name": "required",
+              "default": "false",
+              "fieldName": "required"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Visually-hidden label mode (the input-family sr-only utility, verbatim).",
+              "name": "sr-only",
+              "default": "false",
+              "fieldName": "srOnly"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Consumer-driven error message: renders the error state immediately\n(overriding any internal error) and clears when the prop clears.\nEmpty string = no error.",
+              "name": "error",
+              "fieldName": "error"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disabled: 40% opacity, no pointer events, aria-disabled (wins over everything).",
+              "name": "disabled",
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Pass-through: the native textarea's name.",
+              "name": "name",
+              "fieldName": "name"
+            },
+            {
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Pass-through: the native soft character limit (absent = unlimited).",
+              "name": "maxlength",
+              "fieldName": "maxlength"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-textarea",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkTextarea",
+          "declaration": {
+            "name": "TkTextarea",
+            "module": "src/textarea/textarea.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-textarea",
+          "declaration": {
+            "name": "TkTextarea",
+            "module": "src/textarea/textarea.ts"
           }
         }
       ]

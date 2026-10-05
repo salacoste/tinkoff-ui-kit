@@ -109,6 +109,10 @@ const COMPONENTS: readonly SearchEntry[] = [
   // entry points at the Components/ story.
   { title: 'Switch', tag: 'tk-switch', ru: 'Переключатель', id: 'components-switch--playground' },
   { title: 'Tabs', tag: 'tk-tabs', ru: 'Табы', id: 'components-tabs--playground' },
+  // 24T.1 (terminal-capture wave): the multiline sibling of tk-input — the
+  // terminal notes field's own vertical register (the 16·n+16 autosize);
+  // entry points at the Components/ story.
+  { title: 'Textarea', tag: 'tk-textarea', ru: 'Многострочное поле', id: 'components-textarea--notes' },
   { title: 'ThumbnailPicker', tag: 'tk-thumbnail-picker', ru: 'Выбор плиткой', id: 'components-thumbnailpicker--playground' },
   { title: 'Toast', tag: 'tk-toast', ru: 'Тост', id: 'components-toast--playground' },
   { title: 'Tooltip', tag: 'tk-tooltip', ru: 'Подсказка', id: 'components-tooltip--playground' },
