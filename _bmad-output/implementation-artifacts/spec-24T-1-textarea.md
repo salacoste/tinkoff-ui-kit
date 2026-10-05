@@ -1,6 +1,6 @@
 # Spec 24T.1 — tk-textarea: многострочное поле (grounded, 24T mini-wave)
 
-- **status:** SPEC (frozen 2026-10-05; awaiting execution)
+- **status:** EXECUTED 2026-10-06 (code head `bf4e167`, CI GREEN run 37370841340 attempt 2 — attempt 1 externally killed, see Change Log)
 - **baseline_commit:** 7e99340 (24T capture pack; CI 37356340358 GREEN)
 - **epic note:** 24T mini-wave (рулинг «1 and then 2», 2026-10-05) — первая
   история на живом терминальном материале
