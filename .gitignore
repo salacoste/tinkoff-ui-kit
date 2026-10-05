@@ -58,6 +58,8 @@ playwright-report/
 !.playwright-cli/captures-v4/
 # v5 maintainer-side capture packs (terminal checklist 2026-10-03; pack lands when captured) — dir whitelisted once, files land freely
 !.playwright-cli/captures-v5/
+# 24T terminal staging originals — UNREDACTED portfolio frames stay local, only the PII-gated pack ships
+.playwright-cli/captures-v5/terminal/raw/
 
 # OMC / Claude Code runtime state (skills, agents, settings.json stay tracked)
 .omc/
