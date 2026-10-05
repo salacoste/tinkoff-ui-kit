@@ -1225,3 +1225,24 @@ spinner/textarea HOLD под 24T-капчуры.
   существующих базлайнов. Мой functional Enter-тест упал на
   тест-трассировке (стори стартует default-checked) — фикс чтением
   живого состояния, scoped 3/3, прод не тронут.
+- **26.3 tk-avatar** — feat `8452765` CI **37310061402 GREEN** с первого
+  пуша; штамп — этим коммитом. Три производных состояния (image cover/
+  lazy — энфорсмент tk-figure; initials «Мария Оганова»→«МО»; placeholder),
+  decode-fail → тихий фолбэк на инициалы (лэтч сбрасывается новым src).
+  Identity: именованный диск самостийно ставит role=img + aria-label=name
+  из connectedCallback (закон React 19); безымянный — контракт потребителя
+  (хостовый label или reflect-свойство aria-hidden — повторы админ-фида);
+  роль едет на имени, не на теге (слепой role=img = axe-нарушение). size →
+  host inline `--tk-avatar-size` — ОДИН канал на короб и кегль глифов
+  (дефолт 45 — замер 20.1; byline 20 заземлён); хуки
+  `--tk-avatar-{size,bg,fg}`; слот — декоративный оверлей (AC4, кольца
+  НЕТ); STATELESS (event-map no-entry, молд tk-rating). Домолды: @state
+  в ките нет — private-поле + requestUpdate; ariaHidden строго
+  `string | null` (база LitElement). Стори-изображения — data-URL SVG на
+  именованных цветах (молд tj-rail: ни сети, ни hex); decode-fail демо =
+  живой 404. React Avatar 49-й; hidden-guard 55/44; suite 2635→**2671**
+  (+36 = 6 стори × 2 темы × [visual+axe+reduced-motion], функциональных
+  нет — stateless); getting-started ×2 реминт (строка «Аватар» вырастила
+  страницу 4307→4329 — класс роста ростера, прецедент 21.2; явный rm →
+  скоупед-переминт → compare GREEN). Пиксель-санити без vision: бюджет
+  истории 0/2 сохранён. Дальше: 26.4 OTP — закрывает волну.
