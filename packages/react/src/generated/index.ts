@@ -2,6 +2,7 @@
 export * from './accordion.js';
 export * from './accordion-item.js';
 export * from './article-card.js';
+export * from './avatar.js';
 export * from './badge.js';
 export * from './breadcrumb.js';
 export * from './button.js';

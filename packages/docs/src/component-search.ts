@@ -40,6 +40,10 @@ const COMPONENTS: readonly SearchEntry[] = [
   // the first GAP-MAP Tier A atom; entry points at the Components/ story.
   { title: 'Accordion', tag: 'tk-accordion', ru: 'Аккордеон', id: 'components-accordion--playground' },
   { title: 'ArticleCard', tag: 'tk-article-card', ru: 'Карточка статьи', id: 'components-articlecard--playground' },
+  // 26.3 (form-control wave): the round identity disc — image/initials/
+  // placeholder over the byline-20/news-45/admin-feed registers; entry
+  // points at the Components/ story.
+  { title: 'Avatar', tag: 'tk-avatar', ru: 'Аватар', id: 'components-avatar--playground' },
   { title: 'Badge', tag: 'tk-badge', ru: 'Бейдж', id: 'components-badge--playground' },
   { title: 'Button', tag: 'tk-button', ru: 'Кнопка', id: 'components-button--playground' },
   // 24.9 (pattern wave 24b): the crumb trail — gap-8's zero-implementations

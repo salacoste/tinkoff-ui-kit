@@ -142,6 +142,11 @@ export const EVENT_MAP: Readonly<Record<string, Readonly<TkKitElementEventMap>>>
   'tk-range-slider': {
     onValueChange: 'value-change',
   },
+  // Spec 26.3 (form-control wave) — STATELESS DISPLAY: the round identity
+  // disc (image/initials/placeholder are DERIVED display states, the
+  // tk-rating no-entry precedent); a decode failure falls back silently
+  // inside the same render, nothing dispatches.
+  // 'tk-avatar': none — see above.
   // Spec 26.2 (form-control wave) — the boolean state channel (§4 contract
   // on `checked`, the tk-checkbox mapping; checked-change is what the
   // element dispatches, so the completeness guard demands exactly this

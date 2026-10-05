@@ -548,6 +548,224 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/avatar/avatar.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "avatarStyles",
+          "default": "css` :host { position: relative; display: inline-block; flex: none; width: var(--tk-avatar-size, 45px); height: var(--tk-avatar-size, 45px); } /* The disc: full-radius flat token fill; the initials ride the fg color at 0.4× the size (45px disc → 18px glyphs, the body row). */ .circle { box-sizing: border-box; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--tk-avatar-bg, var(--tk-color-surface-muted)); color: var(--tk-avatar-fg, var(--tk-color-text-secondary)); overflow: hidden; font-family: var(--tk-font-body); font-size: calc(var(--tk-avatar-size, 45px) * 0.4); font-weight: 600; line-height: 1; user-select: none; } /* The image state: cover-cropped to the disc; lazy + async decoding enforced in the template (the tk-figure mold, an internal img). */ img { display: block; width: 100%; height: 100%; object-fit: cover; } /* Consumer overlay (status dots & co) — absolutely positioned over the disc, decorative by contract (the service-card icon-slot mold): the wrapper hides whatever the consumer floats in, no status ring of the atom's own (AC4 — the ring is out of scope, slotted only). */ .overlay { position: absolute; inset: 0; pointer-events: none; } :host([hidden]) { display: none; } `",
+          "description": "tk-avatar styles (spec 26.3, form-control completeness wave).\n\nThe disc geometry hangs off ONE hook — `--tk-avatar-size` — which feeds\nboth the host box AND the initials type size, so a consumer override\n(the `size` property writes the host inline custom property, the\nskeleton-geometry mold) can never desynchronize the glyph from the\ncircle. The 45px default is the news measurement (spec 20.1)."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "avatarStyles",
+          "declaration": {
+            "name": "avatarStyles",
+            "module": "src/avatar/avatar.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/avatar/avatar.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-avatar — the kit's round identity disc (spec 26.3, form-control\ncompleteness wave; grounded thrice: tj byline 20, tj news 45 — the\n20.1 measurement — and the admin-feed circles).\n\nThree display states, derived — never stored (the tk-rating\nstateless-display ruling):\n- IMAGE: `src` set and decoded — cover-cropped, `loading=lazy` +\n  `decoding=async` (the tk-figure enforcement, an internal img);\n  a decode failure falls back to INITIALS.\n- INITIALS: no `src` (or a failed one) with a `name` — the first\n  letters of the first two whitespace words, uppercased\n  («Мария Оганова» → «МО»; a single word → its first letter).\n- PLACEHOLDER: neither — a flat token disc with no content\n  (the tj-composer placeholder register).\n\nA11y (AC3): a NAMED disc self-asserts `role=\"img\"` +\n`aria-label={name}` at connect (the React-19 law: constructor-time\nattributes never survive the element's upgrade — the tk-rating\nidiom). An UNNAMED disc is the consumer's contract verbatim: they\nname it with a host aria-label (untouched by the atom) or hide it\nwith the reflected `aria-hidden` property — the admin-feed repeat\npattern (the first row announces, the repeats are decorative). A\nblind role=img without a name would be an axe violation, so the\nrole rides the name, not the tag.\n\nSTATELESS (the tk-rating mold): nothing dispatches — the event-map\nno-entry case; no keyboard contract exists on purpose (a display\natom must not hold a focus stop).",
+          "name": "TkAvatar",
+          "members": [
+            {
+              "kind": "field",
+              "name": "src",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Image URL — the IMAGE state when set, empty string reads as unset.",
+              "attribute": "src"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Person name — the initials source and the accessible label.",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Disc size — a px string applied as the host inline custom property\n`--tk-avatar-size` (the skeleton-geometry mold: clearing removes the\noverride, the CSS default 45 returns). One channel with the hook —\nthe box and the initials glyph cannot drift apart.",
+              "attribute": "size"
+            },
+            {
+              "kind": "field",
+              "name": "ariaHidden",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Decorative mode (AC3) — reflected, a plain pass-through to hide repeats.",
+              "attribute": "aria-hidden",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "#imageFailed",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Decode-failure latch: set by the img error event, reset by a new src.\nA private field + explicit requestUpdate (the kit mold — no"
+            },
+            {
+              "kind": "field",
+              "name": "#identityOwned",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the identity attributes currently on the host are OURS."
+            },
+            {
+              "kind": "field",
+              "name": "#displayName",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "description": "The trimmed name, or null when the disc is unnamed (placeholder state).",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#initials",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "description": "Initials (AC2): first letters of the first two whitespace-separated\nwords, uppercased; unnamed discs render none.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#applyGeometry",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncIdentity",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "The identity stamp: a named disc self-asserts role=img + the name as\nits accessible label; a cleared name withdraws EXACTLY what we set —\na consumer-supplied host label is never touched (unnamed discs are\nthe consumer's contract: name it or hide it)."
+            },
+            {
+              "kind": "method",
+              "name": "#handleImageError",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Image URL — the IMAGE state when set, empty string reads as unset.",
+              "name": "src",
+              "fieldName": "src"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Person name — the initials source and the accessible label.",
+              "name": "name",
+              "fieldName": "name"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Disc size — a px string applied as the host inline custom property\n`--tk-avatar-size` (the skeleton-geometry mold: clearing removes the\noverride, the CSS default 45 returns). One channel with the hook —\nthe box and the initials glyph cannot drift apart.",
+              "name": "size",
+              "fieldName": "size"
+            },
+            {
+              "type": {
+                "text": "string | null"
+              },
+              "description": "Decorative mode (AC3) — reflected, a plain pass-through to hide repeats.",
+              "name": "aria-hidden",
+              "default": "null",
+              "fieldName": "ariaHidden"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-avatar",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkAvatar",
+          "declaration": {
+            "name": "TkAvatar",
+            "module": "src/avatar/avatar.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-avatar",
+          "declaration": {
+            "name": "TkAvatar",
+            "module": "src/avatar/avatar.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/avatar/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/avatar/avatar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/badge/badge.css.ts",
       "declarations": [
         {
@@ -4989,6 +5207,14 @@
           "declaration": {
             "name": "*",
             "module": "src/article-card/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/avatar/index.js"
           }
         },
         {

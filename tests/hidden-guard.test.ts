@@ -52,9 +52,10 @@ const COMPONENTS_SRC = join(REPO_ROOT, 'packages', 'components', 'src');
  * + 1 (breadcrumb, spec 24.9)
  * + 1 (range-slider, spec 26.1)
  * + 1 (switch, spec 26.2)
- * = 54.
+ * + 1 (avatar, spec 26.3)
+ * = 55.
  */
-const PINNED_HOST_DISPLAY_SHEETS = 54;
+const PINNED_HOST_DISPLAY_SHEETS = 55;
 
 interface SheetFinding {
   component: string;
@@ -120,14 +121,14 @@ describe('kit-wide :host([hidden]) guard (story 8.1, deferred-work 6.3 N6)', () 
     ).toEqual([]);
   });
 
-  it('tripwire: the host-display sheet roster is the pinned 54 — a new sheet joining the family forces a deliberate guard decision', () => {
+  it('tripwire: the host-display sheet roster is the pinned 55 — a new sheet joining the family forces a deliberate guard decision', () => {
     const findings = auditSheets();
     expect(findings).toHaveLength(PINNED_HOST_DISPLAY_SHEETS);
-    // 43 component files (switch, spec 26.2); seven contribute a second
+    // 44 component files (avatar, spec 26.3); seven contribute a second
     // host-display sheet and menu-popover contributes four (deduped — a
     // 4-sheet component would otherwise list itself three times in the raw
     // duplicate findings).
-    expect(new Set(findings.map((f) => f.component)).size).toBe(43);
+    expect(new Set(findings.map((f) => f.component)).size).toBe(44);
     const doubled = [
       ...new Set(
         findings
