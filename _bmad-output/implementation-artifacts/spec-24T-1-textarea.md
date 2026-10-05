@@ -122,3 +122,10 @@ form-association (семейное ограничение v1); мобильны�
     фикса), lint/typecheck чисты. Ростер поиска docs: Textarea-строка
     добавлена в component-search.ts (getting-started ноги 16/16 — недрейф
     подтверждён фактом).
+
+- 2026-10-06 — CI VERDICT: run **37370841340 attempt 2 GREEN** (gates job
+  21:11:52→21:45:14 UTC, 33м22с). Attempt 1 того же рана убит внешним
+  сигналом на 8м44с при нуле тестовых фейлов («The operation was canceled»,
+  conclusion failure; новых пушей/конкурренси-отмен нет, job-таймаут 60м не
+  достигнут) → инфраструктурное, `rerun --failed` оправдан. **Story 24T.1
+  CLOSED на кодовой голове bf4e167.**
