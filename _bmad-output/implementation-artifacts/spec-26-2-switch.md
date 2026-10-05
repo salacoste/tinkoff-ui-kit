@@ -1,6 +1,6 @@
 # Spec 26.2 — tk-switch: boolean-тумблер
 
-- **status:** DRAFT 2026-10-05
+- **status:** EXECUTED 2026-10-05 (code head `04f19c4`, CI GREEN run 37297112761)
 - **baseline_commit:** 3e27649
 - **epic note:** Epic 26, brief `brief-epic-26-form-control-wave-2026-10-05.md`
   (аудит-вердикт «в волну»: admin probe-notes «Запомнить» toggle,
@@ -141,3 +141,6 @@ consumer-level pattern candidate, NOT this atom).
   + 10 axe + 10 reduced-motion — свип авто-собирает стори, гвард
   прошел — + 3 функциональных). Reduced-motion-ноги прошли с первого
   прогона: явный @media-гард выключает transition трека/ручки.
+- **CI VERDICT на `04f19c4`: GREEN — run 37297112761** (10:31:22Z →
+  ~11:09Z, gates job success; вердикт по API после факта,
+  zero-in-flight соблюдён).

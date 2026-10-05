@@ -1186,3 +1186,42 @@ Q&A: ростер Taiga-якорь + 6–10 эталонов; фокус все 
 (11 снапшотов JSONL + 11 отчётов + SUMMARY + BENCHMARK) +
 `.playwright-cli/verify/kit-recon/` (~85 МБ). Новых историй без
 брифа мейнтейнера не открывать; 24T ждёт терминальных капчур.
+
+## Epic 26 — form-control completeness wave (brief 2026-10-05, adopt-находки 25.4)
+
+Спеки 26.1 slider / 26.2 switch / 26.3 avatar / 26.4 OTP = `d8eb5b0` CI 37268604391;
+spinner/textarea HOLD под 24T-капчуры.
+
+- **26.1 tk-range-slider** — feat `e02825f` CI RED (api-стори рендерит
+  таблицу из CEM — послекоммитная регенерация ariaLabel выросила её на
+  строку; локальный compare слепой: аменд манифеста ПОСЛЕ прогона) →
+  fix `3f92922` CI **37283157635 GREEN**; штамп `a194695` → docs-head CI
+  **37287220117 GREEN** (вердикт-строка в спеке — следующим штампом
+  волны, молд 11.1). Заземление iis.png ОПРОВЕРГНУТО на исполнении →
+  рулинг «китовые регистры + HOLD→24T»: трек = молд progress-bar 4px,
+  ручка = китовый круг 20px. Атом: strict §4 number-канал, step-grid
+  display-clamp (prop не мутируется), PageUp/PageDown гвард,
+  valueFormatter → readout/aria-valuetext; axe-раунд закрыт ОДНИМ
+  фиксом — aria-labelledby-цепочка на header (имя + inactive-components
+  contrast exemption). Suite 2572→2602; hidden-guard 53/42; React
+  Slider 47-й. **Урок волны: любое изменение CEM-манифеста ⇒ docs
+  rebuild + реминт api-стори + compare.**
+- **26.2 tk-switch** — feat `04f19c4` CI **37297112761 GREEN** с
+  первого пуша; штамп — этим коммитом. AC2-гейт: пиксельная проба
+  admin-main-fullpage (1 vision-навигация + ASCII-карты) — «Запомнить»
+  = chip-кнопка 78×18 (#F3F4F7, кольцевой глиф + текст внутри, ряд
+  фильтр-чипов), НЕ тумблер/чекбокс; бизнес-hero — сегмент-контрол;
+  обе ветки спеки мертвы → рулинг мейнтейнера «китовые регистры +
+  HOLD→24T» (тумблерные поверхности → 24T-чеклист, пункт 4). Атом:
+  нативный checkbox + role="switch" (aria-checked имплицитен — руками
+  не выставляется), Enter-кейдаун-гвард (нативный пробел),
+  ElementInternals form-зеркало, strict §4 boolean-канал
+  (checkbox-зеркало). Капсула 36×20 (yellow-100/border-default, ручка
+  16 surface-base), путь ручки w−h (хуки геометрически консистентны),
+  reduced-motion гард, hit-area 44. Хуки
+  `--tk-switch-{width,height,knob,track-on,track-off}`. React Switch
+  48-й; hidden-guard 54/43; suite 2602→**2635** (+33 = 5 стори × 2
+  темы × [visual+axe+reduced-motion] + 3 функциональных), нулевой дрейф
+  существующих базлайнов. Мой functional Enter-тест упал на
+  тест-трассировке (стори стартует default-checked) — фикс чтением
+  живого состояния, scoped 3/3, прод не тронут.
