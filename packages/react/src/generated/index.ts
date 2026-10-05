@@ -41,6 +41,7 @@ export * from './service-card.js';
 export * from './skeleton.js';
 export * from './stepper.js';
 export * from './store-badges.js';
+export * from './switch.js';
 export * from './tabs.js';
 export * from './thumbnail-picker.js';
 export * from './toast.js';

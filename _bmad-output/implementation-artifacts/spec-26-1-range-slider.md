@@ -108,6 +108,9 @@ data-table фильтрами (паттерн — потом).
   08:58:55Z, 37.1m, gates job success; промежуточный `gh run watch`
   EXIT 1 — сетевой сбой внутри watch, вердикт по полю conclusion,
   повторный poll подтверждён — известный паттерн 11.1).
+- **Docs-head CI VERDICT на `a194695`: GREEN — run 37287220117**
+  (non-self-referential close по молду 11.1: строка записана следующей
+  историей — 26.2, этим штампом).
 - Vision-бюджет истории: 2/2 израсходовано на заземление-аудит
   (pixel-сканы без vision + 2 vision-вызова на кропы iis.png); минт и
   axe-раунд — без vision (пиксельный compare + error-context DOM).

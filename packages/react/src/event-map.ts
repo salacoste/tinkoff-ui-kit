@@ -142,6 +142,13 @@ export const EVENT_MAP: Readonly<Record<string, Readonly<TkKitElementEventMap>>>
   'tk-range-slider': {
     onValueChange: 'value-change',
   },
+  // Spec 26.2 (form-control wave) — the boolean state channel (§4 contract
+  // on `checked`, the tk-checkbox mapping; checked-change is what the
+  // element dispatches, so the completeness guard demands exactly this
+  // entry).
+  'tk-switch': {
+    onCheckedChange: 'checked-change',
+  },
   // 'tk-skeleton': none at spec 21.2 — STATELESS DISPLAY: a decorative
   // aria-hidden placeholder bone; nothing dispatches (the completeness
   // guard's no-entry case, the tk-badge mold).

@@ -5284,6 +5284,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/switch/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/tabs/index.js"
           }
         },
@@ -12830,6 +12838,400 @@
           "declaration": {
             "name": "TkStoreBadges",
             "module": "src/store-badges/store-badges.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/switch/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/switch/switch.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/switch/switch.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "switchStyles",
+          "default": "css` :host { display: inline-flex; max-width: 100%; } /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */ :host([hidden]) { display: none; } /* Disabled (EXPERIENCE State Patterns): 40% opacity, no pointer events at the host boundary. The inner input keeps aria-disabled (focusable — the button-pilot pattern); the change guard in switch.ts reverts any keyboard flip, so nothing ever emits or commits while disabled. */ :host([disabled]) { opacity: 0.4; pointer-events: none; } /* The native label IS the interactive surface: track + input + text inside one label gives click-to-toggle and accessible naming for free. The space-12 padding (ALL around) lifts the 20px capsule to the 44px target floor in BOTH dimensions — block for the row height, inline so a LABEL-LESS (bare) switch keeps a ≥44px-wide hit area instead of the bare 36px .control; flex-start keeps the track on the label's FIRST line when text wraps (the tk-checkbox mold verbatim). */ .root { box-sizing: border-box; display: inline-flex; align-items: flex-start; gap: var(--tk-space-8); min-height: 44px; padding: var(--tk-space-12); cursor: pointer; } /* --- The visual capsule REPLACES the native box (the tk-checkbox technique): the native input sits as an invisible 36×20 interaction layer OVER the token-styled .track sibling (later in DOM order ⇒ paints above; opacity 0 keeps hit-testing). Focus/hover/checked all key on the NATIVE pseudo-classes of that layer, so the visual can never drift from the semantic state. --- */ .control { position: relative; flex: none; width: var(--tk-switch-width, 36px); height: var(--tk-switch-height, 20px); } .control__input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; padding: 0; cursor: pointer; -webkit-appearance: none; appearance: none; } .track { box-sizing: border-box; display: block; width: 100%; height: 100%; border-radius: var(--tk-radius-full); background: var(--tk-switch-track-off, var(--tk-color-border-default)); transition: background-color var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-standard); } /* The knob rides INSIDE the track: centered vertically, inset ((height − knob) / 2) from the left when off; checked travel is width − height (the inset pairs cancel: w − k − 2·(h−k)/2 = w − h), so a consumer overriding any hook keeps the geometry consistent. */ .knob { position: absolute; top: 50%; left: calc((var(--tk-switch-height, 20px) - var(--tk-switch-knob, 16px)) / 2); box-sizing: border-box; width: var(--tk-switch-knob, 16px); height: var(--tk-switch-knob, 16px); border: 1px solid var(--tk-color-border-default); border-radius: var(--tk-radius-full); background: var(--tk-color-surface-base); transform: translateY(-50%); transition: transform var(--tk-motion-duration-fast) var(--tk-motion-curve-productive-standard); } /* Unified focus ring — 2px token ring, offset 2px, never removed: drawn on the VISIBLE track (the invisible input owns :focus-visible; the sibling selector bridges — the tk-checkbox mold). */ .control__input:focus-visible + .track { outline: 2px solid var(--tk-color-focus-ring); outline-offset: 2px; } /* Hover: ONE token step (border-default → border-strong) at the fast duration, the unchecked track ONLY — the checked yellow is the engaged state and does not shift under the pointer (the EXPERIENCE State Patterns row; checked rule below wins the cascade anyway). */ .control__input:hover:not(:checked) + .track { background: var(--tk-color-border-strong); } /* Checked: the yellow-100 engaged register — theme-invariant, the same pairing the tk-checkbox box and the range-slider fill/thumb carry. */ .control__input:checked + .track { background: var(--tk-switch-track-on, var(--tk-color-yellow-100)); } .control__input:checked + .track .knob { transform: translateX(calc(var(--tk-switch-width, 36px) - var(--tk-switch-height, 20px))) translateY(-50%); } /* --- Label text: the tk-checkbox .text mold verbatim — body-s, the de-emphasized consent/secondary register, wrapping freely; slotted content inherits (§5 — nothing here targets slotted nodes). --- */ .text { font-family: var(--tk-font-body); font-size: var(--tk-text-body-s-size); font-weight: var(--tk-text-body-s-weight); line-height: var(--tk-text-body-s-leading); color: var(--tk-color-text-secondary); } /* Motion guard (spec AC4, the tk-skeleton mold): the knob slide and the track fill are pure embellishment — under prefers-reduced-motion both snap between states with no transition. */ @media (prefers-reduced-motion: reduce) { .track, .knob { transition: none; } } `",
+          "description": "tk-switch styles — tokens only (FR-1), zero theme branches (AD-3).\n\nGEOMETRY REGISTER (spec 26.2 AC4, maintainer ruling 2026-10-05): the\nadmin «Запомнить» pixel probe resolved to a chip-button, not a switch\n(see the spec Change Log), so the capsule follows KIT registers — the\ntk-progress-bar / tk-range-slider track family: a full-radius pill\ntrack (36×20 default), a surface-base knob (16px) with the hairline,\nON = yellow-100 (the engaged register), OFF = border-default (the same\ngray the slider track carries). Pixel grounding is a HOLD → 24T.\n\nPer-component custom properties (`--tk-<component>-<slot>`, CONVENTIONS\n§6), each consumed WITH its token default as the fallback:\n- `--tk-switch-width`    track width     (default 36px)\n- `--tk-switch-height`   track height    (default 20px)\n- `--tk-switch-knob`     knob diameter   (default 16px)\n- `--tk-switch-track-on` checked fill    (default yellow-100)\n- `--tk-switch-track-off`unchecked fill  (default border-default)\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule — the token sheet carries no counterpart:\n- the 36×20×16 capsule geometry (kit registers, the ruling above);\n- the 1px knob hairline (the button/input/select hairline class);\n- the 12px all-around padding on the label root — the hit-area math\n  that lifts the 20px-tall capsule to the ≥44px interactive floor in\n  BOTH dimensions (the whole label toggles natively, so the padding IS\n  the effective target — including the label-less bare configuration)."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "switchStyles",
+          "declaration": {
+            "name": "switchStyles",
+            "module": "src/switch/switch.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/switch/switch.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-switch — boolean toggle with the APG switch contract (spec 26.2,\nform-control wave).\n\nGEOMETRY REGISTER (spec 26.2 AC2/AC4, maintainer ruling 2026-10-05): the\nadmin «Запомнить» pixel probe resolved to a chip-button, not a switch (the\nspec Change Log records the probe), so the capsule follows KIT registers —\nthe tk-progress-bar / tk-range-slider track family (full-radius pill,\n36×20 default, surface-base 16px knob, ON yellow-100 / OFF border-default).\nPixel grounding is a HOLD → 24T.\n\nSTATEFUL API — the §4 contract frozen at 2.1, boolean mirror of\ntk-checkbox: `checked` strict-controlled (renders exactly `checked`;\ntoggling emits `checked-change` and applies nothing locally — the native\nbox keeps its live flip until the element's next update, the caret-sanity\nmirror), `defaultChecked` seeds uncontrolled (later changes ignored),\nreleasing `checked` goes uncontrolled seeded from the last controlled\nvalue.\n\nARIA TECHNIQUE (AC3, the APG Switch Pattern): the native shadow\n`<input type=\"checkbox\" role=\"switch\">` stays THE interaction and\nannouncement surface — Space, label-click and form association come\nnative, and role=switch over the checkbox base switches the announced\nsemantics («switch, on/off» instead of «checkbox, checked») while the\nstate keeps riding the native checkedness (aria-checked is implied —\nnever hand-set, so it can never drift). The ONE native gap is Enter: a\ncheckbox does not activate on Enter, so a keydown guard clicks the input\non Enter (preventDefault first — the guard owns the key outright); every\nother key stays native.\n\nFORM PARTICIPATION (AC1, the tk-checkbox mechanism verbatim): `name`/\n`value` reach the form through the host's ElementInternals mirror\n(Chromium's form-owner walk stops at the shadow root — probed 2026-09-22),\nso the host inside a `<form>` submits name=value when checked and nothing\nwhen unchecked; `form.reset()` restores `defaultChecked`. The shadow\ninput keeps the attributes for direct-DOM consumers but does not itself\nassociate.\n\nLABEL: the native `<label>` WRAPS track + input + text, so label-click\ntoggles and the accessible name comes from the label content for free.\nSlot-vs-prop precedence (the tk-checkbox mold): default-slot CONTENT when\npresent, else the `label` prop — \"present\" follows the badge-slot\npresence rule (an element or non-empty text). With neither, a bare\nswitch renders (nameless — consumers give it a label or an aria-label on\nthe host).\n\nSSR-compat (AD-10): rendered via Lit templates only; the imperative native\nsync (checked is a JS-only channel) lives in `updated()`, never at\nconstruction.",
+          "name": "TkSwitch",
+          "slots": [
+            {
+              "description": "Label content; wins over the `label` prop when present.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "true",
+              "description": "FORM ASSOCIATION (the tk-checkbox amendment verbatim): the host\ndeclares `formAssociated` and mirrors the entry through\nElementInternals (`setFormValue`) — exactly what the native control\nwould submit. Feature-guarded: environments without ElementInternals\n(happy-dom) skip the mirror — wiring is unit-pinned, the live FormData\nrow is proven in tests/visual/switch.spec.ts (chromium)."
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Visible label text — the default slot's fallback (slot content wins).",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "checked",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "description": "Controlled checked channel — STRICT semantics (frozen at 2.1, boolean\nmirror of tk-checkbox): the element renders exactly this; toggling\nemits `checked-change` and applies nothing locally. Property-only\n(`attribute: false`) — a static attribute could never update, so\ncontrolled-from-markup would be a trap. Non-boolean values set via JS\nclamp to their boolean form; null/undefined after control RELEASES to\nuncontrolled seeded from the last controlled value."
+            },
+            {
+              "kind": "field",
+              "name": "defaultChecked",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "description": "Initial checked state for the UNCONTROLLED mode; ignored after the first update.",
+              "attribute": "default-checked"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disabled: 40% opacity, no pointer events, aria-disabled (kept focusable).",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Pass-through: the control's name. REFLECTS — the ElementInternals form\nmirror reads the HOST's name content attribute for the entry's name\n(and the inner input carries the same value for direct-DOM consumers).",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Pass-through: the native input's value (submitted when checked).",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "ariaLabel",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Accessible name forwarded to the native input (the wrapper-component\npattern): the host carries no role, so a host-level aria-label reaches\nno AT by itself — this property is the documented way to name a bare\nswitch (no label prop, no slotted content). Typed `string | null` to\nmatch the HTMLElement ARIA-reflection base declaration.",
+              "attribute": "aria-label"
+            },
+            {
+              "kind": "field",
+              "name": "#uncontrolledChecked",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Live uncontrolled state (the truth whenever `checked` is not provided)."
+            },
+            {
+              "kind": "field",
+              "name": "#labelSlotted",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the default slot carries REAL label content (an element or\nnon-empty text). Empty text nodes do NOT count — Lit template children\nlike `${cond ? html`…` : ''}` assign an empty text node that would\notherwise suppress the label prop (the badge-slot presence rule)."
+            },
+            {
+              "kind": "field",
+              "name": "#lastControlledChecked",
+              "privacy": "private",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "description": "Last boolean ever provided through the controlled channel — the seed on release."
+            },
+            {
+              "kind": "field",
+              "name": "#isControlled",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the controlled channel has ever supplied a value."
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private",
+              "type": {
+                "text": "ElementInternals | null"
+              },
+              "readonly": true,
+              "default": "null",
+              "description": "ElementInternals form mirror — null where unsupported (happy-dom)."
+            },
+            {
+              "kind": "method",
+              "name": "#syncFormValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Mirrors the submission entry through ElementInternals — exactly what\nthe native control would submit: `value` (or the native \"on\" default)\nwhen checked, NO entry when unchecked. The host's reflected `name`\nattribute supplies the entry's name."
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Native reset parity: form.reset() restores the default checkedness\n(defaultValue semantics — the initial-value contract, again)."
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveChecked",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "The checked state in force: exactly `checked` when controlled, the internal state otherwise.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#syncLabelSlotted",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "optional": true,
+                  "type": {
+                    "text": "HTMLSlotElement"
+                  }
+                }
+              ],
+              "description": "Label slot presence (the badge-slot rule mirrored): REAL content (an\nelement or non-empty text) makes the slot win; empty text nodes — the\n`${cond ? html`…` : ''}` template shape — do NOT suppress the label\nprop. Checked at firstUpdated (static children are assigned from the\nfirst paint) and on every slotchange (content arriving or leaving\nlater)."
+            },
+            {
+              "kind": "method",
+              "name": "#handleLabelSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#emitCheckedChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "`detail: { value }` with the unwrapped boolean; composed + bubbles (CONVENTIONS §3)."
+            },
+            {
+              "kind": "method",
+              "name": "#handleChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "Toggle pipeline (Space, Enter and label-click all arrive here through\nthe native input's change event): uncontrolled commits the internal\nstate; both modes emit. Controlled applies nothing locally — the\nnative box stays flipped until the element's next update reverts it to\nexactly `checked` (the frozen strict contract; the lagging-consumer\nwindow mirrors tk-input's caret sanity). Disabled: aria-disabled keeps\nthe control focusable, so a keyboard Space/Enter still flips the\nnative box — the guard reverts checkedness and nothing emits."
+            },
+            {
+              "kind": "method",
+              "name": "#handleKeydown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "The one native gap (AC3): a checkbox does not activate on Enter — the\nguard clicks the input itself (preventDefault first, so the guard owns\nthe key outright; the programmatic click runs the SAME change pipeline\nSpace and label-clicks ride). Every other key (Space above all) stays\nnative: this handler passes them through untouched."
+            }
+          ],
+          "events": [
+            {
+              "name": "checked-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "`{ value: boolean }` with the unwrapped new checked state; composed, bubbles; silent on the first render."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Visible label text — the default slot's fallback (slot content wins).",
+              "name": "label",
+              "fieldName": "label"
+            },
+            {
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "description": "Initial checked state for the UNCONTROLLED mode; ignored after the first update.",
+              "name": "default-checked",
+              "fieldName": "defaultChecked"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disabled: 40% opacity, no pointer events, aria-disabled (kept focusable).",
+              "name": "disabled",
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Pass-through: the control's name. REFLECTS — the ElementInternals form\nmirror reads the HOST's name content attribute for the entry's name\n(and the inner input carries the same value for direct-DOM consumers).",
+              "name": "name",
+              "fieldName": "name"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Pass-through: the native input's value (submitted when checked).",
+              "name": "value",
+              "fieldName": "value"
+            },
+            {
+              "type": {
+                "text": "string | null"
+              },
+              "description": "Accessible name forwarded to the native input (the wrapper-component\npattern): the host carries no role, so a host-level aria-label reaches\nno AT by itself — this property is the documented way to name a bare\nswitch (no label prop, no slotted content). Typed `string | null` to\nmatch the HTMLElement ARIA-reflection base declaration.",
+              "name": "aria-label",
+              "default": "null",
+              "fieldName": "ariaLabel"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-switch",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkSwitch",
+          "declaration": {
+            "name": "TkSwitch",
+            "module": "src/switch/switch.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-switch",
+          "declaration": {
+            "name": "TkSwitch",
+            "module": "src/switch/switch.ts"
           }
         }
       ]
