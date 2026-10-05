@@ -94,6 +94,9 @@
   /* Measured (Story 23.2) — the publisher official chip blue glyph `#428BF9` (check figure) on the pale ring `#D0E2FE`, same row/scan as the verified chip (captures-v4/invest/stock-sber.png, y1227-1270). Non-text status glyph — same AA ruling; theme-invariant ink, the backdrop re-declares dark (`#1E2C4A` first-pass). DESIGN.md Colors. */
   --tk-color-invest-badge-official: #428BF9;
   --tk-color-invest-badge-official-backdrop: #D0E2FE;
+  /* Measured (Story 24T.2) — terminal buy CTA fill `#0BA264`, pixel-probed on the order button (captures-v5/terminal, clean frames both themes). Theme-invariant terminal fill (charcoal mold). White label 3.299:1; sell twin `#9D2B2B` white 7.463:1 ✓; RECORDED-FAILING: white body-m-bold on buy **3.299:1** (< 4.5 — bold 15px is not AA-large) — the live terminal ships the same pair; pinned as-measured. DESIGN.md Colors. */
+  --tk-color-trade-buy: #0BA264;
+  --tk-color-trade-sell: #9D2B2B;
   /* Semantic alias — `blue-100`, added in Story 1.3: components consume semantics, not scales (AD-2/AD-3), and the dark layer needs a semantic name to override (`dark-link`). DESIGN.md Colors (TextLink). */
   --tk-color-link: #1771E6;
   /* Semantic alias — `red-100`, added in Story 1.3 alongside `link` so both themes expose error semantics (the dark layer overrides it with `dark-error`). DESIGN.md Colors. */

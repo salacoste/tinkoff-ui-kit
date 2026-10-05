@@ -10,6 +10,9 @@ import { buttonStyles } from './button.css.js';
  * Pill button in the Tinkoff (T-Bank) register: primary yellow (ink text),
  * secondary surface (default shadow), inverse ink (white text); heights
  * 56 (hero) / 48 (card) / 32 (compact, padded to the 44px target floor).
+ * Terminal trade pair (24T.2): `positive`/`negative` ride the measured
+ * trade fills (`--tk-color-trade-buy|sell`, theme-invariant, white label,
+ * the terminal's own ≈4px radius — see button.css.ts).
  * Visual spec: DESIGN.md `components.button-*`; behavior: EXPERIENCE.md
  * Component Patterns (Button row).
  *
@@ -39,7 +42,7 @@ import { buttonStyles } from './button.css.js';
  * anchor semantics — the documented delta, see the Accessibility story).
  *
  * @tag tk-button
- * @attr {primary|secondary|inverse} variant - Visual variant (default `primary`).
+ * @attr {primary|secondary|inverse|positive|negative} variant - Visual variant (default `primary`).
  * @attr {hero|card|compact} size - Control height scale (default `card`).
  * @attr {boolean} loading - In-place spinner; width frozen; clicks do not activate.
  * @attr {boolean} disabled - 40% opacity, no pointer events, aria-disabled.
@@ -51,14 +54,14 @@ import { buttonStyles } from './button.css.js';
  */
 export class TkButton extends LitElement {
   /** Visual variant union (CONVENTIONS §2: literal unions, never forking booleans). */
-  static readonly variants = ['primary', 'secondary', 'inverse'] as const;
+  static readonly variants = ['primary', 'secondary', 'inverse', 'positive', 'negative'] as const;
 
   /** Size union: hero 56 / card 48 / compact 32 (padded to the 44px floor). */
   static readonly sizes = ['hero', 'card', 'compact'] as const;
 
   /** Visual variant. */
   @property({ reflect: true })
-  variant: 'primary' | 'secondary' | 'inverse' = 'primary';
+  variant: 'primary' | 'secondary' | 'inverse' | 'positive' | 'negative' = 'primary';
 
   /** Control height scale. */
   @property({ reflect: true })

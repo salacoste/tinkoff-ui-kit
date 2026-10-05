@@ -126,6 +126,11 @@ colors:
   invest-badge-official-backdrop: '#D0E2FE' # blue chip pale ring
   dark-invest-badge-verified-backdrop: '#1E3B2A' # dark first-pass, bright ink stays
   dark-invest-badge-official-backdrop: '#1E2C4A' # dark first-pass, bright ink stays
+  # v2.5 — terminal trade CTA pair (24T.2 terminal ticket, captures-v5/terminal
+  # pixel-probed on the order buttons, both themes; theme-invariant terminal fills —
+  # the live terminal ships the same pair in light and dark, charcoal mold)
+  trade-buy: '#0BA264' # buy CTA fill; white label 3.299:1 — see Colors (Terminal trade CTA pair)
+  trade-sell: '#9D2B2B' # sell CTA fill; white 7.463:1 ✓
 # v2.2 — AA-annotation machine truth (story 9.2): the AA-bearing color notes
 # (TOKENS.md Notes column + tokens.css comments) are GENERATED from this block,
 # not held as generator literals. Grammar per entry: kind (override | addition |
@@ -217,6 +222,11 @@ aa-annotations:
     status: verified
     story: '23.2'
     text: 'the publisher official chip blue glyph `#428BF9` (check figure) on the pale ring `#D0E2FE`, same row/scan as the verified chip (captures-v4/invest/stock-sber.png, y1227-1270). Non-text status glyph — same AA ruling; theme-invariant ink, the backdrop re-declares dark (`#1E2C4A` first-pass). DESIGN.md Colors.'
+  trade-buy:
+    kind: measured
+    status: verified
+    story: '24T.2'
+    text: 'terminal buy CTA fill `#0BA264`, pixel-probed on the order button (captures-v5/terminal, clean frames both themes). Theme-invariant terminal fill (charcoal mold). White label 3.299:1; sell twin `#9D2B2B` white 7.463:1 ✓; RECORDED-FAILING: white body-m-bold on buy **3.299:1** (< 4.5 — bold 15px is not AA-large) — the live terminal ships the same pair; pinned as-measured. DESIGN.md Colors.'
 shadows:
   default: '0 4px 24px rgba(0,0,0,.12)'
   default-hover: '0 12px 36px rgba(0,0,0,.2)'
@@ -453,6 +463,7 @@ PRD improvement axis, fidelity checks cover visuals, not ratios):
 | Warm-cream pairings (v2, business) | 4.87–15.90:1 | sanctioned: text-primary 10.911:1 / text-secondary 4.866:1 on `tint-cream`; text-primary 9.655:1 on `tint-cream-raised`; dark: 15.895 / 8.461 on `dark-tint-cream`, 14.680 / 7.989 on `dark-tint-cream-raised`. **text-secondary NOT sanctioned on `tint-cream-raised`** — 4.306:1 fails 4.5:1, use text-primary there (the v1 on-tint ruling precedent) |
 | Stepper badge brown (v2, business, 9.1) | 5.413:1 / 4.674:1 | REQUIRED: white numeral on `tint-brown` **5.413:1** ✓ (badge fill, both themes — `tint-brown` is theme-invariant, charcoal mold); `tint-brown` on `tint-cream` **4.674:1** ✓ (badge over page cream). RECORDED-FAILING: `tint-brown` on `tint-cream-raised` **4.136:1** (< 4.5) — the badge never sits on raised cream (its card-top overlap is white); pinned, not fixed |
 | Instrument hero gradients (v2.3, invest, 22.5) | 3.500–19.31:1 | Measured identity fills, theme-invariant (charcoal mold; pixel-probed at the card rims, captures-v4/invest). `invest-stock-a` `#2E970A` → `invest-stock-b` `#257A08` (horizontal): white 3.785:1 → 5.434:1 — name 28px/700 clears AA-large both stops ✓. `invest-bond-a` `#009E4D` → `invest-bond-b` `#00813E` (135deg): white 3.500:1 → 4.991:1 — AA-large ✓ both. `invest-dark-a` `#0E0E0E` → `invest-dark-b` `#3B3B3B`: white 19.31:1 → 11.207:1 ✓ all sizes. `invest-light-a` `#EEF0F2` → `invest-light-b` `#D1D3D5` (right stop edge-extrapolated): ink-300 11.06:1 → 8.42:1 ✓ all sizes. RECORDED-FAILING: white body-s on `invest-stock-a` **3.785:1** and on `invest-bond-a` **3.500:1** (< 4.5) — the live identity gradient is immutable (the site ships the same ratios); the hero ships them as-measured with the ratios pinned, and a consumer overriding the fill via `--tk-instrument-hero-bg` owns their own AA |
+| Terminal trade CTA pair (v2.5, invest, 24T.2) | 3.299–7.463:1 | Measured terminal order fills, theme-invariant (pixel-probed on the order buttons, captures-v5/terminal, both themes). `trade-buy` `#0BA264` + white label **3.299:1**; `trade-sell` `#9D2B2B` + white **7.463:1** ✓. RECORDED-FAILING: white body-m-bold on `trade-buy` **3.299:1** (< 4.5 — bold 15px is not AA-large) — the live terminal ships the same pair on its buy CTA; pinned as-measured, and a consumer overriding the pair via the trade tokens owns their own AA |
 
 ## Typography
 

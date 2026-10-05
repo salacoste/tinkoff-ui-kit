@@ -71,6 +71,8 @@ export const colorTokens = {
   '--tk-color-invest-badge-verified-backdrop': '#CDF1DD',
   '--tk-color-invest-badge-official': '#428BF9',
   '--tk-color-invest-badge-official-backdrop': '#D0E2FE',
+  '--tk-color-trade-buy': '#0BA264',
+  '--tk-color-trade-sell': '#9D2B2B',
   '--tk-color-link': '#1771E6',
   '--tk-color-error': '#E01F19',
   '--tk-color-error-on-field': '#D3120E',

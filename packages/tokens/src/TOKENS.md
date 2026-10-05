@@ -6,9 +6,9 @@ GENERATED FILE — DO NOT EDIT. Regenerate with `pnpm gen:tokens`.
 - The `components:` frontmatter block is consumer spec prose — never rendered.
 - The z-scale is scaffold mechanics, not an extraction (own section below).
 - The `dark-*` color entries are the palette SOURCE for the dark layer (see "Dark layer") — never emitted as `--tk-color-dark-*` custom properties.
-- AA-bearing color notes are GENERATED from the DESIGN.md `aa-annotations:` block (story 9.2 — the generator literals died; every note must anchor in the Colors body, anchor lost → generation aborts): 16 entries — 16 verified / 0 open `[ASSUMPTION]` flags. Resolved history: text-secondary (Story 1.2); focus-ring (Story 1.2); link-on-tint (Story 1.2); error-on-field (Story 1.3); text-muted (Story 1.2); delta-positive (Story 6.1); delta-negative (Story 6.1); tint-cream (Story 6.1); tint-cream-raised (Story 6.1); tint-brown (Story 9.1); invest-stock-a (Story 22.5); invest-bond-a (Story 22.5); invest-dark-a (Story 22.5); invest-light-a (Story 22.5); invest-badge-verified (Story 23.2); invest-badge-official (Story 23.2).
+- AA-bearing color notes are GENERATED from the DESIGN.md `aa-annotations:` block (story 9.2 — the generator literals died; every note must anchor in the Colors body, anchor lost → generation aborts): 17 entries — 17 verified / 0 open `[ASSUMPTION]` flags. Resolved history: text-secondary (Story 1.2); focus-ring (Story 1.2); link-on-tint (Story 1.2); error-on-field (Story 1.3); text-muted (Story 1.2); delta-positive (Story 6.1); delta-negative (Story 6.1); tint-cream (Story 6.1); tint-cream-raised (Story 6.1); tint-brown (Story 9.1); invest-stock-a (Story 22.5); invest-bond-a (Story 22.5); invest-dark-a (Story 22.5); invest-light-a (Story 22.5); invest-badge-verified (Story 23.2); invest-badge-official (Story 23.2); trade-buy (Story 24T.2).
 
-Light layer: **151 tokens** on `:host, :root` (colors 64, typography 42, fonts 1, radius 7, spacing 14, shadows 6, motion 11, z-scale 6) plus the dark layer: **25 semantic overrides + 6 shadow-none re-declarations** on `[data-theme="dark"]`.
+Light layer: **153 tokens** on `:host, :root` (colors 66, typography 42, fonts 1, radius 7, spacing 14, shadows 6, motion 11, z-scale 6) plus the dark layer: **25 semantic overrides + 6 shadow-none re-declarations** on `[data-theme="dark"]`.
 
 ## Colors
 
@@ -77,6 +77,8 @@ Light entries from the `colors` block: brand/ink/gray/lightblue/functional scale
 | `--tk-color-invest-badge-verified-backdrop` | `#CDF1DD` |  |
 | `--tk-color-invest-badge-official` | `#428BF9` | Measured (Story 23.2) — the publisher official chip blue glyph `#428BF9` (check figure) on the pale ring `#D0E2FE`, same row/scan as the verified chip (captures-v4/invest/stock-sber.png, y1227-1270). Non-text status glyph — same AA ruling; theme-invariant ink, the backdrop re-declares dark (`#1E2C4A` first-pass). DESIGN.md Colors. |
 | `--tk-color-invest-badge-official-backdrop` | `#D0E2FE` |  |
+| `--tk-color-trade-buy` | `#0BA264` | Measured (Story 24T.2) — terminal buy CTA fill `#0BA264`, pixel-probed on the order button (captures-v5/terminal, clean frames both themes). Theme-invariant terminal fill (charcoal mold). White label 3.299:1; sell twin `#9D2B2B` white 7.463:1 ✓; RECORDED-FAILING: white body-m-bold on buy **3.299:1** (< 4.5 — bold 15px is not AA-large) — the live terminal ships the same pair; pinned as-measured. DESIGN.md Colors. |
+| `--tk-color-trade-sell` | `#9D2B2B` |  |
 | `--tk-color-link` | `#1771E6` | Semantic alias — `blue-100`, added in Story 1.3: components consume semantics, not scales (AD-2/AD-3), and the dark layer needs a semantic name to override (`dark-link`). DESIGN.md Colors (TextLink). |
 | `--tk-color-error` | `#E01F19` | Semantic alias — `red-100`, added in Story 1.3 alongside `link` so both themes expose error semantics (the dark layer overrides it with `dark-error`). DESIGN.md Colors. |
 | `--tk-color-error-on-field` | `#D3120E` | AA addition — `red-200` for errors on field/muted surfaces (red-100 = 4.22:1 on surface-field and 4.40:1 on surface-muted — both fail 4.5:1; red-200 passes). Mirrors the link-on-tint precedent. DESIGN.md Colors. |

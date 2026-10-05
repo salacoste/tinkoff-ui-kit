@@ -2,6 +2,7 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { TkButton } from './button.js';
+import { buttonStyles } from './button.css.js';
 
 /**
  * tk-button unit tests (spec 1.7): variant/size application + clamping,
@@ -113,6 +114,35 @@ describe('tk-button', () => {
     el.setAttribute('variant', 'inverse');
     await elementUpdated(el);
     expect(el.variant).toBe('inverse');
+  });
+
+  it('reflects the terminal trade pair positive/negative (24T.2) and pins their measured registers', async () => {
+    const el = await mount({}, 'Купить');
+    el.variant = 'positive';
+    await elementUpdated(el);
+    expect(el.getAttribute('variant')).toBe('positive');
+    el.setAttribute('variant', 'negative');
+    await elementUpdated(el);
+    expect(el.variant).toBe('negative');
+    // Both stay in the union (no clamp) and a bogus value still clamps.
+    expect(TkButton.variants).toContain('positive');
+    expect(TkButton.variants).toContain('negative');
+    el.variant = 'bogus' as unknown as TkButton['variant'];
+    await elementUpdated(el);
+    expect(el.variant).toBe('primary');
+
+    // CSS pins (comments stripped first — the AD-3 lesson): the measured
+    // terminal fills on the pill pseudo, the white label, the variant-scoped
+    // ≈4px radius (radius-xs) and the literal-free color-mix hover steps.
+    const sheet = buttonStyles.cssText.replace(/\/\*[\s\S]*?\*\//g, '');
+    expect(sheet).toContain(":host([variant='positive']) .button::before");
+    expect(sheet).toContain('background: var(--tk-color-trade-buy)');
+    expect(sheet).toContain('background: var(--tk-color-trade-sell)');
+    expect(sheet).toContain("color: var(--tk-color-white)");
+    expect(sheet).toContain('border-radius: var(--tk-radius-xs)');
+    expect(sheet).toContain(
+      'background: color-mix(in srgb, var(--tk-color-trade-buy) 88%, var(--tk-color-ink-400))',
+    );
   });
 
   it('freezes width while loading and keeps the label for screen readers', async () => {

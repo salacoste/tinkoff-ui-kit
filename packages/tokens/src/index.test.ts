@@ -83,7 +83,8 @@ describe('pillkit-tokens generated maps', () => {
   it('carries the derived aa-annotations ledger with zero open [ASSUMPTION] flags (story 9.2)', () => {
     const md = readFileSync(new URL('./TOKENS.md', import.meta.url), 'utf8');
     expect(md).toContain('`aa-annotations:` block');
-    expect(md).toContain('16 verified / 0 open `[ASSUMPTION]` flags');
+    // 17 since 24T.2 — the trade-buy measured note joined the ledger.
+    expect(md).toContain('17 verified / 0 open `[ASSUMPTION]` flags');
   });
 });
 

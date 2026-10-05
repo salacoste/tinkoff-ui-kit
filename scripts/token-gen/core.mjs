@@ -598,7 +598,9 @@ export function createTokenGenerator(config) {
   const AA_KINDS = new Set(['override', 'addition', 'restricted', 'pairing', 'measured']);
   const AA_STATUSES = new Set(['verified', 'assumed']);
   const AA_ENTRY_FIELDS = new Set(['kind', 'status', 'story', 'text']);
-  const AA_STORY_RE = /^\d+\.\d+$/;
+  // '24T.2' — capture-wave stories carry a letter suffix (24T.1/24T.2); the
+  // plain N.N shape stays the common case (grammar widened 24T.2).
+  const AA_STORY_RE = /^\d+[A-Z]?\.\d+$/;
 
   /**
    * The AA-class test (spec 9.2): a note is AA-bearing when its text carries a

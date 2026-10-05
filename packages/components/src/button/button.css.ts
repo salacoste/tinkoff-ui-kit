@@ -181,6 +181,50 @@ export const buttonStyles = css`
     background: var(--tk-color-ink-100);
   }
 
+  /* Positive/negative: the terminal trade CTA pair (24T.2, measured in
+     captures-v5/terminal). Theme-invariant fills (--tk-color-trade-buy /
+     --tk-color-trade-sell — the terminal ships the same pair in both themes,
+     charcoal mold), white label (white-on-buy is RECORDED-FAILING 3.299:1
+     as-measured — the DESIGN.md Colors ruling). The pair carries its OWN
+     radius: the measured terminal pill is ≈4px = --tk-radius-xs exactly
+     (vs the family pill) — the variant-scoped override, not a family change.
+     Hover/press: the family has no color-step tokens for these fills, so
+     the steps MIX the fill with the ink-400 token (color-mix — no color
+     literals, FR-1); 88/78 are structural mix ratios, not colors. */
+  :host([variant='positive']) .button {
+    color: var(--tk-color-white);
+  }
+
+  :host([variant='positive']) .button::before {
+    background: var(--tk-color-trade-buy);
+    border-radius: var(--tk-radius-xs);
+  }
+
+  :host([variant='positive']:not([loading])) .button:hover::before {
+    background: color-mix(in srgb, var(--tk-color-trade-buy) 88%, var(--tk-color-ink-400));
+  }
+
+  :host([variant='positive']:not([loading])) .button:active::before {
+    background: color-mix(in srgb, var(--tk-color-trade-buy) 78%, var(--tk-color-ink-400));
+  }
+
+  :host([variant='negative']) .button {
+    color: var(--tk-color-white);
+  }
+
+  :host([variant='negative']) .button::before {
+    background: var(--tk-color-trade-sell);
+    border-radius: var(--tk-radius-xs);
+  }
+
+  :host([variant='negative']:not([loading])) .button:hover::before {
+    background: color-mix(in srgb, var(--tk-color-trade-sell) 88%, var(--tk-color-ink-400));
+  }
+
+  :host([variant='negative']:not([loading])) .button:active::before {
+    background: color-mix(in srgb, var(--tk-color-trade-sell) 78%, var(--tk-color-ink-400));
+  }
+
   /* --- Disabled: 40% opacity, no pointer events (host-level above);
      aria-disabled is set on the inner button. Disabled wins visually over
      loading (the recorded precedence — the spinner may still render). The
