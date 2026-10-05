@@ -33,6 +33,7 @@ export * from './promo-card.js';
 export * from './publisher-header.js';
 export * from './qr-block.js';
 export * from './quote-chip.js';
+export * from './range-slider.js';
 export * from './rating.js';
 export * from './segmented-radio.js';
 export * from './select.js';

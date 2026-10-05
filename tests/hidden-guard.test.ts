@@ -25,7 +25,7 @@ import { describe, expect, it } from 'vitest';
  * other's guard.
  *
  * Tripwires keep the scan non-vacuous:
- * - the pinned sheet count (41) fails loudly when a sheet joins or leaves
+ * - the pinned sheet count (53) fails loudly when a sheet joins or leaves
  *   the host-display family — joining forces the guard decision deliberately;
  * - a component directory whose `<name>.css.ts` exists but contributes zero
  *   css`` templates is a parse surprise, not a pass.
@@ -50,9 +50,10 @@ const COMPONENTS_SRC = join(REPO_ROOT, 'packages', 'components', 'src');
  * + 1 (chart, spec 23.1) + 1 (publisher-header, spec 23.2)
  * + 1 (figure, spec 24.7)
  * + 1 (breadcrumb, spec 24.9)
- * = 52.
+ * + 1 (range-slider, spec 26.1)
+ * = 53.
  */
-const PINNED_HOST_DISPLAY_SHEETS = 52;
+const PINNED_HOST_DISPLAY_SHEETS = 53;
 
 interface SheetFinding {
   component: string;
@@ -118,14 +119,14 @@ describe('kit-wide :host([hidden]) guard (story 8.1, deferred-work 6.3 N6)', () 
     ).toEqual([]);
   });
 
-  it('tripwire: the host-display sheet roster is the pinned 52 — a new sheet joining the family forces a deliberate guard decision', () => {
+  it('tripwire: the host-display sheet roster is the pinned 53 — a new sheet joining the family forces a deliberate guard decision', () => {
     const findings = auditSheets();
     expect(findings).toHaveLength(PINNED_HOST_DISPLAY_SHEETS);
-    // 41 component files (breadcrumb, spec 24.9); seven contribute a second
+    // 42 component files (range-slider, spec 26.1); seven contribute a second
     // host-display sheet and menu-popover contributes four (deduped — a
     // 4-sheet component would otherwise list itself three times in the raw
     // duplicate findings).
-    expect(new Set(findings.map((f) => f.component)).size).toBe(41);
+    expect(new Set(findings.map((f) => f.component)).size).toBe(42);
     const doubled = [
       ...new Set(
         findings

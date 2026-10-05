@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { describe, expect, it } from 'vitest';
 
-import { TkAccordion, TkAccordionItem, TkButton, TkComboboxSearch, TkCookieBanner, TkDataTable, TkEmptyState, TkFigure, TkFilterChips, TkMenuDivider, TkMenuItem, TkMenuPopover, TkNote, TkPagination, TkQrBlock, TkQuoteChip, TkRating, TkSkeleton, TkStepper, TkStoreBadges } from './index.js';
+import { TkAccordion, TkAccordionItem, TkButton, TkComboboxSearch, TkCookieBanner, TkDataTable, TkEmptyState, TkFigure, TkFilterChips, TkMenuDivider, TkMenuItem, TkMenuPopover, TkNote, TkPagination, TkQrBlock, TkQuoteChip, TkRangeSlider, TkRating, TkSkeleton, TkStepper, TkStoreBadges } from './index.js';
 
 /**
  * Package entry: every component's public surface is reachable from
@@ -105,5 +105,11 @@ describe('pillkit-components entry', () => {
     expect(TkFigure).toBeDefined();
     await customElements.whenDefined('tk-figure');
     expect(customElements.get('tk-figure')).toBe(TkFigure);
+  });
+
+  it('re-exports the range-slider atom (spec 26.1 — form-control wave) and registers its tag', async () => {
+    expect(TkRangeSlider).toBeDefined();
+    await customElements.whenDefined('tk-range-slider');
+    expect(customElements.get('tk-range-slider')).toBe(TkRangeSlider);
   });
 });

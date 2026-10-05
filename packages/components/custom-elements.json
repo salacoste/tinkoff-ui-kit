@@ -5188,6 +5188,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/range-slider/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/figure/index.js"
           }
         },
@@ -10201,6 +10209,517 @@
           "declaration": {
             "name": "TkQuoteChip",
             "module": "src/quote-chip/quote-chip.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/range-slider/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/range-slider/range-slider.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/range-slider/range-slider.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "rangeSliderStyles",
+          "default": "css` :host { display: block; max-width: 100%; } /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */ :host([hidden]) { display: none; } /* --- Disabled (the checkbox mold): 40% opacity, no pointer events; the control stays focusable — aria-disabled carries the state and the input handler guards commits. --- */ :host([disabled]) { opacity: 0.4; pointer-events: none; } /* --- Header row (the tk-progress-bar header mold): label left, formatted value right, body-s pair, one 8px gap above the track. Rendered only when it carries content (label prop/slot or a value slot) — a bare slider is track-only. --- */ .header { display: flex; align-items: baseline; justify-content: space-between; gap: var(--tk-space-16); margin: 0 0 var(--tk-space-8); font-family: var(--tk-font-body); } .header[hidden], .header > [hidden] { display: none; } .header__label { font-size: var(--tk-text-body-s-size); font-weight: var(--tk-text-body-s-weight); line-height: var(--tk-text-body-s-leading); color: var(--tk-range-slider-text, var(--tk-color-text-secondary)); } .header__value { font-size: var(--tk-text-body-s-bold-size); font-weight: var(--tk-text-body-s-bold-weight); /* Bold steps carry no leading token — the base-step leading governs. */ line-height: var(--tk-text-body-s-leading); color: var(--tk-range-slider-value-text, var(--tk-color-text-primary)); } /* --- Interaction row: the invisible NATIVE input[type=range] is THE interaction surface (keyboard, drag, touch, announcements — free), laid over the token-painted visual. The 44px height is the §8 target floor — the 4px track alone could never carry touch. Both children are positioned, DOM order paints the input above (checkbox mold, no z-index). --- */ .row { position: relative; display: flex; align-items: center; height: 44px; } .control__input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; padding: 0; cursor: pointer; -webkit-appearance: none; appearance: none; /* The native engine paints its own track/thumb on some platforms even under appearance:none (Safari knobs) — clip to nothing: the visual below is the only painted surface. */ background: transparent; border: none; } /* The painted track: the progress-bar mold. Inset by half the thumb on both sides so the VISUAL thumb travel matches the native engine's thumb geometry (native centers its thumb over [half-thumb … width−half-thumb] — an uninset track would drift from the pointer at the extremes). */ .visual { position: relative; box-sizing: border-box; width: 100%; height: var(--tk-range-slider-track-height, 4px); margin: 0 calc(var(--tk-range-slider-thumb-size, 20px) / 2); border-radius: var(--tk-radius-full); background: var(--tk-range-slider-track-color, var(--tk-color-border-default)); /* The thumb is taller than the track — the visual layer must not clip it. */ overflow: visible; } .fill { position: absolute; inset: 0 auto 0 0; width: 50%; border-radius: var(--tk-radius-full); background: var(--tk-range-slider-fill-color, var(--tk-color-yellow-100)); } .thumb { position: absolute; top: 50%; left: 50%; box-sizing: border-box; width: var(--tk-range-slider-thumb-size, 20px); height: var(--tk-range-slider-thumb-size, 20px); border-radius: var(--tk-radius-full); background: var(--tk-range-slider-thumb-color, var(--tk-color-yellow-100)); box-shadow: 0 0 0 2px var(--tk-range-slider-thumb-ring, var(--tk-color-ink-300)); transform: translate(-50%, -50%); /* Direct manipulation, not state animation: NO transition on position — the thumb tracks the pointer/native value frame-for-frame (a curve here would lag every drag). Colors do not animate either — the thumb has no color states (hover affordance lives on the native cursor). */ } /* Unified focus ring — 2px token ring, offset 2px, drawn on the VISIBLE thumb (:has() bridges the sibling order — the evergreen technique the data-table row link documented; the invisible input owns :focus-visible). Suppression nowhere: the input paints nothing. */ .row:has(.control__input:focus-visible) .thumb { outline: 2px solid var(--tk-color-focus-ring); outline-offset: 2px; } /* The native input's own hit layer never paints anything (the Safari guard above) — belt and braces for engine quirks. */ .control__input:focus { outline: none; } `",
+          "description": "tk-range-slider styles — tokens only (FR-1), zero theme branches (AD-3).\n\nGEOMETRY REGISTER (spec 26.1 AC4, maintainer ruling 2026-10-05): the\niis.png grounding premise was disproven at execution (no slider in the\ncapture or the live DOM — spec Change Log), so the geometry follows KIT\nREGISTERS: the track is the tk-progress-bar mold (4px full-width pill,\nborder-default rail, radius-full) and the thumb is the tk-checkbox\nengaged circle language (20px — the DESIGN 20px-wins box reading —\nyellow-100 fill with an ink ring). Pixel grounding of these numbers is\nan explicit HOLD → 24T capture target (TERMINAL-CAPTURE-CHECKLIST).\n\nPer-component custom properties (`--tk-range-slider-*`, CONVENTIONS §6),\neach consumed WITH its token default as the fallback:\n- `--tk-range-slider-track-height` track bar height (default 4px — the\n  progress-bar DESIGN default, same structural flag)\n- `--tk-range-slider-thumb-size`   thumb diameter (default 20px — the\n  checkbox box DESIGN win; structural, same flag family)\n- `--tk-range-slider-track-color`  rail fill (default border-default —\n  the progress-bar track semantic: light value = gray-200's hex, dark\n  remaps to the white-alpha tonal step)\n- `--tk-range-slider-fill-color`   filled portion (default yellow-100 —\n  the kit's engaged-control language, tk-checkbox's checked fill)\n- `--tk-range-slider-thumb-color`  thumb fill (default yellow-100)\n- `--tk-range-slider-thumb-ring`   thumb contrast ring (default ink-300 —\n  the checkbox glyph pairing; keeps the yellow thumb visible over the\n  yellow fill AND the gray rail in both themes)\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule — the token sheet carries no counterpart: the 4px track height and\n20px thumb defaults (above), the 2px ring width (the unified ring metric,\n§8) and the 44px interaction row height (the §8 target floor).\nFill width and thumb left% arrive as inline styles — computed GEOMETRY,\nnot theming (the tk-progress-bar `width: N%` precedent)."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "rangeSliderStyles",
+          "declaration": {
+            "name": "rangeSliderStyles",
+            "module": "src/range-slider/range-slider.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/range-slider/range-slider.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-range-slider — single-thumb amount picker (spec 26.1, form-control\nwave), the Т-Банк calculator pattern rebuilt on kit registers.\n\nGEOMETRY REGISTER (AC4, maintainer ruling 2026-10-05): the iis.png\ngrounding premise was disproven at execution (no slider in the capture\nor the live DOM — see the spec Change Log); the track follows the\ntk-progress-bar mold (4px pill) and the thumb the tk-checkbox engaged\ncircle (20px, yellow + ink ring). Pixel grounding is a HOLD → 24T.\n\nSTATEFUL API — the §4 contract frozen at 2.1, number mirror of\ntk-checkbox: `value` strict-controlled (renders exactly the SNAPPED\n`value`; interaction emits `value-change` and applies nothing locally —\nthe native thumb keeps its live position until the element's next\nupdate, the caret-sanity mirror), `defaultValue` seeds uncontrolled\n(later changes ignored), releasing `value` goes uncontrolled seeded from\nthe last controlled value.\n\nMECHANISM (AC3): the native shadow `<input type=\"range\">` is THE\ninteraction surface — keyboard (arrows/Home/End ±step), pointer drag,\ntouch and the implicit slider role with aria-valuemin/max/now all come\nnative; the kit paints its own track/fill/thumb underneath (opacity-0\noverlay, the tk-checkbox technique). The ONE native gap is PageUp/\nPageDown (spec AC2: ±10 steps) — handled in a keydown guard that\ncomputes, commits and prevents default; every other key stays native.\n\nSTEP-GRID CLAMP (AC1): the DISPLAY snaps every value — controlled prop\nand uncontrolled state alike — to the nearest step multiple\n(documented rule: `round((v − min) / step) · step + min`, ties toward\n+∞, then clamped into [min, max]). The `value` PROP is never mutated\n(the tk-progress-bar display-clamp ruling: the prop keeps 7, everything\nrendered and emitted reads 5 on a 0–10/step-5 grid). A non-finite or\n≤0 `step` reads as 1 (the native default); a degenerate range\n(min ≥ max) collapses to the min endpoint with nothing to traverse.\n\nARIA (AC2): role=slider + aria-valuemin/max/now come native from the\ninput's min/max/value; the input's accessible NAME is the visible header\n(label → formatted value) through an `aria-labelledby` id-ref chain (the\ntk-input mold) — a bare slider (header hidden) takes the forwarded\nhost `aria-label` instead (the tk-checkbox mold); aria-valuetext carries\nthe FORMATTED value when a `valueFormatter` is set (the APG valuetext\nguidance for unit-formatted sliders), aria-disabled carries `disabled`\n(kept focusable — the button-pilot pattern). The visual layer is\naria-hidden decoration over the semantic input.\n\nSSR-compat (AD-10): rendered via Lit templates only; the imperative\nnative sync (the input's live value between updates) lives in\n`updated()`, never at construction.",
+          "name": "TkRangeSlider",
+          "slots": [
+            {
+              "description": "Label content; wins over the `label` prop when present.",
+              "name": ""
+            },
+            {
+              "description": "Readout cell (right); wins over the formatter/String default when present.",
+              "name": "value"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "min",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Range floor; non-finite reads as the 0 default.",
+              "attribute": "min"
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "100",
+              "description": "Range ceiling; non-finite reads as the 100 default.",
+              "attribute": "max"
+            },
+            {
+              "kind": "field",
+              "name": "step",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Grid step; non-finite or ≤ 0 reads as the native 1 default.",
+              "attribute": "step"
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Initial value for the UNCONTROLLED mode; ignored after the first update.",
+              "attribute": "default-value"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Visible label text — the default slot's fallback (slot content wins).",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "ariaLabel",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Accessible name for a BARE slider (no label prop/slot, header hidden) —\nforwarded to the native input (the tk-checkbox mold): the host carries\nno role, so a host-level aria-label only matters on the input; when the\nheader is visible the labelledby chain wins instead. Typed\n`string | null` to match the HTMLElement ARIA-reflection base.",
+              "attribute": "aria-label"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disabled: 40% opacity, no pointer events, aria-disabled (kept focusable).",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "description": "Controlled value channel (property-only, never reflects); renders snapped, never mutated."
+            },
+            {
+              "kind": "field",
+              "name": "valueFormatter",
+              "type": {
+                "text": "TkRangeSliderValueFormatter"
+              },
+              "description": "Formats the snapped value for the readout and aria-valuetext (property-only — functions never ride attributes)."
+            },
+            {
+              "kind": "field",
+              "name": "#uncontrolledValue",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Live uncontrolled state (the truth whenever `value` is not provided)."
+            },
+            {
+              "kind": "field",
+              "name": "#lastControlledValue",
+              "privacy": "private",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Last number ever provided through the controlled channel — the seed on release."
+            },
+            {
+              "kind": "field",
+              "name": "#isControlled",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the controlled channel has ever supplied a value."
+            },
+            {
+              "kind": "field",
+              "name": "#labelSlotted",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the default slot carries REAL label content (an element or non-empty text)."
+            },
+            {
+              "kind": "field",
+              "name": "#valueSlotted",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the `value` slot carries REAL readout content."
+            },
+            {
+              "kind": "field",
+              "name": "#uniqueId",
+              "privacy": "private",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Per-instance id root for the aria id-ref chain (label → value)."
+            },
+            {
+              "kind": "field",
+              "name": "#nextId",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "static": true,
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#id",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveMin",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "description": "Display-side effective min: non-finite reads as 0.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveMax",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "description": "Display-side effective max: non-finite reads as 100; degenerate collapses to min.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#isDegenerate",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Degenerate range (effective min ≥ effective max): one legal point, nothing to traverse.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveStep",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "description": "The grid step in force: non-finite or ≤ 0 reads as the native 1 default.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveValue",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "description": "The value in force: exactly `value` when controlled, the internal state otherwise.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#displayValue",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "description": "The SNAPPED display value (AC1's documented rule): nearest step\nmultiple, ties toward +∞ (Math.round), then clamped into [min, max].\nDegenerate ranges have one legal point — min. The PROP is never touched.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#ratio",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "description": "Ratio (0–1) of the display value over the range — the fill/thumb geometry source.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#syncSlotPresence",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "optional": true,
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "Label slot presence (the badge-slot rule mirrored from tk-checkbox):\nREAL content (an element or non-empty text) makes the slot win; empty\ntext nodes — the `${cond ? html`…` : ''}` template shape — do NOT\nsuppress the label prop. Checked at firstUpdated and on every\nslotchange (the header cells stay in the DOM — hidden, never absent —\nso their slots exist for slotchange in every state)."
+            },
+            {
+              "kind": "method",
+              "name": "#handleSlotChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#emitValueChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "`detail: { value }` with the unwrapped snapped number; composed + bubbles (CONVENTIONS §3)."
+            },
+            {
+              "kind": "method",
+              "name": "#commit",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "next",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Commit pipeline (native `input` events and the PageUp/PageDown guard\nboth arrive here): the value is ALREADY on the grid — native snaps\nuser input to the step, the key guard pre-snaps — so the pipeline\ntrusts the incoming number. Uncontrolled commits the internal state;\nboth modes emit. Controlled applies nothing locally — the native\nthumb stays where the pointer left it until the element's next update\nreverts it to exactly `value` (the frozen strict contract). Disabled:\naria-disabled keeps the control focusable, so a keyboard interaction\nstill fires native input — the guard reverts the native value and\nnothing emits."
+            },
+            {
+              "kind": "method",
+              "name": "#handleInput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#handleKeydown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ],
+              "description": "The one native gap (AC2): PageUp/PageDown jump ±10 steps. preventDefault\n(nothing native maps to Page keys on range inputs in Chromium — the\nguard owns them outright), snap the target onto the grid, write it to\nthe native input (a programmatic write fires no native `input` — the\ncommit runs directly). Every other key (arrows, Home, End, typing)\nstays native: this handler passes them through untouched."
+            },
+            {
+              "kind": "field",
+              "name": "#readout",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "description": "The formatted readout: the consumer formatter, else the plain number.",
+              "readonly": true
+            }
+          ],
+          "events": [
+            {
+              "name": "value-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "`{ value: number }` with the unwrapped snapped value; composed, bubbles; silent on the first render."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "Range floor; non-finite reads as the 0 default.",
+              "name": "min",
+              "default": "0",
+              "fieldName": "min"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "Range ceiling; non-finite reads as the 100 default.",
+              "name": "max",
+              "default": "100",
+              "fieldName": "max"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "Grid step; non-finite or ≤ 0 reads as the native 1 default.",
+              "name": "step",
+              "default": "1",
+              "fieldName": "step"
+            },
+            {
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Initial value for the UNCONTROLLED mode; ignored after the first update.",
+              "name": "default-value",
+              "fieldName": "defaultValue"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disabled: 40% opacity, no pointer events, aria-disabled (kept focusable).",
+              "name": "disabled",
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Visible label text — the default slot's fallback (slot content wins).",
+              "name": "label",
+              "fieldName": "label"
+            },
+            {
+              "type": {
+                "text": "string | null"
+              },
+              "description": "Accessible name for a BARE slider (no label prop/slot, header hidden) —\nforwarded to the native input (the tk-checkbox mold): the host carries\nno role, so a host-level aria-label only matters on the input; when the\nheader is visible the labelledby chain wins instead. Typed\n`string | null` to match the HTMLElement ARIA-reflection base.",
+              "name": "aria-label",
+              "default": "null",
+              "fieldName": "ariaLabel"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-range-slider",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkRangeSlider",
+          "declaration": {
+            "name": "TkRangeSlider",
+            "module": "src/range-slider/range-slider.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-range-slider",
+          "declaration": {
+            "name": "TkRangeSlider",
+            "module": "src/range-slider/range-slider.ts"
           }
         }
       ]

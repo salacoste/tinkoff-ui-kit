@@ -88,6 +88,10 @@ const COMPONENTS: readonly SearchEntry[] = [
   // A3, the only market-data answer in the kit; entry points at the
   // Components/ story.
   { title: 'QuoteChip', tag: 'tk-quote-chip', ru: 'Чип котировки', id: 'components-quotechip--playground' },
+  // 26.1 (form-control wave): the single-thumb amount picker — the Т-Банк
+  // calculator pattern on a native range surface; entry points at the
+  // Components/ story.
+  { title: 'RangeSlider', tag: 'tk-range-slider', ru: 'Ползунок', id: 'components-rangeslider--playground' },
   // 21.5 (invest foundation wave): the read-only star rating — GAP-MAP
   // Tier A #7; entry points at the Components/ story.
   { title: 'Rating', tag: 'tk-rating', ru: 'Рейтинг', id: 'components-rating--playground' },

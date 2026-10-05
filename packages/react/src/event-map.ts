@@ -135,6 +135,13 @@ export const EVENT_MAP: Readonly<Record<string, Readonly<TkKitElementEventMap>>>
   'tk-note': {
     onOpenChange: 'open-change',
   },
+  // Spec 26.1 (form-control wave) — the number state channel (§4 contract on
+  // `value`, the same mapping the form family carries; value-change is what
+  // the element dispatches, so the completeness guard demands exactly this
+  // entry).
+  'tk-range-slider': {
+    onValueChange: 'value-change',
+  },
   // 'tk-skeleton': none at spec 21.2 — STATELESS DISPLAY: a decorative
   // aria-hidden placeholder bone; nothing dispatches (the completeness
   // guard's no-entry case, the tk-badge mold).
