@@ -219,4 +219,62 @@ export const inputStyles = css`
     height: 16px;
     margin-block-start: 0.5px;
   }
+
+  /* --- Code mode (spec 26.4): the one-digit cell row ------------------------
+     Geometry is KIT REGISTERS by the wave ruling: the spec's capture premise
+     (create-account.png holding 4 cells) died on the pixel probe — the frame
+     is the PHONE step, its «four blocks» are footer sitemap columns — so the
+     cells take the input family's own box registers: a 52px square (the
+     DESIGN.md components.input height literal — square by the OTP idiom),
+     radius-md, the border-default hairline at rest. The row gap reuses the
+     field's own flex gap register (--tk-space-8). Override hooks, the
+     --tk-<component>-<slot> grammar (spec AC4, exactly four):
+     - --tk-input-code-size           cell box          (default 52px)
+     - --tk-input-code-cell           cell fill         (default surface-field)
+     - --tk-input-code-gap            row gap           (default --tk-space-8)
+     - --tk-input-code-border-active  active-cell border (default focus-ring)
+     A FILLED cell darkens its border to border-strong (state, not a hook —
+     same axis as the family's error/focus colors: the token layer themes it). */
+  .code {
+    display: flex;
+    gap: var(--tk-input-code-gap, var(--tk-space-8));
+  }
+
+  .code__cell {
+    box-sizing: border-box;
+    width: var(--tk-input-code-size, 52px);
+    height: var(--tk-input-code-size, 52px);
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--tk-color-border-default);
+    border-radius: var(--tk-input-radius, var(--tk-radius-md));
+    background: var(--tk-input-code-cell, var(--tk-color-surface-field));
+    text-align: center;
+    font-family: var(--tk-font-body);
+    font-size: var(--tk-text-body-l-size);
+    line-height: var(--tk-text-body-l-leading);
+    color: var(--tk-input-text, var(--tk-color-text-primary));
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .code__cell[data-filled] {
+    border-color: var(--tk-color-border-strong);
+  }
+
+  /* The active cell: the family focus ring (2px token ring, offset 2px, never
+     removed — the .field:focus-within idiom, per-cell) plus the spec's yellow
+     accent on the border itself, hookable via --tk-input-code-border-active. */
+  .code__cell:focus-visible {
+    outline: 2px solid var(--tk-color-focus-ring);
+    outline-offset: 2px;
+    border-color: var(--tk-input-code-border-active, var(--tk-color-focus-ring));
+  }
+
+  /* Consumer error: every cell outlined (AC1); the message block below is the
+     shared .error markup. The internal focus-visible rule above still applies
+     — an outlined errored cell keeps its focus ring. */
+  .code--error .code__cell {
+    border-color: var(--tk-color-error-on-field);
+  }
 `;

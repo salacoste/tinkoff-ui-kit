@@ -91,8 +91,8 @@ describe('pillkit-react', () => {
 
   // --- The frozen React-surface contract (Story 2.1, CONVENTIONS §9) --------
 
-  it("carries the first registry entry: tk-input's value-change → onValueChange", () => {
-    expect(EVENT_MAP['tk-input']).toEqual({ onValueChange: 'value-change' });
+  it("carries the first registry entry: tk-input's value-change → onValueChange (+ code-mode complete, 26.4)", () => {
+    expect(EVENT_MAP['tk-input']).toEqual({ onValueChange: 'value-change', onComplete: 'complete' });
   });
 
   it('renders <Input> as tk-input with element properties set through the wrapper', async () => {

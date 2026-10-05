@@ -29,10 +29,12 @@ type InputArgs = {
   error: string;
   badge: boolean;
   type: TkInputType;
+  code: boolean;
+  length: number;
 };
 
 const input = (args: Partial<InputArgs> = {}) => {
-  const { label, placeholder, required, disabled, srOnly, error, badge, type } = args;
+  const { label, placeholder, required, disabled, srOnly, error, badge, type, code, length } = args;
   return html`
     <tk-input
       class="tkin-field"
@@ -41,6 +43,8 @@ const input = (args: Partial<InputArgs> = {}) => {
       ?required=${required ?? false}
       ?disabled=${disabled ?? false}
       ?sr-only=${srOnly ?? false}
+      ?code=${code ?? false}
+      .length=${length ?? 4}
       .error=${error && error.length > 0 ? error : undefined}
       .type=${type ?? 'text'}
     >
@@ -174,6 +178,8 @@ const meta: Meta<InputArgs> = {
     error: '',
     badge: false,
     type: 'text',
+    code: false,
+    length: 4,
   },
   argTypes: {
     label: { control: 'text', description: 'Видимая подпись над полем — видна всегда.' },
@@ -206,6 +212,14 @@ const meta: Meta<InputArgs> = {
       control: 'radio',
       options: ['text', 'email', 'tel', 'password', 'url', 'search'],
       description: 'Белый список нативных типов; неверное значение клампится в text.',
+    },
+    code: {
+      control: 'boolean',
+      description: 'Режим кода (26.4): ряд ячеек по одной цифре вместо одиночного поля.',
+    },
+    length: {
+      control: { type: 'range', min: 4, max: 8, step: 1 },
+      description: 'Режим кода: количество ячеек, кламп 4–8 (по умолчанию 4).',
     },
   },
   parameters: { layout: 'fullscreen' },
@@ -552,6 +566,190 @@ export const Accessibility: Story = {
           </tr>
         </tbody>
       </table>
+    </main>
+  `,
+};
+
+/**
+ * Code mode (spec 26.4): the cell row on kit registers — the spec's capture
+ * premise (create-account.png) did not survive the pixel probe (the frame is
+ * the PHONE step), so the geometry is the input family's own: 52px squares,
+ * radius-md, border-default → border-strong when filled, the family focus
+ * ring on the active cell. Resend/counters stay OUT (consumer pattern).
+ */
+export const CodeMode: Story = {
+  name: 'Код подтверждения',
+  render: (args) => html`
+    ${canvasStyles}
+    <main class="tkin-canvas">
+      <h1>Код подтверждения</h1>
+      <p class="tkin-note">
+        Режим <code>code</code> у tk-input (26.4): ряд ячеек по одной цифре,
+        value — склеенная строка, <code>value-change</code> на каждом вводе,
+        <code>complete</code> — когда заполнены все ячейки. Первая ячейка несёт
+        <code>autocomplete="one-time-code"</code> — браузер предложит СМС сам.
+        Не-цифровые символы не коммитятся (правило: только [0-9]); вставка с
+        разделителями (пробел/дефис) разбивается по ячейкам. Геометрия —
+        китовые регистры семейства: квадрат 52, radius-md, рамка темнее у
+        заполненной, жёлтый focus-токен у активной. Хуки:
+        <code>--tk-input-code-size</code>, <code>--tk-input-code-cell</code>,
+        <code>--tk-input-code-gap</code>,
+        <code>--tk-input-code-border-active</code>.
+      </p>
+      ${input({ ...args, code: true, label: 'Код подтверждения' })}
+      <div class="tkin-row">
+        <figure>
+          <tk-input class="tkin-field" code label="Код подтверждения"></tk-input>
+          <figcaption>по умолчанию: 4 пустые ячейки</figcaption>
+        </figure>
+        <figure>
+          <tk-input
+            class="tkin-field"
+            code
+            label="Код подтверждения"
+            default-value="12"
+          ></tk-input>
+          <figcaption>prefill через defaultValue: «12»</figcaption>
+        </figure>
+        <figure>
+          <tk-input class="tkin-field" code label="Код подтверждения" length="6"></tk-input>
+          <figcaption>length=6 (кламп 4–8)</figcaption>
+        </figure>
+        <figure>
+          <tk-input
+            class="tkin-field"
+            code
+            label="Код подтверждения"
+            default-value="12"
+            error="Неверный код"
+          ></tk-input>
+          <figcaption>error: обводка всех ячеек + aria-invalid</figcaption>
+        </figure>
+        <figure>
+          <tk-input class="tkin-field" code label="Код подтверждения" disabled></tk-input>
+          <figcaption>disabled на всю группу</figcaption>
+        </figure>
+      </div>
+    </main>
+  `,
+};
+
+/**
+ * The confirmation-flow composition (spec AC5): the consumer pattern around
+ * the code cells — masked phone (FICTIONAL digits, ПД-гейт), a STATIC timer
+ * line («00:58» — the countdown pattern is deliberately NOT taken) and the
+ * complete hand-off. Story handlers write into the log pre; args stay
+ * untouched.
+ */
+export const Confirmation: Story = {
+  name: 'Подтверждение заявки',
+  render: () => {
+    const log = (line: string): void => {
+      const pre = document.getElementById('tkin-log-code');
+      if (pre) {
+        pre.textContent = [line, ...(pre.textContent ?? '').split('\n')].slice(0, 6).join('\n');
+      }
+    };
+    return html`
+      ${canvasStyles}
+      <main class="tkin-canvas">
+        <h1>Подтверждение заявки</h1>
+        <p class="tkin-note">
+          Паттерн потребителя вокруг ячеек: маскированный телефон, статичная
+          строка таймера (значения вымышленные), нативная ссылка повторной
+          отправки. Событие <code>complete</code> — точка передачи: потребитель
+          сам решает, что делать с собранным кодом (серверная проверка — вне
+          атома). Счётчик попыток и resend-countdown — вне скоупа кита.
+        </p>
+        <section class="tkin-panel tkin-panel--muted">
+          <h2>Заявка № 8-4471</h2>
+          <p class="tkin-note">
+            Мы отправили код подтверждения на +7 9•• ••• •• 58. Код действует
+            <strong>00:58</strong>.
+          </p>
+          <tk-input
+            class="tkin-field"
+            code
+            label="Код подтверждения"
+            @value-change=${(event: Event) => {
+              const { value } = (event as CustomEvent<{ value: string }>).detail;
+              log(`value-change → «${value}»`);
+            }}
+            @complete=${(event: Event) => {
+              const { value } = (event as CustomEvent<{ value: string }>).detail;
+              log(`complete → «${value}» — передаём потребителю`);
+            }}
+          ></tk-input>
+          <p class="tkin-note">
+            Повторная отправка кода — паттерн потребителя; строка таймера
+            статична («00:58»), countdown-механика в кит не входит.
+          </p>
+          <pre class="tkin-log" id="tkin-log-code">—</pre>
+        </section>
+      </main>
+    `;
+  },
+};
+
+export const CodeAccessibility: Story = {
+  name: 'Доступность: код',
+  render: () => html`
+    ${canvasStyles}
+    <main class="tkin-canvas">
+      <h1>Доступность: код</h1>
+      <p class="tkin-note">
+        Группа ячеек — <code>role="group"</code> с именем из подписи (без
+        подписи — фолбэк «Код подтверждения»: группа не бывает безымянной);
+        каждая ячейка — фокусируемый нативный input с <code>aria-label</code>
+        «Цифра N». Фокус РЕАЛЬНЫЙ, не roving-имитация: каждая ячейка —
+        самостоятельный tab-stop (осознанный выбор спеки 26.4). Ошибка
+        обводит все ячейки и ставит <code>aria-invalid</code> на каждую;
+        сообщение связано через <code>aria-describedby</code>.
+      </p>
+      <h2>Чек-лист: только с клавиатуры</h2>
+      <table>
+        <thead>
+          <tr><th>Клавиша</th><th>Ожидаемое поведение</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>Tab</code> / <code>Shift+Tab</code></td>
+            <td>
+              Фокус входит в первую ячейку / покидает группу из последней;
+              кольцо 2px жёлтого focus-токена на активной ячейке.
+            </td>
+          </tr>
+          <tr>
+            <td>цифра</td>
+            <td>
+              Коммит + авто-переход к следующей ячейке; эмит
+              <code>value-change</code> со склеенной строкой; при заполнении
+              всех ячеек — <code>complete</code>.
+            </td>
+          </tr>
+          <tr>
+            <td><code>Backspace</code> на пустой ячейке</td>
+            <td>Фокус уходит на ячейку назад, её цифра очищается.</td>
+          </tr>
+          <tr>
+            <td><code>←</code> / <code>→</code></td>
+            <td>Ходьба по ячейкам без ввода.</td>
+          </tr>
+          <tr>
+            <td>не-цифра</td>
+            <td>Игнорируется: ячейка возвращает прежнюю цифру, событий нет.</td>
+          </tr>
+          <tr>
+            <td>вставка «1 2-3 4»</td>
+            <td>Разделители отбрасываются, ячейки заполняются с текущей.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="tkin-row">
+        ${input({ code: true, label: 'Код подтверждения' })}
+        ${input({ code: true, error: 'Неверный код' })}
+        ${input({ code: true, label: 'Код подтверждения', srOnly: true })}
+      </div>
     </main>
   `,
 };

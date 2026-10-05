@@ -31,6 +31,10 @@ export const EVENT_MAP: Readonly<Record<string, Readonly<TkKitElementEventMap>>>
   // gen` regenerates the wrappers after any edit.
   'tk-input': {
     onValueChange: 'value-change',
+    // Spec 26.4 (form-control wave) — code mode's completion occurrence (§3
+    // bare verb with a payload: detail { value }, unwrapped by the wrapper
+    // like every kit event). Fires when a user edit fills every cell.
+    onComplete: 'complete',
   },
   // Story 2.3 — value-change (the §4 contract) + open-change (the §9 frozen
   // overlay-surface state event every floating surface carries; demanded

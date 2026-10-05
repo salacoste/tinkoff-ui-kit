@@ -33,6 +33,21 @@ export type TkInputType = 'text' | 'email' | 'tel' | 'password' | 'url' | 'searc
 const REQUIRED_MESSAGE = 'Обязательное поле';
 
 /**
+ * Fallback name of the code-mode group (spec 26.3/26.4 a11y): `role=group`
+ * must never go nameless, and the label prop is absent in the bare register.
+ * A single constant, same localization axis as REQUIRED_MESSAGE.
+ */
+const DEFAULT_CODE_LABEL = 'Код подтверждения';
+
+/**
+ * Payload of `complete` (code mode): the joined digit string the user's edit
+ * produced — the same candidate `value-change` just carried.
+ */
+export interface TkInputCompleteDetail {
+  value: string;
+}
+
+/**
  * tk-input — the kit's first stateful component (Story 2.1), and the PR where
  * the React-surface and controlled/uncontrolled APIs are FROZEN
  * (CONVENTIONS §4/§9, «frozen at 2.1 — Input PR»):
@@ -65,6 +80,32 @@ const REQUIRED_MESSAGE = 'Обязательное поле';
  * `updated()`, the canonical Lit input pattern). Form association
  * (ElementInternals) is NOT in v1 — noted as a limitation in the story docs.
  *
+ * CODE MODE (spec 26.4, form-control completeness wave) — `code` swaps the
+ * single field for a row of N one-digit cells (the SMS-confirmation register;
+ * gap-6 asked for a MODE, not a new atom). Same frozen §4/§9 value channel:
+ * `value` is the JOINED digit string, `value-change` fires on every cell edit
+ * (silent at first render, as ever) and `complete` fires when an edit fills
+ * every cell (`detail: { value }` — the candidate the user entered, in both
+ * control modes). Mechanics: a digit commits and focus advances; Backspace on
+ * an empty cell walks back and clears the previous one; ←/→ move between
+ * cells; non-digits never commit (only [0-9] — the documented rule); a pasted
+ * string is digit-stripped and split-filled from the focused cell (space/dash
+ * separators are gap-6's «вставка-разделение»). Cells are individually
+ * focusable native inputs (`maxlength=1`, `inputmode=numeric`); the first
+ * cell carries `autocomplete=one-time-code` so the browser offers the SMS
+ * itself. Group semantics: `role=group` named by `label` (fallback «Код
+ * подтверждения» — a group must never go nameless), each cell announced as
+ * «Цифра N». `error` outlines every cell; `disabled` governs the group.
+ *
+ * Cell geometry is KIT REGISTERS (the wave ruling): the spec's capture
+ * premise — create-account.png holding 4 cells — did not survive the pixel
+ * probe (the frame is the PHONE step; the "four blocks" are the footer
+ * sitemap columns), so the cells take the input family's own box: a 52px
+ * square (the DESIGN.md `components.input` height literal), radius-md,
+ * border-default hairline at rest, border-strong when filled, the family
+ * focus ring on the active cell. Resend timers/counters stay OUT (consumer
+ * pattern).
+ *
  * @tag tk-input
  * @attr {string} label - Visible label above the field (always rendered when set).
  * @attr {string} placeholder - In-field hint; never replaces the label.
@@ -75,9 +116,12 @@ const REQUIRED_MESSAGE = 'Обязательное поле';
  * @attr {boolean} disabled - 40% opacity, no pointer events, aria-disabled.
  * @attr {string} name - Pass-through to the native input's name (form data, once form association ships).
  * @attr {text|email|tel|password|url|search} type - Native input type whitelist (default `text`).
- * @attr {string} autocomplete - Pass-through to the native input's autocomplete.
+ * @attr {string} autocomplete - Pass-through to the native input's autocomplete (code mode: the FIRST cell only, default `one-time-code`).
+ * @attr {boolean} code - Code mode: N one-digit cells instead of the single field (spec 26.4).
+ * @attr {number} length - Code mode: cell count, clamped 4–8 (default 4).
  * @slot badge - Inline badge inside the field, right-anchored (e.g. «+30%»); announced after the label.
  * @fires value-change - `{ value }` with the unwrapped new string; composed, bubbles.
+ * @fires complete - Code mode: `{ value }` when an edit fills every cell; composed, bubbles.
  */
 export class TkInput extends LitElement {
   /** Native input type whitelist (invalid runtime values clamp to `text`). */
@@ -152,6 +196,25 @@ export class TkInput extends LitElement {
   @property({ type: String })
   autocomplete?: string;
 
+  /**
+   * Code mode (spec 26.4): the single field becomes a row of `length`
+   * one-digit cells — the SMS-confirmation register. Reflected so the mode is
+   * visible in markup (`<tk-input code length="6">`); the single-field props
+   * (placeholder/badge/type) are inert in this mode.
+   */
+  @property({ type: Boolean, reflect: true })
+  code = false;
+
+  /**
+   * Code mode: cell count, clamped to 4–8 (spec AC1 — a shorter code is not a
+   * code, a longer one is not a phone SMS). Non-numeric input clamps to the
+   * default 4. Changing the prop re-renders the row; a longer `value` is
+   * truncated display-side only (the prop itself is never mutated — §4 strict,
+   * the tk-rating display-clamp mold).
+   */
+  @property({ type: Number })
+  length = 4;
+
   static override readonly styles = [inputStyles];
 
   /** Live uncontrolled state (the truth whenever `value` is not provided). */
@@ -194,6 +257,166 @@ export class TkInput extends LitElement {
     return this.renderRoot.querySelector<HTMLInputElement>('.field__control')?.value ?? '';
   }
 
+  // --- Code mode (spec 26.4) ------------------------------------------------
+
+  /** The clamped cell count (4–8); NaN/undefined read as the default 4. */
+  get #cellCount(): number {
+    const parsed = Number(this.length);
+    if (!Number.isFinite(parsed)) return 4;
+    return Math.min(8, Math.max(4, Math.floor(parsed)));
+  }
+
+  /**
+   * The digits in force, display-side clamped to the row length: the joined
+   * cell text. Non-digits in a controlled `value` never reach a cell (a cell
+   * can only hold one [0-9] — the display-clamp ruling, §4 strict on the prop
+   * itself).
+   */
+  get #codeChars(): string[] {
+    return this.#effectiveValue
+      .replace(/\D/g, '')
+      .slice(0, this.#cellCount)
+      .split('');
+  }
+
+  /** All rendered cell inputs, in row order ('' before the first render). */
+  get #cells(): HTMLInputElement[] {
+    return Array.from(this.renderRoot.querySelectorAll<HTMLInputElement>('.code__cell'));
+  }
+
+  /**
+   * Commit `digits` starting at `start` (paste-split / programmatic fill):
+   * merges into the value in force, advances state + events, and focuses the
+   * cell AFTER the last one written — the auto-advance contract, shared by
+   * typing (one digit) and pasting (many).
+   *
+   * The VALUE ruling: the value is the joined string and the cells are its
+   * left-packed view — holes cannot exist. A deletion (`digits === ''`)
+   * removes the cell's digit and compacts (splice), so the value length is
+   * always the number of filled cells; an overwrite (digits present) writes
+   * in place.
+   *
+   * Controlled mode keeps the family's strictness: nothing is applied locally
+   * (the shadow cells keep their live text for caret sanity; the consumer's
+   * answer re-syncs on the next update) — the events carry the candidate.
+   */
+  #applyDigits(start: number, digits: string): void {
+    const count = this.#cellCount;
+    const current = this.#effectiveValue.replace(/\D/g, '').slice(0, count).split('');
+    const next = [...current];
+    if (digits === '') {
+      // Deletion: clear THIS cell's digit and compact the tail left.
+      next.splice(start, 1);
+    } else {
+      for (let i = 0; i < digits.length && start + i < count; i += 1) {
+        next[start + i] = digits[i];
+      }
+    }
+    const value = next.join('');
+    if (!this.#isControlled) {
+      this.#uncontrolledValue = value;
+      this.requestUpdate();
+    }
+    this.#emitValueChange(value);
+    if (value.length === count) {
+      this.dispatchEvent(
+        new CustomEvent<TkInputCompleteDetail>('complete', {
+          detail: { value },
+          composed: true,
+          bubbles: true,
+        }),
+      );
+    }
+    // Focus follows the entry, never the re-render: the cell after the last
+    // written one (the last cell itself when the row is full).
+    const focusIndex = Math.min(start + digits.length, count - 1);
+    if (digits.length > 0) {
+      this.#cells[focusIndex]?.focus();
+    }
+  }
+
+  /**
+   * Cell input: the single entry pipeline for typing AND test-driven paste
+   * (a multi-char value set on a cell lands here as one input event).
+   * - empty text → a real deletion: commit '' and emit;
+   * - non-digit text → the documented ignore: restore the committed digit,
+   *   no state change, no events;
+   * - one digit → commit (normalizing any trailing separators away) and
+   *   auto-advance;
+   * - many digits → split-fill from this cell (the paste path).
+   */
+  #handleCodeInput(event: Event, index: number): void {
+    if (this.disabled) return;
+    if ((event as InputEvent).isComposing) return;
+    const cell = event.target as HTMLInputElement;
+    const digits = cell.value.replace(/\D/g, '');
+    if (cell.value === '') {
+      this.#applyDigits(index, '');
+      return;
+    }
+    if (digits === '') {
+      // A non-digit never commits — the cell snaps back to the digit in force.
+      cell.value = this.#codeChars[index] ?? '';
+      return;
+    }
+    this.#applyDigits(index, digits);
+  }
+
+  /**
+   * Cell keyboard: ←/→ walk the row (spec AC2); Backspace on an EMPTY cell
+   * walks back AND clears the previous digit («фокус назад + очистка прежней»).
+   * Backspace on a filled cell is native — the browser deletes the char and
+   * the input pipeline above commits the deletion.
+   */
+  #handleCodeKeydown(event: KeyboardEvent, index: number): void {
+    if (this.disabled) return;
+    const cells = this.#cells;
+    if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      cells[index + 1]?.focus();
+    } else if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      cells[index - 1]?.focus();
+    } else if (
+      event.key === 'Backspace' &&
+      index > 0 &&
+      (event.target as HTMLInputElement).value === ''
+    ) {
+      event.preventDefault();
+      this.#applyDigits(index - 1, '');
+      cells[index - 1]?.focus();
+    }
+  }
+
+  /**
+   * Cell paste (the real-browser path): maxlength=1 would swallow a multi-char
+   * insert, so the paste is intercepted, digit-stripped and split-filled from
+   * the focused cell — gap-6's «вставка-разделение» (space/dash separators
+   * drop out in the strip).
+   */
+  #handleCodePaste(event: ClipboardEvent, index: number): void {
+    if (this.disabled) return;
+    const digits = (event.clipboardData?.getData('text') ?? '').replace(/\D/g, '');
+    if (digits.length === 0) return;
+    event.preventDefault();
+    this.#applyDigits(index, digits);
+  }
+
+  /**
+   * Code-mode blur validation: the required check reads the JOINED value (a
+   * per-cell read would trip on every inter-cell move — blur fires when focus
+   * walks the row). Whitespace never applies: the value is digits by
+   * construction.
+   */
+  #handleCodeBlur(): void {
+    if (this.disabled) return;
+    const next = this.required && this.#effectiveValue === '' ? REQUIRED_MESSAGE : null;
+    if (next !== this.#internalError) {
+      this.#internalError = next;
+      this.requestUpdate();
+    }
+  }
+
   /**
    * The message in force: the consumer `error` prop overrides the internal
    * one. Null-tolerant — React conditional props (`error={cond || null}`)
@@ -219,6 +442,11 @@ export class TkInput extends LitElement {
   protected override willUpdate(changed: PropertyValues<this>): void {
     if (changed.has('type') && !(TkInput.types as readonly string[]).includes(this.type)) {
       this.type = 'text';
+    }
+    if (changed.has('length') && this.length !== this.#cellCount) {
+      // Clamp 4–8 (spec AC1): NaN/undefined re-read as the default through
+      // #cellCount; the corrected value reflects back into the prop.
+      this.length = this.#cellCount;
     }
     if (changed.has('required') && !this.required && this.#internalError !== null) {
       this.#internalError = null;
@@ -249,6 +477,15 @@ export class TkInput extends LitElement {
    * Imperative DOM lives here, never at construction (AD-10).
    */
   override updated(): void {
+    if (this.code) {
+      // The same Design Notes contract, per cell: live text stays visible
+      // until an update runs, then re-syncs to the value in force.
+      const chars = this.#codeChars;
+      this.#cells.forEach((cell, i) => {
+        if (cell.value !== (chars[i] ?? '')) cell.value = chars[i] ?? '';
+      });
+      return;
+    }
     const control = this.renderRoot.querySelector<HTMLInputElement>('.field__control');
     if (control && control.value !== this.#effectiveValue) {
       control.value = this.#effectiveValue;
@@ -325,7 +562,93 @@ export class TkInput extends LitElement {
     this.#syncBadgeSlotted(event.target as HTMLSlotElement);
   }
 
+  /**
+   * The error message block — shared by both modes verbatim (single field and
+   * code cells): calm copy + decorative icon, id-referenced by
+   * aria-describedby.
+   */
+  #renderError(message: string) {
+    return html`<p class="error" id="${this.#id}-error">
+      <svg
+        class="error__icon"
+        aria-hidden="true"
+        viewBox="0 0 16 16"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+      >
+        <circle cx="8" cy="8" r="6.25"></circle>
+        <path d="M8 4.75v4"></path>
+        <circle class="error__icon-dot" cx="8" cy="11" r="0.25" fill="currentColor"></circle>
+      </svg>
+      <span class="error__text">${message}</span>
+    </p>`;
+  }
+
+  /**
+   * Code mode (spec 26.4): a named group of `length` one-digit cells. The
+   * visible `<label for>` points at the FIRST cell (a click target that lands
+   * the user where entry begins); each cell's aria-label («Цифра N») carries
+   * the per-cell name, and the group's own name rides the `label` prop with
+   * the «Код подтверждения» fallback — a role=group must never go nameless.
+   */
+  #renderCode() {
+    const message = this.#message;
+    const chars = this.#codeChars;
+    const count = this.#cellCount;
+    const hasLabel = this.label != null && this.label.length > 0;
+    const groupName = hasLabel ? this.label : DEFAULT_CODE_LABEL;
+
+    return html`
+      ${hasLabel
+        ? html`<label
+              class="label${this.srOnly ? ' label--sr-only' : ''}"
+              id="${this.#id}-label"
+              for="${this.#id}-cell-0"
+            >
+            ${this.label}
+            ${this.required
+              ? html`<span class="label__star" aria-hidden="true">*</span>`
+              : nothing}
+          </label>`
+        : nothing}
+      <div
+        class="code${message ? ' code--error' : ''}"
+        role="group"
+        aria-label=${groupName}
+      >
+        ${Array.from({ length: count }, (_, i) => {
+          const digit = chars[i] ?? '';
+          return html`<input
+            id="${this.#id}-cell-${i}"
+            class="code__cell"
+            type="text"
+            inputmode="numeric"
+            maxlength="1"
+            autocomplete=${i === 0 ? (this.autocomplete ?? 'one-time-code') : 'off'}
+            name=${i === 0 && this.name ? this.name : nothing}
+            aria-label="Цифра ${i + 1}"
+            aria-required=${this.required ? 'true' : nothing}
+            aria-invalid=${message ? 'true' : nothing}
+            aria-describedby=${message ? `${this.#id}-error` : nothing}
+            aria-disabled=${this.disabled ? 'true' : nothing}
+            ?readonly=${this.disabled}
+            ?data-filled=${digit !== ''}
+            .value=${digit}
+            @input=${(event: Event) => this.#handleCodeInput(event, i)}
+            @keydown=${(event: KeyboardEvent) => this.#handleCodeKeydown(event, i)}
+            @paste=${(event: ClipboardEvent) => this.#handleCodePaste(event, i)}
+            @blur=${() => this.#handleCodeBlur()}
+          />`;
+        })}
+      </div>
+      ${message ? this.#renderError(message) : nothing}
+    `;
+  }
+
   override render() {
+    if (this.code) return this.#renderCode();
     const message = this.#message;
     // Null-tolerant (React conditional props): label={null} means "no label".
     const hasLabel = this.label != null && this.label.length > 0;
@@ -371,24 +694,7 @@ export class TkInput extends LitElement {
           <slot name="badge" @slotchange=${this.#handleBadgeSlotChange}></slot>
         </span>
       </div>
-      ${message
-        ? html`<p class="error" id="${this.#id}-error">
-            <svg
-              class="error__icon"
-              aria-hidden="true"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-            >
-              <circle cx="8" cy="8" r="6.25"></circle>
-              <path d="M8 4.75v4"></path>
-              <circle class="error__icon-dot" cx="8" cy="11" r="0.25" fill="currentColor"></circle>
-            </svg>
-            <span class="error__text">${message}</span>
-          </p>`
-        : nothing}
+      ${message ? this.#renderError(message) : nothing}
     `;
   }
 }
