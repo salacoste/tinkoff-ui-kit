@@ -7,6 +7,75 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.0] - 2026-10-06
+
+### Added — the form-control wave: range slider, switch, avatar, SMS cells (Epic 26, specs 26.1–26.4)
+
+- **tk-range-slider (26.1)** — the amount slider on the native
+  `<input type="range">` interior: the APG slider contract rides the
+  platform element, the kit register paints track/thumb/fill on tokens;
+  valueFormatter feeds the readout AND aria-valuetext, the step-grid
+  display-clamp never mutates the prop, PageUp/PageDown guarded. Lesson
+  26.1 minted into the workflow: a manifest delta re-renders the api
+  story — baselines remint explicitly, never overwritten.
+- **tk-switch (26.2)** — the boolean toggle: a native checkbox +
+  role="switch" (aria-checked implicit), Enter guarded, the
+  ElementInternals form mirror, the strict §4 boolean channel; the
+  kit-register capsule 36×20 (yellow-100 on, border-default off),
+  reduced-motion guarded.
+- **tk-avatar (26.3)** — the round identity disc: image (cover + lazy,
+  the tk-figure enforcement) / initials («Мария Оганова» → «МО») /
+  placeholder; decode-fail falls back to initials quietly (the latch
+  resets on a new src). The named disc self-asserts role="img" with
+  aria-label from connectedCallback (the React 19 law); the monogram is
+  NEVER a live photo (the PD gate mold).
+- **tk-input code mode (26.4)** — one-digit SMS cells on the input
+  atom (a mode, not a new atom): auto-advance, Backspace-on-empty steps
+  back and clears, arrow walk, non-digits never commit, paste split
+  both ways (the input pipeline for tests, the intercepted paste-event
+  for the browser), the first cell autocomplete=one-time-code, real
+  per-cell focus. Cell values are the left-packed view of the frozen
+  §4/§9 string — deletion compacts, holes do not exist. Closes Epic 26.
+
+### Added — the terminal capture wave: tk-textarea + the terminal order ticket (24T, specs 24T.1–24T.2)
+
+- **The 24T capture pack** — 28 PII-gated PNG + 6 sanitized DOM dumps +
+  measured passports (`.playwright-cli/captures-v5/terminal/`); two
+  vision passes before git, the raw frames stay local forever.
+- **tk-textarea (24T.1)** — the terminal notes atom: the 16·n+16
+  autosize counted on the FULL border box (line-height 16px structural
+  literal — the token's 1.5 unitless multiplier gives 19.5px, the live
+  field is denser; padding 7px = (16−2)/2 over the hairlines), the
+  height sync driven straight from the input event (typing plans no Lit
+  update in the uncontrolled mode — the direct call; the controlled
+  mode keeps the caret-sanity contract), scrollHeight + parsed-borders
+  compensation.
+- **The terminal ticket + the trade CTA pair (24T.2)** — the 23.3
+  re-open on the measured material: the Invest/Terminal ticket pattern
+  story — order modes as tk-tabs (APG), NumericInput steppers OUTSIDE
+  the tab order (measured DOM: tabindex −1, aria-label «Плюс»/«Минус»,
+  boundary disable), the two-column bottom block (limits strip h27 +
+  the 155×32 CTA pair, gap 8). tk-button grows positive/negative
+  variants: fills on the seed ::before, the variant-specific
+  --tk-radius-xs (the measured ≈4), hover/active via color-mix with the
+  existing ink token — zero color literals. Two theme-invariant
+  measured tokens — --tk-color-trade-buy #0BA264 (white label 3.299:1,
+  recorded-failing as-measured — the invest-stock-a mold) and
+  --tk-color-trade-sell #9D2B2B (7.463:1); the AA ledger moves 16 → 17.
+  All ticket data is FICTIONAL (the PD gate).
+
+### Added — the UI-kit ecosystem recon dataset (Epic 25, specs 25.1–25.4)
+
+- **25.1** the machine-harvest pipeline (the `recon/` ESM conveyor +
+  CLI, zero new dependencies; curl transport — the npm CLI stays
+  banned), the dogfood gate, the Taiga pilot, the capability matrix;
+  **25.2** the full roster run — 11/11 kits, npm downloads + GitHub
+  health, per-kit reports; **25.3** the visual reference — 10 kit docs
+  galleries, 51 honest PNGs with dark-luminance verification; **25.4
+  BENCHMARK.md** — the matrix + the 15-finding gap report (the five
+  adopts fed Epic 26). Dataset tier (docs/recon artifacts), no runtime
+  surface.
+
 ## [1.7.0] - 2026-10-04
 
 ### Added — gift certificate + promo-code entry (spec 24.15, pattern wave 24b closes)
