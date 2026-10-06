@@ -158,6 +158,10 @@ export const EVENT_MAP: Readonly<Record<string, Readonly<TkKitElementEventMap>>>
   // tk-rating no-entry precedent); a decode failure falls back silently
   // inside the same render, nothing dispatches.
   // 'tk-avatar': none — see above.
+  // Spec 27.1 (quality window) — STATELESS DISPLAY: the circular
+  // indeterminate loader; `size`/`label` are inputs, nothing dispatches
+  // (the tk-rating no-entry precedent).
+  // 'tk-spinner': none — see above.
   // Spec 26.2 (form-control wave) — the boolean state channel (§4 contract
   // on `checked`, the tk-checkbox mapping; checked-change is what the
   // element dispatches, so the completeness guard demands exactly this

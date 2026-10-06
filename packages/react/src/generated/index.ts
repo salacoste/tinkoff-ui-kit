@@ -40,6 +40,7 @@ export * from './segmented-radio.js';
 export * from './select.js';
 export * from './service-card.js';
 export * from './skeleton.js';
+export * from './spinner.js';
 export * from './stepper.js';
 export * from './store-badges.js';
 export * from './switch.js';

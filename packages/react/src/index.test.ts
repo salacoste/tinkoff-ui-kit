@@ -5,7 +5,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import * as litReact from '@lit/react';
 import { afterAll, describe, expect, it, vi } from 'vitest';
 
-import { ArticleCard, Badge, Button, Checkbox, ComboboxSearch, CookieBanner, DataTable, EVENT_MAP, FeatureCard, FilterChips, Footer, Input, Link, Modal, Navbar, Pagination, ProgressBar, PromoCard, QrBlock, SegmentedRadio, Select, ServiceCard, Stepper, StoreBadges, Tabs, ThumbnailPicker, Toast, Tooltip } from './index.js';
+import { ArticleCard, Badge, Button, Checkbox, ComboboxSearch, CookieBanner, DataTable, EVENT_MAP, FeatureCard, FilterChips, Footer, Input, Link, Modal, Navbar, Pagination, ProgressBar, PromoCard, QrBlock, SegmentedRadio, Select, ServiceCard, Spinner, Stepper, StoreBadges, Tabs, ThumbnailPicker, Toast, Tooltip } from './index.js';
 
 /**
  * pillkit-react generated surface. The wrapper imports `pillkit-components`
@@ -1610,6 +1610,38 @@ describe('pillkit-react', () => {
     expect(EVENT_MAP['tk-stepper']).toBeUndefined();
     expect(EVENT_MAP['tk-store-badges']).toBeUndefined();
     expect(EVENT_MAP['tk-qr-block']).toBeUndefined();
+  });
+
+  // --- Spec 27.1: tk-spinner wrapper (stateless loader — no events) ------
+
+  it('ships NO registry entry for tk-spinner (stateless loader, nothing dispatches)', () => {
+    // Spec 27.1: size/label are inputs, not channels — the element
+    // dispatches nothing, so the completeness guard demands NO event-map
+    // entry (the tk-progress-bar/tk-rating no-entry precedent).
+    expect(EVENT_MAP['tk-spinner']).toBeUndefined();
+  });
+
+  it('renders <Spinner> as tk-spinner with element properties set through the wrapper', async () => {
+    const container = await renderToContainer(
+      React.createElement(Spinner, { label: 'Обновляем курс', size: '24' }),
+    );
+    const el = container.querySelector('tk-spinner') as (Element & {
+      label?: string;
+      size?: string;
+      updateComplete?: Promise<unknown>;
+    }) | null;
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    // Props survive element creation (the avatar mold): strings land as
+    // element properties; the size enum additionally reflects.
+    expect(el?.label).toBe('Обновляем курс');
+    expect(el?.size).toBe('24');
+    expect(el?.getAttribute('size')).toBe('24');
+    await (el as { updateComplete: Promise<unknown> }).updateComplete;
+    // The connect-time semantics ran through the wrapper too (React-19
+    // law): the named loader carries role=status + its label.
+    expect(el?.getAttribute('role')).toBe('status');
+    expect(el?.getAttribute('aria-label')).toBe('Обновляем курс');
+    expect(el?.shadowRoot?.querySelector('svg.spinner')).not.toBeNull();
   });
 
   it('renders <Stepper> as tk-stepper with element properties set through the wrapper', async () => {

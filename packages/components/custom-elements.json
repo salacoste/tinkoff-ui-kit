@@ -5494,6 +5494,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/spinner/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/stepper/index.js"
           }
         },
@@ -12951,6 +12959,173 @@
           "declaration": {
             "name": "TkSkeleton",
             "module": "src/skeleton/skeleton.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/spinner/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/spinner/spinner.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/spinner/spinner.css.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "spinnerStyles",
+          "default": "css` :host { display: inline-flex; flex: none; width: var(--tk-spinner-size, 20px); height: var(--tk-spinner-size, 20px); } /* :host display above out-ranks the UA [hidden] rule — enforce hidden. */ :host([hidden]) { display: none; } /* The arc canvas: fills the host box (the size channel), rotation runs on the svg element itself — transform-origin 50% 50% of its box, a linear infinite loop (the button-spinner curve ruling: a token curve would pulse per iteration; the loading language is a steady turn). */ .spinner { display: block; width: 100%; height: 100%; animation: tk-spinner-rotate var(--tk-spinner-duration, 0.9s) linear infinite; } /* The arc: no fill, currentColor stroke with the round cap of the full-radius progress family; width rides the stroke hook. */ .spinner__arc { fill: none; stroke: var(--tk-spinner-color, currentColor); stroke-width: var(--tk-spinner-stroke, 2px); stroke-linecap: round; } /* a11y law of the kit (the tk-skeleton mold): reduced motion collapses the rotation to a STATIC arc — the meaning is carried by the label (role=status text), never by the motion itself. The harness runs visual baselines under this emulation, so the arc is a deterministic frame, never a caught mid-turn angle. */ @media (prefers-reduced-motion: reduce) { .spinner { animation: none; } } @keyframes tk-spinner-rotate { to { transform: rotate(360deg); } } `",
+          "description": "tk-spinner styles — tokens only (FR-1), zero theme branches (AD-3).\n\nGrounding (spec 27.1, quality window): adopt-atom BENCHMARK #3 with the\nkit's OWN registers as the grounding — the terminal 24T census gave 0\nlive occurrences, so no reference kit is copied pixel-wise. The registers\nin force: currentColor (the arc inherits the context text — the\npolaris/shoelace pattern, NOT a new token), the full-radius progress\nfamily (round caps, the tk-progress-bar ruling), and the size row\n16/20/24/32 (the kit's typical text sizes).\n\nThe geometry hangs off ONE hook — `--tk-spinner-size` — written by the\n`size` property as a host inline custom property (the tk-avatar mold);\nthe CSS box and the SVG canvas are the same channel, so an override can\nnever desynchronize the arc from the box. The arc GEOMETRY (viewBox, r,\nthe 75/25 dash) is computed in the template from the same clamped size —\ncomputed geometry, not theming (the tk-rating clip-path precedent).\n\nPer-component custom properties (`--tk-spinner-*`, CONVENTIONS §6):\n- `--tk-spinner-size`     box + canvas size (default 20px — the size\n  prop's union default writes the host inline channel)\n- `--tk-spinner-color`    arc stroke (default currentColor — inherits the\n  context text color; deliberately NOT a token, the AC2 ruling)\n- `--tk-spinner-stroke`   arc stroke width (default 2px)\n- `--tk-spinner-duration` rotation period (default 0.9s)\n\nKnown structural (non-token) values, flagged per the flag-don't-invent\nrule — the token sheet carries no counterpart:\n- the 20px size DEFAULT (the frozen-AC union default; the row itself is\n  the kit's text sizes, not a scale step);\n- the 2px stroke (the button-spinner hairline weight — a structural\n  literal, the same ruling as the border weights);\n- the 0.9s rotation period (not on the motion scale; the AC's literal —\n  a steady loop, calmer than duration-slow's 500ms and quicker than the\n  skeleton's 1.4s breathing);\n- the 75/25 dash split lives in the TEMPLATE (three quarters of the\n  circle, a 25% gap — the frozen-AC shape).\n\nNo backticks in css comments — they would terminate the css literal."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "spinnerStyles",
+          "declaration": {
+            "name": "spinnerStyles",
+            "module": "src/spinner/spinner.css.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/spinner/spinner.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "tk-spinner — the kit's circular indeterminate loader atom (spec 27.1,\nquality window; adopt-atom BENCHMARK #3 grounded on the kit's OWN\nregisters — the terminal 24T census gave 0 live occurrences, so no\nreference kit is copied pixel-wise).\n\nAn SVG arc of three quarters of a circle (a 25% gap), 2px round-cap\nstroke, rotating a steady 0.9s linear loop. The color register is\n`currentColor` — the arc inherits the context text color (the\nfull-radius progress family), so the atom themes through whatever text\nsurrounds it and adds NO token of its own.\n\nDETERMINATE loading is REFUSED here on purpose: a known-percentage\nprogress surface is tk-progress-bar's contract (its `value` channel,\n`aria-valuenow` narration and zero-state copy) — this atom is the\nunknown-duration companion, never a second progress meter.\n\nA11y (AC4): a NAMED instance (`label` non-empty, default «Загрузка»)\nself-asserts `role=\"status\"` + the label as its accessible name at\nconnect (the React-19 law: constructor-time attributes never survive the\nelement's upgrade — the tk-rating idiom); role=status carries the\naria-live polite policy, so a spinner mounted into a changing region\nannounces itself once, on its own timeline. A DECORATIVE instance\n(`label=''`) is the rating aria-hidden points mold: the host leaves the\naccessibility tree (`aria-hidden=\"true\"`) — for repeats and inline\ndecoration next to visible text. The arc svg is aria-hidden in BOTH\nmodes; the name, when present, is text.\n\nSTATELESS (the tk-rating/tk-skeleton mold): nothing dispatches — the\nevent-map no-entry case; no keyboard contract exists on purpose (a\nloader must not hold a focus stop).\n\nGeometry (AC2): `size` writes the host inline custom property\n`--tk-spinner-size` — ONE channel for the box and the arc (the tk-avatar\nsize mold); the viewBox, radius (r = (size − 2·stroke)/2 with the 2px\ndefault) and the 75/25 dash split are computed from the same clamped\nvalue in the template.",
+          "name": "TkSpinner",
+          "members": [
+            {
+              "kind": "field",
+              "name": "sizes",
+              "static": true,
+              "readonly": true,
+              "default": "['16', '20', '24', '32']",
+              "type": {
+                "text": "['16', '20', '24', '32']"
+              },
+              "description": "Size union (CONVENTIONS §2: literal unions, never forking booleans)."
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'16' | '20' | '24' | '32'"
+              },
+              "default": "'20'",
+              "description": "Spinner size — one channel with the `--tk-spinner-size` hook.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Загрузка'",
+              "description": "Accessible name; an empty string renders the decorative mode.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "#semanticsOwned",
+              "privacy": "private",
+              "type": {
+                "text": "'named' | 'decorative' | null"
+              },
+              "default": "null",
+              "description": "Which semantics WE currently own on the host (withdraw exactly those)."
+            },
+            {
+              "kind": "field",
+              "name": "#effectiveSize",
+              "privacy": "private",
+              "type": {
+                "text": "'16' | '20' | '24' | '32'"
+              },
+              "description": "The size in force — invalid values clamp to the union default (the prop is corrected, CONVENTIONS §2).",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#displayName",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "description": "The trimmed label, or null in the decorative mode (the avatar name mold).",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#syncSemantics",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "The semantics stamp: a named instance self-asserts role=status + the\nlabel as its accessible name; a decorative one hides the host. A mode\nflip withdraws EXACTLY what we set — a consumer-supplied host attribute\nof the other kind is never touched."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "'16' | '20' | '24' | '32'"
+              },
+              "description": "Spinner size — one channel with the `--tk-spinner-size` hook.",
+              "name": "size",
+              "default": "'20'",
+              "fieldName": "size"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Accessible name; an empty string renders the decorative mode.",
+              "name": "label",
+              "default": "'Загрузка'",
+              "fieldName": "label"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "tk-spinner",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TkSpinner",
+          "declaration": {
+            "name": "TkSpinner",
+            "module": "src/spinner/spinner.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tk-spinner",
+          "declaration": {
+            "name": "TkSpinner",
+            "module": "src/spinner/spinner.ts"
           }
         }
       ]

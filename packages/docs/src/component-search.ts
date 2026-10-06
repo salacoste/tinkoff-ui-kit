@@ -105,6 +105,9 @@ const COMPONENTS: readonly SearchEntry[] = [
   // 21.2 (invest foundation wave): the loading-placeholder bone — GAP-MAP
   // Tier A #4; entry points at the Components/ story.
   { title: 'Skeleton', tag: 'tk-skeleton', ru: 'Скелетон', id: 'components-skeleton--playground' },
+  // 27.1 (quality window): the circular indeterminate loader — the loading
+  // atom that is NOT a progress-bar; entry points at the Components/ story.
+  { title: 'Spinner', tag: 'tk-spinner', ru: 'Спиннер', id: 'components-spinner--playground' },
   // 26.2 (form-control wave): the boolean toggle — APG switch contract;
   // entry points at the Components/ story.
   { title: 'Switch', tag: 'tk-switch', ru: 'Переключатель', id: 'components-switch--playground' },
