@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.9.0] - 2026-10-06
+
+### Added — the quality window: tk-spinner + the events phase B (Epic 27, specs 27.1–27.4)
+
+- **tk-spinner (27.1)** — the circular indeterminate loader: the size
+  union (16/20/24/32/40) clamps into the host inline
+  `--tk-spinner-size`, currentColor stroke (pathLength 100, dash 75/25,
+  0.9s linear), hooks `--tk-spinner-{size,color,stroke,duration}`;
+  role="status" self-asserts from connectedCallback with its label,
+  `label=''` degrades to the decorative aria-hidden disc;
+  prefers-reduced-motion stops the spin. Grounded on the kit's own
+  registers — the terminal capture material held zero spinner
+  occurrences, so no live reference was transcribed (the PD gate).
+- **The events phase B (27.4)** — the 27.3 audit verdicts (mechanics
+  18/18 clean, two findings) land as ONE funnel each: tk-carousel
+  `page-change` `{page}` (1-based) emitted from the single
+  `#syncFromRail()` geometry point on real snap-index changes only —
+  chevrons, native drag/keyboard, programmatic scrolls converge there,
+  and the `#emittedPage` null-guard keeps the first render and
+  intra-page ticks silent (the dots stay decorative, ruling 21.6);
+  tk-toast `hide` `{reason: 'auto' | 'manual'}` — the `#autoFired` flag
+  splits the duration-timer path from Esc/`dismiss()`/the handle;
+  `show` stays REFUSED (the appearance is observed through the
+  consumer's own call). Contract wiring: `@fires` docstrings → CEM,
+  event-map entries onPageChange/onHide, React pin tests, api-story
+  baselines reminted (4 PNG, lesson 26.1).
+- **Docs freshness (27.2)** — the docs counters re-synced to the
+  catalogs after the 24T window (46 bank `tk-*` / 56 total) and the
+  spinner row joined the getting-started roster (the baseline-split
+  incident that minted the extended lesson 26.1: any pixel-moving
+  source rides ONE commit with its PNG remint).
+
 ## [1.8.0] - 2026-10-06
 
 ### Added — the form-control wave: range slider, switch, avatar, SMS cells (Epic 26, specs 26.1–26.4)

@@ -1,6 +1,6 @@
 {
   "name": "pillkit-tj-fonts",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "description": "Bundled reading fonts for pillkit-tj (the ТЖ editorial family) — XCharter: the free Charter idiom with Cyrillic, under the Bitstream Charter license terms; Graphik stays a slot + recipe (bring your own licensed files).",
   "keywords": [
     "pillkit",
