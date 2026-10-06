@@ -1,7 +1,7 @@
 {
   "name": "pillkit-components",
   "version": "1.9.0",
-  "description": "Lit custom elements core for pillkit — 45 tk-* components (forms, navigation, cards, tables, overlays) rendered via Shadow DOM and themed with --tk-* custom properties; includes the shared overlay controller.",
+  "description": "Lit custom elements core for pillkit — 46 tk-* components (forms, navigation, cards, tables, overlays) rendered via Shadow DOM and themed with --tk-* custom properties; includes the shared overlay controller.",
   "keywords": [
     "pillkit",
     "web-components",
