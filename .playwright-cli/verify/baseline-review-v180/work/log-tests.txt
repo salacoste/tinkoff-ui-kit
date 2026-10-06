@@ -1,0 +1,84 @@
+COMMIT aa9bbcf docs(release): v1.8.0 — RELEASE §15 + HANDOFF + README pins, bank counter 41→45
+
+M	tests/visual/visual.spec.ts-snapshots/visual-getting-started--page-dark-1-chromium.png
+M	tests/visual/visual.spec.ts-snapshots/visual-getting-started--page-light-1-chromium.png
+COMMIT 75d9ef5 feat(components): 24T.2 terminal ticket — pattern story + button trade pair + trade tokens
+
+A	tests/visual/terminal-ticket.spec.ts
+M	tests/visual/visual.spec.ts-snapshots/visual-components-button--api-dark-1-chromium.png
+M	tests/visual/visual.spec.ts-snapshots/visual-components-button--api-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-invest-terminal-ticket--terminal-ticket-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-invest-terminal-ticket--terminal-ticket-light-1-chromium.png
+M	tests/visual/visual.spec.ts-snapshots/visual-token-reference--colors-dark-1-chromium.png
+M	tests/visual/visual.spec.ts-snapshots/visual-token-reference--colors-light-1-chromium.png
+COMMIT bf4e167 feat(components): 24T.1 tk-textarea — the terminal notes atom (autosize 16·n+16, frozen input-family contract)
+
+M	tests/hidden-guard.test.ts
+A	tests/visual/textarea.spec.ts
+A	tests/visual/visual.spec.ts-snapshots/visual-components-textarea--accessibility-notes-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-textarea--accessibility-notes-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-textarea--notes-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-textarea--notes-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-textarea--states-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-textarea--states-light-1-chromium.png
+COMMIT aa78856 feat(input): code mode — one-digit SMS cells (spec 26.4, closes Epic 26)
+
+A	tests/visual/input-code.spec.ts
+M	tests/visual/visual.spec.ts-snapshots/visual-components-input--api-dark-1-chromium.png
+M	tests/visual/visual.spec.ts-snapshots/visual-components-input--api-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-input--code-accessibility-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-input--code-accessibility-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-input--code-mode-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-input--code-mode-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-input--confirmation-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-input--confirmation-light-1-chromium.png
+COMMIT 8452765 feat(components): tk-avatar — round identity disc (image/initials/placeholder)
+
+M	tests/hidden-guard.test.ts
+A	tests/visual/visual.spec.ts-snapshots/visual-components-avatar--accessibility-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-avatar--accessibility-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-avatar--admin-feed-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-avatar--admin-feed-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-avatar--api-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-avatar--api-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-avatar--news-row-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-avatar--news-row-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-avatar--playground-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-avatar--playground-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-avatar--variants-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-avatar--variants-light-1-chromium.png
+M	tests/visual/visual.spec.ts-snapshots/visual-getting-started--page-dark-1-chromium.png
+M	tests/visual/visual.spec.ts-snapshots/visual-getting-started--page-light-1-chromium.png
+COMMIT 04f19c4 feat(components): tk-switch boolean toggle — APG switch contract, kit-register capsule (story 26.2)
+
+M	tests/hidden-guard.test.ts
+A	tests/visual/switch.spec.ts
+A	tests/visual/visual.spec.ts-snapshots/visual-components-switch--accessibility-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-switch--accessibility-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-switch--api-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-switch--api-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-switch--playground-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-switch--playground-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-switch--settings-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-switch--settings-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-switch--variants-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-switch--variants-light-1-chromium.png
+COMMIT 3f92922 fix(visual): rangeslider api baselines reminted on the aria-label manifest (spec 26.1)
+
+M	tests/visual/visual.spec.ts-snapshots/visual-components-rangeslider--api-dark-1-chromium.png
+M	tests/visual/visual.spec.ts-snapshots/visual-components-rangeslider--api-light-1-chromium.png
+COMMIT e02825f feat(components): tk-range-slider — native-range amount slider (spec 26.1)
+
+M	tests/hidden-guard.test.ts
+A	tests/visual/visual.spec.ts-snapshots/visual-components-rangeslider--accessibility-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-rangeslider--accessibility-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-rangeslider--api-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-rangeslider--api-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-rangeslider--calculator-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-rangeslider--calculator-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-rangeslider--playground-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-rangeslider--playground-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-rangeslider--variants-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-rangeslider--variants-light-1-chromium.png
+M	tests/visual/visual.spec.ts-snapshots/visual-getting-started--page-dark-1-chromium.png
+M	tests/visual/visual.spec.ts-snapshots/visual-getting-started--page-light-1-chromium.png

@@ -1,0 +1,408 @@
+COMMIT bbad7f6 docs(release): v1.8.0 stamp — CI verdict + story log
+
+M	CLAUDE.md
+M	RELEASE.md
+COMMIT aa9bbcf docs(release): v1.8.0 — RELEASE §15 + HANDOFF + README pins, bank counter 41→45
+
+M	HANDOFF.md
+M	README.md
+M	RELEASE.md
+M	packages/components/package.json
+M	packages/docs/src/getting-started.stories.ts
+M	tests/visual/visual.spec.ts-snapshots/visual-getting-started--page-dark-1-chromium.png
+M	tests/visual/visual.spec.ts-snapshots/visual-getting-started--page-light-1-chromium.png
+COMMIT 6f7d067 chore(release): v1.8.0 — version + changelog
+
+M	CHANGELOG.md
+M	packages/components/package.json
+M	packages/react/package.json
+M	packages/tj-components/package.json
+M	packages/tj-fonts/package.json
+M	packages/tj-react/package.json
+M	packages/tj-tokens/package.json
+M	packages/tokens/package.json
+COMMIT d4e97ac docs(bmad): story 24T.2 close-out — code head 75d9ef5 CI GREEN (run 37379514382); Epic 24T closed
+
+M	CLAUDE.md
+M	_bmad-output/implementation-artifacts/spec-24T-1-textarea.md
+M	_bmad-output/implementation-artifacts/spec-24T-2-terminal-ticket.md
+COMMIT 75d9ef5 feat(components): 24T.2 terminal ticket — pattern story + button trade pair + trade tokens
+
+M	_bmad-output/implementation-artifacts/spec-24T-2-terminal-ticket.md
+M	_bmad-output/planning-artifacts/ux-designs/ux-tinkoff-ui-kit-2026-09-21/DESIGN.md
+M	packages/components/custom-elements.json
+M	packages/components/src/button/button.css.ts
+M	packages/components/src/button/button.test.ts
+M	packages/components/src/button/button.ts
+A	packages/components/src/showcase/terminal-ticket.stories.ts
+M	packages/tokens/src/TOKENS.md
+M	packages/tokens/src/index.test.ts
+M	packages/tokens/src/tokens.css
+M	packages/tokens/src/tokens.ts
+M	scripts/token-gen/core.mjs
+A	tests/visual/terminal-ticket.spec.ts
+M	tests/visual/visual.spec.ts-snapshots/visual-components-button--api-dark-1-chromium.png
+M	tests/visual/visual.spec.ts-snapshots/visual-components-button--api-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-invest-terminal-ticket--terminal-ticket-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-invest-terminal-ticket--terminal-ticket-light-1-chromium.png
+M	tests/visual/visual.spec.ts-snapshots/visual-token-reference--colors-dark-1-chromium.png
+M	tests/visual/visual.spec.ts-snapshots/visual-token-reference--colors-light-1-chromium.png
+COMMIT 70a7a72 docs(bmad): story 24T.1 close-out — code head bf4e167 CI GREEN (run 37370841340, attempt 2)
+
+M	CLAUDE.md
+M	_bmad-output/implementation-artifacts/spec-24T-1-textarea.md
+COMMIT bf4e167 feat(components): 24T.1 tk-textarea — the terminal notes atom (autosize 16·n+16, frozen input-family contract)
+
+M	_bmad-output/implementation-artifacts/spec-24T-1-textarea.md
+M	packages/components/custom-elements.json
+M	packages/components/src/index.ts
+A	packages/components/src/textarea/index.ts
+A	packages/components/src/textarea/textarea.css.ts
+A	packages/components/src/textarea/textarea.stories.ts
+A	packages/components/src/textarea/textarea.test.ts
+A	packages/components/src/textarea/textarea.ts
+M	packages/docs/src/component-search.ts
+M	packages/react/src/event-map.ts
+M	packages/react/src/generated/index.ts
+A	packages/react/src/generated/textarea.ts
+M	tests/hidden-guard.test.ts
+A	tests/visual/textarea.spec.ts
+A	tests/visual/visual.spec.ts-snapshots/visual-components-textarea--accessibility-notes-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-textarea--accessibility-notes-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-textarea--notes-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-textarea--notes-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-textarea--states-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-textarea--states-light-1-chromium.png
+COMMIT 6cac497 docs(bmad): 24T mini-wave specs — 24T.1 tk-textarea (grounded) + 24T.2 terminal ticket (23.3 re-open)
+
+A	_bmad-output/implementation-artifacts/spec-24T-1-textarea.md
+A	_bmad-output/implementation-artifacts/spec-24T-2-terminal-ticket.md
+COMMIT 7e99340 docs(captures): 24T terminal pack — 28 PII-gated PNG + 6 DOM dumps + measured passports (story 24T captures)
+
+M	.gitignore
+A	.playwright-cli/captures-v5/terminal/NOTES.md
+A	.playwright-cli/captures-v5/terminal/terminal-chart-toolbar-dark.png
+A	.playwright-cli/captures-v5/terminal/terminal-chart-toolbar-dom.txt
+A	.playwright-cli/captures-v5/terminal/terminal-chart-toolbar-light.png
+A	.playwright-cli/captures-v5/terminal/terminal-frame-dark.png
+A	.playwright-cli/captures-v5/terminal/terminal-frame-light.png
+A	.playwright-cli/captures-v5/terminal/terminal-instrument-catalog-popover-dark.png
+A	.playwright-cli/captures-v5/terminal/terminal-instrument-tabs-dark.png
+A	.playwright-cli/captures-v5/terminal/terminal-instrument-tabs-dom.txt
+A	.playwright-cli/captures-v5/terminal/terminal-instrument-tabs-light.png
+A	.playwright-cli/captures-v5/terminal/terminal-notes-editor-dark.png
+A	.playwright-cli/captures-v5/terminal/terminal-notes-editor-dom.txt
+A	.playwright-cli/captures-v5/terminal/terminal-notes-editor-light.png
+A	.playwright-cli/captures-v5/terminal/terminal-notes-list-dark.png
+A	.playwright-cli/captures-v5/terminal/terminal-notes-textarea-empty-dark.png
+A	.playwright-cli/captures-v5/terminal/terminal-notes-textarea-filled-dark.png
+A	.playwright-cli/captures-v5/terminal/terminal-notes-textarea-grown-dark.png
+A	.playwright-cli/captures-v5/terminal/terminal-notifications-instrumentlist-dark.png
+A	.playwright-cli/captures-v5/terminal/terminal-order-ticket-clean-dark.png
+A	.playwright-cli/captures-v5/terminal/terminal-order-ticket-clean-light.png
+A	.playwright-cli/captures-v5/terminal/terminal-order-ticket-delayed-dark.png
+A	.playwright-cli/captures-v5/terminal/terminal-order-ticket-delayed-dom.txt
+A	.playwright-cli/captures-v5/terminal/terminal-order-ticket-empty-light.png
+A	.playwright-cli/captures-v5/terminal/terminal-order-ticket-limit-dark.png
+A	.playwright-cli/captures-v5/terminal/terminal-order-ticket-limit-dom.txt
+A	.playwright-cli/captures-v5/terminal/terminal-order-ticket-limit-filled-dark.png
+A	.playwright-cli/captures-v5/terminal/terminal-order-ticket-limit-light.png
+A	.playwright-cli/captures-v5/terminal/terminal-order-ticket-limit-stopchecked-dark.png
+A	.playwright-cli/captures-v5/terminal/terminal-order-ticket-qty-filled-dark.png
+A	.playwright-cli/captures-v5/terminal/terminal-orderbook-empty-dark.png
+A	.playwright-cli/captures-v5/terminal/terminal-orderbook-sber-dark.png
+A	.playwright-cli/captures-v5/terminal/terminal-orderbook-sber-dom.txt
+A	.playwright-cli/captures-v5/terminal/terminal-orderbook-sber-light.png
+A	.playwright-cli/captures-v5/terminal/terminal-watchlist-groups-dropdown-dark.png
+A	.playwright-cli/captures-v5/terminal/terminal-widgets-drawer-dark.png
+COMMIT 6f2f2dc docs(bmad): story 26.4 close-out — code head aa78856 CI GREEN (run 37337087718); Epic 26 closed
+
+M	CLAUDE.md
+M	_bmad-output/implementation-artifacts/spec-26-4-otp-code.md
+COMMIT aa78856 feat(input): code mode — one-digit SMS cells (spec 26.4, closes Epic 26)
+
+M	.playwright-cli/captures-v5/TERMINAL-CAPTURE-CHECKLIST.md
+M	_bmad-output/implementation-artifacts/spec-26-4-otp-code.md
+M	packages/components/custom-elements.json
+A	packages/components/src/input/input-code.test.ts
+M	packages/components/src/input/input.css.ts
+M	packages/components/src/input/input.stories.ts
+M	packages/components/src/input/input.ts
+M	packages/react/src/event-map.ts
+M	packages/react/src/index.test.ts
+A	tests/visual/input-code.spec.ts
+M	tests/visual/visual.spec.ts-snapshots/visual-components-input--api-dark-1-chromium.png
+M	tests/visual/visual.spec.ts-snapshots/visual-components-input--api-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-input--code-accessibility-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-input--code-accessibility-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-input--code-mode-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-input--code-mode-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-input--confirmation-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-input--confirmation-light-1-chromium.png
+COMMIT d1339b7 docs(bmad): story 26.3 close-out — code head 8452765 CI GREEN (run 37310061402); spec EXECUTED record; CLAUDE.md Epic 26 row
+
+M	CLAUDE.md
+M	_bmad-output/implementation-artifacts/spec-26-3-avatar.md
+COMMIT 8452765 feat(components): tk-avatar — round identity disc (image/initials/placeholder)
+
+M	packages/components/custom-elements.json
+A	packages/components/src/avatar/avatar.css.ts
+A	packages/components/src/avatar/avatar.stories.ts
+A	packages/components/src/avatar/avatar.test.ts
+A	packages/components/src/avatar/avatar.ts
+A	packages/components/src/avatar/index.ts
+M	packages/components/src/index.ts
+M	packages/docs/src/component-search.ts
+M	packages/react/src/event-map.ts
+A	packages/react/src/generated/avatar.ts
+M	packages/react/src/generated/index.ts
+M	tests/hidden-guard.test.ts
+A	tests/visual/visual.spec.ts-snapshots/visual-components-avatar--accessibility-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-avatar--accessibility-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-avatar--admin-feed-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-avatar--admin-feed-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-avatar--api-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-avatar--api-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-avatar--news-row-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-avatar--news-row-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-avatar--playground-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-avatar--playground-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-avatar--variants-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-avatar--variants-light-1-chromium.png
+M	tests/visual/visual.spec.ts-snapshots/visual-getting-started--page-dark-1-chromium.png
+M	tests/visual/visual.spec.ts-snapshots/visual-getting-started--page-light-1-chromium.png
+COMMIT 99c24c8 docs(bmad): story 26.2 close-out — code head 04f19c4 CI GREEN (run 37297112761); CLAUDE.md gains the Epic 26 story-log section
+
+M	CLAUDE.md
+M	_bmad-output/implementation-artifacts/spec-26-2-switch.md
+COMMIT 04f19c4 feat(components): tk-switch boolean toggle — APG switch contract, kit-register capsule (story 26.2)
+
+M	.playwright-cli/captures-v5/TERMINAL-CAPTURE-CHECKLIST.md
+M	_bmad-output/implementation-artifacts/spec-26-1-range-slider.md
+M	_bmad-output/implementation-artifacts/spec-26-2-switch.md
+M	packages/components/custom-elements.json
+M	packages/components/src/index.ts
+A	packages/components/src/switch/index.ts
+A	packages/components/src/switch/switch.css.ts
+A	packages/components/src/switch/switch.stories.ts
+A	packages/components/src/switch/switch.test.ts
+A	packages/components/src/switch/switch.ts
+M	packages/docs/src/component-search.ts
+M	packages/react/src/event-map.ts
+M	packages/react/src/generated/index.ts
+A	packages/react/src/generated/switch.ts
+M	tests/hidden-guard.test.ts
+A	tests/visual/switch.spec.ts
+A	tests/visual/visual.spec.ts-snapshots/visual-components-switch--accessibility-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-switch--accessibility-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-switch--api-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-switch--api-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-switch--playground-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-switch--playground-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-switch--settings-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-switch--settings-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-switch--variants-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-switch--variants-light-1-chromium.png
+COMMIT a194695 docs(bmad): story 26.1 close-out — code head 3f92922 CI GREEN (run 37283157635), Execution record + axe-fix round + api-remint lesson
+
+M	.playwright-cli/captures-v5/TERMINAL-CAPTURE-CHECKLIST.md
+M	_bmad-output/implementation-artifacts/spec-26-1-range-slider.md
+COMMIT 3f92922 fix(visual): rangeslider api baselines reminted on the aria-label manifest (spec 26.1)
+
+M	tests/visual/visual.spec.ts-snapshots/visual-components-rangeslider--api-dark-1-chromium.png
+M	tests/visual/visual.spec.ts-snapshots/visual-components-rangeslider--api-light-1-chromium.png
+COMMIT e02825f feat(components): tk-range-slider — native-range amount slider (spec 26.1)
+
+M	packages/components/custom-elements.json
+M	packages/components/src/index.test.ts
+M	packages/components/src/index.ts
+A	packages/components/src/range-slider/index.ts
+A	packages/components/src/range-slider/range-slider.css.ts
+A	packages/components/src/range-slider/range-slider.stories.ts
+A	packages/components/src/range-slider/range-slider.test.ts
+A	packages/components/src/range-slider/range-slider.ts
+M	packages/docs/src/component-search.ts
+M	packages/react/src/event-map.ts
+M	packages/react/src/generated/index.ts
+A	packages/react/src/generated/range-slider.ts
+M	tests/hidden-guard.test.ts
+A	tests/visual/visual.spec.ts-snapshots/visual-components-rangeslider--accessibility-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-rangeslider--accessibility-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-rangeslider--api-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-rangeslider--api-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-rangeslider--calculator-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-rangeslider--calculator-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-rangeslider--playground-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-rangeslider--playground-light-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-rangeslider--variants-dark-1-chromium.png
+A	tests/visual/visual.spec.ts-snapshots/visual-components-rangeslider--variants-light-1-chromium.png
+M	tests/visual/visual.spec.ts-snapshots/visual-getting-started--page-dark-1-chromium.png
+M	tests/visual/visual.spec.ts-snapshots/visual-getting-started--page-light-1-chromium.png
+COMMIT d8eb5b0 docs(bmad): spec 26.1-26.4 — form-control wave frozen (slider, switch, avatar, OTP code mode)
+
+A	_bmad-output/implementation-artifacts/spec-26-1-range-slider.md
+A	_bmad-output/implementation-artifacts/spec-26-2-switch.md
+A	_bmad-output/implementation-artifacts/spec-26-3-avatar.md
+A	_bmad-output/implementation-artifacts/spec-26-4-otp-code.md
+M	_bmad-output/planning-artifacts/briefs/brief-epic-26-form-control-wave-2026-10-05.md
+COMMIT 3e27649 docs(bmad): brief Epic 26 form-control wave — grounding audit verdicts + 24T capture targets
+
+M	.playwright-cli/captures-v5/TERMINAL-CAPTURE-CHECKLIST.md
+A	_bmad-output/planning-artifacts/briefs/brief-epic-26-form-control-wave-2026-10-05.md
+COMMIT 4c009c8 docs(bmad): spec 25.4 CLOSED — CI run 37232913092 GREEN; Epic 25 close-out stamps
+
+M	CLAUDE.md
+M	HANDOFF.md
+M	_bmad-output/implementation-artifacts/spec-25-4-kit-recon-synthesis.md
+COMMIT c93b5ea docs(recon): 25.4 synthesis — BENCHMARK.md (matrix + 15-finding gap report, closes Epic 25 dataset)
+
+M	_bmad-output/implementation-artifacts/spec-25-4-kit-recon-synthesis.md
+A	_bmad-output/planning-artifacts/kit-recon-2026-10/BENCHMARK.md
+COMMIT 70a0797 docs(bmad): spec 25.3 CLOSED — CI run 37227729767 GREEN
+
+M	_bmad-output/implementation-artifacts/spec-25-3-kit-recon-visual.md
+COMMIT 9a1011a feat(recon): 25.3 visual reference — 10 kit docs galleries, 51 honest PNGs
+
+A	.playwright-cli/verify/kit-recon/NOTES.md
+A	.playwright-cli/verify/kit-recon/PASSPORTS.md
+A	.playwright-cli/verify/kit-recon/PLAN.md
+A	.playwright-cli/verify/kit-recon/antd-button-light.png
+A	.playwright-cli/verify/kit-recon/antd-gallery-dark.png
+A	.playwright-cli/verify/kit-recon/antd-gallery-light.png
+A	.playwright-cli/verify/kit-recon/antd-table-dark.png
+A	.playwright-cli/verify/kit-recon/antd-table-light.png
+A	.playwright-cli/verify/kit-recon/carbon-button-light.png
+A	.playwright-cli/verify/kit-recon/carbon-gallery-light.png
+A	.playwright-cli/verify/kit-recon/carbon-input-light.png
+A	.playwright-cli/verify/kit-recon/composite-antd.png
+A	.playwright-cli/verify/kit-recon/composite-carbon.png
+A	.playwright-cli/verify/kit-recon/composite-mantine.png
+A	.playwright-cli/verify/kit-recon/composite-mui.png
+A	.playwright-cli/verify/kit-recon/composite-polaris.png
+A	.playwright-cli/verify/kit-recon/composite-radix.png
+A	.playwright-cli/verify/kit-recon/composite-shadcn.png
+A	.playwright-cli/verify/kit-recon/composite-shoelace.png
+A	.playwright-cli/verify/kit-recon/composite-spectrum.png
+A	.playwright-cli/verify/kit-recon/composite-taiga.png
+A	.playwright-cli/verify/kit-recon/journal.json
+A	.playwright-cli/verify/kit-recon/mantine-button-light.png
+A	.playwright-cli/verify/kit-recon/mantine-gallery-light.png
+A	.playwright-cli/verify/kit-recon/mantine-table-light.png
+A	.playwright-cli/verify/kit-recon/mui-button-dark.png
+A	.playwright-cli/verify/kit-recon/mui-button-light.png
+A	.playwright-cli/verify/kit-recon/mui-gallery-dark.png
+A	.playwright-cli/verify/kit-recon/mui-gallery-light.png
+A	.playwright-cli/verify/kit-recon/mui-input-dark.png
+A	.playwright-cli/verify/kit-recon/mui-input-light.png
+A	.playwright-cli/verify/kit-recon/polaris-gallery-dark.png
+A	.playwright-cli/verify/kit-recon/polaris-gallery-light.png
+A	.playwright-cli/verify/kit-recon/polaris-webcomponents-dark.png
+A	.playwright-cli/verify/kit-recon/polaris-webcomponents-light.png
+A	.playwright-cli/verify/kit-recon/radix-accordion-dark.png
+A	.playwright-cli/verify/kit-recon/radix-accordion-light.png
+A	.playwright-cli/verify/kit-recon/radix-dialog-dark.png
+A	.playwright-cli/verify/kit-recon/radix-dialog-light.png
+A	.playwright-cli/verify/kit-recon/radix-gallery-dark.png
+A	.playwright-cli/verify/kit-recon/radix-gallery-light.png
+A	.playwright-cli/verify/kit-recon/shadcn-button-dark.png
+A	.playwright-cli/verify/kit-recon/shadcn-button-light.png
+A	.playwright-cli/verify/kit-recon/shadcn-gallery-dark.png
+A	.playwright-cli/verify/kit-recon/shadcn-gallery-light.png
+A	.playwright-cli/verify/kit-recon/shadcn-input-dark.png
+A	.playwright-cli/verify/kit-recon/shadcn-input-light.png
+A	.playwright-cli/verify/kit-recon/shoelace-button-dark.png
+A	.playwright-cli/verify/kit-recon/shoelace-button-light.png
+A	.playwright-cli/verify/kit-recon/shoelace-dialog-dark.png
+A	.playwright-cli/verify/kit-recon/shoelace-dialog-light.png
+A	.playwright-cli/verify/kit-recon/shoelace-gallery-dark.png
+A	.playwright-cli/verify/kit-recon/shoelace-gallery-light.png
+A	.playwright-cli/verify/kit-recon/shoelace-input-dark.png
+A	.playwright-cli/verify/kit-recon/shoelace-input-light.png
+A	.playwright-cli/verify/kit-recon/spectrum-button-light.png
+A	.playwright-cli/verify/kit-recon/spectrum-field-light.png
+A	.playwright-cli/verify/kit-recon/spectrum-gallery-light.png
+A	.playwright-cli/verify/kit-recon/taiga-button-dark.png
+A	.playwright-cli/verify/kit-recon/taiga-button-light.png
+A	.playwright-cli/verify/kit-recon/taiga-gallery-light.png
+A	.playwright-cli/verify/kit-recon/taiga-input-dark.png
+A	.playwright-cli/verify/kit-recon/taiga-input-light.png
+A	.playwright-cli/verify/kit-recon/taiga-table-dark.png
+A	.playwright-cli/verify/kit-recon/taiga-table-light.png
+A	.playwright-cli/verify/kit-recon/vision-antd.png
+A	.playwright-cli/verify/kit-recon/vision-carbon.png
+A	.playwright-cli/verify/kit-recon/vision-mantine.png
+A	.playwright-cli/verify/kit-recon/vision-mui.png
+A	.playwright-cli/verify/kit-recon/vision-polaris.png
+A	.playwright-cli/verify/kit-recon/vision-radix.png
+A	.playwright-cli/verify/kit-recon/vision-shadcn.png
+A	.playwright-cli/verify/kit-recon/vision-shoelace.png
+A	.playwright-cli/verify/kit-recon/vision-spectrum.png
+A	.playwright-cli/verify/kit-recon/vision-taiga.png
+M	_bmad-output/implementation-artifacts/spec-25-3-kit-recon-visual.md
+A	recon/composite.mjs
+M	recon/parse.test.mjs
+A	recon/visual.mjs
+COMMIT 2026215 docs(bmad): spec 25.2 CLOSED — CI run 37219706642 GREEN (verdict recorded after the fact)
+
+M	_bmad-output/implementation-artifacts/spec-25-2-kit-recon-roster-run.md
+COMMIT 29994ae feat(recon): spec 25.2 — full roster harvest + downloads/GitHub activity + per-kit reports
+
+M	_bmad-output/implementation-artifacts/spec-25-2-kit-recon-roster-run.md
+A	_bmad-output/planning-artifacts/kit-recon-2026-10/SUMMARY.md
+A	_bmad-output/planning-artifacts/kit-recon-2026-10/antd.md
+A	_bmad-output/planning-artifacts/kit-recon-2026-10/carbon.md
+A	_bmad-output/planning-artifacts/kit-recon-2026-10/mantine.md
+A	_bmad-output/planning-artifacts/kit-recon-2026-10/mui.md
+A	_bmad-output/planning-artifacts/kit-recon-2026-10/polaris.md
+A	_bmad-output/planning-artifacts/kit-recon-2026-10/radix.md
+A	_bmad-output/planning-artifacts/kit-recon-2026-10/self.md
+A	_bmad-output/planning-artifacts/kit-recon-2026-10/shadcn.md
+A	_bmad-output/planning-artifacts/kit-recon-2026-10/shoelace.md
+A	_bmad-output/planning-artifacts/kit-recon-2026-10/spectrum.md
+A	_bmad-output/planning-artifacts/kit-recon-2026-10/taiga.md
+M	recon/harvest.mjs
+A	recon/lib/downloads.mjs
+A	recon/lib/github.mjs
+M	recon/lib/snapshot.mjs
+M	recon/parse.test.mjs
+A	recon/report.mjs
+A	recon/snapshots/antd.jsonl
+A	recon/snapshots/carbon.jsonl
+A	recon/snapshots/mantine.jsonl
+A	recon/snapshots/mui.jsonl
+A	recon/snapshots/polaris.jsonl
+A	recon/snapshots/radix.jsonl
+M	recon/snapshots/self.jsonl
+A	recon/snapshots/shadcn.jsonl
+A	recon/snapshots/shoelace.jsonl
+A	recon/snapshots/spectrum.jsonl
+M	recon/snapshots/taiga.jsonl
+COMMIT fb3875a docs(bmad): spec 25.1 CLOSED — CI run 37214077995 GREEN (verdict recorded after the fact)
+
+M	_bmad-output/implementation-artifacts/spec-25-1-kit-recon-harvest.md
+COMMIT 10639cc feat(recon): spec 25.1 — machine-harvest pipeline + dogfood + taiga pilot + capability matrix
+
+M	.gitignore
+M	_bmad-output/implementation-artifacts/spec-25-1-kit-recon-harvest.md
+M	eslint.config.js
+M	package.json
+A	recon/capability.md
+A	recon/harvest.mjs
+A	recon/lib/capability.mjs
+A	recon/lib/extract.mjs
+A	recon/lib/http.mjs
+A	recon/lib/registry.mjs
+A	recon/lib/snapshot.mjs
+A	recon/lib/tarball.mjs
+A	recon/parse.test.mjs
+A	recon/roster.yml
+A	recon/snapshots/self.jsonl
+A	recon/snapshots/taiga.jsonl
+M	vitest.config.ts
+COMMIT 58eae9a docs(bmad): Epic 25 brief + spec drafts 25.1-25.4 — UI-kit ecosystem recon
+
+A	_bmad-output/implementation-artifacts/spec-25-1-kit-recon-harvest.md
+A	_bmad-output/implementation-artifacts/spec-25-2-kit-recon-roster-run.md
+A	_bmad-output/implementation-artifacts/spec-25-3-kit-recon-visual.md
+A	_bmad-output/implementation-artifacts/spec-25-4-kit-recon-synthesis.md
+A	_bmad-output/planning-artifacts/briefs/brief-epic-25-kit-ecosystem-recon-2026-10-04.md
