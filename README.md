@@ -29,7 +29,7 @@ overlay-контроллер, плюс редакционное семейств
 | Пакет | Роль |
 |---|---|
 | `pillkit-tokens` | Дизайн-токены — слои custom properties `--tk-*`: светлая база + тёмные переопределения на `[data-theme="dark"]` |
-| `pillkit-components` | Ядро на Lit custom elements: 45 компонентов `tk-*`, общий overlay-контроллер |
+| `pillkit-components` | Ядро на Lit custom elements: 46 компонентов `tk-*`, общий overlay-контроллер |
 | `pillkit-react` | React-обёртки, генерируемые из Custom Elements Manifest (`@lit/react`) |
 | `pillkit-tj-tokens` | Токены под-кита ТЖ — `--tj-*` + нативная тёмная тема `[data-tj-theme="dark"]` (семейство заскаффолжено в 15.1, таблица — 15.2) |
 | `pillkit-tj-components` | Ядро ТЖ на Lit custom elements: редакционные компоненты `tj-*` (roster — эпик 16) |
@@ -134,7 +134,7 @@ pnpm install && pnpm --filter pillkit-docs dev   # Storybook (RU) на :6006
 
 Внутри: «Начало работы» (установка, темизация, шрифты), Token Reference
 (светлая/тёмная тема бок о бок), Theming Guide, API-таблицы всех компонентов —
-45 банковских `tk-*` и 10 редакционных `tj-*` (55 всего), заметки по
+46 банковских `tk-*` и 10 редакционных `tj-*` (56 всего), заметки по
 доступности и паттерны composition. Контракт API компонентов — пропсы, события,
 controlled/uncontrolled-режимы, слоты и грамматика темизации — описан в
 [`packages/components/CONVENTIONS.md`](packages/components/CONVENTIONS.md).
