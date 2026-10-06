@@ -1,6 +1,7 @@
 # Spec 27.1 — tk-spinner: indeterminate-лоадер
 
-- **status:** DRAFT → frozen при открытии эпика
+- **status:** EXECUTED 2026-10-06 (feat `11e33f2`; CI-вердикт снят по
+  repairs-рану `52d2393` = 37508135976 success — см. Execution record)
 - **epic note:** Epic 27, brief `brief-epic-27-quality-window-2026-10-06.md`
   (adopt-атом BENCHMARK #3; заземление = китовые регистры — терминал 24T
   дал 0 вхождений, рулинг-молд 26.1/26.2/26.4).
@@ -49,3 +50,16 @@ So that loading states stop being ad-hoc CSS or a misused progress-bar.
 - **2026-10-06 (pre-execution).** Frozen на китовых регистрах; ни один
   эталон-кит не копируется пиксельно — регистры кита (currentColor,
   round caps, size-ряд 16/20/24/32 = типовые кегли текста кита).
+- **2026-10-06 (execution).** Executor dev-spinner; все AC исполнены
+  дословно (юниты 12, стори 5, event-map no-entry, CEM, враппер 51-й).
+  **Поправка счётчика hidden-guard:** черновое «55→56 щитов/45 файлов»
+  было устаревшим на единицу — фактическое до-состояние 56/45 (выросло
+  textarea в 24T.1), исполнено 56→**57 щитов / 45→46 файлов**. Сюита
+  2725→**2755** (+20 visual/axe, +10 reduced-motion). Локальные гейты
+  оркестратора полные GREEN; CI-ран feat-коммита (37501969333) красный
+  по getting-started 4329→4405px — расщепление связки
+  source↔baseline (ростер component-search ехал feat'ом, реминт PNG —
+  docs-коммитом); чинено 52d2393, verdict 37508135976 success (урок
+  записан в spec-27-2). HOLD спиннера снят этим окном: заземление на
+  собственные регистры кита признано достаточным (0 вхождений в 24T =
+  нет капчур-материала, копировать нечего).

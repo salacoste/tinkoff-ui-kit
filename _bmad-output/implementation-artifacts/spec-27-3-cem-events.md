@@ -1,6 +1,8 @@
-# Spec 27.3 — CEM events depth: аудит (фаза A) + add-верdikты
+# Spec 27.3 — CEM events depth: аудит (фаза A) + add-вердикты
 
-- **status:** DRAFT → frozen при открытии эпика
+- **status:** EXECUTED (фаза A) 2026-10-06 — отчёт
+  `planning-artifacts/kit-events-audit-2026-10/REPORT.md`; фаза B
+  вынесена в spec-27-4 (DRAFT — решение мейнтейнера)
 - **epic note:** Epic 27, brief `brief-epic-27-quality-window-2026-10-06.md`
   (BENCHMARK finding #10 watch: 0.4 events/компонент против shoelace 1.9).
 
