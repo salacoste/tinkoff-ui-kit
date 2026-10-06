@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <title>pillkit v1.8.0 fresh consumer</title>
+  </head>
+  <body>
+    <h1>pillkit v1.8.0 — свежий потребитель (тег)</h1>
+
+    <section id="raw">
+      <h2>Raw custom elements</h2>
+      <tk-range-slider id="slider" label="Сумма покупки"></tk-range-slider>
+      <tk-switch id="switch" label="Уведомления по сделкам"></tk-switch>
+      <tk-avatar id="avatar" name="Мария Оганова"></tk-avatar>
+      <tk-textarea id="notes" label="Заметка о инструменте" placeholder="Добавьте заметку"></tk-textarea>
+      <tk-button id="buy" variant="positive">Купить</tk-button>
+      <tk-button id="sell" variant="negative">Продать</tk-button>
+    </section>
+
+    <section id="react">
+      <h2>React wrappers</h2>
+      <div id="root"></div>
+    </section>
+
+    <script type="module" src="/main.ts"></script>
+  </body>
+</html>

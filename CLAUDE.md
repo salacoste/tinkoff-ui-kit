@@ -1378,3 +1378,24 @@ spinner/textarea HOLD под 24T-капчуры.
   зелёной). SUMMARY.md timestamp-флейк откачен дважды (закон 25.4). Дальше
   по §15.3: тег на ЭТОЙ штамп-голове после её CI-вердикта → Flow-B §15.4
   (свежий клон v1.8.0) → финальный штамп (молд 0161310).
+- **v1.8.0 РЕЛИЗ ЗАВЕРШЁН (2026-10-06, то же окно; «lets continue doing
+  all what we need to do one by one. i'll be AFK»):** CI штампа
+  **37453797781 GREEN** → аннотированный тег `v1.8.0` на `bbad7f6`
+  (tag-объект `fe1a3bdb6ff391c02a4f92c67d131470fd1b5954`, remote deref
+  сверен ДО клона; теговый пуш CI не триггернул; перемещений не было) →
+  **Flow-B §15.4 ПРОЙДЕН раунд-1 22/22 БЕЗ дефектов** (первый релиз со
+  времён v1.7.0 без второго раунда; клон локальный file-транспорт
+  exact-match, ценсус = банковская тройка @1.8.0 у потребителя + семёрка
+  в клоне, install `--prefer-offline`, прод-билд vite с dedupe;
+  range-slider valueFormatter→readout+aria-valuetext, switch
+  checkbox+role=switch капсула 36×20, avatar role=img из
+  connectedCallback «МО»/«ЛВ», textarea автосайз 48px, кнопки
+  ::before #0BA264/#9D2B2B radius 4px белая подпись, все пять
+  React-обёрток — пропсы переживают; dark #1a1a1a; консоль 0; пруфы
+  `verify/v180-fresh-clone/`). **Probe-уроки: role="switch" живёт на
+  нативном input в shadow, НЕ на хосте; `checked` — строгий §4
+  property-канал (атрибут не читает, React defaultChecked через
+  свойство работает); label-текст сравнивать после .trim().** Очередь
+  §4 v1.8.0: только опц. batch-confirm (+153) по отдельной санкции;
+  HOLD слайдер/тумблер/OTP/спиннер ждут нового капчур-материала; новых
+  историй без брифа не открывать. Цикл закрыт этим финальным штампом.
