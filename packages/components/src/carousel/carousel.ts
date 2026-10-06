@@ -4,6 +4,14 @@ import type { PropertyValues } from 'lit';
 
 import { carouselStyles } from './carousel.css.js';
 
+/** Payload of `page-change` (CONVENTIONS §3): the unwrapped 1-based page. */
+export interface TkCarouselChangeDetail {
+  page: number;
+}
+
+/** Typed shape of the tk-carousel `page-change` event (CONVENTIONS §7). */
+export type TkCarouselChangeEvent = CustomEvent<TkCarouselChangeDetail>;
+
 /**
  * The chevron glyphs (the select field's 24-grid stroke family — inline
  * SVG, no asset fetch; `stroke: currentColor` so the CSS hook layer owns
@@ -66,8 +74,15 @@ const chevronRightSvg = html`<svg
  * the prop is contract-mandatory. NO aria-live (the spec's ruling: no
  * live region for scroll position).
  *
- * STATE: none dispatches — scroll position is derived, not a §9
- * channel (the rating no-entry precedent).
+ * STATE: ONE §9 channel — `page-change` (spec 27.4, the events audit's
+ * P1: the 24.8 infinite-feed pattern had to build a
+ * DriveFirstAppend workaround directive precisely because the page
+ * change was unobservable). The rail's position is DERIVED geometry —
+ * the atom emits only when the snap page INDEX actually changes (never
+ * per scroll tick), from chevron page-steps, native/drag/keyboard
+ * scrolling and programmatic scrolls alike — one funnel: #syncFromRail.
+ * The FIRST render establishes the baseline silently (the §9 silence,
+ * the accordion-item/note mold); `detail.page` is 1-based.
  *
  * SSR-compat (AD-10): rendered via Lit templates only; the imperative
  * steps (host attribute writes, scroll sync) run after the element
@@ -76,6 +91,7 @@ const chevronRightSvg = html`<svg
  * @tag tk-carousel
  * @attr {string} label - REQUIRED accessible name of the region (e.g. «Похожие акции»).
  * @attr {boolean} dots - Paint the decorative dot pagination under the rail.
+ * @fires page-change - `{ page: number }` with the newly active 1-based snap page; composed, bubbles; silent on the first render and on intra-page scroll ticks.
  * @slot - The cards (light DOM; width/height and card chrome are consumer-side).
  */
 export class TkCarousel extends LitElement {
@@ -89,11 +105,18 @@ export class TkCarousel extends LitElement {
   @property({ type: Boolean })
   dots = false;
 
-  /** Derived scroll state — never a §9 channel, nothing dispatches. */
+  /** Derived scroll state — the page index is the ONE §9 channel. */
   #canPrev = false;
   #canNext = true;
   #pages = 1;
   #active = 0;
+
+  /**
+   * The §9 silence guard: null until the first sync establishes the
+   * baseline (no emit), then the last emitted 0-based page — a change
+   * of `#active` alone is what emits.
+   */
+  #emittedPage: number | null = null;
 
   #resizeObserver: ResizeObserver | null = null;
 
@@ -156,6 +179,19 @@ export class TkCarousel extends LitElement {
       this.#active = active;
       this.requestUpdate();
     }
+    // The §9 funnel: the baseline lands silently, every real page CHANGE
+    // emits — chevron steps, native scrolls and programmatic scrolls all
+    // converge here (the 27.4 audit's P1).
+    if (this.#emittedPage !== null && active !== this.#emittedPage) {
+      this.dispatchEvent(
+        new CustomEvent<TkCarouselChangeDetail>('page-change', {
+          detail: { page: active + 1 },
+          composed: true,
+          bubbles: true,
+        }),
+      );
+    }
+    this.#emittedPage = active;
   }
 
   override firstUpdated(): void {

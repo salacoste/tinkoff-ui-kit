@@ -1379,7 +1379,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "tk-carousel — the kit's horizontal card carousel (spec 21.6, invest\nfoundation wave, GAP-MAP A2: the most repeated candidate of the whole\nrecon — tk-scroll-row ≡ tk-carousel ≡ horizontal card carousel is ONE\nprimitive, census 46+95+5 rails across three pages).\n\nArchitecture: a NATIVE scroll-snap scroller — `overflow-x: auto` +\n`scroll-snap-type: x mandatory` on the rail, light-DOM cards as the\ndefault slot's flat-tree flex children. NO transform track, NO\nvirtualization, NO autoplay, NO loop (all out of scope by the spec's\nown rulings). The keyboard stays NATIVE: card links tab through the\nlight DOM on their own and the browser's arrow-key scrolling needs no\nduplicate — the atom adds no key handlers at all.\n\nChrome (all measured, see the css sheet's header table):\n- chevron prev/next — circular, white on the dropdown shadow token,\n  revealed on rail hover/focus (statics on the live site paint none —\n  the threshold-corrected scans are the proof); page-step scrolling\n  (± the rail's clientWidth); `disabled` at the edges.\n- `dots` — decorative pagination dots (aria-hidden, NON-clickable):\n  8px, 16px pitch, active = the existing yellow (byte-identical to\n  the live probe), 16px under the rail.\n\nSemantics: the HOST is `role=\"region\"` with\n`aria-roledescription=\"карусель\"` and `aria-label` from the REQUIRED\n`label` property — a carousel without a name is an axe violation, so\nthe prop is contract-mandatory. NO aria-live (the spec's ruling: no\nlive region for scroll position).\n\nSTATE: none dispatches — scroll position is derived, not a §9\nchannel (the rating no-entry precedent).\n\nSSR-compat (AD-10): rendered via Lit templates only; the imperative\nsteps (host attribute writes, scroll sync) run after the element\nexists.",
+          "description": "tk-carousel — the kit's horizontal card carousel (spec 21.6, invest\nfoundation wave, GAP-MAP A2: the most repeated candidate of the whole\nrecon — tk-scroll-row ≡ tk-carousel ≡ horizontal card carousel is ONE\nprimitive, census 46+95+5 rails across three pages).\n\nArchitecture: a NATIVE scroll-snap scroller — `overflow-x: auto` +\n`scroll-snap-type: x mandatory` on the rail, light-DOM cards as the\ndefault slot's flat-tree flex children. NO transform track, NO\nvirtualization, NO autoplay, NO loop (all out of scope by the spec's\nown rulings). The keyboard stays NATIVE: card links tab through the\nlight DOM on their own and the browser's arrow-key scrolling needs no\nduplicate — the atom adds no key handlers at all.\n\nChrome (all measured, see the css sheet's header table):\n- chevron prev/next — circular, white on the dropdown shadow token,\n  revealed on rail hover/focus (statics on the live site paint none —\n  the threshold-corrected scans are the proof); page-step scrolling\n  (± the rail's clientWidth); `disabled` at the edges.\n- `dots` — decorative pagination dots (aria-hidden, NON-clickable):\n  8px, 16px pitch, active = the existing yellow (byte-identical to\n  the live probe), 16px under the rail.\n\nSemantics: the HOST is `role=\"region\"` with\n`aria-roledescription=\"карусель\"` and `aria-label` from the REQUIRED\n`label` property — a carousel without a name is an axe violation, so\nthe prop is contract-mandatory. NO aria-live (the spec's ruling: no\nlive region for scroll position).\n\nSTATE: ONE §9 channel — `page-change` (spec 27.4, the events audit's\nP1: the 24.8 infinite-feed pattern had to build a\nDriveFirstAppend workaround directive precisely because the page\nchange was unobservable). The rail's position is DERIVED geometry —\nthe atom emits only when the snap page INDEX actually changes (never\nper scroll tick), from chevron page-steps, native/drag/keyboard\nscrolling and programmatic scrolls alike — one funnel: #syncFromRail.\nThe FIRST render establishes the baseline silently (the §9 silence,\nthe accordion-item/note mold); `detail.page` is 1-based.\n\nSSR-compat (AD-10): rendered via Lit templates only; the imperative\nsteps (host attribute writes, scroll sync) run after the element\nexists.",
           "name": "TkCarousel",
           "slots": [
             {
@@ -1416,7 +1416,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Derived scroll state — never a §9 channel, nothing dispatches."
+              "description": "Derived scroll state — the page index is the ONE §9 channel."
             },
             {
               "kind": "field",
@@ -1444,6 +1444,16 @@
                 "text": "number"
               },
               "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#emittedPage",
+              "privacy": "private",
+              "type": {
+                "text": "number | null"
+              },
+              "default": "null",
+              "description": "The §9 silence guard: null until the first sync establishes the\nbaseline (no emit), then the last emitted 0-based page — a change\nof `#active` alone is what emits."
             },
             {
               "kind": "field",
@@ -1513,6 +1523,15 @@
                 }
               ],
               "description": "Page-step scroll: one rail viewport per click (the spec's AC)."
+            }
+          ],
+          "events": [
+            {
+              "name": "page-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "`{ page: number }` with the newly active 1-based snap page; composed, bubbles; silent on the first render and on intra-page scroll ticks."
             }
           ],
           "attributes": [
@@ -15357,7 +15376,7 @@
         },
         {
           "kind": "class",
-          "description": "tk-toast — the derived notification card (Story 4.3). NO kit events, no\n`open` channel: a toast is fire-and-forget — it appears already visible,\nnever takes focus (no tabindex, no focus() — structural pins), and removes\nitself when done. That is the documented §9/event-map ruling (native click\non the slotted action serves the action — the button/cards precedent).\n\nSELF-ENQUEUE (the §9 «built on the SAME elements» rule made literal): the\nelement enqueues ITSELF on connectedCallback —\n`enqueueToast({ element: this, onCollapse: exit-then-remove })` — so BOTH\nusage patterns are the same element: declarative (create/append a tk-toast\nanywhere; it relocates into the shared bottom-right host) and imperative\n(`showToast(options)` sugar in ./show.ts that builds THIS element, sets\nprops, slots the optional action, returns a dismiss handle). Stacking\n(bottom-right, max 3 visible, oldest collapses) is the queue's; the\nauto-dismiss TIMER is the element's own (the queue never starts or stops\ntimers).\n\nREMOVAL IS SELF-REMOVAL (the queue's advertised pattern): dismiss() plays\nthe exit animation and removes the element; the stacking host's\nMutationObserver prunes the queue entry and tears the host down when the\nlast toast leaves (2.2 contract) — the queue's handle.dismiss is never\nused from here, precisely so the exit animation paints before the element\nleaves the host.\n\nANNOUNCEMENTS: default → aria-live=\"polite\" on the host; destructive →\nrole=\"alert\" (implies assertive) — never both. The message is the default\nslot; the action is the named `action` slot (ONE interactive element; its\nnative click is the consumer's — the toast STAYS until duration/dismiss,\nthe recorded pick). The per-variant icon is an internal token-drawn SVG,\naria-hidden.\n\nTIMING: `duration` ms (default 5000; 0 = sticky until Esc/dismiss;\nnegative clamps to 0, non-finite degrades to the default). Auto-dismiss\nPAUSES on pointerenter/focusin and RESUMES on pointerleave/focusout.\n\nSSR-compat (AD-10): no imperative DOM at construction; the queue's\nenqueueToast itself no-ops without a document.\n\nREACT CAVEAT (wrapper consumers): the self-enqueue RELOCATES the element\nout of whatever container it was mounted in (into the shared bottom-right\nhost). Unmounting a relocated toast through a container-owning renderer\n(React's root.unmount) throws removeChild on a node it no longer parents —\nre-home it first or, better, use the imperative showToast helper for\nfire-and-forget notifications (the §9 pattern). The generated wrapper\nworks while mounted; this is the documented cost of the shared stack.",
+          "description": "tk-toast — the derived notification card (Story 4.3). No `open` channel —\na toast is fire-and-forget: it appears already visible, never takes focus\n(no tabindex, no focus() — structural pins), and removes itself when done.\nThe ONE kit event is the lifecycle tail `hide` (spec 27.4, the events\naudit's P2: the consumer could never learn a toast LEFT — controller\nblindness; `show` stays REFUSED, the appearance is already observed\nthrough the consumer's own call). Emitted in dismiss() — the single exit\nfunnel every path converges into — with `detail.reason`: 'auto' = the\nelement's own duration timer; 'manual' = Esc, the imperative handle, the\nqueue's overflow collapse, any consumer dismiss(). The slotted action's\nnative click stays the consumer's (the button/cards precedent).\n\nSELF-ENQUEUE (the §9 «built on the SAME elements» rule made literal): the\nelement enqueues ITSELF on connectedCallback —\n`enqueueToast({ element: this, onCollapse: exit-then-remove })` — so BOTH\nusage patterns are the same element: declarative (create/append a tk-toast\nanywhere; it relocates into the shared bottom-right host) and imperative\n(`showToast(options)` sugar in ./show.ts that builds THIS element, sets\nprops, slots the optional action, returns a dismiss handle). Stacking\n(bottom-right, max 3 visible, oldest collapses) is the queue's; the\nauto-dismiss TIMER is the element's own (the queue never starts or stops\ntimers).\n\nREMOVAL IS SELF-REMOVAL (the queue's advertised pattern): dismiss() plays\nthe exit animation and removes the element; the stacking host's\nMutationObserver prunes the queue entry and tears the host down when the\nlast toast leaves (2.2 contract) — the queue's handle.dismiss is never\nused from here, precisely so the exit animation paints before the element\nleaves the host.\n\nANNOUNCEMENTS: default → aria-live=\"polite\" on the host; destructive →\nrole=\"alert\" (implies assertive) — never both. The message is the default\nslot; the action is the named `action` slot (ONE interactive element; its\nnative click is the consumer's — the toast STAYS until duration/dismiss,\nthe recorded pick). The per-variant icon is an internal token-drawn SVG,\naria-hidden.\n\nTIMING: `duration` ms (default 5000; 0 = sticky until Esc/dismiss;\nnegative clamps to 0, non-finite degrades to the default). Auto-dismiss\nPAUSES on pointerenter/focusin and RESUMES on pointerleave/focusout.\n\nSSR-compat (AD-10): no imperative DOM at construction; the queue's\nenqueueToast itself no-ops without a document.\n\nREACT CAVEAT (wrapper consumers): the self-enqueue RELOCATES the element\nout of whatever container it was mounted in (into the shared bottom-right\nhost). Unmounting a relocated toast through a container-owning renderer\n(React's root.unmount) throws removeChild on a node it no longer parents —\nre-home it first or, better, use the imperative showToast helper for\nfire-and-forget notifications (the §9 pattern). The generated wrapper\nworks while mounted; this is the documented cost of the shared stack.",
           "name": "TkToast",
           "slots": [
             {
@@ -15438,6 +15457,16 @@
               "default": "false"
             },
             {
+              "kind": "field",
+              "name": "#autoFired",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Set by the duration timer's callback — dismiss() reads it as 'auto'."
+            },
+            {
               "kind": "method",
               "name": "#startTimer",
               "privacy": "private",
@@ -15509,7 +15538,16 @@
                   "text": "void"
                 }
               },
-              "description": "Dismisses the toast: the exit animation, then SELF-REMOVAL (the queue's\nMutationObserver prunes the stack entry — see the class doc). Idempotent;\nnever moves focus."
+              "description": "Dismisses the toast: the exit animation, then SELF-REMOVAL (the queue's\nMutationObserver prunes the stack entry — see the class doc). Idempotent;\nnever moves focus. Emits `hide` exactly once at the top — every exit\npath (timer, Esc, handle, collapse, consumer call) funnels here (27.4)."
+            }
+          ],
+          "events": [
+            {
+              "name": "hide",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "`{ reason: 'auto' | 'manual' }` at the top of the single exit funnel (auto = the duration timer, manual = Esc/handle/collapse/consumer dismiss); composed, bubbles; emitted exactly once per toast."
             }
           ],
           "attributes": [

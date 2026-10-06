@@ -165,6 +165,53 @@ describe('tk-carousel', () => {
     expect(railOf(el).onkeydown).toBeNull();
   });
 
+  it('§9 SILENCE: the first sync establishes the page baseline WITHOUT emitting (spec 27.4)', async () => {
+    const el = await mount({ label: 'Рейл' });
+    const events: CustomEvent<{ page: number }>[] = [];
+    el.addEventListener('page-change', (event) => events.push(event as typeof events[number]));
+
+    // The baseline lands (geometry syncs, state computes) — zero emits.
+    mockGeometry(el, { scrollWidth: 2000, clientWidth: 500, scrollLeft: 0 });
+    await elementUpdated(el);
+    expect(el.shadowRoot?.querySelectorAll('.carousel__dot') ?? []).toBeDefined();
+    expect(events).toHaveLength(0);
+
+    // A re-sync at the SAME page (resize tick, no scroll change): still silent.
+    mockGeometry(el, { scrollWidth: 2000, clientWidth: 500, scrollLeft: 0 });
+    await elementUpdated(el);
+    expect(events).toHaveLength(0);
+  });
+
+  it('emits page-change {page} on real page changes only — the one funnel covers chevrons, native and programmatic scrolls; intra-page ticks stay silent (spec 27.4)', async () => {
+    const el = await mount({ label: 'Рейл' });
+    const events: CustomEvent<{ page: number }>[] = [];
+    el.addEventListener('page-change', (event) => events.push(event as typeof events[number]));
+
+    mockGeometry(el, { scrollWidth: 2000, clientWidth: 500, scrollLeft: 0 }); // baseline page 1
+    // A page-step forward: scrollLeft 700 rounds to page 2 (1-based).
+    mockGeometry(el, { scrollWidth: 2000, clientWidth: 500, scrollLeft: 700 });
+    await elementUpdated(el);
+    expect(events).toHaveLength(1);
+    expect(events[0].detail).toEqual({ page: 2 });
+    expect(events[0].composed).toBe(true);
+    expect(events[0].bubbles).toBe(true);
+
+    // Intra-page tick (700 → 740: 1.4 → 1.48, both round to page 2): SILENT.
+    mockGeometry(el, { scrollWidth: 2000, clientWidth: 500, scrollLeft: 740 });
+    await elementUpdated(el);
+    expect(events).toHaveLength(1);
+
+    // Two pages forward (1500 → page 4), then back home (page 1).
+    mockGeometry(el, { scrollWidth: 2000, clientWidth: 500, scrollLeft: 1500 });
+    await elementUpdated(el);
+    expect(events).toHaveLength(2);
+    expect(events[1].detail).toEqual({ page: 4 });
+    mockGeometry(el, { scrollWidth: 2000, clientWidth: 500, scrollLeft: 0 });
+    await elementUpdated(el);
+    expect(events).toHaveLength(3);
+    expect(events[2].detail).toEqual({ page: 1 });
+  });
+
   it('ships the measured surface: snap scroller, hidden scrollbar, hook layer with token defaults (structural)', () => {
     const css = sheetCss();
     // Native scroll-snap — the transform track is out of scope by law.

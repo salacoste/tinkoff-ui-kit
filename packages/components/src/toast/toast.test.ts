@@ -372,6 +372,62 @@ describe('tk-toast', () => {
     await advanceExit();
   });
 
+  // --- The lifecycle tail event (spec 27.4, the events audit P2) ------------------
+
+  it('emits hide {reason:"auto"} exactly once when the duration timer fires — never before', async () => {
+    vi.useFakeTimers();
+    const el = await mount({ props: { duration: 100 }, message: 'Сообщение' });
+    const events: CustomEvent<{ reason: string }>[] = [];
+    el.addEventListener('hide', (event) => events.push(event as typeof events[number]));
+
+    await vi.advanceTimersByTimeAsync(50);
+    expect(events).toHaveLength(0); // not yet — the window is still open
+
+    await vi.advanceTimersByTimeAsync(60); // timer fires → dismiss() funnels as 'auto'
+    expect(events).toHaveLength(1);
+    expect(events[0].detail).toEqual({ reason: 'auto' });
+    expect(events[0].composed).toBe(true);
+    expect(events[0].bubbles).toBe(true);
+
+    await advanceExit(); // the exit bound — no second event from removal
+    expect(events).toHaveLength(1);
+  });
+
+  it('emits hide {reason:"manual"} on Esc and on dismiss() — the non-timer paths; exactly once', async () => {
+    vi.useFakeTimers();
+    const first = await mount({ props: { duration: 0 }, message: 'Первое' });
+    const second = await mount({ props: { duration: 0 }, message: 'Второе' });
+    const events: CustomEvent<{ reason: string }>[] = [];
+    const hear = (event: Event): void => events.push(event as typeof events[number]);
+    first.addEventListener('hide', hear);
+    second.addEventListener('hide', hear);
+
+    pressEscape(); // dismisses the NEWEST — 'manual'
+    expect(events).toHaveLength(1);
+    expect(events[0].detail).toEqual({ reason: 'manual' });
+    await advanceExit();
+
+    second.dismiss(); // already exiting → idempotent guard, no second event
+    expect(events).toHaveLength(1);
+
+    first.dismiss(); // the imperative/consumer path — 'manual' too
+    expect(events).toHaveLength(2);
+    expect(events[1].detail).toEqual({ reason: 'manual' });
+    await advanceExit();
+  });
+
+  it('showToast: the handle dismiss rides the SAME funnel — hide {reason:"manual"} on the built element', async () => {
+    vi.useFakeTimers();
+    const handle = showToast({ message: 'Через хендл', duration: 0 });
+    const el = stackToasts()[0];
+    const events: CustomEvent<{ reason: string }>[] = [];
+    el.addEventListener('hide', (event) => events.push(event as typeof events[number]));
+    handle.dismiss();
+    expect(events).toHaveLength(1);
+    expect(events[0].detail).toEqual({ reason: 'manual' });
+    await advanceExit();
+  });
+
   // --- The acceptance's structural pin -------------------------------------------
 
   it('ZERO-BESPOKE PIN: toast.ts consumes enqueueToast and implements no stacking/z/scroll of its own', () => {

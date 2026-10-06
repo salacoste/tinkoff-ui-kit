@@ -1074,11 +1074,14 @@ describe('pillkit-react', () => {
     expect(EVENT_MAP['tk-tooltip']).toEqual({ onOpenChange: 'open-change' });
   });
 
-  it('ships NO registry entry for tk-toast (fire-and-forget, nothing dispatches)', () => {
-    // Spec 4.3 ruling: no open channel, no kit events — the slotted action
-    // serves its own native click (the tk-button no-entry precedent);
-    // showToast is built on the SAME element, never a parallel event surface.
-    expect(EVENT_MAP['tk-toast']).toBeUndefined();
+  it('ships the 27.4 entries: tk-carousel onPageChange and tk-toast onHide (exactly these)', () => {
+    // Spec 27.4 (events audit P1/P2): the snap page channel (the 24.8
+    // DriveFirstAppend workaround is the consumer evidence) and the toast
+    // lifecycle tail — show stays REFUSED (the appearance is observed
+    // through the consumer's own call); everything else of the 4.3
+    // fire-and-forget ruling stands.
+    expect(EVENT_MAP['tk-carousel']).toEqual({ onPageChange: 'page-change' });
+    expect(EVENT_MAP['tk-toast']).toEqual({ onHide: 'hide' });
   });
 
   it('renders <Modal> as tk-modal with heading through the wrapper (smoke)', async () => {

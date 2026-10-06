@@ -1,9 +1,13 @@
 # Spec 27.4 — events phase B: carousel page-change + toast lifecycle
 
-- **status:** DRAFT (фаза B по отчёту `kit-events-audit-2026-10/REPORT.md`;
-  санкция направления — выбор мейнтейнера «CEM-events углубление»)
+- **status:** EXECUTED (2026-10-06) — локальные гейты полные ЗЕЛЁНЫЕ:
+  gen/build/lint/typecheck, юниты (components+react), scoped-реминт
+  api-стори ×2 темы с confirm-прогоном, полный visual compare сюиты
+  **2755 passed (16.4m)**. CI-вердикт — в close-out story log (не
+  вписывается до факта).
 - **epic note:** Epic 27, brief `brief-epic-27-quality-window-2026-10-06.md`.
-  Исполняется хвостом окна ПОСЛЕ 27.1 (один build-heavy поток единовременно).
+  Исполнен отдельным окном ПОСЛЕ закрытия 27.1–27.3a по санкции
+  мейнтейнера «1 ok and then 2» (сначала 27.4, затем v1.9.0-prep).
 
 ## Story
 
@@ -14,15 +18,19 @@ chains become awaitable.
 
 ## AC (frozen draft)
 
-1. **tk-carousel `page-change`.** Емитится: клик-шеврон (page-step ±
-   clientWidth), клик-точка, programmatic scroll snap-установка.
+1. **tk-carousel `page-change`.** Емитится из ЕДИНОЙ точки —
+   `#syncFromRail()` при смене snap-индекса: клики шевронов (page-step ±
+   clientWidth → scroll-события), нативный drag/scrollbar/клавиатурный
+   скролл, programmatic scrollLeft — всё сходится в один funnel.
    `detail: { page }` (1-based, int); composed + bubbles (§3);
-   **§9-молчание первого рендера** (guard `wasPage !== undefined` молд
-   accordion-item/note). НОВЫЙ юнит-функционалка: инициализация НЕ
-   эмитит; шеврон вперёд/назад эмитит соседнюю страницу; точка — свою.
-   Дроссель скролл-событий: page вычисляется по snap-позиции
-   (scrollLeft/clientWidth round), эмит только на смене страницы (не на
-   каждый scroll-tick).
+   **§9-молчание первого рендера** (guard `#emittedPage === null` молд
+   accordion-item/note). Дроссель присущ механике: page =
+   round(scrollLeft/clientWidth), эмит ТОЛЬКО на смене значения (не на
+   каждый scroll-tick). **Поправка драфта по факту кода:** точки
+   НЕкликабельны (декоративный рулинг 21.6) — ветки «клик-точка» в
+   драфте не существует; юниты: инициализация молчит, шеврон-степ
+   эмитит соседнюю страницу, внутристраничный тик молчит, возврат
+   эмитит.
 2. **tk-toast lifecycle `hide`.** Эмитится при авто-dismiss (таймаут) и
    программном hide; `detail: { reason: 'auto' | 'manual' }` (строковый
    union). Показ — компонент уже наблюдаем через вызов контроллера,
@@ -41,3 +49,16 @@ chains become awaitable.
 
 - **2026-10-06 (draft).** P2-состав toast сужен до `hide` — событие show
   не имеет потребительской улики (правило §9 отчёта).
+- **2026-10-06 (исполнение).** Поправка AC1 по факту кода: ветки
+  «клик-точка» НЕ существует — точки декоративны и некликабельны (рулинг
+  21.6); page-change эмитится из ЕДИНОЙ точки `#syncFromRail()` при
+  смене snap-индекса (шевроны/нативный скролл/programmatic — один
+  funnel). Guard молчания: `#emittedPage: number | null`.
+- **2026-10-06 (исполнение).** Тест-урок: intra-page тик 700→800 НЕ
+  подходит для пина молчания — 800/500 = 1.6, round даёт страницу 2
+  (реальная смена). Использован 700→740 (1.4 → 1.48, обе round →
+  страница 2): арифметика тика обязана считаться ДО фиксации теста.
+- **2026-10-06 (исполнение).** Реминты по уроку 26.1: CEM-дельта @fires
+  → api-стори carousel/toast — явный rm + scoped реминт ×2 темы ×2
+  компонента (4 PNG), confirm-прогон 12/12 (c axe leg); полный compare
+  2755 passed — дрейфа нет.

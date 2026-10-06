@@ -8,6 +8,17 @@ import { toastStyles } from './toast.css.js';
 /** The variant union. */
 export type TkToastVariant = 'default' | 'destructive';
 
+/** Why the toast left: its own timer, or any dismiss() source. */
+export type TkToastHideReason = 'auto' | 'manual';
+
+/** Payload of `hide` (CONVENTIONS §3): the unwrapped exit reason. */
+export interface TkToastHideDetail {
+  reason: TkToastHideReason;
+}
+
+/** Typed shape of the tk-toast `hide` event (CONVENTIONS §7). */
+export type TkToastHideEvent = CustomEvent<TkToastHideDetail>;
+
 /**
  * Upper bound on the awaited exit animation before the element removes
  * itself — a JS timing constant (the select typeahead's precedent: the token
@@ -45,11 +56,17 @@ const prefersReducedMotion = (): boolean =>
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /**
- * tk-toast — the derived notification card (Story 4.3). NO kit events, no
- * `open` channel: a toast is fire-and-forget — it appears already visible,
- * never takes focus (no tabindex, no focus() — structural pins), and removes
- * itself when done. That is the documented §9/event-map ruling (native click
- * on the slotted action serves the action — the button/cards precedent).
+ * tk-toast — the derived notification card (Story 4.3). No `open` channel —
+ * a toast is fire-and-forget: it appears already visible, never takes focus
+ * (no tabindex, no focus() — structural pins), and removes itself when done.
+ * The ONE kit event is the lifecycle tail `hide` (spec 27.4, the events
+ * audit's P2: the consumer could never learn a toast LEFT — controller
+ * blindness; `show` stays REFUSED, the appearance is already observed
+ * through the consumer's own call). Emitted in dismiss() — the single exit
+ * funnel every path converges into — with `detail.reason`: 'auto' = the
+ * element's own duration timer; 'manual' = Esc, the imperative handle, the
+ * queue's overflow collapse, any consumer dismiss(). The slotted action's
+ * native click stays the consumer's (the button/cards precedent).
  *
  * SELF-ENQUEUE (the §9 «built on the SAME elements» rule made literal): the
  * element enqueues ITSELF on connectedCallback —
@@ -94,6 +111,7 @@ const prefersReducedMotion = (): boolean =>
  * @tag tk-toast
  * @attr {'default'|'destructive'} variant - Icon + announcement register: default renders the success check with aria-live polite; destructive renders the error glyph with role=alert. Invalid values clamp to 'default'.
  * @attr {number} duration - Auto-dismiss window in ms; 0 = sticky (until Esc/dismiss). Default 5000.
+ * @fires hide - `{ reason: 'auto' | 'manual' }` at the top of the single exit funnel (auto = the duration timer, manual = Esc/handle/collapse/consumer dismiss); composed, bubbles; emitted exactly once per toast.
  * @slot - The message.
  * @slot action - ONE interactive element; its native click is the consumer's (the toast stays until duration/dismiss).
  */
@@ -121,6 +139,9 @@ export class TkToast extends LitElement {
   #deadline = 0;
   #remaining = 0;
   #exiting = false;
+
+  /** Set by the duration timer's callback — dismiss() reads it as 'auto'. */
+  #autoFired = false;
 
   override connectedCallback(): void {
     super.connectedCallback();
@@ -204,6 +225,7 @@ export class TkToast extends LitElement {
     this.#timer = window.setTimeout(() => {
       this.#timer = null;
       this.#remaining = 0;
+      this.#autoFired = true; // dismiss() emits this exit as 'auto'
       this.dismiss();
     }, this.#remaining);
   }
@@ -244,12 +266,21 @@ export class TkToast extends LitElement {
   /**
    * Dismisses the toast: the exit animation, then SELF-REMOVAL (the queue's
    * MutationObserver prunes the stack entry — see the class doc). Idempotent;
-   * never moves focus.
+   * never moves focus. Emits `hide` exactly once at the top — every exit
+   * path (timer, Esc, handle, collapse, consumer call) funnels here (27.4).
    */
   dismiss(): void {
     if (this.#exiting || !this.isConnected) return;
     this.#exiting = true;
     this.#clearTimer();
+    this.dispatchEvent(
+      new CustomEvent<TkToastHideDetail>('hide', {
+        detail: { reason: this.#autoFired ? 'auto' : 'manual' },
+        composed: true,
+        bubbles: true,
+      }),
+    );
+    this.#autoFired = false;
     this.setAttribute('data-exiting', '');
     if (prefersReducedMotion()) {
       this.remove();

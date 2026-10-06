@@ -175,20 +175,27 @@ export const EVENT_MAP: Readonly<Record<string, Readonly<TkKitElementEventMap>>>
   // 'tk-rating': none at spec 21.5 — STATELESS READ-ONLY DISPLAY: the
   // bond-row star cluster; `value` is an input clamped display-side and
   // nothing dispatches (the tk-progress-bar/tk-badge no-entry precedent).
-  // 'tk-carousel': none at spec 21.6 — DERIVED SCROLL STATE: the rail's
-  // position is geometry the consumer can read off the element, not a
-  // §9 channel (the tk-rating no-entry precedent); the dots are
-  // decorative and the chevrons serve their own native clicks.
+  // Spec 27.4 (quality window, events audit P1) — the snap page channel:
+  // the 24.8 infinite-feed pattern built a DriveFirstAppend workaround
+  // precisely because the page change was unobservable. The atom emits
+  // ONLY on a real page-index change (never per scroll tick), so the
+  // completeness guard demands exactly this entry.
+  'tk-carousel': {
+    onPageChange: 'page-change',
+  },
   // 'tk-empty-state': none at spec 21.3 — STATELESS DISPLAY: the passive
   // «nothing here yet» block; the action is a consumer's slotted link or
   // button that serves its own native activation (the tk-skeleton/
   // tk-service-card no-entry precedent).
-  // 'tk-toast': none at v4.3 — FIRE-AND-FORGET (spec 4.3 ruling): no `open`
-  // channel and no kit events at all; a toast appears already visible,
-  // never takes focus, and the slotted action serves its own native click
-  // (the tk-button/cards no-entry precedent). The imperative showToast is
-  // built on the SAME element, never a parallel event surface — the
-  // completeness guard's no-entry case.
+  // Spec 27.4 (quality window, events audit P2) — the lifecycle tail: the
+  // consumer could never learn a toast LEFT (controller blindness). The
+  // 4.3 no-events ruling stands for everything else: no `open` channel,
+  // no `show` (the appearance is observed through the consumer's own
+  // call), the slotted action serves its own native click. One event,
+  // one funnel (dismiss), exactly this entry.
+  'tk-toast': {
+    onHide: 'hide',
+  },
   // 'tk-button': none at v1 (native click serves activation).
   // 'tk-navbar': none at v3.4 — NAVIGATION, NOT A FORM CONTROL (spec 3.4
   // ruling): `activeValue` is a prop-only input with NO change-event
