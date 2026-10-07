@@ -94,6 +94,21 @@ describe('tk-rating', () => {
     expect(el.getAttribute('aria-label')).toBe('Рейтинг 0 из 5');
   });
 
+  it('rides a set label VERBATIM (the locale door) and re-derives only when it clears', async () => {
+    const el = await mount({ value: 4.5, label: 'Rating 4.5 out of 5' });
+    expect(el.getAttribute('aria-label')).toBe('Rating 4.5 out of 5'); // verbatim, dot decimal kept
+
+    // Value changes UNDER an override never re-derive the wording.
+    el.value = 3;
+    await elementUpdated(el);
+    expect(el.getAttribute('aria-label')).toBe('Rating 4.5 out of 5');
+
+    // Clearing the override returns the derived RU default.
+    el.label = '';
+    await elementUpdated(el);
+    expect(el.getAttribute('aria-label')).toBe('Рейтинг 3 из 5');
+  });
+
   it('is NOT interactive: no tabindex, no buttons, nothing dispatchable (the read-only ruling)', async () => {
     const el = await mount({ value: 4 });
     expect(el.hasAttribute('tabindex')).toBe(false);

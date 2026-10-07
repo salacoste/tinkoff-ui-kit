@@ -44,7 +44,10 @@ const formatValue = (value: number): string => String(value).replace('.', ',');
  * `aria-label="Рейтинг N из 5"`, comma-decimal per RU convention. NOT
  * interactive: no tabindex, no focus, no pointer affordances — an
  * interactive rating input is explicitly out of scope (the spec's own
- * roster ruling: ungrounded).
+ * roster ruling: ungrounded). The accessible name's LANGUAGE is the
+ * consumer's call: a set `label` rides verbatim (an EN page ships
+ * «Rating 4.5 out of 5» with the dot decimal); only the empty default
+ * derives the RU wording.
  *
  * Partial stars (the 0.5 schema grid; the wild values are integers):
  * floor(value) full stars plus ONE star clipped by an inline
@@ -57,6 +60,7 @@ const formatValue = (value: number): string => String(value).replace('.', ',');
  *
  * @tag tk-rating
  * @attr {number} value - Rating 0–5 (0.5-step schema, live = integers); display-clamped, never mutated, never reflected (CONVENTIONS §2).
+ * @attr {string} label - Accessible-name override, VERBATIM (the consumer's language and formatting, e.g. «Rating 4.5 out of 5» on an EN page); empty/absent = the derived RU default «Рейтинг N из 5».
  */
 export class TkRating extends LitElement {
   static override readonly styles = [ratingStyles];
@@ -68,6 +72,15 @@ export class TkRating extends LitElement {
    */
   @property({ type: Number })
   value = 0;
+
+  /**
+   * Accessible-name override — VERBATIM, the consumer's language and
+   * formatting (the locale-neutral door: an EN page ships its own
+   * wording; the default below is the kit's RU convention). Empty =
+   * the derived `Рейтинг N из 5`.
+   */
+  @property({ type: String })
+  label = '';
 
   /**
    * The value in force: clamped into [0, 5]; non-finite reads as 0. The
@@ -90,9 +103,14 @@ export class TkRating extends LitElement {
 
   protected override willUpdate(changed: PropertyValues<this>): void {
     // The accessible name is derived state (AC2): recompute on every
-    // value change; harmless on the first pass after connect asserted it.
-    if (changed.has('value')) {
-      this.setAttribute('aria-label', `Рейтинг ${formatValue(this.#effectiveValue)} из 5`);
+    // value/label change; harmless on the first pass after connect
+    // asserted it. A non-empty label rides VERBATIM (the locale door) —
+    // value changes under an override do not re-derive the wording.
+    if (changed.has('value') || changed.has('label')) {
+      this.setAttribute(
+        'aria-label',
+        this.label !== '' ? this.label : `Рейтинг ${formatValue(this.#effectiveValue)} из 5`,
+      );
     }
   }
 
