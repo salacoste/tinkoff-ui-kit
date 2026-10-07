@@ -7,19 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Fixed — post-v1.9.0 Flow-B round-1 defect
-
-- **React wrappers delivered the raw `CustomEvent` for the 27.4 payload
-  shapes** — the wrapper runtime's unwrap rule only recognized
-  `detail: { value }` (the §3 majority), so `onPageChange` received the
-  event object instead of `{ page }` and `onHide` instead of `{ reason }`.
-  Caught by the v1.9.0 fresh-consumer gate (round 1, 2 failing legs;
-  `.playwright-cli/verify/v190-fresh-clone/`). The rule now passes a
-  NON-EMPTY value-less detail through whole — `onPageChange(page)` and
-  `onHide(reason)` arrive unwrapped on every channel, value-carrying
-  events are byte-identical to before, payload-less events still hand
-  over the event itself.
-
 ## [1.9.0] - 2026-10-06
 
 ### Added — the quality window: tk-spinner + the events phase B (Epic 27, specs 27.1–27.4)
@@ -51,6 +38,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   spinner row joined the getting-started roster (the baseline-split
   incident that minted the extended lesson 26.1: any pixel-moving
   source rides ONE commit with its PNG remint).
+
+### Fixed — the Flow-B round-1 defect (shipped in the moved tag)
+
+- **React wrappers delivered the raw `CustomEvent` for the 27.4 payload
+  shapes** — the wrapper runtime's unwrap rule only recognized
+  `detail: { value }` (the §3 majority), so `onPageChange` received the
+  event object instead of `{ page }` and `onHide` instead of `{ reason }`.
+  Caught by the v1.9.0 fresh-consumer gate (round 1, 2 failing legs;
+  `.playwright-cli/verify/v190-fresh-clone/`). The rule now passes a
+  NON-EMPTY value-less detail through whole — `onPageChange(page)` and
+  `onHide(reason)` arrive unwrapped on every channel, value-carrying
+  events are byte-identical to before, payload-less events still hand
+  over the event itself. Shipped in `54b9d18` (plus the changelog
+  typo micro-fix `8791dd3`), which the tag was moved to.
+
+### Internal
+
+- Release note: the v1.9.0 tag was placed on `9d179c6` («tag ok») and
+  MOVED to `8791dd3` on 2026-10-07 (RELEASE.md §7 — maintainer decision,
+  zero consumers at that age) so the release ships the React unwrap fix;
+  the two-round Flow-B gate record —
+  `.playwright-cli/verify/v190-fresh-clone/`.
 
 ## [1.8.0] - 2026-10-06
 

@@ -1538,3 +1538,15 @@ spinner/textarea HOLD под 24T-капчуры.
   `verify/v190-fresh-clone/` (NOTES + round1/round2.log + скрины обеих
   тем обоих раундов). Живые пункты: (1) решение о переносе тега v1.9.0
   на `8791dd3`; (2) опц. batch-confirm +30 — по отдельной санкции.
+- **Тег v1.9.0 ПЕРЕМЕЩЁН на фикс-голову (2026-10-07, санкция «1 and then
+  2» — пункт 1; молда v1.5.0 §7):** `git tag -f -a v1.9.0 8791dd3` +
+  force-push; force-update сверен с remote (`9a8ba9b...dc16b58`), новый
+  tag-объект `dc16b58bf4fda22552a70b9f88ab4c994cfdb6e8`, deref `^{}` =
+  `8791dd3` (local = remote байт-в-байт). Теговый force-push CI не
+  триггернул; вердикт-обязательство — на этот docs-коммит. Релиз
+  v1.9.0 теперь несёт unwrap-фикс в теговых битах; CHANGELOG [1.9.0]
+  += секция Fixed (из [Unreleased], хвост «shipped in 54b9d18, which
+  the tag was moved to») + Internal release-note о переносе (молда
+  v1.5.0); [Unreleased] пуст. Пункт 2 санкции — batch-confirm
+  прироста окна 27 (+30) — запущен следующим шагом после CI-вердикта
+  этого коммита (zero-in-flight).
