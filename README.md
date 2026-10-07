@@ -1,61 +1,125 @@
 # tinkoff-ui-kit / pillkit
 
+**Banking-grade web components for any stack.**
+
 [![CI](https://github.com/salacoste/tinkoff-ui-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/salacoste/tinkoff-ui-kit/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Lit](https://img.shields.io/badge/Lit-3.3.3-blue)](https://lit.dev)
+[![Storybook](https://img.shields.io/badge/Storybook-10.6-blueviolet)](https://salacoste.github.io/tinkoff-ui-kit/storybook/)
+[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-live-brightgreen)](https://salacoste.github.io/tinkoff-ui-kit/)
 
-CI проверяет каждый push/PR полной цепочкой: `lint` → `typecheck` → `build` →
-`test` (unit + gen/tokens drift + zero-hardcoded + import boundaries + preview +
-contrast) → `test:visual` (режим сравнения с закоммиченными кроссплатформенными
-baseline, axe в обеих темах) → impeccable design-детектор по изменённым UI-файлам;
-визуальные диффы при падении выгружаются как артефакты.
+Read this in Russian: [`README.ru.md`](README.ru.md)
 
-**pillkit** — UI kit на основе воссозданной дизайн-системы: 46 банковских
-компонентов `tk-*` (Lit custom elements + React-обёртки), двухслойная система
-дизайн-токенов (светлая база + тёмные семантические переопределения), общий
-overlay-контроллер, плюс редакционное семейство Т-Журнала — 10 компонентов
-`tj-*` со своими токенами `--tj-*` и нулевыми перекрёстными зависимостями с
-банком (FR-17), и два шрифтовых носителя отдельно-лицензированных начертаний
-(Daytona для банка, XCharter для ТЖ). Документация на Storybook и
-верификационный контур (визуальная регрессия, axe в обеих темах, контраст,
-клавиатура, reduced-motion).
+**pillkit** is a banking-grade UI kit that recreates a proven fintech design
+language as standards-based web components — framework-agnostic,
+accessibility-first, and themed through a two-layer token system with a real
+dark mode. Two families ship side by side: 46 bank `tk-*` components and the
+self-contained editorial `tj-*` family (10 components with their own `--tj-*`
+tokens) — 56 components in total, plus 51 generated React wrappers, strict
+TypeScript, and Storybook documentation for every component.
 
-> **Неофициальный учебный проект.** pillkit (tinkoff-ui-kit) — независимое воссоздание
-> дизайн-языка Тинькофф (Т-Банка) исключительно в учебных целях. Проект не аффилирован
-> с Т-Банком / ТКС Холдинг, не одобрен ими и никак с ними не связан; товарные знаки
-> Т-Банка в публикуемом результате не используются, а сайт-референс служит только
-> источником дизайн-эталона.
+**[Try the live showcase](https://salacoste.github.io/tinkoff-ui-kit/)**
+· **[Open the component docs](https://salacoste.github.io/tinkoff-ui-kit/storybook/)**
+· **[Get started](#quick-start)**
 
-## Пакеты
+## Why pillkit
 
-| Пакет | Роль |
-|---|---|
-| `pillkit-tokens` | Дизайн-токены — слои custom properties `--tk-*`: светлая база + тёмные переопределения на `[data-theme="dark"]` |
-| `pillkit-components` | Ядро на Lit custom elements: 46 компонентов `tk-*`, общий overlay-контроллер |
-| `pillkit-react` | React-обёртки, генерируемые из Custom Elements Manifest (`@lit/react`) |
-| `pillkit-tj-tokens` | Токены под-кита ТЖ — `--tj-*` + нативная тёмная тема `[data-tj-theme="dark"]` (семейство заскаффолжено в 15.1, таблица — 15.2) |
-| `pillkit-tj-components` | Ядро ТЖ на Lit custom elements: редакционные компоненты `tj-*` (roster — эпик 16) |
-| `pillkit-tj-react` | React-обёртки ТЖ из CEM-манифеста `pillkit-tj-components` (эпик 16) |
-| `pillkit-tj-fonts` | Шрифтовой носитель ТЖ (18.3): XCharter ×4 woff2 под условиями Bitstream Charter + закомментированный рецепт Graphik; единственная точка дистрибуции шрифтовых байтов ТЖ — тройка `pillkit-tj-*` остаётся zero-fonts по тесту |
-| `pillkit-docs` | Документация — Storybook 10 (RU); служебный пакет воркспейса, потреблять снаружи не нужно |
-| `tests/` | Закоммиченные гарантии import-boundary + build-isolation для матрицы AD-4 (запускаются в `pnpm test`) |
-| `transitions/` | Вендорные рецепты transitions.dev (сырые `t-*.css` + `_root.css`) — источник моушна; остаются в репозитории, лицензируются отдельно (см. «Лицензия») |
+- **Standards-based web components — any stack.** Every component is a
+  Lit 3.3.3 custom element. The same `tk-*` and `tj-*` tags work in React,
+  Vue, Svelte, Angular, plain HTML, or a no-build static page; there is no
+  framework lock-in and nothing to port.
+- **Two-layer theming with a real dark mode.** A light base of `--tk-*`
+  custom properties plus semantic overrides on `[data-theme="dark"]`: dark
+  mode is one attribute on `<html>` — no markup rewrites, no per-screen
+  style patches.
+- **Accessibility first.** An AA contrast ledger enforced by tests, axe
+  audits in both themes for every component, screen-reader semantics,
+  keyboard support and reduced-motion respected by default — not bolted on
+  afterwards.
+- **Generated React wrappers.** 51 typed wrappers are generated from the
+  Custom Elements Manifest with `@lit/react`, so the React API (props,
+  events, slots) can never drift from the elements underneath.
+- **One shared overlay controller.** Dialogs, toasts and popovers share a
+  single overlay controller: one stacking order, one focus story, no
+  per-component z-index battles.
+- **A 2755-leg regression suite guarding every change.** Automated visual
+  regression against committed cross-platform baselines plus axe in both
+  themes; CI runs lint → typecheck → build → test → the visual suite on
+  every push and PR.
+- **A zero-dependency editorial sub-kit.** The T-Journal family carries its
+  own token set and font model and imports nothing from the bank packages —
+  you can adopt it alone.
 
-## Быстрый старт
+## One kit, four product languages
 
-> Рецепт проверен дословно на свежем проекте вне репозитория (SM-6, Story 5.7 —
-> транскрипт и скриншот в `.playwright-cli/verify/sm6-self-test/`; повторён
-> релизным гейтом v1.1.0 с уточнением dedupe —
-> `.playwright-cli/verify/v110-fresh-clone/`).
+| Family | What it is | Live showcase |
+|---|---|---|
+| **Bank** | The core: 46 `tk-*` components — buttons, inputs, cards, carousel, toast, spinner — on the two-layer token system | [bank.html](https://salacoste.github.io/tinkoff-ui-kit/bank.html) |
+| **Invest** | Investment-client surfaces composed from bank components and tokens | [invest.html](https://salacoste.github.io/tinkoff-ui-kit/invest.html) |
+| **Admin** | Admin consoles and internal tools: dense data surfaces, including the authorized-zone patterns | [admin.html](https://salacoste.github.io/tinkoff-ui-kit/admin.html) |
+| **T-Journal** | The editorial sub-kit: 10 `tj-*` components, own `--tj-*` tokens, a serif reading font, zero imports from the bank packages | [tj.html](https://salacoste.github.io/tinkoff-ui-kit/tj.html) |
 
-Требования: Node >= 20, pnpm (приходит через `packageManager` + corepack).
+Every showcase has a Russian twin under the same path with a `/ru/` prefix —
+for example [`.../ru/bank.html`](https://salacoste.github.io/tinkoff-ui-kit/ru/bank.html);
+the Russian landing is [`.../ru/`](https://salacoste.github.io/tinkoff-ui-kit/ru/).
 
-Кит распространяется **только через этот репозиторий GitHub**: это независимый
-учебный проект, и отдельно-лицензированные шрифты в `pillkit-tokens` делают
-дистрибуцию через реестр npm неудобной — публикации не будет, `private: true`
-во всех пакетах остаётся постоянно (модель релиза — в `RELEASE.md`).
-Каноническая установка — pnpm-линк воркспейса из checkout'а репозитория;
-для воспроизводимости пинуйте релизный тег: `git clone --branch v1.9.0 …` или
-`git checkout v1.9.0` в существующем checkout'е (тег = версия пакета, см.
-«Семверинг и changelog»):
+## Works with your stack
+
+- **React 18 / 19** — first-class: generated, typed wrappers from
+  `pillkit-react` and `pillkit-tj-react`, with props, events and slots
+  mapped the React way (the quick start below renders a button both ways on
+  one page).
+- **Vue, Svelte, Angular** — custom elements are native citizens in all
+  three: register the modules once and use the tags in templates.
+- **Vanilla JS and no-build static pages** — import an element module and
+  write the tag; the published showcases are plain ESM pages with zero
+  framework code.
+- **Any CSS setup** — theming is plain CSS custom properties; token layers
+  compose with utility frameworks, CSS modules, or whatever styling
+  solution you already use.
+- **SSR caveat** — web components hydrate on the client: the kit provides
+  no server-side rendering of shadow trees, so plan for the element
+  modules to upgrade the tags in the browser.
+
+## Where to use it
+
+Good fits:
+
+- **Fintech product surfaces** — client portals, payments, onboarding
+  funnels, dashboards.
+- **Admin consoles and internal tools** — dense tables, forms and console
+  patterns, including authorized zones.
+- **Editorial and media** — long-read typography and article chrome from
+  the T-Journal family.
+- **Marketing landings** — token-driven theming and components that work
+  on static pages.
+
+Think twice if:
+
+- you need **native-only mobile widgets** — this kit is web; wrap it in a
+  WebView yourself or use platform kits;
+- you need **the official T-Bank design system with its brand assets** —
+  pillkit is an unofficial recreation and ships no T-Bank trademarks (see
+  the disclaimer below).
+
+## Quick start
+
+> The recipe is verified verbatim: it was executed on a fresh project
+> outside this repository and re-run by the release gates (v1.1.0 with the
+> dedupe refinement, v1.2.0–v1.5.0 with the `devEngines` trap below).
+
+Requirements: Node >= 20 and pnpm (arrives via the `packageManager` field +
+corepack).
+
+The kit is distributed **only through this GitHub repository**: it is an
+independent study project, and the separately licensed fonts inside
+`pillkit-tokens` make npm-registry distribution impractical — there will be
+no publish, and `private: true` stays permanent across the packages (the
+release model lives in [`RELEASE.md`](RELEASE.md)). The canonical install is
+a pnpm workspace link from a checkout of the repository; pin a release tag
+for reproducibility — `git clone --branch v1.9.0 …` or `git checkout v1.9.0`
+in an existing checkout (tag = package version, see
+[Versioning](#versioning-and-changelog)):
 
 ```bash
 git clone https://github.com/salacoste/tinkoff-ui-kit
@@ -72,17 +136,17 @@ pnpm add -w react@19.3.0 react-dom@19.3.0
 pnpm add -w -D vite
 ```
 
-Ловушка `pnpm init` (pnpm v12): он пишет блок `devEngines.packageManager`
-с caret-спекой, которую следующий же `pnpm add` отвергает — до установки
-пакетов кита удалите блок `devEngines` из `package.json` приложения (по
-ключу, не текстовой правкой всего файла). Встречено релизными гейтами
-v1.2.0–v1.5.0 (протокол — `.playwright-cli/verify/v140-fresh-clone/NOTES.md`).
+The `pnpm init` trap (pnpm v12): `pnpm init` writes a
+`devEngines.packageManager` block with a caret spec that the very next
+`pnpm add` rejects — before installing the kit packages, remove the
+`devEngines` block from the app's `package.json` (by key, not by
+text-editing the whole file). Found by the release gates v1.2.0–v1.5.0.
 
-Для vite — три строки dedupe (обязательно): воркспейс-линк даёт бандлеру
-два физических экземпляра `react` (ваш и локальную копию из чекаута кита),
-и без дедупликации React-обёртки падают с «Invalid hook call» (найдено
-релизным гейтом v1.1.0 на актуальном патче vite 8.3; трасса и разбор —
-`.playwright-cli/verify/v110-fresh-clone/NOTES.md`):
+For vite — three lines of dedupe (required): the workspace link hands the
+bundler two physical copies of `react` (yours and the local copy from the
+kit checkout), and without dedupe the React wrappers crash with "Invalid
+hook call" (found by the v1.1.0 release gate on the current vite 8.3
+patch):
 
 ```ts
 // vite.config.ts
@@ -90,7 +154,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({ resolve: { dedupe: ['react', 'react-dom'] } });
 ```
 
-`index.html` — кнопка и как custom element, и через React-обёртку:
+`index.html` — a button as a custom element and through the React wrapper:
 
 ```html
 <!doctype html>
@@ -120,83 +184,110 @@ createRoot(document.getElementById('root')!).render(
 );
 ```
 
-Запуск: `pnpm exec vite` → http://localhost:5173 — обе кнопки рендерятся
-и стилизуются токенами кита. Токеновый лист подключается один раз на уровне
-документа; тёмная тема — атрибутом `<html data-theme="dark">`, без правок
-разметки и inline-стилей. Обновление кита — `git fetch --tags && git checkout
-vX.Y.Z` в checkout'е кита и пересборка (`pnpm install && pnpm build`).
+Run `pnpm exec vite` and open http://localhost:5173 — both buttons render
+and are styled by the kit's tokens. The token sheet is included once at the
+document level; the dark theme is the `<html data-theme="dark">` attribute —
+no markup edits, no inline styles. To update the kit: `git fetch --tags &&
+git checkout vX.Y.Z` in the kit checkout, then rebuild
+(`pnpm install && pnpm build`).
 
-## Документация
+## Packages
+
+| Package | Role |
+|---|---|
+| `pillkit-tokens` | Design tokens — layers of `--tk-*` custom properties: light base + dark overrides on `[data-theme="dark"]` |
+| `pillkit-components` | The Lit custom-element core: 46 `tk-*` components and the shared overlay controller |
+| `pillkit-react` | React wrappers generated from the Custom Elements Manifest (`@lit/react`) |
+| `pillkit-tj-tokens` | T-Journal sub-kit tokens — `--tj-*` plus a native dark theme `[data-tj-theme="dark"]` |
+| `pillkit-tj-components` | The T-Journal Lit core: editorial `tj-*` components |
+| `pillkit-tj-react` | T-Journal React wrappers generated from the `pillkit-tj-components` CEM manifest |
+| `pillkit-tj-fonts` | The T-Journal font carrier: XCharter, 4 woff2 styles under Bitstream Charter terms, plus the commented Graphik recipe; the single distribution point for T-Journal font bytes — the `pillkit-tj-*` code triple stays zero-fonts by test |
+| `pillkit-docs` | Documentation — Storybook 10 (RU); a workspace service package, not meant for external consumption |
+| `tests/` | Committed import-boundary and build-isolation guarantees for the AD-4 matrix (run as part of `pnpm test`) |
+| `transitions/` | Vendored transitions.dev recipes (raw `t-*.css` + `_root.css`) — the motion source; kept in the repository and licensed separately (see [License](#license)) |
+
+## Documentation
+
+Full Storybook 10.6 docs are published at
+[salacoste.github.io/tinkoff-ui-kit/storybook/](https://salacoste.github.io/tinkoff-ui-kit/storybook/)
+— or run them locally:
 
 ```bash
 pnpm install && pnpm --filter pillkit-docs dev   # Storybook (RU) на :6006
 ```
 
-Внутри: «Начало работы» (установка, темизация, шрифты), Token Reference
-(светлая/тёмная тема бок о бок), Theming Guide, API-таблицы всех компонентов —
-46 банковских `tk-*` и 10 редакционных `tj-*` (56 всего), заметки по
-доступности и паттерны composition. Контракт API компонентов — пропсы, события,
-controlled/uncontrolled-режимы, слоты и грамматика темизации — описан в
+Inside: Getting Started (installation, theming, fonts), Token Reference
+(light and dark side by side), the Theming Guide, API tables for all 56
+components — 46 bank `tk-*` and 10 editorial `tj-*` — accessibility notes
+and composition patterns. The component API contract — props, events,
+controlled and uncontrolled modes, slots, and the theming grammar — is
+specified in
 [`packages/components/CONVENTIONS.md`](packages/components/CONVENTIONS.md).
 
-## Шрифты
+Prefer to scroll a real page? Browse the
+[family showcases](#one-kit-four-product-languages) or start from the
+[landing](https://salacoste.github.io/tinkoff-ui-kit/).
 
-Кит бандлит лицензированные переименованные шрифты как **отдельно-лицензированные
-активы**: **DaytonaSans** (переименованная Neue Haas Unica W1G, © Monotype
-Imaging Inc.) и **DaytonaPragma** (переименованная Pragmatica, © ParaType, веса
-400/500/700). Шрифты распространяются в пакете по договорам на использование
-и переименование, заключённым мейнтейнером с Monotype и ParaType: эти договоры
-лицензируют **мейнтейнера** и **не передаются вместе с пакетом** — права
-потребителя на файлы шрифтов определяет только
-[`LICENSE-FONTS.md`](packages/tokens/fonts/LICENSE-FONTS.md); шрифты **не
-покрываются MIT-лицензией** (файлы — в `packages/tokens/fonts/`, подключаются
-одним импортом `import 'pillkit-tokens/daytona.css'` рядом с `tokens.css`;
-оригинальные уведомления об авторских правах сохранены внутри файлов шрифтов).
-Если требуемое использование в LICENSE-FONTS.md не описано — не распространяйте
-файлы дальше и свяжитесь с мейнтейнером. Если Daytona не подключена, шрифтовые
-слоты разрешаются в открытый **Inter** (рекомендуемая альтернатива по
-умолчанию); свой бренд-шрифт ставится первым в стеке слота.
+## Fonts
 
-У редакционного семейства ТЖ — собственная шрифтовая модель (18.3,
-«сплит»): читальный сериф **дистрибутируется сам** — пакет
-`pillkit-tj-fonts` несёт **XCharter** ×4 начертания (woff2, свободные
-условия лицензии Bitstream Charter: use/copy/modify/sublicense/sell/
-redistribute с сохранением уведомления; XCharter — Charter-идиома С
-кириллицей, оригинальный Bitstream Charter латинский). Слот
-`--tj-font-reading` ведёт XCharter, поэтому достаточно одного импорта
-`import 'pillkit-tj-fonts/fonts.css'` рядом с `pillkit-tj-tokens/tokens.css`.
-Гротеск **Graphik** в пакетах кита отсутствует и не появится: стандартная
-EULA Commercial Type прав на перераспределение файлов не даёт — держатели
-лицензии используют закомментированный `@font-face`-рецепт в
-[`packages/tj-fonts/fonts.css`](packages/tj-fonts/fonts.css); без него слот
-разрешается в Inter. Условия — в
+The kit bundles licensed, renamed fonts as **separately licensed assets**:
+**DaytonaSans** (renamed Neue Haas Unica W1G, © Monotype Imaging Inc.) and
+**DaytonaPragma** (renamed Pragmatica, © ParaType, weights 400/500/700). The
+fonts are distributed in the package under usage-and-rename contracts
+concluded by the maintainer with Monotype and ParaType: those contracts
+license **the maintainer** and **do not transfer with the package** — your
+rights to the font files are defined solely by
+[`LICENSE-FONTS.md`](packages/tokens/fonts/LICENSE-FONTS.md); the fonts are
+**not covered by the MIT license** (the files live in
+`packages/tokens/fonts/` and are loaded with a single
+`import 'pillkit-tokens/daytona.css'` next to `tokens.css`; the original
+copyright notices are preserved inside the font files). If your intended use
+is not described in LICENSE-FONTS.md — do not redistribute the files further
+and contact the maintainer. Without Daytona connected, the font slots
+resolve to the open-source **Inter** (the recommended default alternative);
+put your own brand font first in the slot stack.
+
+The editorial T-Journal family has its own font model (the "split"): the
+reading serif **is distributed by the kit itself** — the `pillkit-tj-fonts`
+package ships **XCharter** in 4 styles (woff2, under the free Bitstream
+Charter terms: use, copy, modify, sublicense, sell and redistribute with the
+notice preserved; XCharter is the Charter idiom with Cyrillic, while the
+original Bitstream Charter is Latin-only). The `--tj-font-reading` slot is
+led by XCharter, so a single `import 'pillkit-tj-fonts/fonts.css'` next to
+`pillkit-tj-tokens/tokens.css` is enough. The **Graphik** grotesque is
+absent from the kit packages and will stay absent: the standard Commercial
+Type EULA grants no redistribution rights for the files — license holders
+use the commented `@font-face` recipe in
+[`packages/tj-fonts/fonts.css`](packages/tj-fonts/fonts.css); without it the
+slot resolves to Inter. Terms are in
 [`packages/tj-fonts/LICENSE-FONTS.md`](packages/tj-fonts/LICENSE-FONTS.md);
-кодовая тройка `pillkit-tj-*` остаётся zero-fonts по тесту.
+the `pillkit-tj-*` code triple stays zero-fonts by test.
 
-## Семверинг и changelog
+## Versioning and changelog
 
-Версии — это **git-теги `v<X.Y.Z>` на `main`**; реестр не используется, тег и
-есть релизный маркер (текущий — `v1.9.0`). Семантика обычная: ломающие
-изменения — только в мажорах; миноры добавляют компоненты/токены/фичи, патчи —
-фиксы. Депрекации объявляются в миноре через [`CHANGELOG.md`](CHANGELOG.md) и
-`@deprecated`-маркеры, удаление — не раньше следующего мажора. История
-релизов — в [`CHANGELOG.md`](CHANGELOG.md).
+Versions are **git tags `v<X.Y.Z>` on `main`**; no registry is used — the
+tag is the release marker (current: `v1.9.0`). Semantics are conventional:
+breaking changes land only in majors; minors add components, tokens and
+features, patches are fixes. Deprecations are announced in a minor via
+[`CHANGELOG.md`](CHANGELOG.md) and `@deprecated` markers, and removal
+happens no earlier than the next major. Release history —
+[`CHANGELOG.md`](CHANGELOG.md).
 
-## Лицензия
+## License
 
-Код и документация репозитория — [MIT](LICENSE) (© 2026 salacoste), кроме трёх
-категорий файлов, лицензируемых отдельно и явно исключённых из MIT:
-банковые бандлимые шрифты (`packages/tokens/fonts/` — условия в
-[`LICENSE-FONTS.md`](packages/tokens/fonts/LICENSE-FONTS.md); пакет
-`pillkit-tokens` — смешанная лицензия, `SEE LICENSE IN LICENSE`), ТЖ-шрифты
-(`packages/tj-fonts/fonts/` — XCharter под условиями Bitstream Charter,
-вербатим-грант и атрибуция в
-[`LICENSE-FONTS.md`](packages/tj-fonts/LICENSE-FONTS.md); пакет
-`pillkit-tj-fonts` — смешанная лицензия) и вендорные
-рецепты transitions.dev (`transitions/` — условия upstream, распространяются
-только в составе репозитория). Полная область действия — в [LICENSE](LICENSE).
+Repository code and documentation are [MIT](LICENSE) (© 2026 salacoste),
+except three categories of files that are separately licensed and explicitly
+excluded from MIT: the bank bundle fonts (`packages/tokens/fonts/` — terms
+in [`LICENSE-FONTS.md`](packages/tokens/fonts/LICENSE-FONTS.md); the
+`pillkit-tokens` package is mixed-license, `SEE LICENSE IN LICENSE`), the
+T-Journal fonts (`packages/tj-fonts/fonts/` — XCharter under Bitstream
+Charter terms, verbatim grant and attribution in
+[`LICENSE-FONTS.md`](packages/tj-fonts/LICENSE-FONTS.md); the
+`pillkit-tj-fonts` package is mixed-license), and the vendored
+transitions.dev recipes (`transitions/` — upstream terms, distributed only
+as part of the repository). The full scope — [LICENSE](LICENSE).
 
-## Разработка
+## Development
 
 ```bash
 pnpm install && pnpm build && pnpm test   # зелёный baseline
@@ -208,11 +299,19 @@ pnpm typecheck                            # TS 7 по корневым пове�
 pnpm test:visual                          # визуальная регрессия + axe в обеих темах
 ```
 
-pnpm 12.5.1 arrives via the `packageManager` field + corepack — a machine with a local
-pnpm 11.x needs no manual upgrade. `pnpm-lock.yaml` is intentionally a two-document
-YAML stream written by pnpm 12; do not "clean" it into a single document.
+CI runs the full chain on every push/PR: `lint` → `typecheck` → `build` →
+`test` (unit + gen/tokens drift + zero-hardcoded + import boundaries +
+preview + contrast) → `test:visual` (comparison mode against committed
+cross-platform baselines, axe in both themes) → the impeccable design
+detector over changed UI files; visual diffs are uploaded as artifacts on
+failure.
 
-### Инструменты
+pnpm 12.5.1 arrives via the `packageManager` field + corepack — a machine
+with a local pnpm 11.x needs no manual upgrade. `pnpm-lock.yaml` is
+intentionally a two-document YAML stream written by pnpm 12; do not "clean"
+it into a single document.
+
+### Tools
 
 | Tool | Purpose |
 |---|---|
@@ -222,4 +321,19 @@ YAML stream written by pnpm 12; do not "clean" it into a single document.
 | [inspo MCP](https://github.com/Nutlope/inspo) | 832 real production sites as design references for the agent |
 | [playwright-cli](https://github.com/microsoft/playwright-cli) | Browser automation: reference capture, a11y/dark-mode verification, E2E (no browser MCP by design) |
 
-Workflows и команды — в `CLAUDE.md`.
+Workflows and commands — see `CLAUDE.md`.
+
+---
+
+**Ready to look closer?**
+[Try the live showcase](https://salacoste.github.io/tinkoff-ui-kit/) ·
+[Open the component docs](https://salacoste.github.io/tinkoff-ui-kit/storybook/) ·
+[Get started](#quick-start) ·
+[Browse the repository](https://github.com/salacoste/tinkoff-ui-kit)
+
+> **Unofficial study project.** pillkit (tinkoff-ui-kit) is an independent
+> recreation of the Tinkoff (T-Bank) design language, made strictly for study
+> purposes. The project is not affiliated with T-Bank / TCS Holding, is not
+> endorsed by them and is not connected to them in any way; no T-Bank
+> trademarks are used in the published output, and the reference site serves
+> only as a design benchmark source.

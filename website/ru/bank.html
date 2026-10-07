@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>pillkit — витрина семейства Банк</title>
+    <script type="module" src="/src/bank.ts"></script>
+    <style>
+      /*
+       * Стили страницы «Банк» (RU). Общие классы хрома (.site-*, .section,
+       * .demo-grid, .demo-card, .code-details) живут в src/styles/site.css;
+       * ниже — только специфика страницы, токены на первом месте, чтобы всё
+       * переключалось вместе с data-theme.
+       */
+
+      .bank-hero {
+        padding: var(--tk-space-64) 0 var(--tk-space-48);
+        background: var(--tk-color-surface-muted);
+        border-bottom: 1px solid var(--tk-color-border-default);
+      }
+
+      .bank-hero__eyebrow {
+        margin: 0 0 var(--tk-space-12);
+        font-family: var(--tk-font-mono);
+        font-size: var(--tk-text-heading-6-size, 0.8125rem);
+        font-weight: var(--tk-text-heading-6-weight, 500);
+        line-height: var(--tk-text-heading-6-leading, 1.4);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--tk-color-text-secondary);
+      }
+
+      .bank-hero h1 {
+        margin: 0 0 var(--tk-space-16);
+        font-family: var(--tk-font-heading);
+        font-size: var(--tk-text-heading-1-size, 2.5rem);
+        font-weight: var(--tk-text-heading-1-weight, 600);
+        line-height: var(--tk-text-heading-1-leading, 1.2);
+        color: var(--tk-color-text-primary);
+      }
+
+      .bank-hero__lead {
+        margin: 0 0 var(--tk-space-32);
+        max-width: 62ch;
+        font-size: var(--tk-text-heading-4-size, 1.125rem);
+        line-height: 1.55;
+        color: var(--tk-color-text-secondary);
+      }
+
+      .bank-hero__cta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--tk-space-16);
+        align-items: center;
+      }
+
+      .bank-hero__cta .bank-hero__browse {
+        font-size: var(--tk-text-heading-5-size, 1rem);
+      }
+
+      /* Внутренности демо-карточек */
+
+      .bank-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--tk-space-16);
+        align-items: center;
+      }
+
+      .bank-row--top { align-items: flex-start; }
+
+      .bank-field {
+        display: flex;
+        flex-direction: column;
+        gap: var(--tk-space-16);
+        min-width: min(320px, 100%);
+      }
+
+      .bank-stack {
+        display: flex;
+        flex-direction: column;
+        gap: var(--tk-space-12);
+      }
+
+      .bank-readout {
+        font-family: var(--tk-font-mono);
+        font-size: var(--tk-text-heading-4-size, 1.125rem);
+        color: var(--tk-color-text-primary);
+      }
+
+      .bank-tabpanel {
+        padding: var(--tk-space-16) 0 0;
+        min-height: 96px;
+      }
+
+      .bank-tabpanel p {
+        margin: 0;
+        color: var(--tk-color-text-secondary);
+      }
+
+      .bank-art {
+        width: 100%;
+        height: 100%;
+        min-height: 96px;
+        border-radius: var(--tk-radius-lg);
+        background:
+          radial-gradient(circle at 72% 28%, var(--tk-color-surface-base) 0 28%, transparent 29%),
+          linear-gradient(135deg, var(--tk-color-tint-cream), var(--tk-color-tint-cream-raised));
+      }
+
+      .bank-figure-svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-container site-header__row">
+        <a class="site-logo" href="/tinkoff-ui-kit/ru/">pillkit</a>
+        <nav class="site-nav" aria-label="Основная навигация">
+          <a href="/tinkoff-ui-kit/ru/bank.html" aria-current="page">Банк</a>
+          <a href="/tinkoff-ui-kit/ru/invest.html">Инвестиции</a>
+          <a href="/tinkoff-ui-kit/ru/admin.html">Админ</a>
+          <a href="/tinkoff-ui-kit/ru/tj.html">ТЖ</a>
+          <a href="/tinkoff-ui-kit/storybook/">Документация</a>
+        </nav>
+        <div class="site-header__actions">
+          <button class="site-theme-toggle" type="button" aria-label="Переключить тёмную тему"
+            onclick="document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? '' : 'dark'">◐</button>
+          <a class="site-gh" href="https://github.com/salacoste/tinkoff-ui-kit">GitHub</a>
+          <a class="site-lang" href="/tinkoff-ui-kit/bank.html" lang="en" hreflang="en">English version</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="bank-scope">
+      <section class="bank-hero" aria-labelledby="bank-hero-title">
+        <div class="site-container">
+          <p class="bank-hero__eyebrow">Витрина семейства · банковский регистр</p>
+          <h1 id="bank-hero-title">Семейство Банк</h1>
+          <p class="bank-hero__lead">
+            Ядро pillkit: продуктовые поверхности розничного банка — анкеты онбординга,
+            платёжные сценарии, дашборды счетов и маркетинговые страницы. Это 46 custom
+            элементов tk-* на одном токенном слое: переключите тему кнопкой в шапке — все
+            демо на странице перекрасятся через кастомные свойства --tk-*, без единой ветки
+            в коде компонентов. Всё ниже живое — печатайте, нажимайте, тяните.
+          </p>
+          <div class="bank-hero__cta">
+            <tk-button variant="primary" size="hero" href="/tinkoff-ui-kit/storybook/">Открыть документацию</tk-button>
+            <tk-link class="bank-hero__browse" href="https://github.com/salacoste/tinkoff-ui-kit/tree/main/packages/components/src">Все 46 компонентов</tk-link>
+          </div>
+        </div>
+      </section>
+
+      <div class="site-container">
+
+        <section class="section" id="buttons" aria-labelledby="buttons-title">
+          <h2 class="section__title" id="buttons-title">Кнопки и действия</h2>
+          <p class="section__lead">
+            Пилюля — единственный носитель главного действия. Один primary на визуальный
+            кластер; secondary и inverse считаются с поверхности и чернил через токены, поэтому
+            выживают на любом фоне. Непустой href превращает ту же пилюлю в настоящую ссылку.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Варианты × размеры</h3>
+              <div class="bank-row">
+                <tk-button variant="primary" size="hero">Стать клиентом</tk-button>
+                <tk-button variant="secondary" size="hero">Подробнее</tk-button>
+                <tk-button variant="inverse" size="hero">Войти</tk-button>
+              </div>
+              <div class="bank-row">
+                <tk-button variant="primary" size="card">Оплатить 2 400 ₽</tk-button>
+                <tk-button variant="secondary" size="card">Запланировать</tk-button>
+                <tk-button variant="inverse" size="card">Повторить</tk-button>
+              </div>
+              <div class="bank-row">
+                <tk-button variant="primary" size="compact">Подтвердить</tk-button>
+                <tk-button variant="secondary" size="compact">Позже</tk-button>
+                <tk-button variant="inverse" size="compact">Пропустить</tk-button>
+              </div>
+              <p class="demo-card__hint">hero — для CTA на всю страницу, card — действия плиток, compact — внутри плотных строк.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Состояния</h3>
+              <div class="bank-row">
+                <tk-button variant="primary">Покой</tk-button>
+                <tk-button variant="primary" loading>Входим</tk-button>
+                <tk-button variant="primary" disabled>Недоступна</tk-button>
+                <tk-button variant="secondary" loading disabled>Оба</tk-button>
+              </div>
+              <p class="demo-card__hint">loading подменяет подпись спиннером и блокирует активацию мышью и с клавиатуры.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Иконки и ссылки</h3>
+              <div class="bank-row">
+                <tk-button variant="primary" size="card">
+                  <svg slot="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M4 12h14m0 0-5-5m5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                  Продолжить
+                </tk-button>
+                <tk-button variant="secondary" size="card" href="/tinkoff-ui-kit/storybook/">Читать доки</tk-button>
+              </div>
+              <p class="demo-card__hint">глиф в slot="icon" — декоративный (aria-hidden); с href пилюля становится настоящим якорем.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Код</summary>
+            <pre><code>&lt;tk-button variant="primary" size="hero"&gt;Стать клиентом&lt;/tk-button&gt;
+&lt;tk-button variant="secondary" size="card"&gt;Запланировать&lt;/tk-button&gt;
+&lt;tk-button variant="primary" loading&gt;Входим&lt;/tk-button&gt;
+&lt;tk-button variant="secondary" size="card" href="/tinkoff-ui-kit/storybook/"&gt;Читать доки&lt;/tk-button&gt;</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="forms" aria-labelledby="forms-title">
+          <h2 class="section__title" id="forms-title">Поля и формы</h2>
+          <p class="section__lead">
+            Атомы с состоянием для анкет и платёжных форм. Контракт value/defaultValue
+            заморожен: default-value засеивает неконтролируемое поле, value-change — единственный
+            выходной канал, а текст ошибки — пропс, а не разметка.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Текстовые поля</h3>
+              <div class="bank-field">
+                <tk-input label="Имя получателя" placeholder="Начните вводить имя или телефон"></tk-input>
+                <tk-input label="Номер телефона" default-value="+7 900 111-22-33" error="Введите номер в международном формате"></tk-input>
+                <tk-textarea label="Комментарий" placeholder="Назначение платежа, до 140 символов" maxlength="140"></tk-textarea>
+              </div>
+              <p class="demo-card__hint">ввод, фильтрация и текст валидации; поле растёт по контенту, без ручки ресайза.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Код подтверждения</h3>
+              <div class="bank-field">
+                <tk-input code length="5" label="Код из СМС"></tk-input>
+              </div>
+              <p class="demo-card__hint">режим code рисует строку ячеек OTP; событие complete стреляет на последней заполненной.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Переключатели</h3>
+              <div class="bank-stack">
+                <tk-checkbox label="Сохранить получателя в шаблоны" default-checked></tk-checkbox>
+                <tk-checkbox label="Разбить платёж на части" indeterminate></tk-checkbox>
+                <tk-switch label="Автоплатёж 5-го числа" default-checked></tk-switch>
+                <tk-switch label="Чеки по СМС" disabled></tk-switch>
+              </div>
+              <p class="demo-card__hint">чекбокс — для согласий, тумблер — для мгновенно обратимых настроек; никогда оба сразу.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Слайдер с форматтером</h3>
+              <div class="bank-field">
+                <tk-range-slider id="bank-slider-limit" label="Лимит трат в месяц" min="30000" max="600000" step="10000" default-value="210000"></tk-range-slider>
+                <p class="bank-readout">Лимит: <span id="bank-slider-readout">210 000 ₽</span></p>
+              </div>
+              <p class="demo-card__hint">.valueFormatter кормит вывод и aria-valuetext — потяните; значение прилипает к шагу.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Код</summary>
+            <pre><code>&lt;tk-input label="Имя получателя" placeholder="Начните вводить"&gt;&lt;/tk-input&gt;
+&lt;tk-input label="Номер телефона" error="Введите номер в международном формате"&gt;&lt;/tk-input&gt;
+&lt;tk-input code length="5" label="Код из СМС"&gt;&lt;/tk-input&gt;
+&lt;tk-switch label="Автоплатёж 5-го числа" default-checked&gt;&lt;/tk-switch&gt;
+
+&lt;script type="module"&gt;
+  const slider = document.querySelector('tk-range-slider');
+  slider.valueFormatter = (v) =&gt; `${v.toLocaleString('ru-RU')} ₽`;
+  slider.addEventListener('value-change', (e) =&gt; console.log(e.detail.value));
+&lt;/script&gt;</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="feedback" aria-labelledby="feedback-title">
+          <h2 class="section__title" id="feedback-title">Обратная связь и статусы</h2>
+          <p class="section__lead">
+            Как поверхность отвечает пользователю: статусные чипы, прогресс, заглушки загрузки
+            и тихие дисклеймеры. Это атомы только для отображения — без фокусных остановок,
+            семантика живёт в ролях и читаемом тексте.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Бейджи</h3>
+              <div class="bank-row">
+                <tk-badge>Кэшбэк 5%</tk-badge>
+                <tk-badge variant="stat">+3.8%</tk-badge>
+                <tk-badge variant="positive">Исполнен</tk-badge>
+                <tk-badge variant="negative">Отклонён</tk-badge>
+                <tk-badge variant="attention">3 документа</tk-badge>
+                <tk-badge variant="neutral">Черновик</tk-badge>
+                <tk-badge variant="attention" count="150"></tk-badge>
+              </div>
+              <p class="demo-card__hint">строка тонированного текста, но не контрол; count обрезается на 99+.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Прогресс</h3>
+              <div class="bank-field">
+                <tk-progress-bar label="Цель по кэшбэку" value="64"></tk-progress-bar>
+                <tk-progress-bar indeterminate label="Проводим платёж"></tk-progress-bar>
+              </div>
+              <p class="demo-card__hint">определённый — когда расстояние известно, неопределённый — когда нет; правила озвучивания встроены.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Скелетоны</h3>
+              <div class="bank-row bank-row--top">
+                <tk-skeleton variant="circle" width="48px" height="48px"></tk-skeleton>
+                <div class="bank-field" style="flex: 1; min-width: 180px;">
+                  <tk-skeleton variant="line" width="70%"></tk-skeleton>
+                  <tk-skeleton variant="line" width="45%"></tk-skeleton>
+                </div>
+              </div>
+              <tk-skeleton variant="rect" width="100%" height="56px"></tk-skeleton>
+              <p class="demo-card__hint">line, circle и rect повторяют геометрию контента, который замещают.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Спиннер и пустое состояние</h3>
+              <div class="bank-row">
+                <tk-spinner size="32" label="Загружаем операции"></tk-spinner>
+                <tk-spinner size="24"></tk-spinner>
+                <tk-spinner size="16"></tk-spinner>
+              </div>
+              <tk-empty-state heading="Шаблонов пока нет">
+                <p slot="description">Сохраните частого получателя — он появится здесь шаблоном в одно касание.</p>
+                <tk-link slot="action" href="/tinkoff-ui-kit/storybook/">Подробнее о шаблонах</tk-link>
+              </tk-empty-state>
+              <p class="demo-card__hint">спиннер наследует currentColor; пустое состояние несёт свою иконку, копию и слот действия.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Заметки, рейтинг, аватар</h3>
+              <tk-note label="Проверка получателя">Имя в реестре банка отличается на один символ. Сверьте номер до отправки.</tk-note>
+              <div class="bank-row">
+                <tk-rating value="4.5"></tk-rating>
+                <tk-avatar name="Анна Королёва" size="32px"></tk-avatar>
+                <tk-avatar name="Меридиан" size="45px"></tk-avatar>
+                <tk-avatar src="data:image/svg+xml;utf8,%3Csvg%20xmlns='http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20fill='darkgray'%2F%3E%3Ccircle%20cx='32'%20cy='26'%20r='12'%20fill='white'%2F%3E%3Cpath%20d='M10%2060c4-12%2012-18%2022-18s18%206%2022%2018'%20fill='white'%2F%3E%3C%2Fsvg%3E" name="Демо-фото" size="45px"></tk-avatar>
+              </div>
+              <p class="demo-card__hint">рейтинг только для чтения, аватары-инициалы с аккуратным фолбэком картинки; у заметки есть tone="info" и collapsible.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Код</summary>
+            <pre><code>&lt;tk-badge variant="positive"&gt;Исполнен&lt;/tk-badge&gt;
+&lt;tk-progress-bar label="Цель по кэшбэку" value="64"&gt;&lt;/tk-progress-bar&gt;
+&lt;tk-skeleton variant="rect" width="100%" height="56px"&gt;&lt;/tk-skeleton&gt;
+&lt;tk-empty-state heading="Шаблонов пока нет"&gt;
+  &lt;p slot="description"&gt;Сохраните частого получателя…&lt;/p&gt;
+  &lt;tk-link slot="action" href="/tinkoff-ui-kit/storybook/"&gt;Подробнее о шаблонах&lt;/tk-link&gt;
+&lt;/tk-empty-state&gt;
+&lt;tk-note label="Проверка получателя"&gt;Имя отличается на один символ…&lt;/tk-note&gt;
+&lt;tk-rating value="4.5"&gt;&lt;/tk-rating&gt;
+&lt;tk-avatar name="Анна Королёва" size="32px"&gt;&lt;/tk-avatar&gt;</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="navigation" aria-labelledby="navigation-title">
+          <h2 class="section__title" id="navigation-title">Навигация</h2>
+          <p class="section__lead">
+            Перемещение внутри продукта: переключатели разделов, пагинация каталога, хлебные
+            крошки и командные меню. Семантика tablist и бродящий фокус встроены — вы даёте
+            данные пунктов, а не ARIA-обвязку.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Продуктовые табы</h3>
+              <tk-tabs id="bank-tabs-cards">
+                <div slot="tab-0" class="bank-tabpanel">
+                  <p>Ежедневные траты, кэшбэк 5% в выбранных категориях, бесплатное обслуживание.</p>
+                </div>
+                <div slot="tab-1" class="bank-tabpanel">
+                  <p>Рассрочка до 12 месяцев, лимит пересматривается каждый квартал.</p>
+                </div>
+                <div slot="tab-2" class="bank-tabpanel">
+                  <p>От 3 месяцев до 2 лет, пополнения разрешены, проценты ежемесячно.</p>
+                </div>
+              </tk-tabs>
+              <p class="demo-card__hint">.tabs несёт массив пунктов (label, value, опциональные badge); панели приходят в slot="tab-N".</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Пагинация и крошки</h3>
+              <tk-pagination count="48" default-page="2" label="Страницы истории операций"></tk-pagination>
+              <tk-breadcrumb id="bank-breadcrumb" label="Вы здесь"></tk-breadcrumb>
+              <p class="demo-card__hint">page-change стреляет только на реальный переход страницы; последняя крошка — просто текст по контракту.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Командное меню</h3>
+              <tk-menu-popover label="Действия с шаблоном">
+                <tk-button slot="anchor" variant="secondary" size="compact">
+                  <svg slot="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <circle cx="12" cy="5" r="1.6" fill="currentColor"></circle>
+                    <circle cx="12" cy="12" r="1.6" fill="currentColor"></circle>
+                    <circle cx="12" cy="19" r="1.6" fill="currentColor"></circle>
+                  </svg>
+                  Действия с шаблоном
+                </tk-button>
+                <tk-menu-item>
+                  <svg slot="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M4 12h14m0 0-5-5m5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                  Повторить перевод
+                </tk-menu-item>
+                <tk-menu-item>Экспорт в PDF</tk-menu-item>
+                <tk-menu-divider></tk-menu-divider>
+                <tk-menu-item variant="destructive" disabled>Удалить шаблон</tk-menu-item>
+              </tk-menu-popover>
+              <p class="demo-card__hint">любой триггер — через slot="anchor"; destructive, disabled, разделители и иконки — пропсы.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Код</summary>
+            <pre><code>&lt;tk-tabs id="tabs"&gt;
+  &lt;div slot="tab-0"&gt;&lt;p&gt;…панель…&lt;/p&gt;&lt;/div&gt;
+  &lt;div slot="tab-1"&gt;&lt;p&gt;…панель…&lt;/p&gt;&lt;/div&gt;
+&lt;/tk-tabs&gt;
+&lt;tk-pagination count="48" default-page="2"&gt;&lt;/tk-pagination&gt;
+&lt;tk-menu-popover label="Действия с шаблоном"&gt;
+  &lt;tk-button slot="anchor" variant="secondary" size="compact"&gt;Действия&lt;/tk-button&gt;
+  &lt;tk-menu-item&gt;Повторить перевод&lt;/tk-menu-item&gt;
+  &lt;tk-menu-item variant="destructive" disabled&gt;Удалить шаблон&lt;/tk-menu-item&gt;
+&lt;/tk-menu-popover&gt;
+
+&lt;script type="module"&gt;
+  document.getElementById('tabs').tabs = [
+    { value: 'debit', label: 'Дебетовая' },
+    { value: 'credit', label: 'Кредитная' },
+  ];
+&lt;/script&gt;</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="overlays" aria-labelledby="overlays-title">
+          <h2 class="section__title" id="overlays-title">Оверлеи</h2>
+          <p class="section__lead">
+            Модалка, тост и тултип живут на одном контроллере оверлеев: ловушки фокуса, Esc,
+            скрим и послойность — забота кита, не ваша. Весь API — атрибут/проп open и одно
+            событие open-change.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Модалка подтверждения</h3>
+              <tk-button variant="primary" size="card" data-modal-open="bank-modal-transfer">Отправить 5 600 ₽</tk-button>
+              <p class="demo-card__hint">деструктивные и необратимые сценарии получают модалку: фокус ловится и возвращается на триггер.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Тосты</h3>
+              <div class="bank-row">
+                <tk-button variant="secondary" size="compact" data-toast="Шаблон сохранён" data-toast-action="Открыть">Сохранить шаблон</tk-button>
+                <tk-button variant="secondary" size="compact" data-toast="Платёж отклонён — проверьте лимит" data-toast-variant="destructive">Уронить платёж</tk-button>
+              </div>
+              <p class="demo-card__hint">тосты сами встают в очередь снизу справа (максимум 3); duration 0 делает тост липким.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Тултипы</h3>
+              <div class="bank-row">
+                <tk-tooltip content="Ставка зафиксирована на 12 месяцев">
+                  <tk-button variant="secondary" size="compact">Ставка 21%</tk-button>
+                </tk-tooltip>
+                <tk-tooltip content="Наведите или сфокусируйте" placement="top" open>
+                  <tk-button variant="secondary" size="compact">Закрыт на open</tk-button>
+                </tk-tooltip>
+              </div>
+              <p class="demo-card__hint">работают от наведения и фокуса, aria-describedby подключается автоматически; open закрепляет для демо.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Код</summary>
+            <pre><code>&lt;tk-modal id="confirm" heading="Подтвердите перевод"&gt;
+  &lt;p&gt;Отправить 5 600 ₽ Анне Королёвой?&lt;/p&gt;
+  &lt;tk-button slot="actions" variant="secondary"&gt;Отмена&lt;/tk-button&gt;
+  &lt;tk-button slot="actions" variant="primary"&gt;Отправить&lt;/tk-button&gt;
+&lt;/tk-modal&gt;
+&lt;tk-toast duration="5000" variant="destructive"&gt;Платёж отклонён&lt;/tk-toast&gt;
+&lt;tk-tooltip content="Ставка зафиксирована на 12 месяцев"&gt;
+  &lt;tk-button variant="secondary" size="compact"&gt;Ставка 21%&lt;/tk-button&gt;
+&lt;/tk-tooltip&gt;
+
+&lt;script type="module"&gt;
+  document.getElementById('confirm').open = true; // канал открытия
+&lt;/script&gt;</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="content" aria-labelledby="content-title">
+          <h2 class="section__title" id="content-title">Контентные карточки</h2>
+          <p class="section__lead">
+            Маркетинговые и дашбордные поверхности: тонированные промо-карточки, ленивый
+            медиа-фрейм, типографическая таблица данных и список «ключ-значение» для реквизитов
+            платежа.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Промо-карточки</h3>
+              <div class="bank-row bank-row--top">
+                <tk-promo-card variant="mint" label="Новое" heading="Выбор кэшбэка" description="Категории 5% — каждый месяц заново.">
+                  <div class="bank-art" slot="art" aria-hidden="true"></div>
+                  <b slot="value">до 15 000 ₽ в год</b>
+                  <p slot="note">Вымышленное демо-предложение — <tk-link href="/tinkoff-ui-kit/storybook/">условия в доках</tk-link></p>
+                  <tk-button slot="actions" variant="primary" size="card">Выбрать категории</tk-button>
+                </tk-promo-card>
+                <tk-promo-card variant="beige" heading="Приведи друга" description="Бонус обоим после первого платежа друга.">
+                  <b slot="value">по 1 000 ₽ каждому</b>
+                  <p slot="note">Вымышленное демо-предложение</p>
+                  <tk-button slot="actions" variant="primary" size="card">Поделиться ссылкой</tk-button>
+                </tk-promo-card>
+              </div>
+              <p class="demo-card__hint">шесть тинтов плюс вариант ticket; хуки заливки, текста и CTA (--tk-promo-card-*) перекрашивают семейство.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Карточка-билет</h3>
+              <tk-promo-card variant="ticket" label="Октябрь" heading="Вклад 16%" description="Демо-ставка на вклад 12 месяцев с выплатами ежемесячно.">
+                <b slot="value">16% годовых</b>
+                <p slot="note">Вымышленное демо-предложение</p>
+                <tk-button slot="actions" variant="primary" size="card">Открыть вклад</tk-button>
+              </tk-promo-card>
+              <p class="demo-card__hint">вырез билета — часть варианта: без лишней разметки и без псевдохаков с вашей стороны.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Фрейм</h3>
+              <tk-figure caption="Структура трат, сентябрь (демо)">
+                <svg class="bank-figure-svg" slot="media" role="img" aria-label="Столбчатая диаграмма: продукты, транспорт, кафе, ЖКХ" viewBox="0 0 320 120">
+                  <rect x="8" width="60" y="28" height="84" rx="8" fill="var(--tk-color-gray-300)"></rect>
+                  <rect x="84" width="60" y="52" height="60" rx="8" fill="var(--tk-color-gray-300)"></rect>
+                  <rect x="160" width="60" y="40" height="72" rx="8" fill="var(--tk-color-gray-400)"></rect>
+                  <rect x="236" width="60" y="64" height="48" rx="8" fill="var(--tk-color-gray-300)"></rect>
+                </svg>
+              </tk-figure>
+              <p class="demo-card__hint">рамка с подписью; img и iframe в slot="media" автоматически становятся ленивыми.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Таблица данных</h3>
+              <tk-data-table id="bank-table-ops"></tk-data-table>
+              <p class="demo-card__hint">.columns + .rows кормят двухстрочные ячейки, цвета дельт и буквенные лого; пустые rows рисуют встроенную заглушку.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Список «ключ-значение»</h3>
+              <tk-kv-list>
+                <tk-kv-list-item label="Получатель"><span slot="value">Анна Королёва</span></tk-kv-list-item>
+                <tk-kv-list-item label="Комиссия" hint="Переводы по телефону бесплатны весь демо-период"><span slot="value">0 ₽</span></tk-kv-list-item>
+                <tk-kv-list-item label="Поступление" hint="Переводы СБП в этом демо приходят за секунды"><span slot="value">мгновенно</span></tk-kv-list-item>
+              </tk-kv-list>
+              <p class="demo-card__hint">спецификация платёжного листа; hint добавляет «?» с тултипом для юридических сносок.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Код</summary>
+            <pre><code>&lt;tk-promo-card variant="mint" label="Новое" heading="Выбор кэшбэка"
+    description="Категории 5% — каждый месяц заново."&gt;
+  &lt;b slot="value"&gt;до 15 000 ₽ в год&lt;/b&gt;
+  &lt;tk-button slot="actions" variant="primary" size="card"&gt;Выбрать категории&lt;/tk-button&gt;
+&lt;/tk-promo-card&gt;
+&lt;tk-figure caption="Структура трат, сентябрь"&gt;
+  &lt;img slot="media" src="chart.svg" alt="Диаграмма по категориям" width="320" height="120"&gt;
+&lt;/tk-figure&gt;
+&lt;tk-kv-list&gt;
+  &lt;tk-kv-list-item label="Получатель"&gt;&lt;span slot="value"&gt;Анна Королёва&lt;/span&gt;&lt;/tk-kv-list-item&gt;
+  &lt;tk-kv-list-item label="Комиссия" hint="Переводы по телефону бесплатны"&gt;
+    &lt;span slot="value"&gt;0 ₽&lt;/span&gt;
+  &lt;/tk-kv-list-item&gt;
+&lt;/tk-kv-list&gt;
+
+&lt;script type="module"&gt;
+  const table = document.querySelector('tk-data-table');
+  table.columns = [
+    { key: 'payee', header: 'Получатель', width: '1.6fr' },
+    { key: 'when', header: 'Когда', width: '120px' },
+    { key: 'amount', header: 'Сумма', align: 'end' },
+  ];
+  table.rows = [
+    { payee: { primary: 'Городские сети', secondary: 'Коммунальные платежи · автосписание' },
+      when: { primary: '4 окт', secondary: '12:40' },
+      amount: { primary: '−2 400 ₽', delta: 'negative' } },
+  ];
+&lt;/script&gt;</code></pre>
+          </details>
+        </section>
+
+      </div>
+    </main>
+
+    <tk-modal id="bank-modal-transfer" heading="Подтвердите перевод">
+      <p>Отправить 5 600 ₽ Анне Королёвой на номер +7 900 111-22-33? Комиссия 0 ₽, деньги придут мгновенно.</p>
+      <tk-button slot="actions" variant="secondary" data-modal-close>Отмена</tk-button>
+      <tk-button slot="actions" variant="primary" data-modal-close data-toast="Перевод отправлен — 5 600 ₽ Анне Королёвой" data-toast-action="Открыть квитанцию">Отправить</tk-button>
+    </tk-modal>
+
+    <footer class="site-footer">
+      <div class="site-container">
+        <p class="site-footer__disclaimer">Неофициальный учебный проект. pillkit (tinkoff-ui-kit) —
+        независимое воссоздание дизайн-языка Тинькофф (Т-Банка) исключительно в учебных целях.
+        Проект не аффилирован с Т-Банком / ТКС Холдинг, не одобрен ими и никак с ними не связан;
+        товарные знаки Т-Банка в публикуемом результате не используются.</p>
+        <p class="site-footer__meta">Код и документация — MIT (шрифты лицензируются отдельно) ·
+        <a href="https://github.com/salacoste/tinkoff-ui-kit">GitHub</a> ·
+        <a href="/tinkoff-ui-kit/storybook/">Storybook-документация</a> ·
+        <a href="https://github.com/salacoste/tinkoff-ui-kit/releases">Релизы</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

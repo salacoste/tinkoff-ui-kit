@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>pillkit — Bank family showcase</title>
+    <script type="module" src="/src/bank.ts"></script>
+    <style>
+      /*
+       * Page-scoped styles for the Bank showcase. Shared chrome classes
+       * (.site-*, .section, .demo-grid, .demo-card, .code-details) come from
+       * src/styles/site.css; everything below is bank-page specific and
+       * token-first so it re-themes with data-theme.
+       */
+
+      .bank-hero {
+        padding: var(--tk-space-64) 0 var(--tk-space-48);
+        background: var(--tk-color-surface-muted);
+        border-bottom: 1px solid var(--tk-color-border-default);
+      }
+
+      .bank-hero__eyebrow {
+        margin: 0 0 var(--tk-space-12);
+        font-family: var(--tk-font-mono);
+        font-size: var(--tk-text-heading-6-size, 0.8125rem);
+        font-weight: var(--tk-text-heading-6-weight, 500);
+        line-height: var(--tk-text-heading-6-leading, 1.4);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--tk-color-text-secondary);
+      }
+
+      .bank-hero h1 {
+        margin: 0 0 var(--tk-space-16);
+        font-family: var(--tk-font-heading);
+        font-size: var(--tk-text-heading-1-size, 2.5rem);
+        font-weight: var(--tk-text-heading-1-weight, 600);
+        line-height: var(--tk-text-heading-1-leading, 1.2);
+        color: var(--tk-color-text-primary);
+      }
+
+      .bank-hero__lead {
+        margin: 0 0 var(--tk-space-32);
+        max-width: 62ch;
+        font-size: var(--tk-text-heading-4-size, 1.125rem);
+        line-height: 1.55;
+        color: var(--tk-color-text-secondary);
+      }
+
+      .bank-hero__cta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--tk-space-16);
+        align-items: center;
+      }
+
+      .bank-hero__cta .bank-hero__browse {
+        font-size: var(--tk-text-heading-5-size, 1rem);
+      }
+
+      /* Demo-card internals */
+
+      .bank-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--tk-space-16);
+        align-items: center;
+      }
+
+      .bank-row--top { align-items: flex-start; }
+
+      .bank-field {
+        display: flex;
+        flex-direction: column;
+        gap: var(--tk-space-16);
+        min-width: min(320px, 100%);
+      }
+
+      .bank-stack {
+        display: flex;
+        flex-direction: column;
+        gap: var(--tk-space-12);
+      }
+
+      .bank-readout {
+        font-family: var(--tk-font-mono);
+        font-size: var(--tk-text-heading-4-size, 1.125rem);
+        color: var(--tk-color-text-primary);
+      }
+
+      .bank-tabpanel {
+        padding: var(--tk-space-16) 0 0;
+        min-height: 96px;
+      }
+
+      .bank-tabpanel p {
+        margin: 0;
+        color: var(--tk-color-text-secondary);
+      }
+
+      .bank-art {
+        width: 100%;
+        height: 100%;
+        min-height: 96px;
+        border-radius: var(--tk-radius-lg);
+        background:
+          radial-gradient(circle at 72% 28%, var(--tk-color-surface-base) 0 28%, transparent 29%),
+          linear-gradient(135deg, var(--tk-color-tint-cream), var(--tk-color-tint-cream-raised));
+      }
+
+      .bank-figure-svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-container site-header__row">
+        <a class="site-logo" href="/tinkoff-ui-kit/">pillkit</a>
+        <nav class="site-nav" aria-label="Primary">
+          <a href="/tinkoff-ui-kit/bank.html" aria-current="page">Bank</a>
+          <a href="/tinkoff-ui-kit/invest.html">Invest</a>
+          <a href="/tinkoff-ui-kit/admin.html">Admin</a>
+          <a href="/tinkoff-ui-kit/tj.html">T-Journal</a>
+          <a href="/tinkoff-ui-kit/storybook/">Docs</a>
+        </nav>
+        <div class="site-header__actions">
+          <button class="site-theme-toggle" type="button" aria-label="Toggle dark theme"
+            onclick="document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? '' : 'dark'">◐</button>
+          <a class="site-gh" href="https://github.com/salacoste/tinkoff-ui-kit">GitHub</a>
+          <a class="site-lang" href="/tinkoff-ui-kit/ru/bank.html" lang="ru" hreflang="ru">Русская версия</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="bank-scope">
+      <section class="bank-hero" aria-labelledby="bank-hero-title">
+        <div class="site-container">
+          <p class="bank-hero__eyebrow">Family showcase · bank register</p>
+          <h1 id="bank-hero-title">The Bank family</h1>
+          <p class="bank-hero__lead">
+            The core register of pillkit: the product surfaces of a retail bank — onboarding
+            forms, payment flows, account dashboards and marketing pages. It is 46 tk-* custom
+            elements on one token layer: flip the theme toggle in the header and every demo on
+            this page re-themes through --tk-* custom properties, with zero branches in
+            component code. Everything below is live — type, click and drag.
+          </p>
+          <div class="bank-hero__cta">
+            <tk-button variant="primary" size="hero" href="/tinkoff-ui-kit/storybook/">Open the docs</tk-button>
+            <tk-link class="bank-hero__browse" href="https://github.com/salacoste/tinkoff-ui-kit/tree/main/packages/components/src">Browse all 46 components</tk-link>
+          </div>
+        </div>
+      </section>
+
+      <div class="site-container">
+
+        <section class="section" id="buttons" aria-labelledby="buttons-title">
+          <h2 class="section__title" id="buttons-title">Buttons &amp; actions</h2>
+          <p class="section__lead">
+            The pill control for every primary action. Keep one primary button per visual
+            cluster; secondary and inverse variants resolve through surface and ink tokens, so
+            they survive any backdrop. A non-empty href renders the same pill as a native link.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Variants × sizes</h3>
+              <div class="bank-row">
+                <tk-button variant="primary" size="hero">Become a customer</tk-button>
+                <tk-button variant="secondary" size="hero">Details</tk-button>
+                <tk-button variant="inverse" size="hero">Log in</tk-button>
+              </div>
+              <div class="bank-row">
+                <tk-button variant="primary" size="card">Pay 2 400 ₽</tk-button>
+                <tk-button variant="secondary" size="card">Schedule</tk-button>
+                <tk-button variant="inverse" size="card">Repeat</tk-button>
+              </div>
+              <div class="bank-row">
+                <tk-button variant="primary" size="compact">Confirm</tk-button>
+                <tk-button variant="secondary" size="compact">Later</tk-button>
+                <tk-button variant="inverse" size="compact">Skip</tk-button>
+              </div>
+              <p class="demo-card__hint">hero for full-page CTAs, card for tile actions, compact inside dense rows.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">States</h3>
+              <div class="bank-row">
+                <tk-button variant="primary">Rest state</tk-button>
+                <tk-button variant="primary" loading>Signing in</tk-button>
+                <tk-button variant="primary" disabled>Disabled</tk-button>
+                <tk-button variant="secondary" loading disabled>Both</tk-button>
+              </div>
+              <p class="demo-card__hint">loading swaps the label for a spinner and blocks pointer + keyboard activation.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Icons &amp; links</h3>
+              <div class="bank-row">
+                <tk-button variant="primary" size="card">
+                  <svg slot="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M4 12h14m0 0-5-5m5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                  Continue
+                </tk-button>
+                <tk-button variant="secondary" size="card" href="/tinkoff-ui-kit/storybook/">Read the docs</tk-button>
+              </div>
+              <p class="demo-card__hint">slot="icon" glyphs are aria-hidden decorations; with href the pill is a real anchor.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Code</summary>
+            <pre><code>&lt;tk-button variant="primary" size="hero"&gt;Become a customer&lt;/tk-button&gt;
+&lt;tk-button variant="secondary" size="card"&gt;Schedule&lt;/tk-button&gt;
+&lt;tk-button variant="primary" loading&gt;Signing in&lt;/tk-button&gt;
+&lt;tk-button variant="secondary" size="card" href="/tinkoff-ui-kit/storybook/"&gt;Read the docs&lt;/tk-button&gt;</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="forms" aria-labelledby="forms-title">
+          <h2 class="section__title" id="forms-title">Inputs &amp; forms</h2>
+          <p class="section__lead">
+            The stateful atoms of onboarding and payment forms. The value/defaultValue contract
+            is frozen: default-value seeds the uncontrolled field, value-change is the single
+            output channel, and error text is a prop, not markup.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Text fields</h3>
+              <div class="bank-field">
+                <tk-input label="Recipient name" placeholder="Start typing a name or phone"></tk-input>
+                <tk-input label="Phone number" default-value="+7 900 111-22-33" error="Enter the number in international format"></tk-input>
+                <tk-textarea label="Comment" placeholder="Payment purpose, up to 140 characters" maxlength="140"></tk-textarea>
+              </div>
+              <p class="demo-card__hint">type, filter and validation text — the field grows with content, no resize handle.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Confirmation code</h3>
+              <div class="bank-field">
+                <tk-input code length="5" label="Code from SMS"></tk-input>
+              </div>
+              <p class="demo-card__hint">code mode renders an OTP cell row; the complete event fires when the last cell fills.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Toggles</h3>
+              <div class="bank-stack">
+                <tk-checkbox label="Save this recipient to templates" default-checked></tk-checkbox>
+                <tk-checkbox label="Split the payment into parts" indeterminate></tk-checkbox>
+                <tk-switch label="Autopay on the 5th" default-checked></tk-switch>
+                <tk-switch label="SMS receipts" disabled></tk-switch>
+              </div>
+              <p class="demo-card__hint">checkbox for opt-ins, switch for instantly-reversible settings — never both for one rule.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Slider with formatter</h3>
+              <div class="bank-field">
+                <tk-range-slider id="bank-slider-limit" label="Monthly spending limit" min="30000" max="600000" step="10000" default-value="210000"></tk-range-slider>
+                <p class="bank-readout">Limit: <span id="bank-slider-readout">210 000 ₽</span></p>
+              </div>
+              <p class="demo-card__hint">.valueFormatter feeds the readout and aria-valuetext — try dragging; the value snaps to step.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Code</summary>
+            <pre><code>&lt;tk-input label="Recipient name" placeholder="Start typing"&gt;&lt;/tk-input&gt;
+&lt;tk-input label="Phone number" error="Enter the number in international format"&gt;&lt;/tk-input&gt;
+&lt;tk-input code length="5" label="Code from SMS"&gt;&lt;/tk-input&gt;
+&lt;tk-switch label="Autopay on the 5th" default-checked&gt;&lt;/tk-switch&gt;
+
+&lt;script type="module"&gt;
+  const slider = document.querySelector('tk-range-slider');
+  slider.valueFormatter = (v) =&gt; `${v.toLocaleString('en-US')} ₽`;
+  slider.addEventListener('value-change', (e) =&gt; console.log(e.detail.value));
+&lt;/script&gt;</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="feedback" aria-labelledby="feedback-title">
+          <h2 class="section__title" id="feedback-title">Feedback &amp; status</h2>
+          <p class="section__lead">
+            How a surface answers the user: status chips, progress, loading placeholders and
+            quiet disclaimers. These atoms are display-only — no focus stops, semantics carried
+            by roles and readable text.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Badges</h3>
+              <div class="bank-row">
+                <tk-badge>Cashback 5%</tk-badge>
+                <tk-badge variant="stat">+3.8%</tk-badge>
+                <tk-badge variant="positive">Executed</tk-badge>
+                <tk-badge variant="negative">Declined</tk-badge>
+                <tk-badge variant="attention">3 documents</tk-badge>
+                <tk-badge variant="neutral">Draft</tk-badge>
+                <tk-badge variant="attention" count="150"></tk-badge>
+              </div>
+              <p class="demo-card__hint">one line of tinted text, never a control; count caps at 99+.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Progress</h3>
+              <div class="bank-field">
+                <tk-progress-bar label="Cashback goal" value="64"></tk-progress-bar>
+                <tk-progress-bar indeterminate label="Processing payment"></tk-progress-bar>
+              </div>
+              <p class="demo-card__hint">determinate for known distance, indeterminate for unknown wait; announce rules are built in.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Skeletons</h3>
+              <div class="bank-row bank-row--top">
+                <tk-skeleton variant="circle" width="48px" height="48px"></tk-skeleton>
+                <div class="bank-field" style="flex: 1; min-width: 180px;">
+                  <tk-skeleton variant="line" width="70%"></tk-skeleton>
+                  <tk-skeleton variant="line" width="45%"></tk-skeleton>
+                </div>
+              </div>
+              <tk-skeleton variant="rect" width="100%" height="56px"></tk-skeleton>
+              <p class="demo-card__hint">line, circle and rect placeholders mirror the exact geometry of the content they stand in for.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Spinner &amp; empty state</h3>
+              <div class="bank-row">
+                <tk-spinner size="32" label="Loading operations"></tk-spinner>
+                <tk-spinner size="24"></tk-spinner>
+                <tk-spinner size="16"></tk-spinner>
+              </div>
+              <tk-empty-state heading="No templates yet">
+                <p slot="description">Save a frequent recipient and it will appear here as a one-tap template.</p>
+                <tk-link slot="action" href="/tinkoff-ui-kit/storybook/">Read about templates</tk-link>
+              </tk-empty-state>
+              <p class="demo-card__hint">spinners inherit currentColor; empty states carry their own icon, copy and action slot.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Notes, rating, avatar</h3>
+              <tk-note label="Recipient check">The name in the bank's registry differs by one character. Check the number before sending.</tk-note>
+              <div class="bank-row">
+                <tk-rating value="4.5"></tk-rating>
+                <tk-avatar name="Anna Koroleva" size="32px"></tk-avatar>
+                <tk-avatar name="Meridian Labs" size="45px"></tk-avatar>
+                <tk-avatar src="data:image/svg+xml;utf8,%3Csvg%20xmlns='http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20fill='darkgray'%2F%3E%3Ccircle%20cx='32'%20cy='26'%20r='12'%20fill='white'%2F%3E%3Cpath%20d='M10%2060c4-12%2012-18%2022-18s18%206%2022%2018'%20fill='white'%2F%3E%3C%2Fsvg%3E" name="Demo Photo" size="45px"></tk-avatar>
+              </div>
+              <p class="demo-card__hint">read-only rating, initials avatars with graceful image fallback; note tone="info" and collapsible exist too.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Code</summary>
+            <pre><code>&lt;tk-badge variant="positive"&gt;Executed&lt;/tk-badge&gt;
+&lt;tk-progress-bar label="Cashback goal" value="64"&gt;&lt;/tk-progress-bar&gt;
+&lt;tk-skeleton variant="rect" width="100%" height="56px"&gt;&lt;/tk-skeleton&gt;
+&lt;tk-empty-state heading="No templates yet"&gt;
+  &lt;p slot="description"&gt;Save a frequent recipient…&lt;/p&gt;
+  &lt;tk-link slot="action" href="/tinkoff-ui-kit/storybook/"&gt;Read about templates&lt;/tk-link&gt;
+&lt;/tk-empty-state&gt;
+&lt;tk-note label="Recipient check"&gt;The name differs by one character…&lt;/tk-note&gt;
+&lt;tk-rating value="4.5"&gt;&lt;/tk-rating&gt;
+&lt;tk-avatar name="Anna Koroleva" size="32px"&gt;&lt;/tk-avatar&gt;</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="navigation" aria-labelledby="navigation-title">
+          <h2 class="section__title" id="navigation-title">Navigation</h2>
+          <p class="section__lead">
+            Moving inside a product: section switchers, catalog paging, trails and command
+            menus. Tablist semantics and roving focus are built in — you ship item data, not
+            ARIA plumbing.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Product tabs</h3>
+              <tk-tabs id="bank-tabs-cards">
+                <div slot="tab-0" class="bank-tabpanel">
+                  <p>Everyday spending, 5% cashback in chosen categories, free upkeep.</p>
+                </div>
+                <div slot="tab-1" class="bank-tabpanel">
+                  <p>Installments up to 12 months, limit reviewed every quarter.</p>
+                </div>
+                <div slot="tab-2" class="bank-tabpanel">
+                  <p>From 3 months to 2 years, top-ups allowed, interest paid monthly.</p>
+                </div>
+              </tk-tabs>
+              <p class="demo-card__hint">.tabs carries the item array (labels, values, optional badges); panels arrive as slot="tab-N".</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Pagination &amp; breadcrumb</h3>
+              <tk-pagination count="48" default-page="2" label="Operation history pages"></tk-pagination>
+              <tk-breadcrumb id="bank-breadcrumb" label="You are here"></tk-breadcrumb>
+              <p class="demo-card__hint">page-change fires only on real page turns; the trail's last item is plain text by contract.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Command menu</h3>
+              <tk-menu-popover label="Template actions">
+                <tk-button slot="anchor" variant="secondary" size="compact">
+                  <svg slot="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <circle cx="12" cy="5" r="1.6" fill="currentColor"></circle>
+                    <circle cx="12" cy="12" r="1.6" fill="currentColor"></circle>
+                    <circle cx="12" cy="19" r="1.6" fill="currentColor"></circle>
+                  </svg>
+                  Template actions
+                </tk-button>
+                <tk-menu-item>
+                  <svg slot="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M4 12h14m0 0-5-5m5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                  Repeat this transfer
+                </tk-menu-item>
+                <tk-menu-item>Export as PDF</tk-menu-item>
+                <tk-menu-divider></tk-menu-divider>
+                <tk-menu-item variant="destructive" disabled>Delete template</tk-menu-item>
+              </tk-menu-popover>
+              <p class="demo-card__hint">any trigger rides slot="anchor"; destructive and disabled rows, dividers and icons are props.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Code</summary>
+            <pre><code>&lt;tk-tabs id="tabs"&gt;
+  &lt;div slot="tab-0"&gt;&lt;p&gt;…panel…&lt;/p&gt;&lt;/div&gt;
+  &lt;div slot="tab-1"&gt;&lt;p&gt;…panel…&lt;/p&gt;&lt;/div&gt;
+&lt;/tk-tabs&gt;
+&lt;tk-pagination count="48" default-page="2"&gt;&lt;/tk-pagination&gt;
+&lt;tk-menu-popover label="Template actions"&gt;
+  &lt;tk-button slot="anchor" variant="secondary" size="compact"&gt;Template actions&lt;/tk-button&gt;
+  &lt;tk-menu-item&gt;Repeat this transfer&lt;/tk-menu-item&gt;
+  &lt;tk-menu-item variant="destructive" disabled&gt;Delete template&lt;/tk-menu-item&gt;
+&lt;/tk-menu-popover&gt;
+
+&lt;script type="module"&gt;
+  document.getElementById('tabs').tabs = [
+    { value: 'debit', label: 'Debit' },
+    { value: 'credit', label: 'Credit' },
+  ];
+&lt;/script&gt;</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="overlays" aria-labelledby="overlays-title">
+          <h2 class="section__title" id="overlays-title">Overlays</h2>
+          <p class="section__lead">
+            Modal, toast and tooltip share one overlay controller: focus traps, Esc handling,
+            scrim and layering are the kit's problem, not yours. The open attribute/prop plus
+            one open-change event is the whole API.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Confirmation modal</h3>
+              <tk-button variant="primary" size="card" data-modal-open="bank-modal-transfer">Send 5 600 ₽</tk-button>
+              <p class="demo-card__hint">destructive or irreversible flows get a modal: focus is trapped and returned to the trigger.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Toasts</h3>
+              <div class="bank-row">
+                <tk-button variant="secondary" size="compact" data-toast="Template saved" data-toast-action="Open">Save template</tk-button>
+                <tk-button variant="secondary" size="compact" data-toast="Payment declined — check the limit" data-toast-variant="destructive">Fail a payment</tk-button>
+              </div>
+              <p class="demo-card__hint">toasts self-enqueue into a bottom-right stack (max 3); duration 0 makes them sticky.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Tooltips</h3>
+              <div class="bank-row">
+                <tk-tooltip content="The rate is fixed for 12 months">
+                  <tk-button variant="secondary" size="compact">Rate 21%</tk-button>
+                </tk-tooltip>
+                <tk-tooltip content="Hover or focus me" placement="top" open>
+                  <tk-button variant="secondary" size="compact">Pinned open</tk-button>
+                </tk-tooltip>
+              </div>
+              <p class="demo-card__hint">hover and focus driven, aria-describedby wired automatically; open pins it for demos.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Code</summary>
+            <pre><code>&lt;tk-modal id="confirm" heading="Confirm the transfer"&gt;
+  &lt;p&gt;Send 5 600 ₽ to Anna Koroleva?&lt;/p&gt;
+  &lt;tk-button slot="actions" variant="secondary"&gt;Cancel&lt;/tk-button&gt;
+  &lt;tk-button slot="actions" variant="primary"&gt;Send&lt;/tk-button&gt;
+&lt;/tk-modal&gt;
+&lt;tk-toast duration="5000" variant="destructive"&gt;Payment declined&lt;/tk-toast&gt;
+&lt;tk-tooltip content="The rate is fixed for 12 months"&gt;
+  &lt;tk-button variant="secondary" size="compact"&gt;Rate 21%&lt;/tk-button&gt;
+&lt;/tk-tooltip&gt;
+
+&lt;script type="module"&gt;
+  document.getElementById('confirm').open = true; // open channel
+&lt;/script&gt;</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="content" aria-labelledby="content-title">
+          <h2 class="section__title" id="content-title">Content cards</h2>
+          <p class="section__lead">
+            Marketing and dashboard surfaces: tinted promo cards, a lazy media frame, a
+            typographic data table and the key-value spec list for payment details.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Promo cards</h3>
+              <div class="bank-row bank-row--top">
+                <tk-promo-card variant="mint" label="New" heading="Cashback choice" description="Pick your 5% categories every month.">
+                  <div class="bank-art" slot="art" aria-hidden="true"></div>
+                  <b slot="value">up to 15 000 ₽ a year</b>
+                  <p slot="note">Fictional demo offer — <tk-link href="/tinkoff-ui-kit/storybook/">terms in docs</tk-link></p>
+                  <tk-button slot="actions" variant="primary" size="card">Choose categories</tk-button>
+                </tk-promo-card>
+                <tk-promo-card variant="beige" heading="Refer a friend" description="Both sides get a bonus after their first payment.">
+                  <b slot="value">1 000 ₽ each</b>
+                  <p slot="note">Fictional demo offer</p>
+                  <tk-button slot="actions" variant="primary" size="card">Share the link</tk-button>
+                </tk-promo-card>
+              </div>
+              <p class="demo-card__hint">six tints plus the ticket variant; fill, text and CTA hooks (--tk-promo-card-*) re-skin the family.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Ticket card</h3>
+              <tk-promo-card variant="ticket" label="October" heading="Deposit 16%" description="A demo rate for a 12-month deposit with monthly payouts.">
+                <b slot="value">16% annual</b>
+                <p slot="note">Fictional demo offer</p>
+                <tk-button slot="actions" variant="primary" size="card">Open a deposit</tk-button>
+              </tk-promo-card>
+              <p class="demo-card__hint">the ticket notch is part of the variant — no extra markup, no pseudo-hacks on your side.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Figure</h3>
+              <tk-figure caption="Spending structure, September (demo)">
+                <svg class="bank-figure-svg" slot="media" role="img" aria-label="Bar chart: groceries, transport, cafes, utilities" viewBox="0 0 320 120">
+                  <rect x="8" width="60" y="28" height="84" rx="8" fill="var(--tk-color-gray-300)"></rect>
+                  <rect x="84" width="60" y="52" height="60" rx="8" fill="var(--tk-color-gray-300)"></rect>
+                  <rect x="160" width="60" y="40" height="72" rx="8" fill="var(--tk-color-gray-400)"></rect>
+                  <rect x="236" width="60" y="64" height="48" rx="8" fill="var(--tk-color-gray-300)"></rect>
+                </svg>
+              </tk-figure>
+              <p class="demo-card__hint">frame with caption; img and iframe inside slot="media" go lazy automatically.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Data table</h3>
+              <tk-data-table id="bank-table-ops"></tk-data-table>
+              <p class="demo-card__hint">.columns + .rows drive two-line cells, delta colors and letter logos; empty rows render a built-in stub.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Key-value list</h3>
+              <tk-kv-list>
+                <tk-kv-list-item label="Recipient"><span slot="value">Anna Koroleva</span></tk-kv-list-item>
+                <tk-kv-list-item label="Transfer fee" hint="Free for by-phone transfers for the whole demo period"><span slot="value">0 ₽</span></tk-kv-list-item>
+                <tk-kv-list-item label="Arrives" hint="SBP transfers land within seconds in this demo"><span slot="value">instantly</span></tk-kv-list-item>
+              </tk-kv-list>
+              <p class="demo-card__hint">the spec list of a payment sheet; hint adds a «?» with a tooltip for legal footnotes.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Code</summary>
+            <pre><code>&lt;tk-promo-card variant="mint" label="New" heading="Cashback choice"
+    description="Pick your 5% categories every month."&gt;
+  &lt;b slot="value"&gt;up to 15 000 ₽ a year&lt;/b&gt;
+  &lt;tk-button slot="actions" variant="primary" size="card"&gt;Choose categories&lt;/tk-button&gt;
+&lt;/tk-promo-card&gt;
+&lt;tk-figure caption="Spending structure, September"&gt;
+  &lt;img slot="media" src="chart.svg" alt="Bar chart by category" width="320" height="120"&gt;
+&lt;/tk-figure&gt;
+&lt;tk-kv-list&gt;
+  &lt;tk-kv-list-item label="Recipient"&gt;&lt;span slot="value"&gt;Anna Koroleva&lt;/span&gt;&lt;/tk-kv-list-item&gt;
+  &lt;tk-kv-list-item label="Transfer fee" hint="Free for by-phone transfers"&gt;
+    &lt;span slot="value"&gt;0 ₽&lt;/span&gt;
+  &lt;/tk-kv-list-item&gt;
+&lt;/tk-kv-list&gt;
+
+&lt;script type="module"&gt;
+  const table = document.querySelector('tk-data-table');
+  table.columns = [
+    { key: 'payee', header: 'Payee', width: '1.6fr' },
+    { key: 'when', header: 'When', width: '120px' },
+    { key: 'amount', header: 'Amount', align: 'end' },
+  ];
+  table.rows = [
+    { payee: { primary: 'City Power &amp; Water', secondary: 'Utilities · auto-pay' },
+      when: { primary: 'Oct 4', secondary: '12:40' },
+      amount: { primary: '−2 400 ₽', delta: 'negative' } },
+  ];
+&lt;/script&gt;</code></pre>
+          </details>
+        </section>
+
+      </div>
+    </main>
+
+    <tk-modal id="bank-modal-transfer" heading="Confirm the transfer">
+      <p>Send 5 600 ₽ to Anna Koroleva by phone number +7 900 111-22-33? The commission is 0 ₽ and the money arrives instantly.</p>
+      <tk-button slot="actions" variant="secondary" data-modal-close>Cancel</tk-button>
+      <tk-button slot="actions" variant="primary" data-modal-close data-toast="Transfer sent — 5 600 ₽ to Anna Koroleva" data-toast-action="Open receipt">Send</tk-button>
+    </tk-modal>
+
+    <footer class="site-footer">
+      <div class="site-container">
+        <p class="site-footer__disclaimer">pillkit is an unofficial, independent study
+        project recreating a banking-grade design language for educational purposes. It is
+        not affiliated with, endorsed by, or connected to T-Bank / TCS Holding; no T-Bank
+        trademarks are used in the published output.</p>
+        <p class="site-footer__meta">Code &amp; docs — MIT (fonts separately licensed) ·
+        <a href="https://github.com/salacoste/tinkoff-ui-kit">GitHub</a> ·
+        <a href="/tinkoff-ui-kit/storybook/">Storybook docs</a> ·
+        <a href="https://github.com/salacoste/tinkoff-ui-kit/releases">Releases</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

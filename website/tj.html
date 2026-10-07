@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="en" data-tj-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>pillkit — T-Journal editorial family showcase</title>
+    <script type="module" src="/src/tj.ts"></script>
+    <style>
+      /*
+       * T-Journal showcase — page-scoped styles ONLY. The editorial demos live
+       * in .tj-demo scopes painted with the sub-kit's OWN --tj-* tokens; the
+       * site chrome around them keeps riding --tk-*. The editorial theme
+       * toggle flips data-tj-theme on the document root — a separate namespace,
+       * so the bank-themed chrome of this page is untouched (FR-17 in action).
+       */
+      .tjp-hero {
+        padding: var(--tk-space-64) 0 var(--tk-space-40);
+        background: var(--tk-color-surface-muted);
+      }
+      .tjp-hero__eyebrow {
+        margin: 0 0 var(--tk-space-8);
+        font-family: var(--tk-font-mono);
+        font-size: var(--tk-text-body-xs-size);
+        letter-spacing: var(--tk-text-body-xs-tracking);
+        text-transform: uppercase;
+        color: var(--tk-color-text-secondary);
+      }
+      .tjp-hero__title {
+        margin: 0 0 var(--tk-space-12);
+        max-width: var(--tk-space-container);
+        font-family: var(--tk-font-heading);
+        font-size: var(--tk-text-heading-2-size);
+        font-weight: var(--tk-text-heading-2-weight);
+        line-height: var(--tk-text-heading-2-leading);
+        color: var(--tk-color-text-primary);
+      }
+      .tjp-hero__lead {
+        margin: 0;
+        max-width: 62ch;
+        font-family: var(--tk-font-body);
+        font-size: var(--tk-text-body-l-size);
+        line-height: var(--tk-text-body-l-leading);
+        color: var(--tk-color-text-primary);
+      }
+      .tjp-hero__note {
+        margin: var(--tk-space-12) 0 var(--tk-space-16);
+        max-width: 62ch;
+        font-family: var(--tk-font-body);
+        font-size: var(--tk-text-body-s-size);
+        line-height: var(--tk-text-body-s-leading);
+        color: var(--tk-color-text-secondary);
+      }
+      .tjp-theme {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--tk-space-8);
+        padding: var(--tk-space-8) var(--tk-space-16);
+        border: 1px solid var(--tk-color-border-default);
+        border-radius: var(--tk-radius-full);
+        background: var(--tk-color-surface-base);
+        color: var(--tk-color-text-primary);
+        font-family: var(--tk-font-body);
+        font-size: var(--tk-text-body-s-size);
+        line-height: var(--tk-text-body-s-leading);
+        cursor: pointer;
+      }
+      .tjp-theme:focus-visible {
+        outline: 2px solid var(--tk-color-focus-ring);
+        outline-offset: 2px;
+      }
+      /* The editorial scope: the sub-kit's own page surface, ink and UI face.
+         Reading face (XCharter) arrives via the entry import — tj-prose owns
+         its two-family cascade itself. */
+      .tj-demo {
+        padding: var(--tj-space-24);
+        border-radius: var(--tj-radius-panel);
+        background: var(--tj-color-page);
+        font-family: var(--tj-font-ui);
+        color: var(--tj-color-ink-100);
+      }
+      .tj-demo__intro {
+        max-width: var(--tj-space-column-reading-body);
+        margin: 0 0 var(--tj-space-16);
+        font-size: var(--tj-text-article-body-size);
+        line-height: var(--tj-text-article-body-leading);
+        color: var(--tj-color-ink-300);
+      }
+      .tjp-code {
+        font-family: var(--tk-font-mono);
+      }
+      /* Rubric section internals. */
+      .tj-stage {
+        max-width: var(--tj-space-column-reading-body);
+        margin: 0 0 var(--tj-space-16);
+      }
+      .tj-feed {
+        display: flex;
+        flex-direction: column;
+        gap: var(--tj-space-24);
+        max-width: var(--tj-space-column-reading-body);
+      }
+      .tj-field {
+        max-width: var(--tj-space-column-reading-body);
+        margin: 0 0 var(--tj-space-16);
+        padding: var(--tj-space-24);
+        background: var(--tj-color-badge-purple);
+        border-radius: var(--tj-radius-panel);
+      }
+      .tj-chiprow {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--tj-space-12);
+      }
+      /* Article section: consumer-owned vertical band over tj-prose (the
+         composition-story pick — H2/pull-quote spacing is consumer CSS). */
+      .tj-article h2 {
+        margin-block: var(--tj-space-40) var(--tj-space-24);
+      }
+      .tj-article blockquote {
+        margin-block: var(--tj-space-32);
+      }
+      .tj-article__meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--tj-space-12);
+        margin: 0 0 var(--tj-space-24);
+        font-size: var(--tj-text-cta-label-size);
+        line-height: var(--tj-text-cta-label-leading);
+        color: var(--tj-color-ink-300);
+      }
+      .tj-article__actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--tj-space-16);
+        margin-block-start: var(--tj-space-32);
+      }
+      .tj-reading {
+        max-width: var(--tj-space-column-reading-body);
+        margin: 0 auto;
+      }
+      /* Community section: composer ON the gray page (tone-on-tone guard),
+         transparent post cells on a white sheet — the pattern story's layout. */
+      .tj-composer {
+        display: block;
+        max-width: var(--tj-space-column-main);
+        margin: 0 0 var(--tj-space-32);
+      }
+      .tj-sheet {
+        max-width: var(--tj-space-column-main);
+        padding: var(--tj-space-32) var(--tj-space-40);
+        background: var(--tj-color-card);
+        border-radius: var(--tj-radius-panel);
+      }
+      .tj-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        column-gap: var(--tj-space-24);
+        row-gap: var(--tj-space-40);
+      }
+      .tj-event {
+        max-width: var(--tj-space-column-main);
+        margin: var(--tj-space-16) 0 0;
+        font-size: var(--tj-text-cta-label-size);
+        line-height: var(--tj-text-cta-label-leading);
+        color: var(--tj-color-ink-300);
+      }
+      @media (max-width: 900px) {
+        .tj-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      /* Chrome section: rail column + main column at the reference width. */
+      .tj-wordmark {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        min-width: 44px;
+        font-weight: var(--tj-text-article-h2-weight);
+        font-size: var(--tj-text-nav-label-size);
+        text-decoration: none;
+        color: var(--tj-color-ink-100);
+      }
+      .tj-wordmark:focus-visible {
+        outline: 2px solid var(--tj-color-focus-ring);
+        outline-offset: 2px;
+      }
+      .tj-layout {
+        display: grid;
+        grid-template-columns: var(--tj-space-rail-sidebar) minmax(0, 1fr);
+        gap: var(--tj-space-40);
+        align-items: start;
+        margin-block-start: var(--tj-space-24);
+      }
+      @media (max-width: 1100px) {
+        .tj-layout {
+          grid-template-columns: 1fr;
+        }
+      }
+      .tj-main-feed {
+        display: flex;
+        flex-direction: column;
+        gap: var(--tj-space-16);
+        max-width: var(--tj-space-column-main);
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-container site-header__row">
+        <a class="site-logo" href="/tinkoff-ui-kit/">pillkit</a>
+        <nav class="site-nav" aria-label="Primary">
+          <a href="/tinkoff-ui-kit/bank.html">Bank</a>
+          <a href="/tinkoff-ui-kit/invest.html">Invest</a>
+          <a href="/tinkoff-ui-kit/admin.html">Admin</a>
+          <a href="/tinkoff-ui-kit/tj.html" aria-current="page">T-Journal</a>
+          <a href="/tinkoff-ui-kit/storybook/">Docs</a>
+        </nav>
+        <div class="site-header__actions">
+          <button class="site-theme-toggle" type="button" aria-label="Toggle dark theme"
+            onclick="document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? '' : 'dark'">◐</button>
+          <a class="site-gh" href="https://github.com/salacoste/tinkoff-ui-kit">GitHub</a>
+          <a class="site-lang" href="/tinkoff-ui-kit/ru/tj.html" lang="ru" hreflang="ru">Русская версия</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="tjp-hero">
+        <div class="site-container">
+          <p class="tjp-hero__eyebrow">Showcase · T-Journal family</p>
+          <h1 class="tjp-hero__title">An editorial product language</h1>
+          <p class="tjp-hero__lead">
+            Media and news surfaces with their own token namespace
+            (<span class="tjp-code">--tj-*</span>), a serif reading face (XCharter, loaded by
+            the page entry) and a quiet two-voice typographic system: Charter for reading,
+            the grotesque for chrome. Rubric heads, feed cards, the reading column, the
+            community composer and the site chrome itself — for media sites, blogs and
+            corporate journals.
+          </p>
+          <p class="tjp-hero__note">
+            The sub-kit is fully standalone (FR-17): its components and tokens have zero
+            runtime dependencies on the bank family. This page loads the bank token sheet
+            only because the shared site chrome around the demos consumes it — the editorial
+            scopes below would run without it. Names, titles and counts are synthetic.
+          </p>
+          <button class="tjp-theme" type="button" aria-label="Toggle the editorial dark theme"
+            onclick="var d = document.documentElement; d.dataset.tjTheme = d.dataset.tjTheme === 'dark' ? 'light' : 'dark'">◐ Editorial theme — light / dark</button>
+        </div>
+      </section>
+
+      <div class="site-container">
+
+        <section class="section" id="rubric">
+          <h2 class="section__title">Rubric grid</h2>
+          <p class="section__lead">
+            The landing head of a rubric: <span class="tjp-code">tj-rubric-header</span>
+            composes a clipped cover, a squircle mark overlapping its border by half and the
+            rubric’s own <span class="tjp-code">h1</span> (the component never renders a
+            heading). The feed below is <span class="tjp-code">tj-news-card</span> — the
+            whole card is one link, one tab stop. Navigation chips
+            (<span class="tjp-code">tj-tag-chip</span>) live on their measured home: purple
+            fields, theme-invariant by design.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Rubric landing</h3>
+              <div class="tj-demo">
+                <p class="tj-demo__intro">Cover, mark, h1 and subtitle — all slot content;
+                  the chip pair on purple is theme-invariant in both editorial themes.</p>
+                <div class="tj-stage">
+                  <tj-rubric-header>
+                    <img slot="cover" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1180 215'><rect width='1180' height='215' fill='gray'/><circle cx='920' cy='215' r='150' fill='silver'/><circle cx='260' cy='215' r='110' fill='darkgray'/></svg>" alt="" />
+                    <img slot="mark" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='30' fill='dimgray'/><circle cx='50' cy='50' r='22' fill='white'/></svg>" alt="" />
+                    <h1>News</h1>
+                    <p>Everything that matters, and how it affects your life</p>
+                  </tj-rubric-header>
+                </div>
+                <div class="tj-field">
+                  <div class="tj-chiprow">
+                    <tj-tag-chip href="#rubric">Courses</tj-tag-chip>
+                    <tj-tag-chip href="#rubric">Longreads</tj-tag-chip>
+                    <tj-tag-chip href="#rubric">Case studies</tj-tag-chip>
+                    <tj-tag-chip href="#rubric">Community</tj-tag-chip>
+                  </div>
+                </div>
+              </div>
+              <p class="demo-card__hint">Chips wrap, never scroll; empty slots degrade
+                without breaking the layout.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Feed cards</h3>
+              <div class="tj-demo">
+                <div class="tj-feed">
+                  <tj-news-card href="#rubric" aria-labelledby="tjp-title-1">
+                    <img slot="mark" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='30' fill='dimgray'/><circle cx='50' cy='50' r='22' fill='white'/></svg>" alt="" />
+                    <img slot="avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='darkgray'/><circle cx='32' cy='26' r='12' fill='white'/><path d='M10 60c4-12 12-18 22-18s18 6 22 18' fill='white'/></svg>" alt="Avatar of Maria Vetrova" />
+                    <span slot="byline">Maria Vetrova</span>
+                    <h3 slot="title" id="tjp-title-1">
+                      The register quota, explained: what changes in the national calendar
+                    </h3>
+                    <p slot="excerpt">
+                      A short excerpt in the reading register — Charter at card scale.
+                      Synthetic content, zero PII.
+                    </p>
+                    <span slot="meta">
+                      <time datetime="2026-09-29T09:40">September 29, 09:40</time>
+                      <span aria-hidden="true"> · </span>
+                      <span>12 comments</span>
+                      <span aria-hidden="true"> · </span>
+                      <span>148 readers</span>
+                    </span>
+                  </tj-news-card>
+                  <tj-news-card href="#rubric" aria-labelledby="tjp-title-2">
+                    <img slot="mark" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='30' fill='dimgray'/><circle cx='50' cy='50' r='22' fill='white'/></svg>" alt="" />
+                    <img slot="avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='darkgray'/><circle cx='32' cy='26' r='12' fill='white'/><path d='M10 60c4-12 12-18 22-18s18 6 22 18' fill='white'/></svg>" alt="Avatar of Artyom Somov" />
+                    <span slot="byline">Artyom Somov</span>
+                    <h4 slot="title" id="tjp-title-2">
+                      Why h3 and h4 are equals here: the heading level is the consumer’s choice
+                    </h4>
+                    <span slot="meta">
+                      <time datetime="2026-09-28T18:05">September 28, 18:05</time>
+                      <span aria-hidden="true"> · </span>
+                      <span>7 comments</span>
+                    </span>
+                  </tj-news-card>
+                </div>
+              </div>
+              <p class="demo-card__hint">Flat cards — no shadow, no hover lift; the excerpt
+                slot is optional in both directions.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Code — rubric header, tag chip, news card</summary>
+            <pre><code>&lt;tj-rubric-header&gt;
+  &lt;img slot="cover" src="cover.svg" alt=""&gt;
+  &lt;img slot="mark" src="mark.svg" alt=""&gt;
+  &lt;h1&gt;News&lt;/h1&gt;
+  &lt;p&gt;Everything that matters…&lt;/p&gt;
+&lt;/tj-rubric-header&gt;
+
+&lt;tj-tag-chip href="/rubric/courses/"&gt;Courses&lt;/tj-tag-chip&gt;
+
+&lt;tj-news-card href="/news/1/" aria-labelledby="card-title"&gt;
+  &lt;span slot="byline"&gt;Maria Vetrova&lt;/span&gt;
+  &lt;h3 slot="title" id="card-title"&gt;…&lt;/h3&gt;
+  &lt;span slot="meta"&gt;&lt;time datetime="2026-09-29T09:40"&gt;…&lt;/time&gt;&lt;/span&gt;
+&lt;/tj-news-card&gt;</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="article">
+          <h2 class="section__title">Article typography</h2>
+          <p class="section__lead">
+            <span class="tjp-code">tj-prose</span> is the reading column: a typography
+            container, not a styled paragraph. The lead and body flow in Charter; the
+            grotesque interrupts twice — section subheads and the pull-quote. In-paragraph
+            links are <span class="tjp-code">tj-link</span> (color never moves; hover only
+            reveals the underline), and <span class="tjp-code">tj-cta</span> is the quiet
+            navigation plate — a 44×44 hit box with a 30px visible pill. Vertical spacing
+            between subheads and quotes is consumer CSS, composed from the token scale.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Reading column (XCharter)</h3>
+              <div class="tj-demo">
+                <div class="tj-reading">
+                  <tj-prose class="tj-article">
+                    <p slot="lead">
+                      Personal data has become a currency — understanding who knows what
+                      about us is now a life skill.
+                    </p>
+                    <p>
+                      Every tap on a screen leaves a trace. Banking apps know more about us
+                      than our families do: where we drink coffee, when we sleep, how much we
+                      spend on taxis. Here is how to read your digital footprint — and why
+                      it is worth learning, with a
+                      <tj-link href="#article">quiet link right inside the sentence</tj-link>.
+                    </p>
+                    <h2>A subhead interrupts the serif flow</h2>
+                    <p>
+                      The grotesque voice against the Charter body is the reference’s
+                      signature move; the column itself is capped by the reading-width token.
+                    </p>
+                    <blockquote>
+                      A pull-quote holds the section’s thought in one phrase — large, with
+                      no ornamental quotes.
+                    </blockquote>
+                    <p>
+                      The story about data is a story about trust: the more transparent the
+                      chain from tap to decision, the easier the main question — to whom and
+                      when we handed over our trace.
+                    </p>
+                  </tj-prose>
+                  <p class="tj-article__meta">
+                    <span>Synthetic article · zero PII</span>
+                    <span aria-hidden="true"> · </span>
+                    <span>6 min read</span>
+                  </p>
+                  <div class="tj-article__actions">
+                    <tj-cta href="#article">Write to the editors</tj-cta>
+                  </div>
+                </div>
+              </div>
+              <p class="demo-card__hint">Flip the editorial theme above — the column
+                re-resolves through the --tj-* token layer with no branches in the component.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Code — prose, link, CTA</summary>
+            <pre><code>&lt;tj-prose&gt;
+  &lt;p slot="lead"&gt;The lead sells the article in one line.&lt;/p&gt;
+  &lt;p&gt;Body with a &lt;tj-link href="#anchor"&gt;quiet link&lt;/tj-link&gt; inside.&lt;/p&gt;
+  &lt;h2&gt;Subhead&lt;/h2&gt;
+  &lt;blockquote&gt;Pull-quote&lt;/blockquote&gt;
+&lt;/tj-prose&gt;
+
+&lt;tj-cta href="#feedback"&gt;Write to the editors&lt;/tj-cta&gt;</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="community">
+          <h2 class="section__title">Composer &amp; feed</h2>
+          <p class="section__lead">
+            The community pair. <span class="tjp-code">tj-composer</span> is the fake-input
+            card — a real button, not a textarea: the editor stays on your side, and the
+            kit’s whole contract is the <span class="tjp-code">open-compose</span> event
+            (click / Enter / Space). <span class="tjp-code">tj-post-card</span> is the
+            transparent community cell: clamped to two lines with the full title mirrored
+            into the anchor’s tooltip, riding a consumer-owned white sheet.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Community page pattern</h3>
+              <div class="tj-demo">
+                <tj-composer class="tj-composer" id="tjp-composer" label="Write a post or a question…">
+                  <img slot="avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='darkgray'/><circle cx='32' cy='26' r='12' fill='white'/><path d='M10 60c4-12 12-18 22-18s18 6 22 18' fill='white'/></svg>" alt="" />
+                </tj-composer>
+                <section class="tj-sheet">
+                  <div class="tj-grid">
+                    <tj-post-card href="#community">
+                      <img slot="avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='darkgray'/><circle cx='32' cy='26' r='12' fill='white'/><path d='M10 60c4-12 12-18 22-18s18 6 22 18' fill='white'/></svg>" alt="" />
+                      <span slot="byline">Olga Danina</span>
+                      <time slot="date" datetime="2026-09-29T09:15">September 29, 09:15</time>
+                      <h3 slot="title">
+                        Deep dive: how a family emergency fund sits on six monthly cushions
+                      </h3>
+                      <span slot="count">128</span>
+                    </tj-post-card>
+                    <tj-post-card href="#community">
+                      <img slot="avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='darkgray'/><circle cx='32' cy='26' r='12' fill='white'/><path d='M10 60c4-12 12-18 22-18s18 6 22 18' fill='white'/></svg>" alt="" />
+                      <span slot="byline">Pavel Reznik</span>
+                      <time slot="date" datetime="2026-09-28T18:40">September 28, 18:40</time>
+                      <h3 slot="title">Quiz: what is your investor profile — conservative or hunter?</h3>
+                      <span slot="count">64</span>
+                    </tj-post-card>
+                    <tj-post-card href="#community">
+                      <img slot="avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='darkgray'/><circle cx='32' cy='26' r='12' fill='white'/><path d='M10 60c4-12 12-18 22-18s18 6 22 18' fill='white'/></svg>" alt="" />
+                      <span slot="byline">Maria Vetrova</span>
+                      <time slot="date" datetime="2026-09-28T12:00">September 28, 12:00</time>
+                      <h3 slot="title">Longread: what changed in self-employment taxes over the year</h3>
+                      <span slot="count">31</span>
+                    </tj-post-card>
+                  </div>
+                </section>
+                <p class="tj-event" id="tjp-compose-log" role="status">
+                  Click the composer — the open-compose event lands here.
+                </p>
+              </div>
+              <p class="demo-card__hint">The composer stands on the gray page on purpose:
+                tone-on-tone on the white sheet it would vanish. Below 900px the grid
+                collapses to one column.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Code — composer &amp; post card</summary>
+            <pre><code>&lt;tj-composer label="Write a post or a question…"&gt;
+  &lt;img slot="avatar" src="avatar.svg" alt=""&gt;
+&lt;/tj-composer&gt;
+&lt;script type="module"&gt;
+  composer.addEventListener('open-compose', () =&gt; openEditor());
+&lt;/script&gt;
+
+&lt;tj-post-card href="/community/1/"&gt;
+  &lt;span slot="byline"&gt;Olga Danina&lt;/span&gt;
+  &lt;time slot="date" datetime="2026-09-29T09:15"&gt;…&lt;/time&gt;
+  &lt;h3 slot="title"&gt;…&lt;/h3&gt;
+  &lt;span slot="count"&gt;128&lt;/span&gt;
+&lt;/tj-post-card&gt;</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="chrome">
+          <h2 class="section__title">Site chrome</h2>
+          <p class="section__lead">
+            <span class="tjp-code">tj-header</span> is the sticky bar: pill navigation from
+            an items array, the current section marked with
+            <span class="tjp-code">aria-current</span> only, a built-in theme button (the
+            stateless auto → light → dark cycle — try it) and a “Write” CTA. It compresses
+            70 → 56 on any scroll. <span class="tjp-code">tj-rail</span> is the section rail:
+            icon tiles, the same quiet current marking, and below 1200px it collapses into a
+            burger that opens a focus-trapped drawer.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Chrome composition</h3>
+              <div class="tj-demo">
+                <tj-header id="tjp-header" active-value="#razbory" cta-href="#chrome">
+                  <a slot="wordmark" class="tj-wordmark" href="#chrome" aria-label="Journal — back to top">JOURNAL</a>
+                </tj-header>
+                <div class="tj-layout">
+                  <tj-rail id="tjp-rail" current-value="razbory" burger-label="Sections">
+                    <img slot="icon-main" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><rect width='30' height='30' rx='7' fill='dimgray'/><circle cx='15' cy='15' r='8' fill='white'/></svg>" alt="" />
+                    <img slot="icon-istorii" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><rect width='30' height='30' rx='7' fill='gray'/><circle cx='15' cy='15' r='8' fill='white'/></svg>" alt="" />
+                  </tj-rail>
+                  <div class="tj-main-feed">
+                    <tj-news-card href="#chrome" aria-labelledby="tjp-title-3">
+                      <span slot="byline">Maria Vetrova</span>
+                      <h3 slot="title" id="tjp-title-3">
+                        How money-market funds work, explained on fingers
+                      </h3>
+                      <span slot="meta">
+                        <time datetime="2026-09-29T07:15">September 29, 07:15</time>
+                        <span aria-hidden="true"> · </span>
+                        <span>4 min read</span>
+                      </span>
+                    </tj-news-card>
+                    <tj-news-card href="#chrome" aria-labelledby="tjp-title-4">
+                      <span slot="byline">Olga Danina</span>
+                      <h3 slot="title" id="tjp-title-4">
+                        What changed in the education tax deduction in 2026
+                      </h3>
+                      <span slot="meta">
+                        <time datetime="2026-09-28T15:40">September 28, 15:40</time>
+                        <span aria-hidden="true"> · </span>
+                        <span>7 min read</span>
+                      </span>
+                    </tj-news-card>
+                  </div>
+                </div>
+              </div>
+              <p class="demo-card__hint">Scroll the page — the demo bar compresses with the
+                real scroll. Narrow the viewport below 1200px — the rail becomes a burger
+                drawer (Esc / scrim click closes, focus returns).</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Code — header &amp; rail wiring</summary>
+            <pre><code>header.items = [
+  { label: 'Latest', href: '#main' },
+  { label: 'Deep dives', href: '#razbory' },
+  { label: 'Stories', href: '#istorii' },
+];
+header.activeValue = '#razbory';
+header.ctaHref = '#write';
+
+rail.items = [
+  { label: 'Latest', href: '#main', value: 'main' },
+  { label: 'Deep dives', href: '#razbory', value: 'razbory' },
+];
+rail.currentValue = 'razbory';
+// icon slots: &lt;img slot="icon-main" …&gt;</code></pre>
+          </details>
+        </section>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-container">
+        <p class="site-footer__disclaimer">pillkit is an unofficial, independent study
+        project recreating a banking-grade design language for educational purposes. It is
+        not affiliated with, endorsed by, or connected to T-Bank / TCS Holding; no T-Bank
+        trademarks are used in the published output.</p>
+        <p class="site-footer__meta">Code &amp; docs — MIT (fonts separately licensed) ·
+        <a href="https://github.com/salacoste/tinkoff-ui-kit">GitHub</a> ·
+        <a href="/tinkoff-ui-kit/storybook/">Storybook docs</a> ·
+        <a href="https://github.com/salacoste/tinkoff-ui-kit/releases">Releases</a></p>
+      </div>
+    </footer>
+
+    <script type="module">
+      // T-Journal showcase wiring — plain ESM (no TypeScript syntax: the lint
+      // hook parses website sources with the base parser). Array-carrying
+      // properties (tj-header items, tj-rail items) have no attribute channel.
+      const ready = (tag) => customElements.whenDefined(tag);
+
+      ready('tj-header').then(() => {
+        const header = document.getElementById('tjp-header');
+        if (header) {
+          header.items = [
+            { label: 'Latest', href: '#main' },
+            { label: 'Deep dives', href: '#razbory' },
+            { label: 'Stories', href: '#istorii' },
+            { label: 'Guides', href: '#guides' },
+            { label: 'Indexes', href: '#indeksy' },
+          ];
+        }
+      });
+
+      ready('tj-rail').then(() => {
+        const rail = document.getElementById('tjp-rail');
+        if (rail) {
+          rail.items = [
+            { label: 'Latest', href: '#main', value: 'main' },
+            { label: 'No icon', href: '#plain' },
+            { label: 'Deep dives', href: '#razbory', value: 'razbory' },
+            { label: 'Stories', href: '#istorii', value: 'istorii' },
+            { label: 'Guides', href: '#guides', value: 'guides' },
+          ];
+        }
+      });
+
+      // The composer's whole contract: open-compose (no detail) — the editor
+      // opens on the consumer side. We only log it into a polite status line.
+      ready('tj-composer').then(() => {
+        const composer = document.getElementById('tjp-composer');
+        const log = document.getElementById('tjp-compose-log');
+        if (!composer || !log) return;
+        composer.addEventListener('open-compose', () => {
+          log.textContent =
+            'open-compose dispatched (composed, bubbles, no detail) — your app would open the editor now.';
+        });
+      });
+    </script>
+  </body>
+</html>

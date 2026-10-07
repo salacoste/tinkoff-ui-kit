@@ -1,0 +1,936 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>pillkit — витрина семейства Инвестиции</title>
+    <script type="module" src="/src/invest.ts"></script>
+    <style>
+      /*
+       * Витрина «Инвестиции» (RU) — только страницы-специфичные стили
+       * (хром сайта живёт в src/styles/site.css). Токен-первичность: все
+       * цвета/расстояния/типографика едут на кастомных свойствах --tk-*,
+       * поэтому демо перетемяются вместе с переключателем сайта.
+       */
+      .inv-hero {
+        padding: var(--tk-space-64) 0 var(--tk-space-40);
+        background: var(--tk-color-surface-muted);
+      }
+      .inv-hero__eyebrow {
+        margin: 0 0 var(--tk-space-8);
+        font-family: var(--tk-font-mono);
+        font-size: var(--tk-text-body-xs-size);
+        letter-spacing: var(--tk-text-body-xs-tracking);
+        text-transform: uppercase;
+        color: var(--tk-color-text-secondary);
+      }
+      .inv-hero__title {
+        margin: 0 0 var(--tk-space-12);
+        max-width: var(--tk-space-container);
+        font-family: var(--tk-font-heading);
+        font-size: var(--tk-text-heading-2-size);
+        font-weight: var(--tk-text-heading-2-weight);
+        line-height: var(--tk-text-heading-2-leading);
+        color: var(--tk-color-text-primary);
+      }
+      .inv-hero__lead {
+        margin: 0;
+        max-width: 62ch;
+        font-family: var(--tk-font-body);
+        font-size: var(--tk-text-body-l-size);
+        line-height: var(--tk-text-body-l-leading);
+        color: var(--tk-color-text-primary);
+      }
+      .inv-hero__note {
+        margin: var(--tk-space-12) 0 0;
+        max-width: 62ch;
+        font-family: var(--tk-font-body);
+        font-size: var(--tk-text-body-s-size);
+        line-height: var(--tk-text-body-s-leading);
+        color: var(--tk-color-text-secondary);
+      }
+      /* Рамки демо внутри карточек — базовая поверхность (молд стори-канвы). */
+      .inv-demo {
+        display: flex;
+        flex-direction: column;
+        gap: var(--tk-space-16);
+        padding: var(--tk-space-16);
+        border: 1px solid var(--tk-color-border-default);
+        border-radius: var(--tk-radius-md);
+        background: var(--tk-color-surface-base);
+        font-family: var(--tk-font-body);
+        color: var(--tk-color-text-primary);
+      }
+      /* Тикерная лента (заземление research-хаба): горизонтальный скролл. */
+      .inv-band {
+        display: flex;
+        align-items: center;
+        gap: var(--tk-space-32);
+        padding: var(--tk-space-12) var(--tk-space-16);
+        border: 1px solid var(--tk-color-border-default);
+        border-radius: var(--tk-radius-md);
+        overflow-x: auto;
+      }
+      .inv-chip-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--tk-space-16);
+      }
+      .inv-post {
+        display: flex;
+        flex-direction: column;
+        gap: var(--tk-space-8);
+      }
+      .inv-post p {
+        margin: 0;
+      }
+      /* Идентичность инструмента: монограммный диск + звезда-слот. */
+      .inv-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        border-radius: var(--tk-radius-full);
+        background: var(--tk-color-gray-100);
+        color: var(--tk-color-gray-600);
+        font-family: var(--tk-font-heading);
+        font-size: var(--tk-text-heading-3-size);
+        font-weight: var(--tk-text-heading-3-weight);
+      }
+      .inv-star {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        border: 0;
+        border-radius: var(--tk-radius-full);
+        background: transparent;
+        color: inherit;
+        cursor: pointer;
+      }
+      .inv-star:focus-visible {
+        outline: 2px solid var(--tk-color-focus-ring);
+        outline-offset: 2px;
+      }
+      .inv-figure {
+        display: flex;
+        flex-direction: column;
+        gap: var(--tk-space-8);
+        padding: var(--tk-space-16);
+        background: var(--tk-color-surface-muted);
+        border-radius: var(--tk-radius-md);
+      }
+      .inv-figure__caption {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: var(--tk-space-12);
+      }
+      .inv-figure__name {
+        font-size: var(--tk-text-body-m-bold-size);
+        font-weight: var(--tk-text-body-m-bold-weight);
+        line-height: var(--tk-text-body-m-leading);
+      }
+      .inv-figure__tag {
+        color: var(--tk-color-text-secondary);
+        font-family: var(--tk-font-mono);
+        font-size: var(--tk-text-body-xs-size);
+        letter-spacing: var(--tk-text-body-xs-tracking);
+      }
+      .inv-frame {
+        padding: var(--tk-space-8) var(--tk-space-16);
+        border: 1px solid var(--tk-color-border-default);
+        border-radius: var(--tk-radius-sm);
+      }
+      /* Дельта-тона значения — контент консьюмера (атом тон не угадывает). */
+      .inv-delta--up {
+        color: var(--tk-color-delta-positive);
+      }
+      .inv-delta--down {
+        color: var(--tk-color-delta-negative);
+      }
+      /* Терминальный тикет (паттерн 24T.2, упрощённая копия). */
+      .inv-ticket {
+        max-width: 344px;
+        display: flex;
+        flex-direction: column;
+        gap: var(--tk-space-16);
+        padding: var(--tk-space-16);
+        border: 1px solid var(--tk-color-border-default);
+        border-radius: var(--tk-radius-md);
+        background: var(--tk-color-surface-base);
+      }
+      .inv-mode {
+        display: flex;
+        flex-direction: column;
+        gap: var(--tk-space-12);
+      }
+      .inv-ticket__iceberg {
+        margin: 0;
+        font-size: var(--tk-text-body-s-size);
+        line-height: var(--tk-text-body-s-leading);
+        color: var(--tk-color-text-secondary);
+      }
+      .inv-steppers {
+        display: inline-flex;
+        gap: 2px;
+      }
+      .inv-step {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        padding: 0;
+        border: none;
+        background: transparent;
+        color: var(--tk-color-text-secondary);
+        font-family: var(--tk-font-body);
+        font-size: var(--tk-text-body-l-bold-size);
+        font-weight: var(--tk-text-body-l-bold-weight);
+        line-height: 1;
+        cursor: pointer;
+      }
+      .inv-step:hover {
+        color: var(--tk-color-text-primary);
+      }
+      .inv-step:focus-visible {
+        outline: 2px solid var(--tk-color-focus-ring);
+        outline-offset: 2px;
+        border-radius: var(--tk-radius-xs);
+      }
+      .inv-step[disabled] {
+        opacity: 0.4;
+        cursor: default;
+      }
+      .inv-step__glyph {
+        pointer-events: none;
+      }
+      .inv-unit {
+        color: var(--tk-color-text-secondary);
+      }
+      .inv-actions {
+        display: flex;
+        gap: var(--tk-space-8);
+      }
+      .inv-column {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: var(--tk-space-8);
+      }
+      .inv-limit {
+        box-sizing: border-box;
+        height: 27px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-inline: var(--tk-space-12);
+        border-radius: var(--tk-radius-sm);
+        background: var(--tk-color-surface-field);
+        font-size: var(--tk-text-body-s-size);
+        line-height: var(--tk-text-body-s-leading);
+        color: var(--tk-color-text-secondary);
+      }
+      .inv-limit__value {
+        color: var(--tk-color-text-primary);
+        font-weight: var(--tk-text-body-m-bold-weight);
+      }
+      /* Рецепт полной ширины CTA: пилюля в shadow DOM, хост — колонка. */
+      .inv-column tk-button.inv-cta {
+        display: flex;
+        flex-direction: column;
+        width: 155px;
+      }
+      /* Ценовые билеты сайдбара (замеренный регистр 247px). */
+      .inv-tickets {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 247px));
+        gap: var(--tk-space-20);
+      }
+      .inv-ticket-cta {
+        width: 100%;
+      }
+      /* Карточки карусели — light-DOM геометрия консьюмера (регистр 230px). */
+      .inv-rail-card {
+        box-sizing: border-box;
+        width: 230px;
+        display: flex;
+        flex-direction: column;
+        gap: var(--tk-space-8);
+        padding: var(--tk-space-16);
+        background: var(--tk-color-surface-base);
+        border-radius: var(--tk-radius-lg);
+        box-shadow: var(--tk-shadow-default);
+        color: var(--tk-color-text-primary);
+        text-decoration: none;
+      }
+      .inv-inst {
+        display: flex;
+        align-items: center;
+        gap: var(--tk-space-12);
+      }
+      .inv-roundel {
+        flex: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: var(--tk-space-40);
+        height: var(--tk-space-40);
+        border-radius: var(--tk-radius-full);
+        background: var(--tk-color-gray-100);
+        font-family: var(--tk-font-heading);
+        font-size: var(--tk-text-body-m-bold-size);
+        font-weight: var(--tk-text-body-m-bold-weight);
+        color: var(--tk-color-text-primary);
+      }
+      .inv-rail-card__title {
+        font-size: var(--tk-text-body-m-bold-size);
+        font-weight: var(--tk-text-body-m-bold-weight);
+        line-height: var(--tk-text-body-m-leading);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .inv-rail-card__price {
+        font-size: var(--tk-text-body-m-size);
+        line-height: var(--tk-text-body-m-leading);
+      }
+      .inv-rail-card__delta {
+        font-size: var(--tk-text-body-s-size);
+        line-height: var(--tk-text-body-s-leading);
+      }
+      .inv-rail-card__delta--up {
+        color: var(--tk-color-delta-positive);
+      }
+      .inv-rail-card__delta--down {
+        color: var(--tk-color-delta-negative);
+      }
+      .inv-code {
+        font-family: var(--tk-font-mono);
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-container site-header__row">
+        <a class="site-logo" href="/tinkoff-ui-kit/ru/">pillkit</a>
+        <nav class="site-nav" aria-label="Основная навигация">
+          <a href="/tinkoff-ui-kit/ru/bank.html">Банк</a>
+          <a href="/tinkoff-ui-kit/ru/invest.html" aria-current="page">Инвестиции</a>
+          <a href="/tinkoff-ui-kit/ru/admin.html">Админ</a>
+          <a href="/tinkoff-ui-kit/ru/tj.html">ТЖ</a>
+          <a href="/tinkoff-ui-kit/storybook/">Документация</a>
+        </nav>
+        <div class="site-header__actions">
+          <button class="site-theme-toggle" type="button" aria-label="Переключить тёмную тему"
+            onclick="document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? '' : 'dark'">◐</button>
+          <a class="site-gh" href="https://github.com/salacoste/tinkoff-ui-kit">GitHub</a>
+          <a class="site-lang" href="/tinkoff-ui-kit/invest.html" lang="en" hreflang="en">English version</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="inv-hero">
+        <div class="site-container">
+          <p class="inv-hero__eyebrow">Витрина · семейство «Инвестиции»</p>
+          <h1 class="inv-hero__title">Торговые и исследовательские поверхности</h1>
+          <p class="inv-hero__lead">
+            Рыночные чипы, карточки-герои инструментов, статичные SVG-чарты, финансовые
+            таблицы и терминальный бланк заявки — инвест-атомы для котировок, research-страниц
+            и торговых интерфейсов. Они живут в пакете банковского семейства и темятся тем же
+            токен-слоем <span class="inv-code">--tk-*</span>: один переключатель пересобирает
+            весь дашборд. Все инструменты, цены и лимиты на странице — вымышленные демо-данные.
+          </p>
+          <p class="inv-hero__note">
+            Семейство — для дашбордов, тикерных лент, research-лонгридов и торговых
+            терминалов. Заметная намеренная особенность: заливки CTA «Купить/Продать» едут на
+            theme-invariant торговых токенах — замеренное поведение терминала, в светлой и
+            тёмной темах одинаковое.
+          </p>
+        </div>
+      </section>
+
+      <div class="site-container">
+
+        <section class="section" id="market-data">
+          <h2 class="section__title">Рыночные чипы</h2>
+          <p class="section__lead">
+            <span class="inv-code">tk-quote-chip</span> — всё живое семейство рыночных чипов в
+            одном атоме: мини-котировка (pill), инлайн-<span class="inv-code">$TOKEN</span> в
+            тексте, вложение-виджет одиночной котировки (box) и пилюля «Ещё N» (overflow).
+            Дельта-цвет выводится из знака строки — цвет никогда не единственный носитель
+            семантики. <span class="inv-code">tk-badge</span> добавляет текстовые финансовые
+            тоны (positive/negative) рядом с маркетинговыми пилюлями.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Тикерная лента — pill-чипы</h3>
+              <div class="inv-band" role="group" aria-label="Котировки инструментов">
+                <tk-quote-chip ticker="SBER" name="Сбербанк" price="275,79 ₽" delta="+3,8%" href="#market-data"></tk-quote-chip>
+                <tk-quote-chip ticker="LKOH" name="Лукойл" price="6 214,50 ₽" delta="−1,2%" href="#market-data"></tk-quote-chip>
+                <tk-quote-chip ticker="GAZP" name="Газпром" price="128,04 ₽" delta="+0,45%" href="#market-data"></tk-quote-chip>
+                <tk-quote-chip ticker="GMKN" name="Норникель" price="118,9 ₽" delta="12,7%" href="#market-data"></tk-quote-chip>
+                <tk-quote-chip variant="overflow" href="#market-data">Ещё 6</tk-quote-chip>
+              </div>
+              <p class="demo-card__hint">Голые чипы на горизонтально скроллящейся полосе;
+                пустой слот лого даёт раундэл из первой буквы тикера.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Чипы в теле поста и бейджи</h3>
+              <div class="inv-demo">
+                <div class="inv-post">
+                  <p>
+                    Референс вставляет тикеры прямо в прозу поста:
+                    <tk-quote-chip variant="inline" ticker="sber" href="#market-data"></tk-quote-chip>
+                    и
+                    <tk-quote-chip variant="inline" ticker="lkoh" href="#market-data"></tk-quote-chip>
+                    — синие, капсом, без подложки.
+                  </p>
+                </div>
+                <div class="inv-chip-row">
+                  <tk-badge variant="positive" label="+3,8%"></tk-badge>
+                  <tk-badge variant="negative" label="−1,2%"></tk-badge>
+                  <tk-badge variant="incentive" label="+20%"></tk-badge>
+                  <tk-badge variant="stat" label="Бета 0,9"></tk-badge>
+                </div>
+                <tk-quote-chip variant="box" ticker="LKOH" name="Лукойл" price="6 214,50 ₽" delta="−1,2%"></tk-quote-chip>
+              </div>
+              <p class="demo-card__hint">Инлайн-$TOKEN, текстовые дельта-бейджи и
+                вложение-виджет одиночной котировки (variant <span class="inv-code">box</span>).</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Код — чип котировки и бейдж</summary>
+            <pre><code>&lt;tk-quote-chip ticker="SBER" name="Сбербанк"
+  price="275,79 ₽" delta="+3,8%" href="/invest/stocks/SBER"&gt;&lt;/tk-quote-chip&gt;
+
+&lt;tk-quote-chip variant="inline" ticker="sber"&gt;&lt;/tk-quote-chip&gt;
+&lt;tk-badge variant="positive" label="+3,8%"&gt;&lt;/tk-badge&gt;</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="instrument">
+          <h2 class="section__title">Страница инструмента</h2>
+          <p class="section__lead">
+            <span class="inv-code">tk-instrument-hero</span> — карточка-герой инструментальной
+            страницы: имя и тикер на градиенте класса актива (stock / bond / dark / light),
+            опциональный блок метрики, круглый лого-диск и звезда избранного — слот-кнопка
+            консьюмера (кит не владеет состоянием портфеля). Ниже —
+            <span class="inv-code">tk-publisher-header</span>: ряд профиля издателя с аватаром,
+            плашками верификации и кнопкой подписки, состояние которой всегда на вашей стороне.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Карточки-герои</h3>
+              <div class="inv-demo">
+                <tk-instrument-hero name="ТехноПром" ticker="TPRG" tone="stock" metric-label="Доходность за полгода">
+                  <button class="inv-star" slot="action" type="button" aria-label="Добавить в избранное" aria-pressed="false">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M12 3.6l2.6 5.4 5.9.8-4.3 4.1 1 5.9-5.2-2.8-5.2 2.8 1-5.9L3.5 9.8l5.9-.8L12 3.6z"
+                        stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path>
+                    </svg>
+                  </button>
+                  <span class="inv-logo" slot="logo">Т</span>
+                  <span slot="metric">−12,86%</span>
+                </tk-instrument-hero>
+                <tk-instrument-hero tone="bond" ticker="RU000A0DM027" metric-label="Доходность к погашению">
+                  <h3 slot="name">ТехноБонд-2027</h3>
+                  <span class="inv-logo" slot="logo">Т</span>
+                  <span slot="metric">15,76% на 8 месяцев</span>
+                </tk-instrument-hero>
+              </div>
+              <p class="demo-card__hint">Имя по умолчанию — DIV; уровень заголовка — структура
+                документа консьюмера (слот name принимает настоящую h-ноду). У ETF и валют
+                метрики нет — слот просто пуст.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Заголовок издателя</h3>
+              <div class="inv-demo">
+                <tk-publisher-header name="Демо-профиль" meta="12,3 тыс. подписчиков">
+                  <svg slot="badge" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+                    <circle cx="9" cy="9" r="9" fill="var(--tk-color-invest-badge-verified-backdrop)"></circle>
+                    <circle cx="9" cy="9" r="6" fill="var(--tk-color-invest-badge-verified)"></circle>
+                  </svg>
+                  <svg slot="badge" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+                    <circle cx="9" cy="9" r="9" fill="var(--tk-color-invest-badge-official-backdrop)"></circle>
+                    <path d="M5 9.2 7.8 12 13 6.5" fill="none" stroke="var(--tk-color-invest-badge-official)"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                  <tk-button slot="action" variant="primary">Подписаться</tk-button>
+                </tk-publisher-header>
+              </div>
+              <p class="demo-card__hint">Глифы плашек — контент слотов (у кита нет
+                иконочной системы); состояние подписки — всегда консьюмер.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Код — герой инструмента и заголовок издателя</summary>
+            <pre><code>&lt;tk-instrument-hero name="ТехноПром" ticker="TPRG"
+  tone="stock" metric-label="Доходность за полгода"&gt;
+  &lt;span slot="logo"&gt;Т&lt;/span&gt;
+  &lt;span slot="metric"&gt;−12,86%&lt;/span&gt;
+&lt;/tk-instrument-hero&gt;
+
+&lt;tk-publisher-header name="Демо-профиль" meta="12,3 тыс. подписчиков"&gt;
+  &lt;tk-button slot="action" variant="primary"&gt;Подписаться&lt;/tk-button&gt;
+&lt;/tk-publisher-header&gt;</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="charts">
+          <h2 class="section__title">Статичные чарты</h2>
+          <p class="section__lead">
+            <span class="inv-code">tk-chart</span> рендерит чарт инструментальной страницы
+            чистым SVG: массив точек на входе — графика на выходе, без состояния и событий.
+            Градиент заливки следует тону семейства инструмента; сетка, опорная пунктирная и
+            бейдж последнего значения — опциональные слои. Ось Y печатает «человеческие» тики
+            (NBSP-группировка, запятая-десятичная, сокращения «тыс.»/«млн»), сам элемент несёт
+            <span class="inv-code">role="img"</span> с производным aria-label.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Рост — тон stock</h3>
+              <div class="inv-demo">
+                <div class="inv-figure">
+                  <div class="inv-figure__caption">
+                    <span class="inv-figure__name">Демо-индекс, день</span>
+                    <span class="inv-figure__tag">reference · badge</span>
+                  </div>
+                  <tk-chart id="inv-chart-grow" reference="102" badge></tk-chart>
+                </div>
+              </div>
+              <p class="demo-card__hint">Опорная линия внутри диапазона плюс пилюля бейджа
+                последнего значения.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Падение — тон bond</h3>
+              <div class="inv-demo">
+                <div class="inv-figure">
+                  <div class="inv-figure__caption">
+                    <span class="inv-figure__name">Демо-облигация, день</span>
+                    <span class="inv-figure__tag">tone: bond</span>
+                  </div>
+                  <tk-chart id="inv-chart-fall" tone="bond"></tk-chart>
+                </div>
+              </div>
+              <p class="demo-card__hint">Чарт не знает «зелёное — вверх»: тон выбирает
+                потребитель, геометрия от направления не зависит.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Код — подключение чарта</summary>
+            <pre><code>const chart = document.querySelector('tk-chart');
+chart.points = [
+  { value: 101.2, label: '10:00' },
+  { value: 102.1, label: '11:00' },
+  { value: 101.8, label: '12:00' },
+  { value: 103.4, label: '13:00' },
+];
+// опциональные слои: reference="102" badge  ·  tone="stock|bond|dark|light"</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="tables">
+          <h2 class="section__title">Финансовые таблицы и списки параметров</h2>
+          <p class="section__lead">
+            <span class="inv-code">tk-data-table</span> — типографическая таблица каталога:
+            двухстрочные ячейки, дельта-тона колонки «Изменение», вся строка — область клика
+            единственной ссылки, клавиатурный слой — roving tabindex. <span class="inv-code">tk-kv-list</span> —
+            список «параметр — значение» карточки облигации: серый лейбл слева, значение
+            прижато вправо, разделители 1px и настоящие «?»-тултипы у нужных строк.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Каталог акций</h3>
+              <tk-data-table id="inv-table"></tk-data-table>
+              <p class="demo-card__hint">Дельта-тон красит обе строки ячейки; строка без href
+                инертна и пропускается фокусом.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Информация о выпуске</h3>
+              <div class="inv-frame">
+                <tk-kv-list>
+                  <tk-kv-list-item label="Доходность к погашению"
+                    hint="Вымышленная справка: доходность к дате погашения с учётом цены покупки.">
+                    <span slot="value">14,70 %</span>
+                  </tk-kv-list-item>
+                  <tk-kv-list-item label="Дата погашения облигации">
+                    <span slot="value">19.06.2027</span>
+                  </tk-kv-list-item>
+                  <tk-kv-list-item label="Купон"
+                    hint="Вымышленная справка: тип купона по решению о выпуске.">
+                    <span slot="value">Фиксированный</span>
+                  </tk-kv-list-item>
+                  <tk-kv-list-item label="Накопленный купонный доход">
+                    <span slot="value">74,68 ₽</span>
+                  </tk-kv-list-item>
+                  <tk-kv-list-item label="Изменение цены за день">
+                    <span slot="value" class="inv-delta--up">+2,4 %</span>
+                  </tk-kv-list-item>
+                  <tk-kv-list-item label="Изменение цены за месяц">
+                    <span slot="value" class="inv-delta--down">−1,1 %</span>
+                  </tk-kv-list-item>
+                </tk-kv-list>
+              </div>
+              <p class="demo-card__hint">Тона значений — контент слота: атом никогда не
+                угадывает тон из текста.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Код — подключение таблицы</summary>
+            <pre><code>const table = document.querySelector('tk-data-table');
+table.caption = 'Каталог акций';
+table.columns = [
+  { key: 'name', header: 'Название', width: '1fr' },
+  { key: 'price', header: 'Цена', align: 'end' },
+  { key: 'change', header: 'Изменение', align: 'end' },
+];
+table.rows = [
+  {
+    href: '/invest/stocks/SBER/',
+    cells: {
+      name: { primary: 'Сбербанк', secondary: 'SBER' },
+      price: { primary: '318,44 ₽', secondary: '1 лот = 10 акций' },
+      change: { primary: '+12,55 ₽', secondary: '+1,46 %', delta: 'positive' },
+    },
+  },
+];</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="terminal">
+          <h2 class="section__title">Терминальный тикет</h2>
+          <p class="section__lead">
+            Паттерн бланка заявки из паттерн-историй кита: режимы — <span class="inv-code">tk-tabs</span>
+            (APG-табы: стрелки ходят по режимам, Home/End — в начало/конец, недоступные
+            пропускаются), поля цены и лотов — <span class="inv-code">tk-input</span> со
+            степперами ВНЕ таб-порядка (клавиатура вводит цифры напрямую; степперы —
+            аффордансы указателя, отключающиеся на границе диапазона), внизу — пара «Доступно» +
+            CTA «Купить/Продать» на вариантах <span class="inv-code">positive</span>/<span class="inv-code">negative</span>
+            кнопки. Торговые заливки theme-invariant: переключите тему сайта — пара не
+            изменится, ровно как в замеренном терминале.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Бланк заявки (живой)</h3>
+              <div class="inv-demo">
+                <div class="inv-ticket" id="inv-ticket">
+                  <tk-tabs id="inv-ticket-tabs" default-value="market">
+                    <div slot="tab-0" class="inv-mode">
+                      <tk-input class="inv-lots" label="Лоты" sr-only placeholder="1" default-value="1">
+                        <span slot="badge" class="inv-steppers">
+                          <button class="inv-step" type="button" data-step="-1" tabindex="-1"
+                            aria-label="Минус" disabled aria-disabled="true">
+                            <span class="inv-step__glyph" aria-hidden="true">−</span>
+                          </button>
+                          <button class="inv-step" type="button" data-step="1" tabindex="-1" aria-label="Плюс">
+                            <span class="inv-step__glyph" aria-hidden="true">+</span>
+                          </button>
+                        </span>
+                      </tk-input>
+                    </div>
+                    <div slot="tab-1" class="inv-mode">
+                      <tk-input class="inv-price" label="Цена, ₽" sr-only placeholder="0" default-value="253,70">
+                        <span slot="badge" class="inv-unit" aria-hidden="true">₽</span>
+                      </tk-input>
+                      <tk-input class="inv-lots" label="Лоты" sr-only placeholder="1" default-value="1">
+                        <span slot="badge" class="inv-steppers">
+                          <button class="inv-step" type="button" data-step="-1" tabindex="-1"
+                            aria-label="Минус" disabled aria-disabled="true">
+                            <span class="inv-step__glyph" aria-hidden="true">−</span>
+                          </button>
+                          <button class="inv-step" type="button" data-step="1" tabindex="-1" aria-label="Плюс">
+                            <span class="inv-step__glyph" aria-hidden="true">+</span>
+                          </button>
+                        </span>
+                      </tk-input>
+                    </div>
+                    <div slot="tab-2" class="inv-mode">
+                      <tk-input class="inv-price" label="Цена, ₽" sr-only placeholder="0" default-value="249,00">
+                        <span slot="badge" class="inv-unit" aria-hidden="true">₽</span>
+                      </tk-input>
+                      <tk-input class="inv-lots" label="Лоты" sr-only placeholder="1" default-value="1">
+                        <span slot="badge" class="inv-steppers">
+                          <button class="inv-step" type="button" data-step="-1" tabindex="-1"
+                            aria-label="Минус" disabled aria-disabled="true">
+                            <span class="inv-step__glyph" aria-hidden="true">−</span>
+                          </button>
+                          <button class="inv-step" type="button" data-step="1" tabindex="-1" aria-label="Плюс">
+                            <span class="inv-step__glyph" aria-hidden="true">+</span>
+                          </button>
+                        </span>
+                      </tk-input>
+                    </div>
+                    <div slot="tab-3" class="inv-mode">
+                      <p class="inv-ticket__iceberg">Скрытая заявка недоступна в демо-терминале.</p>
+                    </div>
+                  </tk-tabs>
+                  <div class="inv-actions">
+                    <div class="inv-column">
+                      <div class="inv-limit">
+                        <span>Доступно</span>
+                        <span class="inv-limit__value">150 000 ₽</span>
+                      </div>
+                      <tk-button class="inv-cta" variant="positive" size="compact">Купить</tk-button>
+                    </div>
+                    <div class="inv-column">
+                      <div class="inv-limit">
+                        <span>Доступно</span>
+                        <span class="inv-limit__value">120</span>
+                      </div>
+                      <tk-button class="inv-cta" variant="negative" size="compact">Продать</tk-button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p class="demo-card__hint">Пройдите тикет табом: степперы пропускаются намеренно,
+                режимы слушают стрелки. Инструмент, цены и лимиты вымышленные.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Код — скелет тикета</summary>
+            <pre><code>&lt;tk-tabs .tabs=${MODE_TABS} default-value="market"&gt;
+  &lt;div slot="tab-0"&gt;…поле лотов со степперами…&lt;/div&gt;
+  &lt;div slot="tab-1"&gt;…поля цены и лотов…&lt;/div&gt;
+&lt;/tk-tabs&gt;
+&lt;tk-button variant="positive" size="compact"&gt;Купить&lt;/tk-button&gt;
+&lt;tk-button variant="negative" size="compact"&gt;Продать&lt;/tk-button&gt;
+// MODE_TABS = [
+//   { value: 'market', label: 'Маркет' },
+//   { value: 'limit', label: 'Лимит' },
+//   { value: 'stop', label: 'Условный' },
+//   { value: 'iceberg', label: 'Айсберг', disabled: true },
+// ]</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="cards-rails">
+          <h2 class="section__title">Ценовые билеты и карточные рейлы</h2>
+          <p class="section__lead">
+            <span class="inv-code">tk-promo-card</span> в варианте <span class="inv-code">ticket</span> —
+            ценовой билет сайдбара инструментальной страницы: лейбл, жирное значение, CTA на
+            всю ширину и мелкая приписка. <span class="inv-code">tk-carousel</span> —
+            snap-рейл под ним: нативный scroll-snap контейнер с шевронами по ховеру и
+            декоративной точечной пагинацией; карточки — обычные light-DOM слоты, влезает
+            любая геометрия.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Ценовые билеты сайдбара</h3>
+              <div class="inv-demo">
+                <div class="inv-tickets">
+                  <tk-promo-card variant="ticket" label="Демо-облигация · вымышленная">
+                    <b slot="value">14,7 % доходность</b>
+                    <tk-button class="inv-ticket-cta" slot="actions" variant="primary">Открыть счет</tk-button>
+                    <span slot="note">
+                      Если у вас уже есть счет,
+                      <tk-link href="#cards-rails">войдите в личный кабинет</tk-link>
+                    </span>
+                  </tk-promo-card>
+                  <tk-promo-card variant="ticket" label="Демо-фонд · вымышленный">
+                    <b slot="value">+9,2 % · 3 года</b>
+                    <tk-button class="inv-ticket-cta" slot="actions" variant="primary">Открыть счет</tk-button>
+                  </tk-promo-card>
+                </div>
+              </div>
+              <p class="demo-card__hint">Регистр 247px замеренного живого билета; ссылка
+                приписки — контент консьюмера.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Рейл «Похожие акции»</h3>
+              <div class="inv-demo">
+                <tk-carousel label="Похожие акции" dots>
+                  <a class="inv-rail-card" href="#cards-rails">
+                    <span class="inv-inst">
+                      <span class="inv-roundel" aria-hidden="true">С</span>
+                      <span class="inv-rail-card__title">Сбербанк</span>
+                    </span>
+                    <span class="inv-rail-card__price">318,44 ₽</span>
+                    <span class="inv-rail-card__delta inv-rail-card__delta--up">+1,46 %</span>
+                  </a>
+                  <a class="inv-rail-card" href="#cards-rails">
+                    <span class="inv-inst">
+                      <span class="inv-roundel" aria-hidden="true">Л</span>
+                      <span class="inv-rail-card__title">Лукойл</span>
+                    </span>
+                    <span class="inv-rail-card__price">684,50 ₽</span>
+                    <span class="inv-rail-card__delta inv-rail-card__delta--down">−0,18 %</span>
+                  </a>
+                  <a class="inv-rail-card" href="#cards-rails">
+                    <span class="inv-inst">
+                      <span class="inv-roundel" aria-hidden="true">Г</span>
+                      <span class="inv-rail-card__title">Газпром</span>
+                    </span>
+                    <span class="inv-rail-card__price">128,36 ₽</span>
+                    <span class="inv-rail-card__delta inv-rail-card__delta--up">+0,51 %</span>
+                  </a>
+                  <a class="inv-rail-card" href="#cards-rails">
+                    <span class="inv-inst">
+                      <span class="inv-roundel" aria-hidden="true">М</span>
+                      <span class="inv-rail-card__title">МТС</span>
+                    </span>
+                    <span class="inv-rail-card__price">214,60 ₽</span>
+                    <span class="inv-rail-card__delta inv-rail-card__delta--up">+0,8 %</span>
+                  </a>
+                  <a class="inv-rail-card" href="#cards-rails">
+                    <span class="inv-inst">
+                      <span class="inv-roundel" aria-hidden="true">П</span>
+                      <span class="inv-rail-card__title">Полюс</span>
+                    </span>
+                    <span class="inv-rail-card__price">1 812,00 ₽</span>
+                    <span class="inv-rail-card__delta inv-rail-card__delta--up">+0,42 %</span>
+                  </a>
+                </tk-carousel>
+              </div>
+              <p class="demo-card__hint">Геометрия карточки — сторона консьюмера (регистр 230px
+                живого рейла «Похожие акции»); тикеры и цены вымышленные.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Код — промо-билет и карусель</summary>
+            <pre><code>&lt;tk-promo-card variant="ticket" label="Демо-облигация · вымышленная"&gt;
+  &lt;b slot="value"&gt;14,7 % доходность&lt;/b&gt;
+  &lt;tk-button slot="actions" variant="primary"&gt;Открыть счет&lt;/tk-button&gt;
+  &lt;span slot="note"&gt;Уже есть счет? &lt;tk-link href="#"&gt;Войти&lt;/tk-link&gt;&lt;/span&gt;
+&lt;/tk-promo-card&gt;
+
+&lt;tk-carousel label="Похожие акции" dots&gt;
+  &lt;a class="my-card" href="/invest/stocks/SBER/"&gt;…&lt;/a&gt;
+&lt;/tk-carousel&gt;</code></pre>
+          </details>
+        </section>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-container">
+        <p class="site-footer__disclaimer">Неофициальный учебный проект. pillkit (tinkoff-ui-kit) —
+        независимое воссоздание дизайн-языка Тинькофф (Т-Банка) исключительно в учебных целях.
+        Проект не аффилирован с Т-Банком / ТКС Холдинг, не одобрен ими и никак с ними не связан;
+        товарные знаки Т-Банка в публикуемом результате не используются.</p>
+        <p class="site-footer__meta">Код и документация — MIT (шрифты лицензируются отдельно) ·
+        <a href="https://github.com/salacoste/tinkoff-ui-kit">GitHub</a> ·
+        <a href="/tinkoff-ui-kit/storybook/">Storybook-документация</a> ·
+        <a href="https://github.com/salacoste/tinkoff-ui-kit/releases">Релизы</a></p>
+      </div>
+    </footer>
+
+    <script type="module">
+      // Подключение витрины «Инвестиции» — чистый ESM (без TS-синтаксиса:
+      // линт-хук парсит исходники сайта базовым парсером). Свойства-массивы
+      // (points у tk-chart, columns/rows у tk-data-table, tabs у tk-tabs) не
+      // имеют атрибутного канала — назначаются скриптом после апгрейда
+      // элементов. Все цифры — ВЫМЫШЛЕННЫЕ демо-данные.
+      const ready = (tag) => customElements.whenDefined(tag);
+
+      ready('tk-chart').then(() => {
+        const hours = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'];
+        const series = (values) =>
+          values.map((value, i) => ({ value, label: hours[i % hours.length] }));
+
+        const grow = document.getElementById('inv-chart-grow');
+        if (grow) {
+          grow.points = series([101.2, 102.1, 101.8, 103.4, 104.0, 103.6, 105.2]);
+        }
+        const fall = document.getElementById('inv-chart-fall');
+        if (fall) {
+          fall.points = series([98.4, 97.9, 98.2, 96.8, 97.1, 95.6, 94.8]);
+        }
+      });
+
+      ready('tk-data-table').then(() => {
+        const table = document.getElementById('inv-table');
+        if (!table) return;
+
+        const row = (name, ticker, price, lot, deltaRub, deltaPct, delta) => ({
+          href: '#tables',
+          cells: {
+            name: { primary: name, secondary: ticker },
+            price: { primary: price, secondary: lot },
+            change: { primary: deltaRub, secondary: deltaPct, delta },
+          },
+        });
+
+        table.caption = 'Каталог акций (цены вымышленные)';
+        table.columns = [
+          { key: 'name', header: 'Название', width: '1fr' },
+          { key: 'price', header: 'Цена', align: 'end' },
+          { key: 'change', header: 'Изменение', align: 'end' },
+        ];
+        table.rows = [
+          row('Сбербанк', 'SBER', '318,44 ₽', '1 лот = 10 акций', '+12,55 ₽', '+1,46 %', 'positive'),
+          row('Лукойл', 'LKOH', '684,50 ₽', '1 лот = 1 акция', '−1,2 ₽', '−0,18 %', undefined),
+          row('Газпром', 'GAZP', '128,36 ₽', '1 лот = 10 акций', '+0,66 ₽', '+0,51 %', 'positive'),
+          row('Норникель', 'GMKN', '121,80 ₽', '1 лот = 10 акций', '−0,9 ₽', '−0,63 %', 'negative'),
+          row('МТС', 'MTSS', '214,60 ₽', '1 лот = 10 акций', '+2,1 ₽', '+0,8 %', 'positive'),
+          row('Магнит', 'MGNT', '4 120,00 ₽', '1 лот = 1 акция', '−25,0 ₽', '−1,1 %', 'negative'),
+          row('Полюс', 'PLZL', '1 812,00 ₽', '1 лот = 1 акция', '+14,4 ₽', '+0,42 %', 'positive'),
+        ];
+      });
+
+      ready('tk-tabs').then(() => {
+        const tabs = document.getElementById('inv-ticket-tabs');
+        if (tabs) {
+          tabs.tabs = [
+            { value: 'market', label: 'Маркет' },
+            { value: 'limit', label: 'Лимит' },
+            { value: 'stop', label: 'Условный' },
+            { value: 'iceberg', label: 'Айсберг', disabled: true },
+          ];
+        }
+      });
+
+      // Состояние тикета (молд паттерн-истории): замыкание — держатель
+      // состояния, DOM-запросы — канал обновления. Степперы отключаются на
+      // границе 1..99; все пары степперов тикета делят одно состояние.
+      ready('tk-input').then(() => {
+        const ticket = document.getElementById('inv-ticket');
+        if (!ticket) return;
+
+        const state = { lots: 1 };
+        const sync = () => {
+          ticket.querySelectorAll('tk-input.inv-lots').forEach((field) => {
+            field.value = String(state.lots);
+          });
+          ticket.querySelectorAll('button.inv-step[data-step="-1"]').forEach((btn) => {
+            const atFloor = state.lots <= 1;
+            btn.disabled = atFloor;
+            if (atFloor) btn.setAttribute('aria-disabled', 'true');
+            else btn.removeAttribute('aria-disabled');
+          });
+          ticket.querySelectorAll('button.inv-step[data-step="1"]').forEach((btn) => {
+            const atCeil = state.lots >= 99;
+            btn.disabled = atCeil;
+            if (atCeil) btn.setAttribute('aria-disabled', 'true');
+            else btn.removeAttribute('aria-disabled');
+          });
+        };
+
+        ticket.addEventListener('click', (event) => {
+          const btn = event.target.closest('button.inv-step');
+          if (!btn) return;
+          const delta = Number(btn.dataset.step);
+          state.lots = Math.min(99, Math.max(1, state.lots + delta));
+          sync();
+        });
+
+        ticket.addEventListener('value-change', (event) => {
+          const field = event.target;
+          if (!field.matches || !field.matches('tk-input.inv-lots')) return;
+          const parsed = Number.parseInt(String(event.detail.value).trim(), 10);
+          if (Number.isFinite(parsed)) {
+            state.lots = Math.min(99, Math.max(1, parsed));
+          }
+          sync();
+        });
+      });
+    </script>
+  </body>
+</html>

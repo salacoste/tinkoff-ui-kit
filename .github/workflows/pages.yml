@@ -1,0 +1,99 @@
+# Pages — GitHub Pages deploy pipeline (marketing site + Storybook docs).
+#
+# Scope split with CI (.github/workflows/ci.yml, same push): lint / typecheck /
+# tests / visual / impeccable all run there — this workflow builds and deploys
+# ONLY. On the same push both run: CI gates the commit, Pages ships it.
+#
+# Toolchain mirrors ci.yml exactly: checkout@v4, pnpm/action-setup@v4 (version
+# from the packageManager field), setup-node@v4 (node 20 + pnpm store cache),
+# `pnpm install --frozen-lockfile`.
+#
+# Site layout (project Pages site → everything under /tinkoff-ui-kit/):
+#   /                     website/dist — EN landing + family showcases (vite
+#                         build, base '/tinkoff-ui-kit/'), RU backups under /ru/
+#   /storybook/           pillkit-docs static Storybook build
+#
+# The Storybook step needs NO base flag: Storybook 10.6 emits fully
+# relative-path output (manager `./sb-manager/*`, preview `./assets/*`,
+# relative iframe.html srcs), so the build serves correctly from any subpath.
+# Verified locally by serving the built output under /tinkoff-ui-kit/storybook/
+# and loading it headless: manager boots, preview iframe renders, zero >=400
+# responses. Do NOT re-add a `--base`/basePath mechanism without re-verifying.
+name: Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - website/**
+      - packages/**
+      - .github/workflows/pages.yml
+      - pnpm-lock.yaml
+  workflow_dispatch:
+
+# Deploys never cancel each other mid-flight (a half-updated Pages artifact is
+# worse than waiting for the previous deploy to land).
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: pnpm 12.5.1 (from packageManager field)
+        uses: pnpm/action-setup@v4
+
+      - name: Node 20 + pnpm store cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Full workspace build: component dists first (the website and docs
+      # import from packages/*/dist), then website/dist and packages/docs/dist.
+      - name: Build workspace (components + docs + website)
+        run: pnpm build
+
+      # Second docs build into its own dir: `pnpm exec` skips the package's
+      # prebuild/lifecycle hooks, and `pnpm build` above already produced the
+      # tokens dist those hooks exist to guarantee. Output is base-agnostic
+      # (relative paths — see the header comment), identical to packages/docs/dist
+      # apart from the directory name; a separate dir keeps the regular docs
+      # build (visual suite serves it) untouched.
+      - name: Build Storybook for the /tinkoff-ui-kit/storybook/ subpath
+        run: pnpm --filter pillkit-docs exec storybook build --output-dir storybook-pages
+
+      - name: Assemble Pages site (_site = website dist + /storybook)
+        run: |
+          mkdir -p _site
+          cp -r website/dist/. _site/
+          cp -r packages/docs/storybook-pages _site/storybook
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

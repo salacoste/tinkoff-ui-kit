@@ -323,6 +323,31 @@ importers:
         specifier: ^2.9.1
         version: 2.9.1
 
+  website:
+    dependencies:
+      lit:
+        specifier: 3.3.3
+        version: 3.3.3
+      pillkit-components:
+        specifier: workspace:*
+        version: link:../packages/components
+      pillkit-tj-components:
+        specifier: workspace:*
+        version: link:../packages/tj-components
+      pillkit-tj-fonts:
+        specifier: workspace:*
+        version: link:../packages/tj-fonts
+      pillkit-tj-tokens:
+        specifier: workspace:*
+        version: link:../packages/tj-tokens
+      pillkit-tokens:
+        specifier: workspace:*
+        version: link:../packages/tokens
+    devDependencies:
+      vite:
+        specifier: 8.3.0
+        version: 8.3.0(@types/node@26.6.2)(esbuild@0.28.2)(yaml@2.9.1)
+
 packages:
 
   '@adobe/css-tools@4.5.0':

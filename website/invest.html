@@ -1,0 +1,936 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>pillkit — Invest family showcase</title>
+    <script type="module" src="/src/invest.ts"></script>
+    <style>
+      /*
+       * Invest showcase — page-scoped styles ONLY (site chrome classes live in
+       * src/styles/site.css). Token-first: every color/spacing/type value rides
+       * a --tk-* custom property so the demos re-theme with the site toggle.
+       */
+      .inv-hero {
+        padding: var(--tk-space-64) 0 var(--tk-space-40);
+        background: var(--tk-color-surface-muted);
+      }
+      .inv-hero__eyebrow {
+        margin: 0 0 var(--tk-space-8);
+        font-family: var(--tk-font-mono);
+        font-size: var(--tk-text-body-xs-size);
+        letter-spacing: var(--tk-text-body-xs-tracking);
+        text-transform: uppercase;
+        color: var(--tk-color-text-secondary);
+      }
+      .inv-hero__title {
+        margin: 0 0 var(--tk-space-12);
+        max-width: var(--tk-space-container);
+        font-family: var(--tk-font-heading);
+        font-size: var(--tk-text-heading-2-size);
+        font-weight: var(--tk-text-heading-2-weight);
+        line-height: var(--tk-text-heading-2-leading);
+        color: var(--tk-color-text-primary);
+      }
+      .inv-hero__lead {
+        margin: 0;
+        max-width: 62ch;
+        font-family: var(--tk-font-body);
+        font-size: var(--tk-text-body-l-size);
+        line-height: var(--tk-text-body-l-leading);
+        color: var(--tk-color-text-primary);
+      }
+      .inv-hero__note {
+        margin: var(--tk-space-12) 0 0;
+        max-width: 62ch;
+        font-family: var(--tk-font-body);
+        font-size: var(--tk-text-body-s-size);
+        line-height: var(--tk-text-body-s-leading);
+        color: var(--tk-color-text-secondary);
+      }
+      /* Demo frames inside cards ride the base surface (the story-canvas mold). */
+      .inv-demo {
+        display: flex;
+        flex-direction: column;
+        gap: var(--tk-space-16);
+        padding: var(--tk-space-16);
+        border: 1px solid var(--tk-color-border-default);
+        border-radius: var(--tk-radius-md);
+        background: var(--tk-color-surface-base);
+        font-family: var(--tk-font-body);
+        color: var(--tk-color-text-primary);
+      }
+      /* Market-data band (the ticker-rail grounding): horizontally scrollable. */
+      .inv-band {
+        display: flex;
+        align-items: center;
+        gap: var(--tk-space-32);
+        padding: var(--tk-space-12) var(--tk-space-16);
+        border: 1px solid var(--tk-color-border-default);
+        border-radius: var(--tk-radius-md);
+        overflow-x: auto;
+      }
+      .inv-chip-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--tk-space-16);
+      }
+      .inv-post {
+        display: flex;
+        flex-direction: column;
+        gap: var(--tk-space-8);
+      }
+      .inv-post p {
+        margin: 0;
+      }
+      /* Instrument identity: consumer monogram disc + favorite-star slot. */
+      .inv-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        border-radius: var(--tk-radius-full);
+        background: var(--tk-color-gray-100);
+        color: var(--tk-color-gray-600);
+        font-family: var(--tk-font-heading);
+        font-size: var(--tk-text-heading-3-size);
+        font-weight: var(--tk-text-heading-3-weight);
+      }
+      .inv-star {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        border: 0;
+        border-radius: var(--tk-radius-full);
+        background: transparent;
+        color: inherit;
+        cursor: pointer;
+      }
+      .inv-star:focus-visible {
+        outline: 2px solid var(--tk-color-focus-ring);
+        outline-offset: 2px;
+      }
+      .inv-figure {
+        display: flex;
+        flex-direction: column;
+        gap: var(--tk-space-8);
+        padding: var(--tk-space-16);
+        background: var(--tk-color-surface-muted);
+        border-radius: var(--tk-radius-md);
+      }
+      .inv-figure__caption {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: var(--tk-space-12);
+      }
+      .inv-figure__name {
+        font-size: var(--tk-text-body-m-bold-size);
+        font-weight: var(--tk-text-body-m-bold-weight);
+        line-height: var(--tk-text-body-m-leading);
+      }
+      .inv-figure__tag {
+        color: var(--tk-color-text-secondary);
+        font-family: var(--tk-font-mono);
+        font-size: var(--tk-text-body-xs-size);
+        letter-spacing: var(--tk-text-body-xs-tracking);
+      }
+      .inv-frame {
+        padding: var(--tk-space-8) var(--tk-space-16);
+        border: 1px solid var(--tk-color-border-default);
+        border-radius: var(--tk-radius-sm);
+      }
+      /* Consumer-side delta tones on kv values (the atom never guesses). */
+      .inv-delta--up {
+        color: var(--tk-color-delta-positive);
+      }
+      .inv-delta--down {
+        color: var(--tk-color-delta-negative);
+      }
+      /* Terminal ticket (the 24T.2 pattern, simplified copy). */
+      .inv-ticket {
+        max-width: 344px;
+        display: flex;
+        flex-direction: column;
+        gap: var(--tk-space-16);
+        padding: var(--tk-space-16);
+        border: 1px solid var(--tk-color-border-default);
+        border-radius: var(--tk-radius-md);
+        background: var(--tk-color-surface-base);
+      }
+      .inv-mode {
+        display: flex;
+        flex-direction: column;
+        gap: var(--tk-space-12);
+      }
+      .inv-ticket__iceberg {
+        margin: 0;
+        font-size: var(--tk-text-body-s-size);
+        line-height: var(--tk-text-body-s-leading);
+        color: var(--tk-color-text-secondary);
+      }
+      .inv-steppers {
+        display: inline-flex;
+        gap: 2px;
+      }
+      .inv-step {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        padding: 0;
+        border: none;
+        background: transparent;
+        color: var(--tk-color-text-secondary);
+        font-family: var(--tk-font-body);
+        font-size: var(--tk-text-body-l-bold-size);
+        font-weight: var(--tk-text-body-l-bold-weight);
+        line-height: 1;
+        cursor: pointer;
+      }
+      .inv-step:hover {
+        color: var(--tk-color-text-primary);
+      }
+      .inv-step:focus-visible {
+        outline: 2px solid var(--tk-color-focus-ring);
+        outline-offset: 2px;
+        border-radius: var(--tk-radius-xs);
+      }
+      .inv-step[disabled] {
+        opacity: 0.4;
+        cursor: default;
+      }
+      .inv-step__glyph {
+        pointer-events: none;
+      }
+      .inv-unit {
+        color: var(--tk-color-text-secondary);
+      }
+      .inv-actions {
+        display: flex;
+        gap: var(--tk-space-8);
+      }
+      .inv-column {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: var(--tk-space-8);
+      }
+      .inv-limit {
+        box-sizing: border-box;
+        height: 27px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-inline: var(--tk-space-12);
+        border-radius: var(--tk-radius-sm);
+        background: var(--tk-color-surface-field);
+        font-size: var(--tk-text-body-s-size);
+        line-height: var(--tk-text-body-s-leading);
+        color: var(--tk-color-text-secondary);
+      }
+      .inv-limit__value {
+        color: var(--tk-color-text-primary);
+        font-weight: var(--tk-text-body-m-bold-weight);
+      }
+      /* Full-width CTA recipe: the pill lives in shadow DOM, so the host
+         becomes a column flex and the pill stretches to the measured width. */
+      .inv-column tk-button.inv-cta {
+        display: flex;
+        flex-direction: column;
+        width: 155px;
+      }
+      /* Sidebar price tickets (the measured 247px register). */
+      .inv-tickets {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 247px));
+        gap: var(--tk-space-20);
+      }
+      .inv-ticket-cta {
+        width: 100%;
+      }
+      /* Carousel stub cards — consumer light-DOM geometry (230px register). */
+      .inv-rail-card {
+        box-sizing: border-box;
+        width: 230px;
+        display: flex;
+        flex-direction: column;
+        gap: var(--tk-space-8);
+        padding: var(--tk-space-16);
+        background: var(--tk-color-surface-base);
+        border-radius: var(--tk-radius-lg);
+        box-shadow: var(--tk-shadow-default);
+        color: var(--tk-color-text-primary);
+        text-decoration: none;
+      }
+      .inv-inst {
+        display: flex;
+        align-items: center;
+        gap: var(--tk-space-12);
+      }
+      .inv-roundel {
+        flex: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: var(--tk-space-40);
+        height: var(--tk-space-40);
+        border-radius: var(--tk-radius-full);
+        background: var(--tk-color-gray-100);
+        font-family: var(--tk-font-heading);
+        font-size: var(--tk-text-body-m-bold-size);
+        font-weight: var(--tk-text-body-m-bold-weight);
+        color: var(--tk-color-text-primary);
+      }
+      .inv-rail-card__title {
+        font-size: var(--tk-text-body-m-bold-size);
+        font-weight: var(--tk-text-body-m-bold-weight);
+        line-height: var(--tk-text-body-m-leading);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .inv-rail-card__price {
+        font-size: var(--tk-text-body-m-size);
+        line-height: var(--tk-text-body-m-leading);
+      }
+      .inv-rail-card__delta {
+        font-size: var(--tk-text-body-s-size);
+        line-height: var(--tk-text-body-s-leading);
+      }
+      .inv-rail-card__delta--up {
+        color: var(--tk-color-delta-positive);
+      }
+      .inv-rail-card__delta--down {
+        color: var(--tk-color-delta-negative);
+      }
+      .inv-code {
+        font-family: var(--tk-font-mono);
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-container site-header__row">
+        <a class="site-logo" href="/tinkoff-ui-kit/">pillkit</a>
+        <nav class="site-nav" aria-label="Primary">
+          <a href="/tinkoff-ui-kit/bank.html">Bank</a>
+          <a href="/tinkoff-ui-kit/invest.html" aria-current="page">Invest</a>
+          <a href="/tinkoff-ui-kit/admin.html">Admin</a>
+          <a href="/tinkoff-ui-kit/tj.html">T-Journal</a>
+          <a href="/tinkoff-ui-kit/storybook/">Docs</a>
+        </nav>
+        <div class="site-header__actions">
+          <button class="site-theme-toggle" type="button" aria-label="Toggle dark theme"
+            onclick="document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? '' : 'dark'">◐</button>
+          <a class="site-gh" href="https://github.com/salacoste/tinkoff-ui-kit">GitHub</a>
+          <a class="site-lang" href="/tinkoff-ui-kit/ru/invest.html" lang="ru" hreflang="ru">Русская версия</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="inv-hero">
+        <div class="site-container">
+          <p class="inv-hero__eyebrow">Showcase · invest family</p>
+          <h1 class="inv-hero__title">Trading &amp; research surfaces</h1>
+          <p class="inv-hero__lead">
+            Market-data chips, instrument identity cards, static SVG charts, financial tables
+            and the terminal order ticket — the invest atoms for quotes, research pages and
+            trading UIs. They live in the bank family package and theme with the same
+            <span class="inv-code">--tk-*</span> token layer, so one toggle re-skins the whole
+            dashboard. All instruments, prices and limits on this page are fictional demo data.
+          </p>
+          <p class="inv-hero__note">
+            Reach for this family on dashboards, quote tickers, research longreads and trading
+            terminals. Note the deliberate exception: Buy/Sell CTA fills ride the theme-invariant
+            trade tokens — the measured terminal behavior, kept identical in light and dark.
+          </p>
+        </div>
+      </section>
+
+      <div class="site-container">
+
+        <section class="section" id="market-data">
+          <h2 class="section__title">Market data chips</h2>
+          <p class="section__lead">
+            <span class="inv-code">tk-quote-chip</span> is the whole live market-chip family in
+            one atom: a mini quote (pill), an inline <span class="inv-code">$TOKEN</span> inside
+            prose, a boxed single-quote widget and the “More” overflow pill. The delta tone is
+            derived from the sign of the string — color is never the only carrier of meaning.
+            <span class="inv-code">tk-badge</span> adds the text-only financial tones
+            (positive/negative) next to plain marketing pills.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Ticker band — pill chips</h3>
+              <div class="inv-band" role="group" aria-label="Instrument quotes">
+                <tk-quote-chip ticker="SBER" name="Sberbank" price="275,79 ₽" delta="+3,8%" href="#market-data"></tk-quote-chip>
+                <tk-quote-chip ticker="LKOH" name="Lukoil" price="6 214,50 ₽" delta="−1,2%" href="#market-data"></tk-quote-chip>
+                <tk-quote-chip ticker="GAZP" name="Gazprom" price="128,04 ₽" delta="+0,45%" href="#market-data"></tk-quote-chip>
+                <tk-quote-chip ticker="GMKN" name="Norilsk Nickel" price="118,9 ₽" delta="12,7%" href="#market-data"></tk-quote-chip>
+                <tk-quote-chip variant="overflow" href="#market-data">More +6</tk-quote-chip>
+              </div>
+              <p class="demo-card__hint">Bare chips on a horizontally scrollable strip; the empty
+                logo slot falls back to the ticker’s first letter.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">In-body chips &amp; badges</h3>
+              <div class="inv-demo">
+                <div class="inv-post">
+                  <p>
+                    The reference drops tickers straight into post prose:
+                    <tk-quote-chip variant="inline" ticker="sber" href="#market-data"></tk-quote-chip>
+                    and
+                    <tk-quote-chip variant="inline" ticker="lkoh" href="#market-data"></tk-quote-chip>
+                    — blue, uppercase, no backing.
+                  </p>
+                </div>
+                <div class="inv-chip-row">
+                  <tk-badge variant="positive" label="+3,8%"></tk-badge>
+                  <tk-badge variant="negative" label="−1,2%"></tk-badge>
+                  <tk-badge variant="incentive" label="+20%"></tk-badge>
+                  <tk-badge variant="stat" label="Beta 0,9"></tk-badge>
+                </div>
+                <tk-quote-chip variant="box" ticker="LKOH" name="Lukoil" price="6 214,50 ₽" delta="−1,2%"></tk-quote-chip>
+              </div>
+              <p class="demo-card__hint">Inline $TOKENs, text-only delta badges and the boxed
+                single-quote widget (variant <span class="inv-code">box</span>).</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Code — quote chip &amp; badge</summary>
+            <pre><code>&lt;tk-quote-chip ticker="SBER" name="Sberbank"
+  price="275,79 ₽" delta="+3,8%" href="/invest/stocks/SBER"&gt;&lt;/tk-quote-chip&gt;
+
+&lt;tk-quote-chip variant="inline" ticker="sber"&gt;&lt;/tk-quote-chip&gt;
+&lt;tk-badge variant="positive" label="+3,8%"&gt;&lt;/tk-badge&gt;</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="instrument">
+          <h2 class="section__title">Instrument page</h2>
+          <p class="section__lead">
+            <span class="inv-code">tk-instrument-hero</span> is the identity card of an
+            instrument page: name and ticker over an asset-class gradient (stock / bond / dark /
+            light), an optional metric block, a round logo disc and the consumer’s favorite-star
+            slot — the kit never owns portfolio state. Below it,
+            <span class="inv-code">tk-publisher-header</span> carries the research-desk row:
+            avatar, verified badges and a subscribe button that stays consumer-side.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Identity cards</h3>
+              <div class="inv-demo">
+                <tk-instrument-hero name="TechnoProm" ticker="TPRG" tone="stock" metric-label="6-month return">
+                  <button class="inv-star" slot="action" type="button" aria-label="Add to favorites" aria-pressed="false">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M12 3.6l2.6 5.4 5.9.8-4.3 4.1 1 5.9-5.2-2.8-5.2 2.8 1-5.9L3.5 9.8l5.9-.8L12 3.6z"
+                        stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path>
+                    </svg>
+                  </button>
+                  <span class="inv-logo" slot="logo">T</span>
+                  <span slot="metric">−12,86%</span>
+                </tk-instrument-hero>
+                <tk-instrument-hero tone="bond" ticker="RU000A0DM027" metric-label="Yield to maturity">
+                  <h3 slot="name">TechnoBond-2027</h3>
+                  <span class="inv-logo" slot="logo">B</span>
+                  <span slot="metric">15,76% · 8 months</span>
+                </tk-instrument-hero>
+              </div>
+              <p class="demo-card__hint">The name is a div by default; slot a real heading node
+                when the document needs one. ETF/currency anatomy simply omits the metric slot.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Publisher row</h3>
+              <div class="inv-demo">
+                <tk-publisher-header name="Demo research desk" meta="12,3K subscribers">
+                  <svg slot="badge" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+                    <circle cx="9" cy="9" r="9" fill="var(--tk-color-invest-badge-verified-backdrop)"></circle>
+                    <circle cx="9" cy="9" r="6" fill="var(--tk-color-invest-badge-verified)"></circle>
+                  </svg>
+                  <svg slot="badge" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+                    <circle cx="9" cy="9" r="9" fill="var(--tk-color-invest-badge-official-backdrop)"></circle>
+                    <path d="M5 9.2 7.8 12 13 6.5" fill="none" stroke="var(--tk-color-invest-badge-official)"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                  <tk-button slot="action" variant="primary">Subscribe</tk-button>
+                </tk-publisher-header>
+              </div>
+              <p class="demo-card__hint">Badge glyphs are slot content (the kit ships no icon
+                system); the subscribe state is always yours.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Code — instrument hero &amp; publisher header</summary>
+            <pre><code>&lt;tk-instrument-hero name="TechnoProm" ticker="TPRG"
+  tone="stock" metric-label="6-month return"&gt;
+  &lt;span slot="logo"&gt;T&lt;/span&gt;
+  &lt;span slot="metric"&gt;−12,86%&lt;/span&gt;
+&lt;/tk-instrument-hero&gt;
+
+&lt;tk-publisher-header name="Demo research desk" meta="12,3K subscribers"&gt;
+  &lt;tk-button slot="action" variant="primary"&gt;Subscribe&lt;/tk-button&gt;
+&lt;/tk-publisher-header&gt;</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="charts">
+          <h2 class="section__title">Static charts</h2>
+          <p class="section__lead">
+            <span class="inv-code">tk-chart</span> renders the instrument page’s price chart as
+            pure SVG: an array of points in, graphics out — no state, no events. The fill
+            gradient follows the instrument family tone; grid, dashed reference line and the
+            last-value badge are optional layers. The Y axis formats “human” ticks (NBSP
+            grouping, decimal comma, thousands/millions abbreviations) and the element carries
+            <span class="inv-code">role="img"</span> with a derived label.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Growth — stock tone</h3>
+              <div class="inv-demo">
+                <div class="inv-figure">
+                  <div class="inv-figure__caption">
+                    <span class="inv-figure__name">Demo index, day</span>
+                    <span class="inv-figure__tag">reference · badge</span>
+                  </div>
+                  <tk-chart id="inv-chart-grow" reference="102" badge></tk-chart>
+                </div>
+              </div>
+              <p class="demo-card__hint">Reference line inside the range plus the last-value
+                badge pill.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Decline — bond tone</h3>
+              <div class="inv-demo">
+                <div class="inv-figure">
+                  <div class="inv-figure__caption">
+                    <span class="inv-figure__name">Demo bond, day</span>
+                    <span class="inv-figure__tag">tone: bond</span>
+                  </div>
+                  <tk-chart id="inv-chart-fall" tone="bond"></tk-chart>
+                </div>
+              </div>
+              <p class="demo-card__hint">The chart does not know “green is up” — the consumer
+                picks the tone; geometry stays direction-agnostic.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Code — chart wiring</summary>
+            <pre><code>const chart = document.querySelector('tk-chart');
+chart.points = [
+  { value: 101.2, label: '10:00' },
+  { value: 102.1, label: '11:00' },
+  { value: 101.8, label: '12:00' },
+  { value: 103.4, label: '13:00' },
+];
+// optional layers: reference="102" badge  ·  tone="stock|bond|dark|light"</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="tables">
+          <h2 class="section__title">Financial tables &amp; spec lists</h2>
+          <p class="section__lead">
+            <span class="inv-code">tk-data-table</span> is the catalog table: two-line cells,
+            delta-toned change columns, the whole row as one link with a roving-tabindex keyboard
+            layer. <span class="inv-code">tk-kv-list</span> is the spec list of a bond card —
+            label left, value flush right, hairline dividers and real “?” hint tooltips on the
+            rows that need them.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Stock catalog</h3>
+              <tk-data-table id="inv-table"></tk-data-table>
+              <p class="demo-card__hint">Delta tone colors both lines of a cell; rows without
+                href stay inert and are skipped by focus.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Bond issue info</h3>
+              <div class="inv-frame">
+                <tk-kv-list>
+                  <tk-kv-list-item label="Yield to maturity"
+                    hint="Fictional note: yield is calculated to the maturity date at the current price.">
+                    <span slot="value">14,70 %</span>
+                  </tk-kv-list-item>
+                  <tk-kv-list-item label="Maturity date">
+                    <span slot="value">19.06.2027</span>
+                  </tk-kv-list-item>
+                  <tk-kv-list-item label="Coupon"
+                    hint="Fictional note: the coupon type fixed by the issue resolution.">
+                    <span slot="value">Fixed</span>
+                  </tk-kv-list-item>
+                  <tk-kv-list-item label="Accrued coupon income">
+                    <span slot="value">74,68 ₽</span>
+                  </tk-kv-list-item>
+                  <tk-kv-list-item label="Day price change">
+                    <span slot="value" class="inv-delta--up">+2,4 %</span>
+                  </tk-kv-list-item>
+                  <tk-kv-list-item label="Month price change">
+                    <span slot="value" class="inv-delta--down">−1,1 %</span>
+                  </tk-kv-list-item>
+                </tk-kv-list>
+              </div>
+              <p class="demo-card__hint">Value tones are consumer content — the atom never
+                guesses a tone from the text.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Code — data table wiring</summary>
+            <pre><code>const table = document.querySelector('tk-data-table');
+table.caption = 'Stock catalog';
+table.columns = [
+  { key: 'name', header: 'Name', width: '1fr' },
+  { key: 'price', header: 'Price', align: 'end' },
+  { key: 'change', header: 'Change', align: 'end' },
+];
+table.rows = [
+  {
+    href: '/invest/stocks/SBER/',
+    cells: {
+      name: { primary: 'Sberbank', secondary: 'SBER' },
+      price: { primary: '318,44 ₽', secondary: '1 lot = 10 shares' },
+      change: { primary: '+12,55 ₽', secondary: '+1,46 %', delta: 'positive' },
+    },
+  },
+];</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="terminal">
+          <h2 class="section__title">Terminal ticket</h2>
+          <p class="section__lead">
+            The order-ticket pattern from the kit’s pattern stories:
+            <span class="inv-code">tk-tabs</span> for the order modes (an APG tabs bar — arrows
+            walk the modes, Home/End jump, disabled entries are skipped), numeric fields with
+            stepper buttons that sit deliberately outside the tab order (the keyboard types
+            digits directly; steppers are pointer affordances that disable at the range
+            boundary), a limits strip per side and the Buy/Sell pair on
+            <span class="inv-code">tk-button</span> variants
+            <span class="inv-code">positive</span>/<span class="inv-code">negative</span>. The
+            trade fills are theme-invariant by design — flip the site theme and the pair stays
+            put, exactly like the measured terminal.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Order ticket (live)</h3>
+              <div class="inv-demo">
+                <div class="inv-ticket" id="inv-ticket">
+                  <tk-tabs id="inv-ticket-tabs" default-value="market">
+                    <div slot="tab-0" class="inv-mode">
+                      <tk-input class="inv-lots" label="Lots" sr-only placeholder="1" default-value="1">
+                        <span slot="badge" class="inv-steppers">
+                          <button class="inv-step" type="button" data-step="-1" tabindex="-1"
+                            aria-label="Minus" disabled aria-disabled="true">
+                            <span class="inv-step__glyph" aria-hidden="true">−</span>
+                          </button>
+                          <button class="inv-step" type="button" data-step="1" tabindex="-1" aria-label="Plus">
+                            <span class="inv-step__glyph" aria-hidden="true">+</span>
+                          </button>
+                        </span>
+                      </tk-input>
+                    </div>
+                    <div slot="tab-1" class="inv-mode">
+                      <tk-input class="inv-price" label="Price, ₽" sr-only placeholder="0" default-value="253,70">
+                        <span slot="badge" class="inv-unit" aria-hidden="true">₽</span>
+                      </tk-input>
+                      <tk-input class="inv-lots" label="Lots" sr-only placeholder="1" default-value="1">
+                        <span slot="badge" class="inv-steppers">
+                          <button class="inv-step" type="button" data-step="-1" tabindex="-1"
+                            aria-label="Minus" disabled aria-disabled="true">
+                            <span class="inv-step__glyph" aria-hidden="true">−</span>
+                          </button>
+                          <button class="inv-step" type="button" data-step="1" tabindex="-1" aria-label="Plus">
+                            <span class="inv-step__glyph" aria-hidden="true">+</span>
+                          </button>
+                        </span>
+                      </tk-input>
+                    </div>
+                    <div slot="tab-2" class="inv-mode">
+                      <tk-input class="inv-price" label="Price, ₽" sr-only placeholder="0" default-value="249,00">
+                        <span slot="badge" class="inv-unit" aria-hidden="true">₽</span>
+                      </tk-input>
+                      <tk-input class="inv-lots" label="Lots" sr-only placeholder="1" default-value="1">
+                        <span slot="badge" class="inv-steppers">
+                          <button class="inv-step" type="button" data-step="-1" tabindex="-1"
+                            aria-label="Minus" disabled aria-disabled="true">
+                            <span class="inv-step__glyph" aria-hidden="true">−</span>
+                          </button>
+                          <button class="inv-step" type="button" data-step="1" tabindex="-1" aria-label="Plus">
+                            <span class="inv-step__glyph" aria-hidden="true">+</span>
+                          </button>
+                        </span>
+                      </tk-input>
+                    </div>
+                    <div slot="tab-3" class="inv-mode">
+                      <p class="inv-ticket__iceberg">Hidden orders are disabled in this demo terminal.</p>
+                    </div>
+                  </tk-tabs>
+                  <div class="inv-actions">
+                    <div class="inv-column">
+                      <div class="inv-limit">
+                        <span>Available</span>
+                        <span class="inv-limit__value">150 000 ₽</span>
+                      </div>
+                      <tk-button class="inv-cta" variant="positive" size="compact">Buy</tk-button>
+                    </div>
+                    <div class="inv-column">
+                      <div class="inv-limit">
+                        <span>Available</span>
+                        <span class="inv-limit__value">120</span>
+                      </div>
+                      <tk-button class="inv-cta" variant="negative" size="compact">Sell</tk-button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p class="demo-card__hint">Tab through the ticket: the steppers are skipped on
+                purpose, the mode tabs take arrows. Instrument, prices and limits are fictional.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Code — ticket skeleton</summary>
+            <pre><code>&lt;tk-tabs .tabs=${MODE_TABS} default-value="market"&gt;
+  &lt;div slot="tab-0"&gt;…lots field with stepper buttons…&lt;/div&gt;
+  &lt;div slot="tab-1"&gt;…price + lots fields…&lt;/div&gt;
+&lt;/tk-tabs&gt;
+&lt;tk-button variant="positive" size="compact"&gt;Buy&lt;/tk-button&gt;
+&lt;tk-button variant="negative" size="compact"&gt;Sell&lt;/tk-button&gt;
+// MODE_TABS = [
+//   { value: 'market', label: 'Market' },
+//   { value: 'limit', label: 'Limit' },
+//   { value: 'stop', label: 'Stop' },
+//   { value: 'iceberg', label: 'Iceberg', disabled: true },
+// ]</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="cards-rails">
+          <h2 class="section__title">Price tickets &amp; card rails</h2>
+          <p class="section__lead">
+            <span class="inv-code">tk-promo-card</span> in its
+            <span class="inv-code">ticket</span> variant is the sidebar price ticket of the
+            instrument page — label, bold value, a full-width primary CTA and a small note.
+            <span class="inv-code">tk-carousel</span> is the snap rail underneath: a native
+            scroll-snap container with chevrons on hover and decorative dot pagination; the
+            cards themselves are plain light-DOM slots, so any card geometry fits.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Sidebar price tickets</h3>
+              <div class="inv-demo">
+                <div class="inv-tickets">
+                  <tk-promo-card variant="ticket" label="Demo bond · fictional">
+                    <b slot="value">14,7 % YTM</b>
+                    <tk-button class="inv-ticket-cta" slot="actions" variant="primary">Open an account</tk-button>
+                    <span slot="note">
+                      Already have one?
+                      <tk-link href="#cards-rails">Sign in to your account</tk-link>
+                    </span>
+                  </tk-promo-card>
+                  <tk-promo-card variant="ticket" label="Demo fund · fictional">
+                    <b slot="value">+9,2 % · 3 years</b>
+                    <tk-button class="inv-ticket-cta" slot="actions" variant="primary">Open an account</tk-button>
+                  </tk-promo-card>
+                </div>
+              </div>
+              <p class="demo-card__hint">The 247px-wide register of the measured live ticket;
+                the note link is consumer content.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Similar stocks rail</h3>
+              <div class="inv-demo">
+                <tk-carousel label="Similar stocks" dots>
+                  <a class="inv-rail-card" href="#cards-rails">
+                    <span class="inv-inst">
+                      <span class="inv-roundel" aria-hidden="true">S</span>
+                      <span class="inv-rail-card__title">Sberbank</span>
+                    </span>
+                    <span class="inv-rail-card__price">318,44 ₽</span>
+                    <span class="inv-rail-card__delta inv-rail-card__delta--up">+1,46 %</span>
+                  </a>
+                  <a class="inv-rail-card" href="#cards-rails">
+                    <span class="inv-inst">
+                      <span class="inv-roundel" aria-hidden="true">L</span>
+                      <span class="inv-rail-card__title">Lukoil</span>
+                    </span>
+                    <span class="inv-rail-card__price">684,50 ₽</span>
+                    <span class="inv-rail-card__delta inv-rail-card__delta--down">−0,18 %</span>
+                  </a>
+                  <a class="inv-rail-card" href="#cards-rails">
+                    <span class="inv-inst">
+                      <span class="inv-roundel" aria-hidden="true">G</span>
+                      <span class="inv-rail-card__title">Gazprom</span>
+                    </span>
+                    <span class="inv-rail-card__price">128,36 ₽</span>
+                    <span class="inv-rail-card__delta inv-rail-card__delta--up">+0,51 %</span>
+                  </a>
+                  <a class="inv-rail-card" href="#cards-rails">
+                    <span class="inv-inst">
+                      <span class="inv-roundel" aria-hidden="true">M</span>
+                      <span class="inv-rail-card__title">MTS</span>
+                    </span>
+                    <span class="inv-rail-card__price">214,60 ₽</span>
+                    <span class="inv-rail-card__delta inv-rail-card__delta--up">+0,8 %</span>
+                  </a>
+                  <a class="inv-rail-card" href="#cards-rails">
+                    <span class="inv-inst">
+                      <span class="inv-roundel" aria-hidden="true">P</span>
+                      <span class="inv-rail-card__title">Polyus</span>
+                    </span>
+                    <span class="inv-rail-card__price">1 812,00 ₽</span>
+                    <span class="inv-rail-card__delta inv-rail-card__delta--up">+0,42 %</span>
+                  </a>
+                </tk-carousel>
+              </div>
+              <p class="demo-card__hint">Card geometry is consumer-side (the 230px register of
+                the live “similar stocks” rail); tickers and prices are fictional.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Code — promo ticket &amp; carousel</summary>
+            <pre><code>&lt;tk-promo-card variant="ticket" label="Demo bond · fictional"&gt;
+  &lt;b slot="value"&gt;14,7 % YTM&lt;/b&gt;
+  &lt;tk-button slot="actions" variant="primary"&gt;Open an account&lt;/tk-button&gt;
+  &lt;span slot="note"&gt;Already have one? &lt;tk-link href="#"&gt;Sign in&lt;/tk-link&gt;&lt;/span&gt;
+&lt;/tk-promo-card&gt;
+
+&lt;tk-carousel label="Similar stocks" dots&gt;
+  &lt;a class="my-card" href="/invest/stocks/SBER/"&gt;…&lt;/a&gt;
+&lt;/tk-carousel&gt;</code></pre>
+          </details>
+        </section>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-container">
+        <p class="site-footer__disclaimer">pillkit is an unofficial, independent study
+        project recreating a banking-grade design language for educational purposes. It is
+        not affiliated with, endorsed by, or connected to T-Bank / TCS Holding; no T-Bank
+        trademarks are used in the published output.</p>
+        <p class="site-footer__meta">Code &amp; docs — MIT (fonts separately licensed) ·
+        <a href="https://github.com/salacoste/tinkoff-ui-kit">GitHub</a> ·
+        <a href="/tinkoff-ui-kit/storybook/">Storybook docs</a> ·
+        <a href="https://github.com/salacoste/tinkoff-ui-kit/releases">Releases</a></p>
+      </div>
+    </footer>
+
+    <script type="module">
+      // Invest showcase wiring — plain ESM (no TypeScript syntax: the lint hook
+      // parses website sources with the base parser). Array-carrying properties
+      // (tk-chart points, tk-data-table columns/rows, tk-tabs tabs) have no
+      // attribute channel, so they are set from script once the elements are
+      // upgraded. All figures are FICTIONAL demo data.
+      const ready = (tag) => customElements.whenDefined(tag);
+
+      ready('tk-chart').then(() => {
+        const hours = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'];
+        const series = (values) =>
+          values.map((value, i) => ({ value, label: hours[i % hours.length] }));
+
+        const grow = document.getElementById('inv-chart-grow');
+        if (grow) {
+          grow.points = series([101.2, 102.1, 101.8, 103.4, 104.0, 103.6, 105.2]);
+        }
+        const fall = document.getElementById('inv-chart-fall');
+        if (fall) {
+          fall.points = series([98.4, 97.9, 98.2, 96.8, 97.1, 95.6, 94.8]);
+        }
+      });
+
+      ready('tk-data-table').then(() => {
+        const table = document.getElementById('inv-table');
+        if (!table) return;
+
+        const row = (name, ticker, price, lot, deltaRub, deltaPct, delta) => ({
+          href: '#tables',
+          cells: {
+            name: { primary: name, secondary: ticker },
+            price: { primary: price, secondary: lot },
+            change: { primary: deltaRub, secondary: deltaPct, delta },
+          },
+        });
+
+        table.caption = 'Stock catalog (fictional prices)';
+        table.columns = [
+          { key: 'name', header: 'Name', width: '1fr' },
+          { key: 'price', header: 'Price', align: 'end' },
+          { key: 'change', header: 'Change', align: 'end' },
+        ];
+        table.rows = [
+          row('Sberbank', 'SBER', '318,44 ₽', '1 lot = 10 shares', '+12,55 ₽', '+1,46 %', 'positive'),
+          row('Lukoil', 'LKOH', '684,50 ₽', '1 lot = 1 share', '−1,2 ₽', '−0,18 %', undefined),
+          row('Gazprom', 'GAZP', '128,36 ₽', '1 lot = 10 shares', '+0,66 ₽', '+0,51 %', 'positive'),
+          row('Norilsk Nickel', 'GMKN', '121,80 ₽', '1 lot = 10 shares', '−0,9 ₽', '−0,63 %', 'negative'),
+          row('MTS', 'MTSS', '214,60 ₽', '1 lot = 10 shares', '+2,1 ₽', '+0,8 %', 'positive'),
+          row('Magnit', 'MGNT', '4 120,00 ₽', '1 lot = 1 share', '−25,0 ₽', '−1,1 %', 'negative'),
+          row('Polyus', 'PLZL', '1 812,00 ₽', '1 lot = 1 share', '+14,4 ₽', '+0,42 %', 'positive'),
+        ];
+      });
+
+      ready('tk-tabs').then(() => {
+        const tabs = document.getElementById('inv-ticket-tabs');
+        if (tabs) {
+          tabs.tabs = [
+            { value: 'market', label: 'Market' },
+            { value: 'limit', label: 'Limit' },
+            { value: 'stop', label: 'Stop' },
+            { value: 'iceberg', label: 'Iceberg', disabled: true },
+          ];
+        }
+      });
+
+      // Terminal ticket state (the pattern-story mold): the closure is the
+      // state holder, DOM queries are the update channel. Steppers disable at
+      // the 1..99 boundary; every stepper pair in the ticket shares the state.
+      ready('tk-input').then(() => {
+        const ticket = document.getElementById('inv-ticket');
+        if (!ticket) return;
+
+        const state = { lots: 1 };
+        const sync = () => {
+          ticket.querySelectorAll('tk-input.inv-lots').forEach((field) => {
+            field.value = String(state.lots);
+          });
+          ticket.querySelectorAll('button.inv-step[data-step="-1"]').forEach((btn) => {
+            const atFloor = state.lots <= 1;
+            btn.disabled = atFloor;
+            if (atFloor) btn.setAttribute('aria-disabled', 'true');
+            else btn.removeAttribute('aria-disabled');
+          });
+          ticket.querySelectorAll('button.inv-step[data-step="1"]').forEach((btn) => {
+            const atCeil = state.lots >= 99;
+            btn.disabled = atCeil;
+            if (atCeil) btn.setAttribute('aria-disabled', 'true');
+            else btn.removeAttribute('aria-disabled');
+          });
+        };
+
+        ticket.addEventListener('click', (event) => {
+          const btn = event.target.closest('button.inv-step');
+          if (!btn) return;
+          const delta = Number(btn.dataset.step);
+          state.lots = Math.min(99, Math.max(1, state.lots + delta));
+          sync();
+        });
+
+        ticket.addEventListener('value-change', (event) => {
+          const field = event.target;
+          if (!field.matches || !field.matches('tk-input.inv-lots')) return;
+          const parsed = Number.parseInt(String(event.detail.value).trim(), 10);
+          if (Number.isFinite(parsed)) {
+            state.lots = Math.min(99, Math.max(1, parsed));
+          }
+          sync();
+        });
+      });
+    </script>
+  </body>
+</html>

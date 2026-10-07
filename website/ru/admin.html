@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>pillkit — витрина консоли (Админ)</title>
+    <script type="module" src="/src/admin.ts"></script>
+    <style>
+      /*
+       * Стили страницы «Админ» (RU). Общие классы хрома (.site-*, .section,
+       * .demo-grid, .demo-card, .code-details) живут в src/styles/site.css;
+       * ниже — только специфика страницы, токены на первом месте.
+       */
+
+      .admin-hero {
+        padding: var(--tk-space-64) 0 var(--tk-space-48);
+        background: var(--tk-color-surface-muted);
+        border-bottom: 1px solid var(--tk-color-border-default);
+      }
+
+      .admin-hero__eyebrow {
+        margin: 0 0 var(--tk-space-12);
+        font-family: var(--tk-font-mono);
+        font-size: var(--tk-text-heading-6-size, 0.8125rem);
+        font-weight: var(--tk-text-heading-6-weight, 500);
+        line-height: var(--tk-text-heading-6-leading, 1.4);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--tk-color-text-secondary);
+      }
+
+      .admin-hero h1 {
+        margin: 0 0 var(--tk-space-16);
+        font-family: var(--tk-font-heading);
+        font-size: var(--tk-text-heading-1-size, 2.5rem);
+        font-weight: var(--tk-text-heading-1-weight, 600);
+        line-height: var(--tk-text-heading-1-leading, 1.2);
+        color: var(--tk-color-text-primary);
+      }
+
+      .admin-hero__lead {
+        margin: 0 0 var(--tk-space-32);
+        max-width: 62ch;
+        font-size: var(--tk-text-heading-4-size, 1.125rem);
+        line-height: 1.55;
+        color: var(--tk-color-text-secondary);
+      }
+
+      .admin-hero__cta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--tk-space-16);
+        align-items: center;
+      }
+
+      .admin-hero__cta .admin-hero__browse {
+        font-size: var(--tk-text-heading-5-size, 1rem);
+      }
+
+      /* Внутренности демо-карточек */
+
+      .admin-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--tk-space-16);
+        align-items: center;
+      }
+
+      .admin-stack {
+        display: flex;
+        flex-direction: column;
+        gap: var(--tk-space-16);
+      }
+
+      /* Консольный регистр: монохромные бейджи табов и плотный таблист */
+
+      .admin-tabs {
+        --tk-badge-fill: var(--tk-color-gray-100);
+        --tk-badge-text: var(--tk-color-gray-600);
+      }
+
+      .admin-tabpanel {
+        padding: var(--tk-space-16) 0 0;
+        min-height: 72px;
+      }
+
+      .admin-tabpanel p {
+        margin: 0;
+        color: var(--tk-color-text-secondary);
+      }
+
+      /* Тулбар: плотная полоса управления на одной линии */
+
+      .admin-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--tk-space-12);
+        align-items: center;
+        padding: var(--tk-space-12);
+        border: 1px solid var(--tk-color-border-default);
+        border-radius: var(--tk-radius-lg);
+        background: var(--tk-color-surface-base);
+      }
+
+      /* Компактное пустое состояние (консольный регистр) */
+
+      .admin-empty {
+        --tk-empty-state-disc-size: 72px;
+        --tk-empty-state-gap: var(--tk-space-12);
+        --tk-empty-state-text-gap: var(--tk-space-8);
+      }
+
+      .admin-toolbar__search { flex: 1 1 240px; }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-container site-header__row">
+        <a class="site-logo" href="/tinkoff-ui-kit/ru/">pillkit</a>
+        <nav class="site-nav" aria-label="Основная навигация">
+          <a href="/tinkoff-ui-kit/ru/bank.html">Банк</a>
+          <a href="/tinkoff-ui-kit/ru/invest.html">Инвестиции</a>
+          <a href="/tinkoff-ui-kit/ru/admin.html" aria-current="page">Админ</a>
+          <a href="/tinkoff-ui-kit/ru/tj.html">ТЖ</a>
+          <a href="/tinkoff-ui-kit/storybook/">Документация</a>
+        </nav>
+        <div class="site-header__actions">
+          <button class="site-theme-toggle" type="button" aria-label="Переключить тёмную тему"
+            onclick="document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? '' : 'dark'">◐</button>
+          <a class="site-gh" href="https://github.com/salacoste/tinkoff-ui-kit">GitHub</a>
+          <a class="site-lang" href="/tinkoff-ui-kit/admin.html" lang="en" hreflang="en">English version</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="admin-scope">
+      <section class="admin-hero" aria-labelledby="admin-hero-title">
+        <div class="site-container">
+          <p class="admin-hero__eyebrow">Витрина семейства · консольный регистр</p>
+          <h1 id="admin-hero-title">Семейство Админ</h1>
+          <p class="admin-hero__lead">
+            Те же 46 атомов tk-* — консольным акцентом. Регистр для внутренних инструментов,
+            бэк-офисных консолей и дашбордов: плотные данные, хром-табы со счётчиками и обратная
+            связь на каждом асинхронном действии. Всем по-прежнему правит один токенный слой:
+            переключите тему кнопкой в шапке — перекрасится вся консоль. Всё ниже живое.
+          </p>
+          <div class="admin-hero__cta">
+            <tk-button variant="primary" size="hero" href="/tinkoff-ui-kit/storybook/">Открыть документацию</tk-button>
+            <tk-link class="admin-hero__browse" href="/tinkoff-ui-kit/ru/bank.html">Сравнить с банковским регистром</tk-link>
+          </div>
+        </div>
+      </section>
+
+      <div class="site-container">
+
+        <section class="section" id="console-tabs" aria-labelledby="console-tabs-title">
+          <h2 class="section__title" id="console-tabs-title">Хром-табы консоли</h2>
+          <p class="section__lead">
+            Вторичная навигация авторизованной зоны: подчёркивание-индикатор и монохромные
+            счётчики-бейджи держат ритм тихим, пока очереди меняют размер.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Переключатель очередей со счётчиками</h3>
+              <tk-tabs id="admin-tabs-console" class="admin-tabs" indicator="underline">
+                <div slot="tab-0" class="admin-tabpanel">
+                  <p>Рабочая очередь: 48 документов за день, старший ждёт 26 минут.</p>
+                </div>
+                <div slot="tab-1" class="admin-tabpanel">
+                  <p>Пять документов ждут второй подписи до отсечки в 18:00.</p>
+                </div>
+                <div slot="tab-2" class="admin-tabpanel">
+                  <p>Исполненные и отклонённые документы на время аудиторского окна.</p>
+                </div>
+              </tk-tabs>
+              <p class="demo-card__hint">indicator="underline" плюс серые хуки --tk-badge-* на предке tk-tabs превращают продуктовые табы в хром-табы.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Код</summary>
+            <pre><code>&lt;tk-tabs indicator="underline" class="console-tabs"&gt;
+  &lt;div slot="tab-0"&gt;&lt;p&gt;…панель очереди…&lt;/p&gt;&lt;/div&gt;
+  &lt;div slot="tab-1"&gt;&lt;p&gt;…панель подписи…&lt;/p&gt;&lt;/div&gt;
+&lt;/tk-tabs&gt;
+
+&lt;style&gt;
+  .console-tabs {
+    --tk-badge-fill: var(--tk-color-gray-100);
+    --tk-badge-text: var(--tk-color-gray-600);
+  }
+&lt;/style&gt;
+
+&lt;script type="module"&gt;
+  document.querySelector('.console-tabs').tabs = [
+    { value: 'queue', label: 'Очередь', badge: 48 },
+    { value: 'sign', label: 'На подпись', badge: 5 },
+    { value: 'archive', label: 'Архив' },
+  ];
+&lt;/script&gt;</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="data" aria-labelledby="data-title">
+          <h2 class="section__title" id="data-title">Данные</h2>
+          <p class="section__lead">
+            Сердце консоли: типографическая таблица с финансовыми ячейками и бейдж-шкала для
+            статусов, которые ячейка не тонирует. Здесь строки инертны; href превращает их в
+            ссылки, когда реестру нужна навигация.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Очередь платежей</h3>
+              <tk-data-table id="admin-table-queue"></tk-data-table>
+              <p class="demo-card__hint">.columns + .rows: двухстрочные ячейки, буквенные лого из тикера, цвета дельт на возвратах и поступлениях.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Шкала статусов</h3>
+              <div class="admin-row">
+                <tk-badge variant="neutral">На подписи</tk-badge>
+                <tk-badge variant="attention" count="3"></tk-badge>
+                <tk-badge variant="positive">Исполнен</tk-badge>
+                <tk-badge variant="negative">Отклонён</tk-badge>
+                <tk-badge variant="stat">+3.8%</tk-badge>
+              </div>
+              <p class="demo-card__hint">одна грамматика статусов для фильтров, тулбаров и шапок таблиц — без второго оттенка смысла на экран.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Код</summary>
+            <pre><code>&lt;tk-data-table id="queue"&gt;&lt;/tk-data-table&gt;
+&lt;tk-badge variant="neutral"&gt;На подписи&lt;/tk-badge&gt;
+&lt;tk-badge variant="attention" count="3"&gt;&lt;/tk-badge&gt;
+
+&lt;script type="module"&gt;
+  const queue = document.getElementById('queue');
+  queue.columns = [
+    { key: 'doc', header: 'Документ', width: '1.4fr' },
+    { key: 'party', header: 'Контрагент', width: '1.2fr' },
+    { key: 'amount', header: 'Сумма', align: 'end' },
+    { key: 'status', header: 'Статус', align: 'end' },
+  ];
+  queue.rows = [
+    { doc: { primary: 'Платёжное поручение 8-4471', secondary: '6 окт · 10:12' },
+      party: { primary: 'ООО «Тюльпан»', secondary: 'TLP', logo: 'letter' },
+      amount: { primary: '12 400 ₽' },
+      status: { primary: 'На подписи' } },
+  ];
+&lt;/script&gt;</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="toolbar" aria-labelledby="toolbar-title">
+          <h2 class="section__title" id="toolbar-title">Тулбар</h2>
+          <p class="section__lead">
+            Одна плотная полоса над данными: поиск, главное действие и переливающиеся команды
+            за кебабом — цели по 44px сохраняются даже в компактном размере.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Тулбар реестра</h3>
+              <div class="admin-toolbar">
+                <tk-input class="admin-toolbar__search" type="search" label="Поиск по реестру" sr-only placeholder="Документ, контрагент, сумма"></tk-input>
+                <tk-button variant="primary" size="compact">Новый платёж</tk-button>
+                <tk-menu-popover label="Команды реестра">
+                  <tk-button slot="anchor" variant="secondary" size="compact" aria-label="Ещё команды">
+                    <svg slot="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <circle cx="5" cy="12" r="1.6" fill="currentColor"></circle>
+                      <circle cx="12" cy="12" r="1.6" fill="currentColor"></circle>
+                      <circle cx="19" cy="12" r="1.6" fill="currentColor"></circle>
+                    </svg>
+                  </tk-button>
+                  <tk-menu-item>Экспорт реестра в CSV</tk-menu-item>
+                  <tk-menu-item>Подписать выбранные</tk-menu-item>
+                  <tk-menu-divider></tk-menu-divider>
+                  <tk-menu-item variant="destructive">Отменить выбранные</tk-menu-item>
+                </tk-menu-popover>
+              </div>
+              <p class="demo-card__hint">type="search" + sr-only label держат полосу визуальной; aria-label кебаба заменяет отсутствующий текст.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Код</summary>
+            <pre><code>&lt;div class="toolbar"&gt;
+  &lt;tk-input type="search" sr-only label="Поиск по реестру" placeholder="Документ, контрагент"&gt;&lt;/tk-input&gt;
+  &lt;tk-button variant="primary" size="compact"&gt;Новый платёж&lt;/tk-button&gt;
+  &lt;tk-menu-popover label="Команды реестра"&gt;
+    &lt;tk-button slot="anchor" variant="secondary" size="compact" aria-label="Ещё команды"&gt;…кебаб…&lt;/tk-button&gt;
+    &lt;tk-menu-item&gt;Экспорт реестра в CSV&lt;/tk-menu-item&gt;
+    &lt;tk-menu-item variant="destructive"&gt;Отменить выбранные&lt;/tk-menu-item&gt;
+  &lt;/tk-menu-popover&gt;
+&lt;/div&gt;</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="states" aria-labelledby="states-title">
+          <h2 class="section__title" id="states-title">Пустые состояния и загрузка</h2>
+          <p class="section__lead">
+            Консоль живёт в ожидании. Скелетоны держат геометрию будущей таблицы, спиннеры
+            помечают блокирующее действие, а пустое состояние объясняет, почему здесь ничего
+            нет — компактируется хуками до консольной плотности.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Реестр грузится</h3>
+              <div class="admin-stack">
+                <tk-skeleton variant="line" width="55%"></tk-skeleton>
+                <tk-skeleton variant="line" width="100%"></tk-skeleton>
+                <tk-skeleton variant="line" width="100%"></tk-skeleton>
+                <tk-skeleton variant="line" width="92%"></tk-skeleton>
+              </div>
+              <p class="demo-card__hint">скелетон повторяет ритм строк таблицы — вёрстка не прыгает, когда данные приходят.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Блокирующее действие</h3>
+              <div class="admin-row">
+                <tk-button variant="primary" loading>Подписываем 5 документов</tk-button>
+                <tk-spinner size="32" label="Загружаем реестр"></tk-spinner>
+                <tk-spinner size="24"></tk-spinner>
+              </div>
+              <p class="demo-card__hint">loading на кнопке — для самого действия; голый спиннер — для областей, обновляемых на месте.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Пустой реестр</h3>
+              <tk-empty-state class="admin-empty" heading="В очереди ничего нет">
+                <p slot="description">Все документы 6 октября исполнены. Новые появляются здесь автоматически.</p>
+                <tk-link slot="action" href="/tinkoff-ui-kit/storybook/">Контракт пустых состояний в доках</tk-link>
+              </tk-empty-state>
+              <p class="demo-card__hint">--tk-empty-state-disc-size/gap/text-gap сжимают маркетинговый дефолт в консольный блок.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Код</summary>
+            <pre><code>&lt;tk-skeleton variant="line" width="100%"&gt;&lt;/tk-skeleton&gt;
+&lt;tk-button variant="primary" loading&gt;Подписываем 5 документов&lt;/tk-button&gt;
+&lt;tk-empty-state class="console-empty" heading="В очереди ничего нет"&gt;
+  &lt;p slot="description"&gt;Все документы 6 октября исполнены.&lt;/p&gt;
+&lt;/tk-empty-state&gt;
+
+&lt;style&gt;
+  .console-empty {
+    --tk-empty-state-disc-size: 72px;
+    --tk-empty-state-gap: var(--tk-space-12);
+    --tk-empty-state-text-gap: var(--tk-space-8);
+  }
+&lt;/style&gt;</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="confirmations" aria-labelledby="confirmations-title">
+          <h2 class="section__title" id="confirmations-title">Подтверждения</h2>
+          <p class="section__lead">
+            Деструктивные действия консоли подтверждаются модалкой, а результат доносится
+            тостом — фокус возвращается на триггер в обоих случаях, так что оператор с
+            клавиатуры не теряет место в очереди.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Отмена документов</h3>
+              <tk-button variant="primary" size="card" data-modal-open="admin-modal-cancel">Отменить 2 выбранных</tk-button>
+              <p class="demo-card__hint">Esc и скрим закрывают безопасно; последствие несёт деструктивная кнопка, а не вёрстка.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Тосты-исходы</h3>
+              <div class="admin-row">
+                <tk-button variant="secondary" size="compact" data-toast="2 документа отменены" data-toast-action="Вернуть">Успешный исход</tk-button>
+                <tk-button variant="secondary" size="compact" data-toast="Подпись отклонена — токен истёк" data-toast-variant="destructive" data-toast-duration="8000">Ошибочный исход</tk-button>
+              </div>
+              <p class="demo-card__hint">общий стек держит три последних; ошибки, которые надо читать, получают длиннее duration.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Код</summary>
+            <pre><code>&lt;tk-modal id="cancel" heading="Отменить 2 выбранных документа?"&gt;
+  &lt;p&gt;Контрагенты получат уведомления. Отменить из очереди это нельзя.&lt;/p&gt;
+  &lt;tk-button slot="actions" variant="secondary"&gt;Оставить&lt;/tk-button&gt;
+  &lt;tk-button slot="actions" variant="primary"&gt;Отменить документы&lt;/tk-button&gt;
+&lt;/tk-modal&gt;
+
+&lt;script type="module"&gt;
+  document.getElementById('cancel').open = true;
+&lt;/script&gt;</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="wayfinding" aria-labelledby="wayfinding-title">
+          <h2 class="section__title" id="wayfinding-title">Ориентирование</h2>
+          <p class="section__lead">
+            Глубоким консолям нужны обе шкалы: хлебные крошки говорят, где в иерархии вы,
+            пагинатор — где в наборе данных; по одному событию у каждой, без перезагрузок.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Крошки + пагинатор</h3>
+              <tk-breadcrumb id="admin-breadcrumb" label="Вы здесь"></tk-breadcrumb>
+              <tk-pagination count="48" default-page="3" show-more more-label="Загрузить ещё 20" label="Страницы реестра"></tk-pagination>
+              <p class="demo-card__hint">show-more рисует полосу «загрузить следующий кусок» рядом с переходами страниц — выбирайте одну на реальный датасет, не обе.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Код</summary>
+            <pre><code>&lt;tk-breadcrumb id="crumbs" label="Вы здесь"&gt;&lt;/tk-breadcrumb&gt;
+&lt;tk-pagination count="48" default-page="3" show-more more-label="Загрузить ещё 20"&gt;&lt;/tk-pagination&gt;
+
+&lt;script type="module"&gt;
+  document.getElementById('crumbs').items = [
+    { label: 'Консоль', href: '/tinkoff-ui-kit/ru/admin.html' },
+    { label: 'Платежи' },
+    { label: 'Реестр 6 октября' },
+  ];
+&lt;/script&gt;</code></pre>
+          </details>
+        </section>
+
+      </div>
+    </main>
+
+    <tk-modal id="admin-modal-cancel" heading="Отменить 2 выбранных документа?">
+      <p>Оба платёжных поручения останутся в архиве, контрагенты получат уведомления. Вернуть их в очередь нельзя.</p>
+      <tk-button slot="actions" variant="secondary" data-modal-close>Оставить</tk-button>
+      <tk-button slot="actions" variant="primary" data-modal-close data-toast="2 документа отменены" data-toast-action="Вернуть">Отменить документы</tk-button>
+    </tk-modal>
+
+    <footer class="site-footer">
+      <div class="site-container">
+        <p class="site-footer__disclaimer">Неофициальный учебный проект. pillkit (tinkoff-ui-kit) —
+        независимое воссоздание дизайн-языка Тинькофф (Т-Банка) исключительно в учебных целях.
+        Проект не аффилирован с Т-Банком / ТКС Холдинг, не одобрен ими и никак с ними не связан;
+        товарные знаки Т-Банка в публикуемом результате не используются.</p>
+        <p class="site-footer__meta">Код и документация — MIT (шрифты лицензируются отдельно) ·
+        <a href="https://github.com/salacoste/tinkoff-ui-kit">GitHub</a> ·
+        <a href="/tinkoff-ui-kit/storybook/">Storybook-документация</a> ·
+        <a href="https://github.com/salacoste/tinkoff-ui-kit/releases">Релизы</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

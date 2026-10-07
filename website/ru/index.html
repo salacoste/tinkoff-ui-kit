@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>pillkit — UI-кит банковского класса для любого стека</title>
+    <meta
+      name="description"
+      content="Фреймворк-агностичные UI-компоненты банковского класса: 56 Lit custom elements, настоящая тёмная тема на слое дизайн-токенов, сгенерированные React-обёртки и 2 755 автоматических визуальных и доступностных проверок за каждым релизом."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="pillkit — UI-кит банковского класса для любого стека" />
+    <meta
+      property="og:description"
+      content="56 Lit custom elements, двухслойная система токенов с настоящей тёмной темой, сгенерированные React-обёртки и 2 755 автоматических проверок."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23FFDD2D'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23333333'/%3E%3C/svg%3E"
+    />
+    <script type="module" src="/src/main.ts"></script>
+  </head>
+  <body>
+    <a class="site-skip" href="#main">Перейти к содержимому</a>
+    <header class="site-header">
+      <div class="site-container site-header__row">
+        <a class="site-logo" href="/tinkoff-ui-kit/ru/">pillkit</a>
+        <nav class="site-nav" aria-label="Основная навигация">
+          <a href="/tinkoff-ui-kit/ru/bank.html">Банк</a>
+          <a href="/tinkoff-ui-kit/ru/invest.html">Инвестиции</a>
+          <a href="/tinkoff-ui-kit/ru/admin.html">Админ</a>
+          <a href="/tinkoff-ui-kit/ru/tj.html">ТЖ</a>
+          <a href="/tinkoff-ui-kit/storybook/">Документация</a>
+        </nav>
+        <div class="site-header__actions">
+          <button class="site-theme-toggle" type="button" aria-label="Переключить тёмную тему"
+            onclick="document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? '' : 'dark'">◐</button>
+          <a class="site-gh" href="https://github.com/salacoste/tinkoff-ui-kit">GitHub</a>
+          <a class="site-lang" href="/tinkoff-ui-kit/" lang="en" hreflang="en">English version</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- 1 · Герой -->
+      <section class="hero">
+        <div class="site-container">
+          <p class="hero__eyebrow">v1.9.0 · MIT · Lit 3 · Storybook 10</p>
+          <h1 class="hero__title">UI-компоненты банковского класса для любого стека.</h1>
+          <p class="hero__sub">
+            pillkit воссоздаёт производственный дизайн-язык банка как фреймворк-агностичные
+            custom elements — двухслойная система токенов с настоящей тёмной темой,
+            сгенерированные React-обёртки и автоматический визуально-доступностный
+            контур за каждым релизом.
+          </p>
+          <div class="hero__ctas">
+            <tk-button variant="inverse" size="hero" href="/tinkoff-ui-kit/storybook/">
+              Открыть живую документацию
+            </tk-button>
+            <a class="hero__link" href="https://github.com/salacoste/tinkoff-ui-kit#quick-start">
+              Начать работу&nbsp;→
+            </a>
+            <a class="hero__link" href="https://github.com/salacoste/tinkoff-ui-kit">
+              Поставить звезду на GitHub&nbsp;↗
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2 · Полоса фактов -->
+      <div class="site-container">
+        <dl class="stats">
+          <div class="stat">
+            <dt class="stat__label">компоненты — 46 tk-* + 10 tj-*</dt>
+            <dd class="stat__value">56</dd>
+          </div>
+          <div class="stat">
+            <dt class="stat__label">автоматических проверок: визуальные + axe</dt>
+            <dd class="stat__value">2&nbsp;755</dd>
+          </div>
+          <div class="stat">
+            <dt class="stat__label">сгенерированных React-обёрток</dt>
+            <dd class="stat__value">51</dd>
+          </div>
+          <div class="stat">
+            <dt class="stat__label">дизайн-токены — 151 tk + 107 tj</dt>
+            <dd class="stat__value">258</dd>
+          </div>
+          <div class="stat">
+            <dt class="stat__label">темы — светлая и настоящая тёмная</dt>
+            <dd class="stat__value">2</dd>
+          </div>
+          <div class="stat">
+            <dt class="stat__label">рантайм-зависимостей CSS-in-JS</dt>
+            <dd class="stat__value">0</dd>
+          </div>
+        </dl>
+      </div>
+
+      <!-- 3 · Семейства -->
+      <section class="section" id="families">
+        <div class="site-container">
+          <h2 class="section__title">Один кит — четыре продуктовых языка</h2>
+          <p class="section__lead">
+            Одна дисциплина в четырёх регистрах. Выберите поверхность, которую строите, —
+            каждое семейство выходит из того же токенового конвейера и того же
+            верификационного контура.
+          </p>
+          <div class="family-grid">
+            <a class="family-card" href="/tinkoff-ui-kit/ru/bank.html">
+              <p class="family-card__tag">Банк</p>
+              <h3 class="family-card__name">Основной регистр</h3>
+              <p class="family-card__desc">
+                Pill-контролы, формы, оверлеи и маркетинговые поверхности — 46
+                компонентов tk-* на токенах --tk-*.
+              </p>
+              <span class="family-card__go">Открыть витрину →</span>
+            </a>
+            <a class="family-card family-card--invest" href="/tinkoff-ui-kit/ru/invest.html">
+              <p class="family-card__tag">Инвестиции</p>
+              <h3 class="family-card__name">Рыночные данные</h3>
+              <p class="family-card__desc">
+                Котировки, спарклайн-графики, страницы инструментов и торговые действия
+                в инвестиционном дизайн-языке.
+              </p>
+              <span class="family-card__go">Открыть витрину →</span>
+            </a>
+            <a class="family-card family-card--admin" href="/tinkoff-ui-kit/ru/admin.html">
+              <p class="family-card__tag">Админ</p>
+              <h3 class="family-card__name">Консольное семейство</h3>
+              <p class="family-card__desc">
+                Плотные таблицы, фильтры, реестры настроек и статус-бейджи для
+                настоящих операционных данных.
+              </p>
+              <span class="family-card__go">Открыть витрину →</span>
+            </a>
+            <a class="family-card family-card--tj" href="/tinkoff-ui-kit/ru/tj.html">
+              <p class="family-card__tag">ТЖ</p>
+              <h3 class="family-card__name">Редакционный суб-кит</h3>
+              <p class="family-card__desc">
+                10 компонентов tj-* со своими токенами --tj-* и нулевыми перекрёстными
+                зависимостями с банковским ядром.
+              </p>
+              <span class="family-card__go">Открыть витрину →</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4 · Живые компоненты -->
+      <section class="section section--muted" id="demo">
+        <div class="site-container">
+          <h2 class="section__title">Живые компоненты, не скриншоты</h2>
+          <p class="section__lead">
+            Всё ниже — настоящий кит, работающий прямо на этой странице. Переключите
+            тему в шапке — все поверхности перестроятся, включая саму страницу.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Кнопка</h3>
+              <div class="demo-row">
+                <tk-button variant="primary" size="card">Продолжить</tk-button>
+                <tk-button variant="secondary" size="card">Подробнее</tk-button>
+                <tk-button variant="inverse" size="card">Открыть счёт</tk-button>
+              </div>
+              <div class="demo-row">
+                <tk-button variant="primary" size="compact">Компактная</tk-button>
+                <tk-button variant="secondary" size="card" loading>Загрузка</tk-button>
+                <tk-button variant="secondary" size="card" disabled>Недоступна</tk-button>
+              </div>
+              <p class="demo-card__hint">3 варианта × 3 размера, состояния loading и disabled, режим href.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Тумблер</h3>
+              <div class="demo-row demo-row--col">
+                <tk-switch label="Push об операциях" default-checked></tk-switch>
+                <tk-switch label="Email-дайджест недели"></tk-switch>
+                <tk-switch label="SMS о входах (тариф «Про»)" disabled></tk-switch>
+              </div>
+              <p class="demo-card__hint">Семантика APG Switch поверх нативного чекбокса — Space, Enter, клик по подписи.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Поле ввода</h3>
+              <tk-input label="Email" placeholder="name@example.com" type="email"></tk-input>
+              <tk-input label="Промокод" error="Проверьте код — 6 цифр"></tk-input>
+              <p class="demo-card__hint">Видимые подписи, плейсхолдеры, которые их никогда не заменяют, ошибки потребителя.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Бейдж</h3>
+              <div class="demo-row">
+                <tk-badge variant="positive">+3,8%</tk-badge>
+                <tk-badge variant="negative">−2,95%</tk-badge>
+                <tk-badge variant="neutral">Ожидает</tk-badge>
+                <tk-badge variant="incentive">+30%</tk-badge>
+              </div>
+              <div class="demo-row">
+                <tk-badge variant="attention" count="3"></tk-badge>
+                <tk-badge variant="stat" count="12"></tk-badge>
+              </div>
+              <p class="demo-card__hint">Шесть тонов плюс динамические счётчики с потолком 99+.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Прогресс</h3>
+              <tk-progress-bar label="Профиль заполнен" value="30"></tk-progress-bar>
+              <tk-progress-bar label="Синхронизация" indeterminate></tk-progress-bar>
+              <p class="demo-card__hint">Определённый и неопределённый треки с вежливыми объявлениями.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Спиннер</h3>
+              <div class="demo-row">
+                <tk-spinner size="16" label="Загружаем"></tk-spinner>
+                <tk-spinner size="24" label="Загружаем"></tk-spinner>
+                <tk-spinner size="32" label="Загружаем"></tk-spinner>
+              </div>
+              <p class="demo-card__hint">Объявляется как «занято», замирает слоем reduced-motion.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Скелет</h3>
+              <div class="demo-row">
+                <tk-skeleton variant="circle" width="56px" height="56px"></tk-skeleton>
+                <tk-skeleton width="180px" height="20px"></tk-skeleton>
+              </div>
+              <tk-skeleton variant="rect" height="96px"></tk-skeleton>
+              <p class="demo-card__hint">Загрузочные заглушки, совпадающие с макетом загруженного состояния.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Аватар</h3>
+              <div class="demo-row">
+                <tk-avatar
+                  name="Мария Оганова"
+                  src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23CBCFD3'/%3E%3Ccircle cx='32' cy='26' r='12' fill='white'/%3E%3Cpath d='M10 60c4-12 12-18 22-18s18 6 22 18' fill='white'/%3E%3C/svg%3E"
+                ></tk-avatar>
+                <tk-avatar name="Иван Петров"></tk-avatar>
+                <tk-avatar name="Ольга Тарасова" size="32px"></tk-avatar>
+              </div>
+              <p class="demo-card__hint">Картинки, инициалы как фолбэк и пустые декоративные состояния.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 · Совместимость со стеками -->
+      <section class="section" id="stack">
+        <div class="site-container">
+          <h2 class="section__title">Фреймворк-агностичен по построению</h2>
+          <p class="section__lead">
+            Кит — это Lit 3 custom elements плюс обычные CSS custom properties: любой
+            современный фреймворк потребляет их нативно. React дополнительно получает
+            сгенерированные обёртки с типизированными пропс и развёрнутыми полезными
+            нагрузками событий.
+          </p>
+          <div class="stack-grid">
+            <div class="stack-card">
+              <p class="stack-card__name">React 18 / 19</p>
+              <p class="stack-card__text">
+                Обёртки генерируются из Custom Elements Manifest — пропсы и события
+                не могут разойтись с Lit-ядром по построению.
+              </p>
+            </div>
+            <div class="stack-card">
+              <p class="stack-card__name">Vue 3</p>
+              <p class="stack-card__text">
+                Custom elements — полноправные жители шаблонов: зарегистрируйте один
+                раз, используйте теги tk-* где угодно.
+              </p>
+            </div>
+            <div class="stack-card">
+              <p class="stack-card__name">Svelte</p>
+              <p class="stack-card__text">
+                Адаптер не нужен — теги компилируются прямо в разметку и уходят в
+                продакшен как есть.
+              </p>
+            </div>
+            <div class="stack-card">
+              <p class="stack-card__name">Angular</p>
+              <p class="stack-card__text">
+                Потребляет custom elements нативно: объявите
+                CUSTOM_ELEMENTS_SCHEMA и работайте с tk-* как с любым элементом.
+              </p>
+            </div>
+            <div class="stack-card">
+              <p class="stack-card__name">Ваниль / статический HTML</p>
+              <p class="stack-card__text">
+                Импортируйте пакет, напишите разметку — всё. Страница, которую вы
+                читаете, устроена именно так.
+              </p>
+            </div>
+            <div class="stack-card">
+              <p class="stack-card__name">Любой стайлинг</p>
+              <p class="stack-card__text">
+                Токены — обычные CSS custom properties: переопределяйте, мостите в
+                утилитарные фреймворки, темизируйте по поверхностям.
+              </p>
+            </div>
+          </div>
+          <p class="grid-note">
+            SSR: Lit 3 поддерживает серверный рендеринг через @lit-labs/ssr, а токеновый
+            слой — обычный CSS, который уходит клиенту как есть; рантайм-JS для темы не
+            нужен ни там, ни там.
+          </p>
+        </div>
+      </section>
+
+      <!-- 6 · Почему профессионально -->
+      <section class="section section--muted" id="why">
+        <div class="site-container">
+          <h2 class="section__title">Сделано как производственная инфраструктура</h2>
+          <p class="section__lead">
+            Профессионализм — это не покрытие, а конвейер за каждым пикселем. Эти
+            гарантии исполняются на каждом пуше, а не в день релиза.
+          </p>
+          <div class="feature-grid">
+            <div class="feature-card">
+              <h3 class="feature-card__title">Доступность на первом месте</h3>
+              <p class="feature-card__text">
+                Контрастная книга AA, axe-прогоны в обеих темах, семантика для
+                скринридеров, полный клавиатурный паритет и reduced-motion в каждом
+                компоненте.
+              </p>
+            </div>
+            <div class="feature-card">
+              <h3 class="feature-card__title">Настоящая тёмная тема</h3>
+              <p class="feature-card__text">
+                Один атрибут — data-theme="dark" — перестраивает семантический слой
+                токенов; тени схлопываются в тональную высоту. Второй стилевой таблицы
+                и веток в коде нет.
+              </p>
+            </div>
+            <div class="feature-card">
+              <h3 class="feature-card__title">Токеновый конвейер, а не зоопарк hex-ов</h3>
+              <p class="feature-card__text">
+                258 токенов генерируются из единственного источника DESIGN; CI падает
+                на захардкоженных значениях внутри пакетов — дрейф не проходит.
+              </p>
+            </div>
+            <div class="feature-card">
+              <h3 class="feature-card__title">Верификация на каждом пуше</h3>
+              <p class="feature-card__text">
+                2 755 автоматических визуальных и axe-проверок сравнивают каждый
+                компонент с закоммиченными кроссплатформенными базами — в светлой и
+                тёмной темах.
+              </p>
+            </div>
+            <div class="feature-card">
+              <h3 class="feature-card__title">Сгенерированная React-поверхность</h3>
+              <p class="feature-card__text">
+                Обёртки выходят из Custom Elements Manifest, поэтому React-API не может
+                разойтись с Lit-ядром; события приходят с развёрнутыми payload-ами.
+              </p>
+            </div>
+            <div class="feature-card">
+              <h3 class="feature-card__title">Общий overlay-контроллер</h3>
+              <p class="feature-card__text">
+                Модалки, поповеры, тултипы и тосты делят один z-порядок и дисциплину
+                возврата фокуса — стекинг-контексты не конфликтуют.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7 · Где применять -->
+      <section class="section" id="where">
+        <div class="site-container">
+          <h2 class="section__title">Где применять</h2>
+          <p class="section__lead">
+            Четыре поверхности, из которых регистры извлечены, — и где они окупаются
+            с первого дня.
+          </p>
+          <div class="use-grid">
+            <div class="use-card">
+              <h3 class="use-card__title">Финтех-дашборды и онбординг</h3>
+              <p class="use-card__text">
+                Таблицы данных, фильтры, многошаговые флоу и KYC-формы — регистр, из
+                которого кит и реверс-инжинирился.
+              </p>
+            </div>
+            <div class="use-card">
+              <h3 class="use-card__title">Админ-консоли</h3>
+              <p class="use-card__text">
+                Плотные таблицы, тулбары, реестры настроек и статус-бейджи, которые
+                выдерживают настоящие операционные данные.
+              </p>
+            </div>
+            <div class="use-card">
+              <h3 class="use-card__title">Редакция и медиа</h3>
+              <p class="use-card__text">
+                Суб-кит tj-* с нулевыми зависимостями: типографика лонгридов, врезки и
+                карточки статей для контентных поверхностей.
+              </p>
+            </div>
+            <div class="use-card">
+              <h3 class="use-card__title">Маркетинговые лендинги</h3>
+              <p class="use-card__text">
+                Hero-контролы, бейджи, скелеты и тосты, совпадающие с продуктовым UI
+                пиксель-в-пиксель — включая эту страницу.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8 · Вкус API -->
+      <section class="section section--muted" id="taste">
+        <div class="site-container">
+          <h2 class="section__title">Вкус API</h2>
+          <p class="section__lead">
+            Один компонент — две поверхности: custom element и сгенерированная
+            React-обёртка. Кит ставится pnpm-линком воркспейса из запиненного
+            релизного тега; полный рецепт — в
+            <a href="https://github.com/salacoste/tinkoff-ui-kit#quick-start">быстром старте README</a>.
+          </p>
+          <div class="taste-grid">
+            <details class="code-details" open>
+              <summary>index.html — любой фреймворк</summary>
+              <pre><code><span class="c-com">&lt;!-- токены один раз, компоненты один раз --&gt;</span>
+<span class="c-com">&lt;!-- дальше разметка и есть API --&gt;</span>
+&lt;<span class="c-tag">tk-button</span> <span class="c-attr">variant</span>=<span class="c-str">"primary"</span> <span class="c-attr">size</span>=<span class="c-str">"hero"</span>&gt;Открыть счёт&lt;/<span class="c-tag">tk-button</span>&gt;
+
+&lt;<span class="c-tag">tk-input</span> <span class="c-attr">label</span>=<span class="c-str">"Email"</span> <span class="c-attr">placeholder</span>=<span class="c-str">"name@example.com"</span>&gt;&lt;/<span class="c-tag">tk-input</span>&gt;</code></pre>
+            </details>
+            <details class="code-details" open>
+              <summary>App.tsx — React-обёртка</summary>
+              <pre><code><span class="c-com">// сгенерировано из Custom Elements Manifest</span>
+<span class="c-kw">import</span> 'pillkit-tokens/tokens.css';
+<span class="c-kw">import</span> 'pillkit-components';
+<span class="c-kw">import</span> { Button, Input } <span class="c-kw">from</span> 'pillkit-react';
+
+&lt;<span class="c-tag">Button</span> <span class="c-attr">variant</span>=<span class="c-str">"primary"</span> <span class="c-attr">size</span>=<span class="c-str">"hero"</span>&gt;Открыть счёт&lt;/<span class="c-tag">Button</span>&gt;
+&lt;<span class="c-tag">Input</span> <span class="c-attr">label</span>=<span class="c-str">"Email"</span> <span class="c-attr">placeholder</span>=<span class="c-str">"name@example.com"</span> /&gt;</code></pre>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9 · Финальный CTA -->
+      <section class="cta-band">
+        <div class="site-container">
+          <h2 class="cta-band__title">Посмотрите вживую в документации.</h2>
+          <p class="cta-band__text">
+            Каждый компонент, каждое состояние, обе темы — интерактивно, с полными
+            заметками о доступности и справочником API по каждому тегу.
+          </p>
+          <div class="cta-band__actions">
+            <tk-button variant="inverse" size="hero" href="/tinkoff-ui-kit/storybook/">
+              Открыть документацию
+            </tk-button>
+            <a class="cta-band__link" href="/tinkoff-ui-kit/ru/bank.html">Смотреть витрины →</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-container">
+        <p class="site-footer__disclaimer">Неофициальный учебный проект. pillkit (tinkoff-ui-kit) —
+        независимое воссоздание дизайн-языка Тинькофф (Т-Банка) исключительно в учебных целях.
+        Проект не аффилирован с Т-Банком / ТКС Холдинг, не одобрен ими и никак с ними не связан;
+        товарные знаки Т-Банка в публикуемом результате не используются.</p>
+        <p class="site-footer__meta">Код и документация — MIT (шрифты лицензируются отдельно) ·
+        <a href="https://github.com/salacoste/tinkoff-ui-kit">GitHub</a> ·
+        <a href="/tinkoff-ui-kit/storybook/">Storybook-документация</a> ·
+        <a href="https://github.com/salacoste/tinkoff-ui-kit/releases">Релизы</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

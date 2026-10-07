@@ -1,0 +1,33 @@
+{
+  "name": "pillkit-website",
+  "version": "0.0.0",
+  "private": true,
+  "description": "GitHub Pages marketing surface for pillkit — landing + per-family showcases (Bank / Invest / Admin / T-Journal), static vite build deployed via Actions; never published to a registry.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/salacoste/tinkoff-ui-kit.git",
+    "directory": "website"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node -e \"console.log('pillkit-website: static surface verified via build + Pages deploy workflow; no runtime tests')\""
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "lit": "3.3.3",
+    "pillkit-components": "workspace:*",
+    "pillkit-tj-components": "workspace:*",
+    "pillkit-tj-fonts": "workspace:*",
+    "pillkit-tj-tokens": "workspace:*",
+    "pillkit-tokens": "workspace:*"
+  },
+  "devDependencies": {
+    "vite": "8.3.0"
+  }
+}

@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="ru" data-tj-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>pillkit — витрина редакционного семейства ТЖ</title>
+    <script type="module" src="/src/tj.ts"></script>
+    <style>
+      /*
+       * Витрина ТЖ (RU) — только страницы-специфичные стили. Редакционные
+       * демо живут в скоупах .tj-demo на СОБСТВЕННЫХ токенах саб-кита --tj-*;
+       * хром сайта вокруг них остаётся на --tk-*. Переключатель редакционной
+       * темы пишет data-tj-theme на корень документа — пространство имён
+       * отдельное, банковский хром страницы не затрагивается (FR-17 в деле).
+       */
+      .tjp-hero {
+        padding: var(--tk-space-64) 0 var(--tk-space-40);
+        background: var(--tk-color-surface-muted);
+      }
+      .tjp-hero__eyebrow {
+        margin: 0 0 var(--tk-space-8);
+        font-family: var(--tk-font-mono);
+        font-size: var(--tk-text-body-xs-size);
+        letter-spacing: var(--tk-text-body-xs-tracking);
+        text-transform: uppercase;
+        color: var(--tk-color-text-secondary);
+      }
+      .tjp-hero__title {
+        margin: 0 0 var(--tk-space-12);
+        max-width: var(--tk-space-container);
+        font-family: var(--tk-font-heading);
+        font-size: var(--tk-text-heading-2-size);
+        font-weight: var(--tk-text-heading-2-weight);
+        line-height: var(--tk-text-heading-2-leading);
+        color: var(--tk-color-text-primary);
+      }
+      .tjp-hero__lead {
+        margin: 0;
+        max-width: 62ch;
+        font-family: var(--tk-font-body);
+        font-size: var(--tk-text-body-l-size);
+        line-height: var(--tk-text-body-l-leading);
+        color: var(--tk-color-text-primary);
+      }
+      .tjp-hero__note {
+        margin: var(--tk-space-12) 0 var(--tk-space-16);
+        max-width: 62ch;
+        font-family: var(--tk-font-body);
+        font-size: var(--tk-text-body-s-size);
+        line-height: var(--tk-text-body-s-leading);
+        color: var(--tk-color-text-secondary);
+      }
+      .tjp-theme {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--tk-space-8);
+        padding: var(--tk-space-8) var(--tk-space-16);
+        border: 1px solid var(--tk-color-border-default);
+        border-radius: var(--tk-radius-full);
+        background: var(--tk-color-surface-base);
+        color: var(--tk-color-text-primary);
+        font-family: var(--tk-font-body);
+        font-size: var(--tk-text-body-s-size);
+        line-height: var(--tk-text-body-s-leading);
+        cursor: pointer;
+      }
+      .tjp-theme:focus-visible {
+        outline: 2px solid var(--tk-color-focus-ring);
+        outline-offset: 2px;
+      }
+      /* Редакционный скоуп: собственная поверхность страницы, чернила и
+         UI-гарнитура саб-кита. Читающий кегль (XCharter) приходит импортом
+         входа — tj-prose владеет своим двухсемейным каскадом сам. */
+      .tj-demo {
+        padding: var(--tj-space-24);
+        border-radius: var(--tj-radius-panel);
+        background: var(--tj-color-page);
+        font-family: var(--tj-font-ui);
+        color: var(--tj-color-ink-100);
+      }
+      .tj-demo__intro {
+        max-width: var(--tj-space-column-reading-body);
+        margin: 0 0 var(--tj-space-16);
+        font-size: var(--tj-text-article-body-size);
+        line-height: var(--tj-text-article-body-leading);
+        color: var(--tj-color-ink-300);
+      }
+      .tjp-code {
+        font-family: var(--tk-font-mono);
+      }
+      /* Секция рубрики. */
+      .tj-stage {
+        max-width: var(--tj-space-column-reading-body);
+        margin: 0 0 var(--tj-space-16);
+      }
+      .tj-feed {
+        display: flex;
+        flex-direction: column;
+        gap: var(--tj-space-24);
+        max-width: var(--tj-space-column-reading-body);
+      }
+      .tj-field {
+        max-width: var(--tj-space-column-reading-body);
+        margin: 0 0 var(--tj-space-16);
+        padding: var(--tj-space-24);
+        background: var(--tj-color-badge-purple);
+        border-radius: var(--tj-radius-panel);
+      }
+      .tj-chiprow {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--tj-space-12);
+      }
+      /* Статья: вертикальная полоса потребителя поверх tj-prose (выбор
+         композиционной истории — отступы H2/цитаты это CSS консьюмера). */
+      .tj-article h2 {
+        margin-block: var(--tj-space-40) var(--tj-space-24);
+      }
+      .tj-article blockquote {
+        margin-block: var(--tj-space-32);
+      }
+      .tj-article__meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--tj-space-12);
+        margin: 0 0 var(--tj-space-24);
+        font-size: var(--tj-text-cta-label-size);
+        line-height: var(--tj-text-cta-label-leading);
+        color: var(--tj-color-ink-300);
+      }
+      .tj-article__actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--tj-space-16);
+        margin-block-start: var(--tj-space-32);
+      }
+      .tj-reading {
+        max-width: var(--tj-space-column-reading-body);
+        margin: 0 auto;
+      }
+      /* Сообщество: композер НА серой странице (защита от тон-в-тон),
+         прозрачные ячейки постов на белом листе — раскладка паттерн-истории. */
+      .tj-composer {
+        display: block;
+        max-width: var(--tj-space-column-main);
+        margin: 0 0 var(--tj-space-32);
+      }
+      .tj-sheet {
+        max-width: var(--tj-space-column-main);
+        padding: var(--tj-space-32) var(--tj-space-40);
+        background: var(--tj-color-card);
+        border-radius: var(--tj-radius-panel);
+      }
+      .tj-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        column-gap: var(--tj-space-24);
+        row-gap: var(--tj-space-40);
+      }
+      .tj-event {
+        max-width: var(--tj-space-column-main);
+        margin: var(--tj-space-16) 0 0;
+        font-size: var(--tj-text-cta-label-size);
+        line-height: var(--tj-text-cta-label-leading);
+        color: var(--tj-color-ink-300);
+      }
+      @media (max-width: 900px) {
+        .tj-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      /* Хром: колонка рельса + основная колонка на референсной ширине. */
+      .tj-wordmark {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        min-width: 44px;
+        font-weight: var(--tj-text-article-h2-weight);
+        font-size: var(--tj-text-nav-label-size);
+        text-decoration: none;
+        color: var(--tj-color-ink-100);
+      }
+      .tj-wordmark:focus-visible {
+        outline: 2px solid var(--tj-color-focus-ring);
+        outline-offset: 2px;
+      }
+      .tj-layout {
+        display: grid;
+        grid-template-columns: var(--tj-space-rail-sidebar) minmax(0, 1fr);
+        gap: var(--tj-space-40);
+        align-items: start;
+        margin-block-start: var(--tj-space-24);
+      }
+      @media (max-width: 1100px) {
+        .tj-layout {
+          grid-template-columns: 1fr;
+        }
+      }
+      .tj-main-feed {
+        display: flex;
+        flex-direction: column;
+        gap: var(--tj-space-16);
+        max-width: var(--tj-space-column-main);
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-container site-header__row">
+        <a class="site-logo" href="/tinkoff-ui-kit/ru/">pillkit</a>
+        <nav class="site-nav" aria-label="Основная навигация">
+          <a href="/tinkoff-ui-kit/ru/bank.html">Банк</a>
+          <a href="/tinkoff-ui-kit/ru/invest.html">Инвестиции</a>
+          <a href="/tinkoff-ui-kit/ru/admin.html">Админ</a>
+          <a href="/tinkoff-ui-kit/ru/tj.html" aria-current="page">ТЖ</a>
+          <a href="/tinkoff-ui-kit/storybook/">Документация</a>
+        </nav>
+        <div class="site-header__actions">
+          <button class="site-theme-toggle" type="button" aria-label="Переключить тёмную тему"
+            onclick="document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? '' : 'dark'">◐</button>
+          <a class="site-gh" href="https://github.com/salacoste/tinkoff-ui-kit">GitHub</a>
+          <a class="site-lang" href="/tinkoff-ui-kit/tj.html" lang="en" hreflang="en">English version</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="tjp-hero">
+        <div class="site-container">
+          <p class="tjp-hero__eyebrow">Витрина · семейство ТЖ</p>
+          <h1 class="tjp-hero__title">Редакционный язык продукта</h1>
+          <p class="tjp-hero__lead">
+            Медиа- и новостные поверхности с собственным пространством токенов
+            (<span class="tjp-code">--tj-*</span>), читающим кеглем XCharter (загружается
+            входом страницы) и сдержанной двухголосой типографикой: Charter для чтения,
+            гротеск для хрома. Шапки рубрик, карточки лент, колонка чтения, композер
+            сообщества и сам хром сайта — для медиа-сайтов, блогов и корпоративных журналов.
+          </p>
+          <p class="tjp-hero__note">
+            Саб-кит полностью самодостаточен (FR-17): его компоненты и токены не имеют
+            ни одной рантайм-зависимости от банковского семейства. Банковский токен-лист
+            эта страница грузит только ради общего хрома сайта вокруг демо — редакционным
+            скоупам ниже он не нужен. Имена, заголовки и счётчики синтетические.
+          </p>
+          <button class="tjp-theme" type="button" aria-label="Переключить тёмную тему ТЖ"
+            onclick="var d = document.documentElement; d.dataset.tjTheme = d.dataset.tjTheme === 'dark' ? 'light' : 'dark'">◐ Тема ТЖ — светлая / тёмная</button>
+        </div>
+      </section>
+
+      <div class="site-container">
+
+        <section class="section" id="rubric">
+          <h2 class="section__title">Сетка рубрики</h2>
+          <p class="section__lead">
+            Шапка лендинга рубрики: <span class="tjp-code">tj-rubric-header</span> собирает
+            обложку с клипом углов, сквиркл-марку, заходящую за границу ровно наполовину, и
+            собственный <span class="tjp-code">h1</span> рубрики (компонент никогда не
+            рендерит заголовок сам). Лента ниже — <span class="tjp-code">tj-news-card</span>:
+            вся карта — одна ссылка, один таб-стоп. Навигационные чипы
+            (<span class="tjp-code">tj-tag-chip</span>) живут на измеренном доме —
+            фиолетовых полях, theme-invariant by design.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Лендинг рубрики</h3>
+              <div class="tj-demo">
+                <p class="tj-demo__intro">Обложка, марка, h1 и подзаголовок — всё слот-контент;
+                  пара чипов на фиолетовом одинакова в обеих темах ТЖ.</p>
+                <div class="tj-stage">
+                  <tj-rubric-header>
+                    <img slot="cover" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1180 215'><rect width='1180' height='215' fill='gray'/><circle cx='920' cy='215' r='150' fill='silver'/><circle cx='260' cy='215' r='110' fill='darkgray'/></svg>" alt="" />
+                    <img slot="mark" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='30' fill='dimgray'/><circle cx='50' cy='50' r='22' fill='white'/></svg>" alt="" />
+                    <h1>Новости</h1>
+                    <p>Рассказываем всё важное и объясняем, как оно влияет на жизнь</p>
+                  </tj-rubric-header>
+                </div>
+                <div class="tj-field">
+                  <div class="tj-chiprow">
+                    <tj-tag-chip href="#rubric">Курсы</tj-tag-chip>
+                    <tj-tag-chip href="#rubric">Лонгриды</tj-tag-chip>
+                    <tj-tag-chip href="#rubric">Разборы кейсов</tj-tag-chip>
+                    <tj-tag-chip href="#rubric">Комьюнити</tj-tag-chip>
+                  </div>
+                </div>
+              </div>
+              <p class="demo-card__hint">Чипы переносятся, но никогда не скроллятся; пустые
+                слоты деградируют без поломок.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Карточки ленты</h3>
+              <div class="tj-demo">
+                <div class="tj-feed">
+                  <tj-news-card href="#rubric" aria-labelledby="tjp-title-1">
+                    <img slot="mark" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='30' fill='dimgray'/><circle cx='50' cy='50' r='22' fill='white'/></svg>" alt="" />
+                    <img slot="avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='darkgray'/><circle cx='32' cy='26' r='12' fill='white'/><path d='M10 60c4-12 12-18 22-18s18 6 22 18' fill='white'/></svg>" alt="Аватар Марии Ветровой" />
+                    <span slot="byline">Мария Ветрова</span>
+                    <h3 slot="title" id="tjp-title-1">
+                      Зарегистрирована первая четырёхвалентная вакцина: что меняется в календаре
+                    </h3>
+                    <p slot="excerpt">
+                      Короткий лид в регистре чтения — Charter в масштабе карточки. Контент
+                      синтетический, нулевой PII.
+                    </p>
+                    <span slot="meta">
+                      <time datetime="2026-09-29T09:40">29 сентября, 09:40</time>
+                      <span aria-hidden="true"> · </span>
+                      <span>12 комментариев</span>
+                      <span aria-hidden="true"> · </span>
+                      <span>148 прочитавших</span>
+                    </span>
+                  </tj-news-card>
+                  <tj-news-card href="#rubric" aria-labelledby="tjp-title-2">
+                    <img slot="mark" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='30' fill='dimgray'/><circle cx='50' cy='50' r='22' fill='white'/></svg>" alt="" />
+                    <img slot="avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='darkgray'/><circle cx='32' cy='26' r='12' fill='white'/><path d='M10 60c4-12 12-18 22-18s18 6 22 18' fill='white'/></svg>" alt="Аватар Артёма Сомова" />
+                    <span slot="byline">Артём Сомов</span>
+                    <h4 slot="title" id="tjp-title-2">
+                      Почему h3 и h4 равноправны: уровень заголовка выбирает потребитель
+                    </h4>
+                    <span slot="meta">
+                      <time datetime="2026-09-28T18:05">28 сентября, 18:05</time>
+                      <span aria-hidden="true"> · </span>
+                      <span>7 комментариев</span>
+                    </span>
+                  </tj-news-card>
+                </div>
+              </div>
+              <p class="demo-card__hint">Плоские карточки — ни тени, ни hover-подъёма; слот
+                лида опционален в обе стороны.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Код — шапка рубрики, чип, карточка новости</summary>
+            <pre><code>&lt;tj-rubric-header&gt;
+  &lt;img slot="cover" src="cover.svg" alt=""&gt;
+  &lt;img slot="mark" src="mark.svg" alt=""&gt;
+  &lt;h1&gt;Новости&lt;/h1&gt;
+  &lt;p&gt;Рассказываем всё важное…&lt;/p&gt;
+&lt;/tj-rubric-header&gt;
+
+&lt;tj-tag-chip href="/rubric/courses/"&gt;Курсы&lt;/tj-tag-chip&gt;
+
+&lt;tj-news-card href="/news/1/" aria-labelledby="card-title"&gt;
+  &lt;span slot="byline"&gt;Мария Ветрова&lt;/span&gt;
+  &lt;h3 slot="title" id="card-title"&gt;…&lt;/h3&gt;
+  &lt;span slot="meta"&gt;&lt;time datetime="2026-09-29T09:40"&gt;…&lt;/time&gt;&lt;/span&gt;
+&lt;/tj-news-card&gt;</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="article">
+          <h2 class="section__title">Типографика статьи</h2>
+          <p class="section__lead">
+            <span class="tjp-code">tj-prose</span> — колонка чтения: контейнер типографики,
+            а не стилизованный абзац. Лид и тело идут Charter; гротеск прерывает дважды —
+            подзаголовок секции и цитата-вынос. Ссылки внутри абзаца —
+            <span class="tjp-code">tj-link</span> (цвет не шагает ни при наведении, ни в
+            тёмной теме; ховер лишь проявляет подчёркивание), <span class="tjp-code">tj-cta</span> —
+            тихая навигационная плашка: бокс 44×44 с видимой пилюлей 30. Вертикальные
+            отступы подзаголовков и цитат — CSS потребителя, собранный из токенной шкалы.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Колонка чтения (XCharter)</h3>
+              <div class="tj-demo">
+                <div class="tj-reading">
+                  <tj-prose class="tj-article">
+                    <p slot="lead">
+                      Персональные данные стали валютой: разбираться, кто и что о нас знает,
+                      теперь жизненный навык.
+                    </p>
+                    <p>
+                      Каждое касание экрана оставляет след. Банковские приложения знают о нас
+                      больше, чем близкие: где мы кофе, когда спим и сколько тратим на такси.
+                      Разбираемся, как читать цифровой след — и
+                      <tj-link href="#article">тихая ссылка прямо внутри предложения</tj-link>.
+                    </p>
+                    <h2>Подзаголовок прерывает serif-поток</h2>
+                    <p>
+                      Голос гротеска против Charter-тела — фирменный приём референса; сама
+                      колонка ограничена токеном читающей ширины.
+                    </p>
+                    <blockquote>
+                      Цитата-вынос держит мысль секции в одной фразе — крупно и без
+                      кавычек-орнаментов.
+                    </blockquote>
+                    <p>
+                      История про данные — это история про доверие: чем прозрачнее цепочка от
+                      касания до решения, тем проще главный вопрос — кому и когда мы сами
+                      отдали свой след.
+                    </p>
+                  </tj-prose>
+                  <p class="tj-article__meta">
+                    <span>Синтетическая статья · нулевой PII</span>
+                    <span aria-hidden="true"> · </span>
+                    <span>6 мин чтения</span>
+                  </p>
+                  <div class="tj-article__actions">
+                    <tj-cta href="#article">Написать в редакцию</tj-cta>
+                  </div>
+                </div>
+              </div>
+              <p class="demo-card__hint">Переключите тему ТЖ выше — колонка
+                переразрешается токен-слоем --tj-* без единой ветки в компоненте.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Код — прос, ссылка, CTA</summary>
+            <pre><code>&lt;tj-prose&gt;
+  &lt;p slot="lead"&gt;Лид продаёт статью одной строкой.&lt;/p&gt;
+  &lt;p&gt;Тело с &lt;tj-link href="#anchor"&gt;тихой ссылкой&lt;/tj-link&gt; внутри.&lt;/p&gt;
+  &lt;h2&gt;Подзаголовок&lt;/h2&gt;
+  &lt;blockquote&gt;Цитата-вынос&lt;/blockquote&gt;
+&lt;/tj-prose&gt;
+
+&lt;tj-cta href="#feedback"&gt;Написать в редакцию&lt;/tj-cta&gt;</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="community">
+          <h2 class="section__title">Композер и лента</h2>
+          <p class="section__lead">
+            Пара сообщества. <span class="tjp-code">tj-composer</span> — карточка-«фейковый
+            инпут»: настоящая кнопка, а не textarea; редактор остаётся на вашей стороне, и
+            весь контракт кита — событие <span class="tjp-code">open-compose</span> (клик /
+            Enter / Space). <span class="tjp-code">tj-post-card</span> — прозрачная ячейка
+            сообщества: обрезка в две строки с зеркалом полного текста в тултип якоря, едет
+            на белом листе, которым владеет потребитель.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Паттерн страницы сообщества</h3>
+              <div class="tj-demo">
+                <tj-composer class="tj-composer" id="tjp-composer" label="Написать пост или вопрос…">
+                  <img slot="avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='darkgray'/><circle cx='32' cy='26' r='12' fill='white'/><path d='M10 60c4-12 12-18 22-18s18 6 22 18' fill='white'/></svg>" alt="" />
+                </tj-composer>
+                <section class="tj-sheet">
+                  <div class="tj-grid">
+                    <tj-post-card href="#community">
+                      <img slot="avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='darkgray'/><circle cx='32' cy='26' r='12' fill='white'/><path d='M10 60c4-12 12-18 22-18s18 6 22 18' fill='white'/></svg>" alt="" />
+                      <span slot="byline">Ольга Данина</span>
+                      <time slot="date" datetime="2026-09-29T09:15">29 сентября, 09:15</time>
+                      <h3 slot="title">
+                        Разбор: как устроен резервный фонд семьи на шести месячных подушках
+                      </h3>
+                      <span slot="count">128</span>
+                    </tj-post-card>
+                    <tj-post-card href="#community">
+                      <img slot="avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='darkgray'/><circle cx='32' cy='26' r='12' fill='white'/><path d='M10 60c4-12 12-18 22-18s18 6 22 18' fill='white'/></svg>" alt="" />
+                      <span slot="byline">Павел Резник</span>
+                      <time slot="date" datetime="2026-09-28T18:40">28 сентября, 18:40</time>
+                      <h3 slot="title">Тест: какой у вас профиль инвестора — консерватор или охотник?</h3>
+                      <span slot="count">64</span>
+                    </tj-post-card>
+                    <tj-post-card href="#community">
+                      <img slot="avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='darkgray'/><circle cx='32' cy='26' r='12' fill='white'/><path d='M10 60c4-12 12-18 22-18s18 6 22 18' fill='white'/></svg>" alt="" />
+                      <span slot="byline">Мария Ветрова</span>
+                      <time slot="date" datetime="2026-09-28T12:00">28 сентября, 12:00</time>
+                      <h3 slot="title">Лонгрид: что изменилось в налогообложении самозанятых за год</h3>
+                      <span slot="count">31</span>
+                    </tj-post-card>
+                  </div>
+                </section>
+                <p class="tj-event" id="tjp-compose-log" role="status">
+                  Кликните композер — событие open-compose прилетает сюда.
+                </p>
+              </div>
+              <p class="demo-card__hint">Композер стоит на серой странице намеренно:
+                тон-в-тон на белом листе он бы исчез. Ниже 900px сетка схлопывается в одну
+                колонку.</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Код — композер и ячейка поста</summary>
+            <pre><code>&lt;tj-composer label="Написать пост или вопрос…"&gt;
+  &lt;img slot="avatar" src="avatar.svg" alt=""&gt;
+&lt;/tj-composer&gt;
+&lt;script type="module"&gt;
+  composer.addEventListener('open-compose', () =&gt; openEditor());
+&lt;/script&gt;
+
+&lt;tj-post-card href="/community/1/"&gt;
+  &lt;span slot="byline"&gt;Ольга Данина&lt;/span&gt;
+  &lt;time slot="date" datetime="2026-09-29T09:15"&gt;…&lt;/time&gt;
+  &lt;h3 slot="title"&gt;…&lt;/h3&gt;
+  &lt;span slot="count"&gt;128&lt;/span&gt;
+&lt;/tj-post-card&gt;</code></pre>
+          </details>
+        </section>
+
+        <section class="section" id="chrome">
+          <h2 class="section__title">Хром сайта</h2>
+          <p class="section__lead">
+            <span class="tjp-code">tj-header</span> — липкая полоса: пилюли навигации из
+            массива items, текущий раздел маркируется ТОЛЬКО
+            <span class="tjp-code">aria-current</span>, встроенная кнопка темы
+            (stateless-цикл auto → light → dark — попробуйте) и CTA «Написать». При любой
+            прокрутке полоса сжимается 70 → 56. <span class="tjp-code">tj-rail</span> —
+            рельс разделов: плитки-иконки, та же тихая маркировка текущего, а ниже 1200px он
+            схлопывается в бургер с ящиком-ловушкой фокуса.
+          </p>
+          <div class="demo-grid">
+            <div class="demo-card">
+              <h3 class="demo-card__title">Композиция хрома</h3>
+              <div class="tj-demo">
+                <tj-header id="tjp-header" active-value="#razbory" cta-href="#chrome">
+                  <a slot="wordmark" class="tj-wordmark" href="#chrome" aria-label="Журнал — на главную">ЖУРНАЛ</a>
+                </tj-header>
+                <div class="tj-layout">
+                  <tj-rail id="tjp-rail" current-value="razbory" burger-label="Разделы">
+                    <img slot="icon-main" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><rect width='30' height='30' rx='7' fill='dimgray'/><circle cx='15' cy='15' r='8' fill='white'/></svg>" alt="" />
+                    <img slot="icon-istorii" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><rect width='30' height='30' rx='7' fill='gray'/><circle cx='15' cy='15' r='8' fill='white'/></svg>" alt="" />
+                  </tj-rail>
+                  <div class="tj-main-feed">
+                    <tj-news-card href="#chrome" aria-labelledby="tjp-title-3">
+                      <span slot="byline">Мария Ветрова</span>
+                      <h3 slot="title" id="tjp-title-3">
+                        Как устроены фонды денежного рынка: разбор на пальцах
+                      </h3>
+                      <span slot="meta">
+                        <time datetime="2026-09-29T07:15">29 сентября, 07:15</time>
+                        <span aria-hidden="true"> · </span>
+                        <span>4 мин чтения</span>
+                      </span>
+                    </tj-news-card>
+                    <tj-news-card href="#chrome" aria-labelledby="tjp-title-4">
+                      <span slot="byline">Ольга Данина</span>
+                      <h3 slot="title" id="tjp-title-4">
+                        Что изменилось в налоговом вычете за обучение в 2026 году
+                      </h3>
+                      <span slot="meta">
+                        <time datetime="2026-09-28T15:40">28 сентября, 15:40</time>
+                        <span aria-hidden="true"> · </span>
+                        <span>7 мин чтения</span>
+                      </span>
+                    </tj-news-card>
+                  </div>
+                </div>
+              </div>
+              <p class="demo-card__hint">Прокрутите страницу — демо-полоса сжимается вместе
+                с реальным скроллом. Сузьте вьюпорт ниже 1200px — рельс станет бургером
+                (Esc / клик в скрим закрывают, фокус возвращается).</p>
+            </div>
+          </div>
+          <details class="code-details">
+            <summary>Код — подключение шапки и рельса</summary>
+            <pre><code>header.items = [
+  { label: 'Главное', href: '#main' },
+  { label: 'Разборы', href: '#razbory' },
+  { label: 'Истории', href: '#istorii' },
+];
+header.activeValue = '#razbory';
+header.ctaHref = '#write';
+
+rail.items = [
+  { label: 'Главное', href: '#main', value: 'main' },
+  { label: 'Разборы', href: '#razbory', value: 'razbory' },
+];
+rail.currentValue = 'razbory';
+// слоты иконок: &lt;img slot="icon-main" …&gt;</code></pre>
+          </details>
+        </section>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-container">
+        <p class="site-footer__disclaimer">Неофициальный учебный проект. pillkit (tinkoff-ui-kit) —
+        независимое воссоздание дизайн-языка Тинькофф (Т-Банка) исключительно в учебных целях.
+        Проект не аффилирован с Т-Банком / ТКС Холдинг, не одобрен ими и никак с ними не связан;
+        товарные знаки Т-Банка в публикуемом результате не используются.</p>
+        <p class="site-footer__meta">Код и документация — MIT (шрифты лицензируются отдельно) ·
+        <a href="https://github.com/salacoste/tinkoff-ui-kit">GitHub</a> ·
+        <a href="/tinkoff-ui-kit/storybook/">Storybook-документация</a> ·
+        <a href="https://github.com/salacoste/tinkoff-ui-kit/releases">Релизы</a></p>
+      </div>
+    </footer>
+
+    <script type="module">
+      // Подключение витрины ТЖ — чистый ESM (без TS-синтаксиса: линт-хук
+      // парсит исходники сайта базовым парсером). Свойства-массивы (items у
+      // tj-header и tj-rail) не имеют атрибутного канала.
+      const ready = (tag) => customElements.whenDefined(tag);
+
+      ready('tj-header').then(() => {
+        const header = document.getElementById('tjp-header');
+        if (header) {
+          header.items = [
+            { label: 'Главное', href: '#main' },
+            { label: 'Разборы', href: '#razbory' },
+            { label: 'Истории', href: '#istorii' },
+            { label: 'Шапки', href: '#shapki' },
+            { label: 'Индексы', href: '#indeksy' },
+          ];
+        }
+      });
+
+      ready('tj-rail').then(() => {
+        const rail = document.getElementById('tjp-rail');
+        if (rail) {
+          rail.items = [
+            { label: 'Главное', href: '#main', value: 'main' },
+            { label: 'Без иконки', href: '#plain' },
+            { label: 'Разборы', href: '#razbory', value: 'razbory' },
+            { label: 'Истории', href: '#istorii', value: 'istorii' },
+            { label: 'Шапки', href: '#shapki', value: 'shapki' },
+          ];
+        }
+      });
+
+      // Весь контракт композера: open-compose (без detail) — редактор
+      // открывает потребитель. Здесь только пишем в вежливую строку статуса.
+      ready('tj-composer').then(() => {
+        const composer = document.getElementById('tjp-composer');
+        const log = document.getElementById('tjp-compose-log');
+        if (!composer || !log) return;
+        composer.addEventListener('open-compose', () => {
+          log.textContent =
+            'open-compose диспетчен (composed, bubbles, без detail) — здесь ваше приложение открыло бы редактор.';
+        });
+      });
+    </script>
+  </body>
+</html>
