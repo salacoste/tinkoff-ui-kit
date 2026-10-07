@@ -1502,3 +1502,39 @@ spinner/textarea HOLD под 24T-капчуры.
   сюита **2755**, hidden-guard 57/46. Очередь: тег `v1.9.0` — только по
   явному «tag ok» (RELEASE §16.3) → Flow-B §16.4; затем — по брифу
   мейнтейнера.
+- **v1.9.0 РЕЛИЗ ЗАВЕРШЁН (2026-10-06→07, автономное окно АФК; санкция
+  «tag ok»)** — штамп `9d179c6` = CI **37538995949 success** (последний
+  push-event; теговый пуш CI не триггерит) → аннотированный тег `v1.9.0`
+  на `9d179c6` (tag-объект `9a8ba9b6`, deref сверен с remote
+  байт-в-байт) → **Flow-B §16.4 ДВУХРАУНДОВЫЙ (молда v1.5.0 — впервые
+  с неё): раунд-1 на теговых битах 17/19 НАШЁЛ продуктовый дефект** —
+  React-обёртки Carousel/Toast доставляли сырой CustomEvent: события 27.4
+  несут `{page}`/`{reason}` БЕЗ ключа `value`, а `unwrapKitEventPayload`
+  (packages/react/src/kit-component.ts) знал только `detail:{value}` —
+  ветка «payload-less» отдавала хендлеру event (нарушение AD-1). Юниты
+  кита были зелёными (74/74) — дефект жил в растворённом правиле обёртки.
+  Фикс `54b9d18`: непустой object-detail без `value` проходит ЦЕЛИКОМ,
+  value-несущие байт-идентичны, пустые — event; + 2 юнит-теста
+  (unwrapped-shape, `not.toBeInstanceOf(CustomEvent)`), CHANGELOG
+  [Unreleased] Fixed. Гейты фикса: react 74/74,
+  build/test/lint/typecheck EXIT 0, gen zero-drift (generated не тронут),
+  полный compare **2755/2755 (26.3 мин)** — пиксельно нейтрален. Параллельная
+  находка: CHANGELOG [1.9.0] «size-union …16/20/24/32/40» — «40»
+  никогда не существовал (sizes = 16/20/24/32) — микрофикс `8791dd3`
+  (прецедент fa3e853). Пуш 9d179c6..8791dd3 одним пушем (zero-in-flight
+  соблюдён) → **CI 37586363867 = success**. **Раунд-2 на фикс-голове
+  `8791dd3`: 19/19 PASS** (распакованные `{page:2}`/`{reason:'auto'}`,
+  isEvent=false; §9-молчание, REFUSE show, reduce-стоп, dark, консоль 0).
+  Отклонение честно: раунд-2 по SHA main, НЕ по тегу — перенос тега =
+  решение мейнтейнера (§7, молда v1.5.0; штампы §16.3/§16.4/§16.7 +
+  HANDOFF «v1.9.0 RELEASED» + эта запись = финальный docs-коммит).
+  **ЗАКОН-урок (unwrap):** новая форма detail ≠ `{value}` ⇒ расширять
+  `unwrapKitEventPayload` одновременно с событием — иначе React-хендлеры
+  молча получают сырой CustomEvent при зелёных юнитах кита. Probe-уроки
+  Flow-B: workspace root требует `pnpm add -w`; ценсус через
+  exports-маппу падает ERR_PACKAGE_PATH_NOT_EXPORTED → fs.readFileSync;
+  мягкие waitForFunction (условие на существование окна, пины в ok()) —
+  иначе FAIL-нога съедает протокол таймаутом. Полный протокол
+  `verify/v190-fresh-clone/` (NOTES + round1/round2.log + скрины обеих
+  тем обоих раундов). Живые пункты: (1) решение о переносе тега v1.9.0
+  на `8791dd3`; (2) опц. batch-confirm +30 — по отдельной санкции.

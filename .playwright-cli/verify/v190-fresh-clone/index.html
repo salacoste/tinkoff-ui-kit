@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <title>pillkit v1.9.0 fresh consumer</title>
+    <style>
+      body { font-family: system-ui, sans-serif; margin: 24px; }
+      section { margin-bottom: 28px; }
+      .row { display: flex; align-items: center; gap: 12px; margin: 8px 0; }
+      .demo-trigger { padding: 6px 12px; }
+      /* The raw carousel rail frame: 6 fixed cards in a 700px viewport. */
+      .car-frame { width: 700px; }
+      .car-card { width: 200px; height: 100px; flex: none; background: #f3f4f6;
+        border-radius: 8px; display: grid; place-items: center; }
+    </style>
+  </head>
+  <body>
+    <h1>pillkit v1.9.0 — свежий потребитель (тег)</h1>
+
+    <section id="raw-spinner">
+      <h2>Raw tk-spinner</h2>
+      <div class="row"><tk-spinner id="spin-named" label="Загрузка данных"></tk-spinner><span>именованный</span></div>
+      <div class="row"><tk-spinner id="spin-default"></tk-spinner><span>дефолтный label</span></div>
+      <div class="row"><tk-spinner id="spin-decorative" label=""></tk-spinner><span>декоративный (label="")</span></div>
+      <div class="row"><tk-spinner id="spin-24" size="24"></tk-spinner><span>size 24</span></div>
+      <div class="row"><tk-spinner id="spin-bogus" size="48"></tk-spinner><span>size 48 вне union → кламп</span></div>
+      <div class="row" style="color: rgb(11, 162, 100)"><tk-spinner id="spin-color"></tk-spinner><span>currentColor-контейнер</span></div>
+    </section>
+
+    <section id="raw-carousel">
+      <h2>Raw tk-carousel + page-change</h2>
+      <div class="car-frame">
+        <tk-carousel id="car1" label="Похожие бумаги" dots>
+          <div class="car-card">1</div>
+          <div class="car-card">2</div>
+          <div class="car-card">3</div>
+          <div class="car-card">4</div>
+          <div class="car-card">5</div>
+          <div class="car-card">6</div>
+        </tk-carousel>
+      </div>
+      <p id="car-readout">—</p>
+    </section>
+
+    <section id="raw-toast">
+      <h2>Raw tk-toast + hide</h2>
+      <button id="toast-auto" class="demo-trigger" type="button">Тост 600 мс (auto)</button>
+      <button id="toast-sticky" class="demo-trigger" type="button">Липкий тост (Esc → manual)</button>
+    </section>
+
+    <section id="react">
+      <h2>React wrappers</h2>
+      <div id="root"></div>
+    </section>
+
+    <script type="module" src="/main.ts"></script>
+  </body>
+</html>
