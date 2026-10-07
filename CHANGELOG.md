@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — post-v1.9.0 Flow-B round-1 defect
+
+- **React wrappers delivered the raw `CustomEvent` for the 27.4 payload
+  shapes** — the wrapper runtime's unwrap rule only recognized
+  `detail: { value }` (the §3 majority), so `onPageChange` received the
+  event object instead of `{ page }` and `onHide` instead of `{ reason }`.
+  Caught by the v1.9.0 fresh-consumer gate (round 1, 2 failing legs;
+  `.playwright-cli/verify/v190-fresh-clone/`). The rule now passes a
+  NON-EMPTY value-less detail through whole — `onPageChange(page)` and
+  `onHide(reason)` arrive unwrapped on every channel, value-carrying
+  events are byte-identical to before, payload-less events still hand
+  over the event itself.
+
 ## [1.9.0] - 2026-10-06
 
 ### Added — the quality window: tk-spinner + the events phase B (Epic 27, specs 27.1–27.4)

@@ -17,6 +17,10 @@ import { EVENT_MAP } from './event-map.js';
  *
  * - event with `detail` containing a `value` key → handler receives
  *   `detail.value` (string, boolean, object — the unwrapped new value);
+ * - event with a NON-EMPTY object `detail` carrying NO `value` key (spec
+ *   27.4: carousel `page-change { page }`, toast `hide { reason }`) → the
+ *   handler receives the WHOLE detail object — still the unwrapped payload,
+ *   never the `CustomEvent`;
  * - payload-less kit events → the handler receives the event itself (there
  *   is nothing to unwrap).
  *
@@ -30,16 +34,22 @@ interface TkKitEventDetail {
   value?: unknown;
 }
 
-/** Unwrap rule: `detail.value` when the payload carries one; the event otherwise. */
-const unwrapKitEventPayload = (event: Event): unknown =>
-  event !== null &&
-  typeof event === 'object' &&
-  'detail' in event &&
-  event.detail !== null &&
-  typeof event.detail === 'object' &&
-  'value' in (event.detail as object)
-    ? (event.detail as TkKitEventDetail).value
-    : event;
+/** Unwrap rule: `detail.value` when the payload carries one (the §3
+ * majority); a non-empty value-less detail object passes through whole
+ * (spec 27.4's `{ page }` / `{ reason }`); the event otherwise. */
+const unwrapKitEventPayload = (event: Event): unknown => {
+  if (event === null || typeof event !== 'object' || !('detail' in event)) {
+    return event;
+  }
+  const detail = (event as CustomEvent).detail;
+  if (detail === null || typeof detail !== 'object') {
+    return event;
+  }
+  if ('value' in detail) {
+    return (detail as TkKitEventDetail).value;
+  }
+  return Object.keys(detail).length > 0 ? detail : event;
+};
 
 /** Element-side props (Lit reactive properties) — kept typed through the HOC. */
 type KitElementProps<Element extends HTMLElement> = Partial<Omit<Element, keyof HTMLElement>>;

@@ -5,7 +5,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import * as litReact from '@lit/react';
 import { afterAll, describe, expect, it, vi } from 'vitest';
 
-import { ArticleCard, Badge, Button, Checkbox, ComboboxSearch, CookieBanner, DataTable, EVENT_MAP, FeatureCard, FilterChips, Footer, Input, Link, Modal, Navbar, Pagination, ProgressBar, PromoCard, QrBlock, SegmentedRadio, Select, ServiceCard, Spinner, Stepper, StoreBadges, Tabs, ThumbnailPicker, Toast, Tooltip } from './index.js';
+import { ArticleCard, Badge, Button, Carousel, Checkbox, ComboboxSearch, CookieBanner, DataTable, EVENT_MAP, FeatureCard, FilterChips, Footer, Input, Link, Modal, Navbar, Pagination, ProgressBar, PromoCard, QrBlock, SegmentedRadio, Select, ServiceCard, Spinner, Stepper, StoreBadges, Tabs, ThumbnailPicker, Toast, Tooltip } from './index.js';
 
 /**
  * pillkit-react generated surface. The wrapper imports `pillkit-components`
@@ -1082,6 +1082,53 @@ describe('pillkit-react', () => {
     // fire-and-forget ruling stands.
     expect(EVENT_MAP['tk-carousel']).toEqual({ onPageChange: 'page-change' });
     expect(EVENT_MAP['tk-toast']).toEqual({ onHide: 'hide' });
+  });
+
+  it('renders <Carousel> as tk-carousel; onPageChange receives the UNWRAPPED { page } object (spec 27.4 fix-round)', async () => {
+    const onPageChange = vi.fn();
+    const container = await renderToContainer(
+      React.createElement(
+        Carousel,
+        { label: 'Рейл', onPageChange },
+        ...['1', '2', '3'].map((n) => React.createElement('div', { key: n }, n)),
+      ),
+    );
+    const el = container.querySelector('tk-carousel');
+    expect(el, 'the wrapper renders the custom element').not.toBeNull();
+    expect((el as unknown as { label?: string }).label).toBe('Рейл');
+    // Direct dispatch: a NON-EMPTY value-less detail passes through WHOLE —
+    // the 27.4 payload shape ({ page } / { reason }), never the CustomEvent.
+    el?.dispatchEvent(
+      new CustomEvent('page-change', { detail: { page: 2 }, composed: true, bubbles: true }),
+    );
+    expect(onPageChange).toHaveBeenCalledTimes(1);
+    const payload = onPageChange.mock.calls[0]?.[0];
+    expect(payload).toEqual({ page: 2 });
+    expect(payload).not.toBeInstanceOf(CustomEvent); // AD-1, the Flow-B v1.9.0 round-1 catch
+  });
+
+  it('renders <Toast> with onHide receiving the UNWRAPPED { reason } (spec 27.4 fix-round)', async () => {
+    const onHide = vi.fn();
+    const container = await renderToContainer(
+      React.createElement(Toast, { duration: 0, onHide }, 'Проверка'),
+    );
+    // Self-enqueue relocation (the smoke mold): query the shared stack.
+    const el = document.querySelector('#tk-toast-stack tk-toast') as (Element & {
+      dismiss?: () => void;
+    }) | null;
+    expect(el, 'the wrapper renders the custom element (relocated to the stack)').not.toBeNull();
+    el?.dispatchEvent(
+      new CustomEvent('hide', { detail: { reason: 'manual' }, composed: true, bubbles: true }),
+    );
+    expect(onHide).toHaveBeenCalledTimes(1);
+    expect(onHide.mock.calls[0]?.[0]).toEqual({ reason: 'manual' });
+    expect(onHide.mock.calls[0]?.[0]).not.toBeInstanceOf(CustomEvent);
+    // The element's own exit funnel delivers the same unwrapped shape.
+    onHide.mockClear();
+    if (el) container.appendChild(el); // re-home before teardown (the smoke mold)
+    (el as { dismiss: () => void }).dismiss?.();
+    expect(onHide).toHaveBeenCalledTimes(1);
+    expect(onHide.mock.calls[0]?.[0]).toEqual({ reason: 'manual' });
   });
 
   it('renders <Modal> as tk-modal with heading through the wrapper (smoke)', async () => {
