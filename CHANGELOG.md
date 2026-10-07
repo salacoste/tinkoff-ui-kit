@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added — the quality window: tk-spinner + the events phase B (Epic 27, specs 27.1–27.4)
 
 - **tk-spinner (27.1)** — the circular indeterminate loader: the size
-  union (16/20/24/32/40) clamps into the host inline
+  union (16/20/24/32) clamps into the host inline
   `--tk-spinner-size`, currentColor stroke (pathLength 100, dash 75/25,
   0.9s linear), hooks `--tk-spinner-{size,color,stroke,duration}`;
   role="status" self-asserts from connectedCallback with its label,
