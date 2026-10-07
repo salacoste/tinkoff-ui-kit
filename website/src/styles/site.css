@@ -219,13 +219,29 @@ video {
   border-radius: var(--tk-radius-full);
   background: var(--tk-color-surface-base);
   color: var(--tk-color-text-primary);
-  font-family: var(--tk-font-body);
-  font-size: var(--tk-text-body-m-size);
-  line-height: 1;
   cursor: pointer;
   transition:
     border-color var(--tk-motion-duration-fastest) ease,
     background-color var(--tk-motion-duration-fastest) ease;
+}
+
+/* Theme toggle glyphs: each theme shows the icon of where the click takes
+   you (light shows the moon, dark shows the sun) — inline SVG in the site's
+   stroke-icon mold, tinted by the button's currentColor. */
+.site-theme-toggle svg {
+  display: block;
+}
+
+.site-theme-toggle .theme-icon-sun {
+  display: none;
+}
+
+[data-theme='dark'] .site-theme-toggle .theme-icon-sun {
+  display: block;
+}
+
+[data-theme='dark'] .site-theme-toggle .theme-icon-moon {
+  display: none;
 }
 
 .site-theme-toggle:hover {
@@ -478,20 +494,6 @@ video {
   align-items: center;
   flex-wrap: wrap;
   gap: var(--tk-space-16) var(--tk-space-24);
-}
-
-/* Plain-text CTA link for the yellow register (tk-button covers the pill). */
-.hero__link {
-  font-size: var(--tk-text-body-l-bold-size);
-  font-weight: var(--tk-text-body-l-bold-weight);
-  color: var(--tk-color-text-on-primary);
-  text-decoration: none;
-  text-underline-offset: 5px;
-  text-decoration-thickness: 2px;
-}
-
-.hero__link:hover {
-  text-decoration: underline;
 }
 
 /* ---------------------------------------------------------------------------
