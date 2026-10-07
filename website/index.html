@@ -152,46 +152,61 @@
         </div>
       </section>
 
-      <!-- 4 · Live demo strip -->
+      <!-- 4 · Live component blocks -->
       <section class="section section--muted" id="demo">
         <div class="site-container">
-          <h2 class="section__title">Live components, not screenshots</h2>
+          <h2 class="section__title">Live component blocks, not screenshots</h2>
           <p class="section__lead">
-            Everything below is the real kit running on this page. Toggle the theme in
-            the header — every surface you see re-themes, this page included.
+            Everything below is the real kit running on this page — grouped the way you
+            consume it. Toggle the theme in the header and every block re-themes, this
+            page included. These seven blocks cover the everyday grammar; the full
+            catalogs for all 56 tags live in the docs.
           </p>
           <div class="demo-grid">
             <div class="demo-card">
-              <h3 class="demo-card__title">Button</h3>
+              <h3 class="demo-card__title">Actions</h3>
               <div class="demo-row">
                 <tk-button variant="primary" size="card">Continue</tk-button>
                 <tk-button variant="secondary" size="card">Details</tk-button>
                 <tk-button variant="inverse" size="card">Open an account</tk-button>
               </div>
               <div class="demo-row">
-                <tk-button variant="primary" size="compact">Compact</tk-button>
-                <tk-button variant="secondary" size="card" loading">Loading</tk-button>
-                <tk-button variant="secondary" size="card" disabled>Disabled</tk-button>
+                <tk-button variant="positive" size="compact">Buy</tk-button>
+                <tk-button variant="negative" size="compact">Sell</tk-button>
+                <tk-link href="#demo">Inline link</tk-link>
               </div>
-              <p class="demo-card__hint">3 variants × 3 sizes, loading and disabled states, href mode.</p>
+              <p class="demo-card__hint">Five variants × three sizes, loading and disabled states, href mode — plus tk-link for inline actions.</p>
             </div>
             <div class="demo-card">
-              <h3 class="demo-card__title">Switch</h3>
-              <div class="demo-row demo-row--col">
-                <tk-switch label="Transaction push" default-checked></tk-switch>
-                <tk-switch label="Weekly email digest"></tk-switch>
-                <tk-switch label="SMS alerts (plan feature)" disabled></tk-switch>
-              </div>
-              <p class="demo-card__hint">APG switch semantics on a native checkbox — Space, Enter, label clicks.</p>
-            </div>
-            <div class="demo-card">
-              <h3 class="demo-card__title">Input</h3>
+              <h3 class="demo-card__title">Inputs</h3>
               <tk-input label="Email" placeholder="name@example.com" type="email"></tk-input>
               <tk-input label="Promo code" error="Check the code — 6 digits"></tk-input>
-              <p class="demo-card__hint">Visible labels, placeholders that never replace them, consumer error states.</p>
+              <tk-input code length="5" label="Code from SMS" default-value="42"></tk-input>
+              <p class="demo-card__hint">Visible labels that placeholders never replace, consumer error states, an OTP code mode — and an auto-growing textarea.</p>
             </div>
             <div class="demo-card">
-              <h3 class="demo-card__title">Badge</h3>
+              <h3 class="demo-card__title">Controls</h3>
+              <div class="demo-row demo-row--col">
+                <tk-switch label="Transaction push" default-checked></tk-switch>
+                <tk-checkbox label="Save the recipient" default-checked></tk-checkbox>
+                <tk-checkbox label="Split into parts" indeterminate></tk-checkbox>
+              </div>
+              <tk-range-slider id="landing-slider" label="Monthly limit" min="30000" max="600000" step="10000" default-value="210000"></tk-range-slider>
+              <p class="demo-card__hint">Switch for instantly-reversible settings, checkbox for opt-ins; the slider formats its own readout and aria-valuetext.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Navigation</h3>
+              <tk-tabs id="landing-nav-tabs">
+                <p class="demo-tabpanel" slot="tab-0">Today: 14 operations, 2 of them recurring.</p>
+                <p class="demo-tabpanel" slot="tab-1">This week: 61 operations, 412 ₽ cashback.</p>
+                <p class="demo-tabpanel" slot="tab-2">This month: the statement is ready to export.</p>
+              </tk-tabs>
+              <tk-breadcrumb id="landing-breadcrumb" label="You are here"></tk-breadcrumb>
+              <tk-pagination count="48" default-page="2" label="Operation history pages"></tk-pagination>
+              <p class="demo-card__hint">APG tabs that answer arrow keys, a breadcrumb trail, pagination with show-more — menu-popover and navbar live in the docs.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Data display</h3>
               <div class="demo-row">
                 <tk-badge variant="positive">+3.8%</tk-badge>
                 <tk-badge variant="negative">−2.95%</tk-badge>
@@ -199,53 +214,127 @@
                 <tk-badge variant="incentive">+30%</tk-badge>
               </div>
               <div class="demo-row">
-                <tk-badge variant="attention" count="3"></tk-badge>
-                <tk-badge variant="stat" count="12"></tk-badge>
-              </div>
-              <p class="demo-card__hint">Six tones plus capped dynamic counters (99+).</p>
-            </div>
-            <div class="demo-card">
-              <h3 class="demo-card__title">Progress</h3>
-              <tk-progress-bar label="Profile filled" value="30"></tk-progress-bar>
-              <tk-progress-bar label="Syncing" indeterminate></tk-progress-bar>
-              <p class="demo-card__hint">Determinate and indeterminate tracks with polite announcements.</p>
-            </div>
-            <div class="demo-card">
-              <h3 class="demo-card__title">Spinner</h3>
-              <div class="demo-row">
-                <tk-spinner size="16" label="Loading"></tk-spinner>
-                <tk-spinner size="24" label="Loading"></tk-spinner>
-                <tk-spinner size="32" label="Loading"></tk-spinner>
-              </div>
-              <p class="demo-card__hint">Announced as busy, frozen by the reduced-motion layer.</p>
-            </div>
-            <div class="demo-card">
-              <h3 class="demo-card__title">Skeleton</h3>
-              <div class="demo-row">
-                <tk-skeleton variant="circle" width="56px" height="56px"></tk-skeleton>
-                <tk-skeleton width="180px" height="20px"></tk-skeleton>
-              </div>
-              <tk-skeleton variant="rect" height="96px"></tk-skeleton>
-              <p class="demo-card__hint">Loading placeholders that match the loaded layout.</p>
-            </div>
-            <div class="demo-card">
-              <h3 class="demo-card__title">Avatar</h3>
-              <div class="demo-row">
                 <tk-avatar
                   name="Maria Oganova"
                   src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23CBCFD3'/%3E%3Ccircle cx='32' cy='26' r='12' fill='white'/%3E%3Cpath d='M10 60c4-12 12-18 22-18s18 6 22 18' fill='white'/%3E%3C/svg%3E"
                 ></tk-avatar>
                 <tk-avatar name="Ivan Petrov"></tk-avatar>
                 <tk-avatar name="Olga Tarasova" size="32px"></tk-avatar>
+                <tk-rating value="4.5"></tk-rating>
               </div>
-              <p class="demo-card__hint">Images, initials fallback and empty decorative states.</p>
+              <p class="demo-card__hint">Six badge tones, avatars with initials fallback, a read-only rating — the data family also covers tables, spec lists and quote chips.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Charts</h3>
+              <tk-chart id="landing-chart" reference="102" badge></tk-chart>
+              <p class="demo-card__hint">Static SVG charts straight from the kit: points in, graphics out, role="img" with a derived label — no chart library in your bundle.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Feedback &amp; loading</h3>
+              <tk-progress-bar label="Profile filled" value="30"></tk-progress-bar>
+              <tk-progress-bar label="Syncing" indeterminate></tk-progress-bar>
+              <div class="demo-row">
+                <tk-spinner size="24" label="Loading"></tk-spinner>
+                <tk-skeleton width="140px" height="20px"></tk-skeleton>
+                <tk-button variant="secondary" size="compact" data-toast="Template saved" data-toast-action="Open">Show a toast</tk-button>
+              </div>
+              <p class="demo-card__hint">Progress with polite announcements, spinners frozen by the reduced-motion layer, layout-matching skeletons — and one shared overlay controller behind toasts, modals, tooltips and popovers.</p>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- 5 · Framework fit -->
-      <section class="section" id="stack">
+      <!-- 5 · Architecture -->
+      <section class="section" id="architecture">
+        <div class="site-container">
+          <h2 class="section__title">From design source to React props — one pipeline</h2>
+          <p class="section__lead">
+            Nothing in the kit is hand-synced. Every layer is generated from the one
+            below it and gated in CI — that is how 56 components hold a single design
+            language release after release.
+          </p>
+          <ol class="arch">
+            <li class="arch__step">
+              <div class="arch__meta">
+                <span class="arch__num">01</span>
+                <span class="arch__pkg">packages/tokens · DESIGN.md</span>
+              </div>
+              <div class="arch__body">
+                <h3 class="arch__title">Design source</h3>
+                <p class="arch__text">
+                  Spacing, type ramp, color, radius and motion are measured from the
+                  reference surfaces into a single DESIGN source. CI fails on
+                  hard-coded values inside the packages, so drift cannot land.
+                </p>
+              </div>
+            </li>
+            <li class="arch__step">
+              <div class="arch__meta">
+                <span class="arch__num">02</span>
+                <span class="arch__pkg">pillkit-tokens · pillkit-tj-tokens</span>
+              </div>
+              <div class="arch__body">
+                <h3 class="arch__title">Token layer</h3>
+                <p class="arch__text">
+                  258 CSS custom properties (151 --tk-* + 107 --tj-*) compile to plain
+                  CSS: light and a real dark theme in one layer, zero runtime
+                  JavaScript on the theming path.
+                </p>
+              </div>
+            </li>
+            <li class="arch__step">
+              <div class="arch__meta">
+                <span class="arch__num">03</span>
+                <span class="arch__pkg">pillkit-components · pillkit-tj-components</span>
+              </div>
+              <div class="arch__body">
+                <h3 class="arch__title">Components</h3>
+                <p class="arch__text">
+                  56 Lit 3 custom elements (46 tk-* + 10 tj-*) in shadow DOM —
+                  TypeScript, APG semantics and one shared overlay controller for
+                  every layer that floats.
+                </p>
+              </div>
+            </li>
+            <li class="arch__step">
+              <div class="arch__meta">
+                <span class="arch__num">04</span>
+                <span class="arch__pkg">pillkit-react · pillkit-tj-react</span>
+              </div>
+              <div class="arch__body">
+                <h3 class="arch__title">React surface</h3>
+                <p class="arch__text">
+                  51 wrappers generated from the Custom Elements Manifest — typed
+                  props, unwrapped event payloads, React 18 and 19. The React API
+                  cannot drift from the Lit core.
+                </p>
+              </div>
+            </li>
+            <li class="arch__step">
+              <div class="arch__meta">
+                <span class="arch__num">05</span>
+                <span class="arch__pkg">pillkit-docs</span>
+              </div>
+              <div class="arch__body">
+                <h3 class="arch__title">Docs &amp; gates</h3>
+                <p class="arch__text">
+                  Storybook 10 documentation with an API reference and a11y notes per
+                  tag — and 2,755 automated visual + axe checks against committed
+                  baselines on every push.
+                </p>
+              </div>
+            </li>
+          </ol>
+          <p class="grid-note">
+            Two independent families: the bank register (tk-*) and the editorial
+            sub-kit (tj-*) share no code and no tokens — adopt one without dragging
+            the other.
+          </p>
+        </div>
+      </section>
+
+      <!-- 6 · Framework fit -->
+      <section class="section section--muted" id="stack">
         <div class="site-container">
           <h2 class="section__title">Framework-agnostic by construction</h2>
           <p class="section__lead">
@@ -305,8 +394,8 @@
         </div>
       </section>
 
-      <!-- 6 · Why professional -->
-      <section class="section section--muted" id="why">
+      <!-- 7 · Why professional -->
+      <section class="section" id="why">
         <div class="site-container">
           <h2 class="section__title">Built like production infrastructure</h2>
           <p class="section__lead">
@@ -362,8 +451,8 @@
         </div>
       </section>
 
-      <!-- 7 · Where to use -->
-      <section class="section" id="where">
+      <!-- 8 · Where to use -->
+      <section class="section section--muted" id="where">
         <div class="site-container">
           <h2 class="section__title">Where it fits</h2>
           <p class="section__lead">
@@ -403,8 +492,8 @@
         </div>
       </section>
 
-      <!-- 8 · Code taste -->
-      <section class="section section--muted" id="taste">
+      <!-- 9 · Code taste -->
+      <section class="section" id="taste">
         <div class="site-container">
           <h2 class="section__title">A taste of the API</h2>
           <p class="section__lead">
@@ -436,7 +525,7 @@
         </div>
       </section>
 
-      <!-- 9 · Final CTA band -->
+      <!-- 10 · Final CTA band -->
       <section class="cta-band">
         <div class="site-container">
           <h2 class="cta-band__title">See it live in the docs.</h2>

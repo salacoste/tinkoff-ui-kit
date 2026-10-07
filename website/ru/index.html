@@ -152,46 +152,61 @@
         </div>
       </section>
 
-      <!-- 4 · Живые компоненты -->
+      <!-- 4 · Живые блоки компонентов -->
       <section class="section section--muted" id="demo">
         <div class="site-container">
-          <h2 class="section__title">Живые компоненты, не скриншоты</h2>
+          <h2 class="section__title">Живые блоки компонентов, не скриншоты</h2>
           <p class="section__lead">
-            Всё ниже — настоящий кит, работающий прямо на этой странице. Переключите
-            тему в шапке — все поверхности перестроятся, включая саму страницу.
+            Всё ниже — настоящий кит, работающий прямо на этой странице, и сгруппирован
+            он так, как вы будете его потреблять. Переключите тему в шапке — каждый
+            блок перестроится, включая саму страницу. Эти семь блоков покрывают
+            повседневную грамматику; полные каталоги всех 56 тегов — в документации.
           </p>
           <div class="demo-grid">
             <div class="demo-card">
-              <h3 class="demo-card__title">Кнопка</h3>
+              <h3 class="demo-card__title">Действия</h3>
               <div class="demo-row">
                 <tk-button variant="primary" size="card">Продолжить</tk-button>
                 <tk-button variant="secondary" size="card">Подробнее</tk-button>
                 <tk-button variant="inverse" size="card">Открыть счёт</tk-button>
               </div>
               <div class="demo-row">
-                <tk-button variant="primary" size="compact">Компактная</tk-button>
-                <tk-button variant="secondary" size="card" loading>Загрузка</tk-button>
-                <tk-button variant="secondary" size="card" disabled>Недоступна</tk-button>
+                <tk-button variant="positive" size="compact">Купить</tk-button>
+                <tk-button variant="negative" size="compact">Продать</tk-button>
+                <tk-link href="#demo">Инлайн-ссылка</tk-link>
               </div>
-              <p class="demo-card__hint">3 варианта × 3 размера, состояния loading и disabled, режим href.</p>
+              <p class="demo-card__hint">Пять вариантов × три размера, состояния loading и disabled, режим href — и tk-link для действий в тексте.</p>
             </div>
             <div class="demo-card">
-              <h3 class="demo-card__title">Тумблер</h3>
-              <div class="demo-row demo-row--col">
-                <tk-switch label="Push об операциях" default-checked></tk-switch>
-                <tk-switch label="Email-дайджест недели"></tk-switch>
-                <tk-switch label="SMS о входах (тариф «Про»)" disabled></tk-switch>
-              </div>
-              <p class="demo-card__hint">Семантика APG Switch поверх нативного чекбокса — Space, Enter, клик по подписи.</p>
-            </div>
-            <div class="demo-card">
-              <h3 class="demo-card__title">Поле ввода</h3>
+              <h3 class="demo-card__title">Поля ввода</h3>
               <tk-input label="Email" placeholder="name@example.com" type="email"></tk-input>
               <tk-input label="Промокод" error="Проверьте код — 6 цифр"></tk-input>
-              <p class="demo-card__hint">Видимые подписи, плейсхолдеры, которые их никогда не заменяют, ошибки потребителя.</p>
+              <tk-input code length="5" label="Код из SMS" default-value="42"></tk-input>
+              <p class="demo-card__hint">Видимые подписи, которые плейсхолдеры никогда не заменяют, ошибки потребителя, OTP-режим ввода кода — и саморастущее поле tk-textarea.</p>
             </div>
             <div class="demo-card">
-              <h3 class="demo-card__title">Бейдж</h3>
+              <h3 class="demo-card__title">Контролы</h3>
+              <div class="demo-row demo-row--col">
+                <tk-switch label="Push об операциях" default-checked></tk-switch>
+                <tk-checkbox label="Сохранить получателя" default-checked></tk-checkbox>
+                <tk-checkbox label="Разбить на части" indeterminate></tk-checkbox>
+              </div>
+              <tk-range-slider id="landing-slider" label="Лимит в месяц" min="30000" max="600000" step="10000" default-value="210000"></tk-range-slider>
+              <p class="demo-card__hint">Тумблер — мгновенно обратимые настройки, чекбокс — согласия; слайдер сам форматирует свой readout и aria-valuetext.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Навигация</h3>
+              <tk-tabs id="landing-nav-tabs">
+                <p class="demo-tabpanel" slot="tab-0">Сегодня: 14 операций, 2 из них регулярные.</p>
+                <p class="demo-tabpanel" slot="tab-1">Неделя: 61 операция, кешбэк 412 ₽.</p>
+                <p class="demo-tabpanel" slot="tab-2">Месяц: выписка готова к экспорту.</p>
+              </tk-tabs>
+              <tk-breadcrumb id="landing-breadcrumb" label="Вы здесь"></tk-breadcrumb>
+              <tk-pagination count="48" default-page="2" label="Страницы истории операций"></tk-pagination>
+              <p class="demo-card__hint">APG-табы, отвечающие стрелкам, хлебные крошки, пагинация с show-more — menu-popover и navbar живут в документации.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Данные</h3>
               <div class="demo-row">
                 <tk-badge variant="positive">+3,8%</tk-badge>
                 <tk-badge variant="negative">−2,95%</tk-badge>
@@ -199,53 +214,127 @@
                 <tk-badge variant="incentive">+30%</tk-badge>
               </div>
               <div class="demo-row">
-                <tk-badge variant="attention" count="3"></tk-badge>
-                <tk-badge variant="stat" count="12"></tk-badge>
-              </div>
-              <p class="demo-card__hint">Шесть тонов плюс динамические счётчики с потолком 99+.</p>
-            </div>
-            <div class="demo-card">
-              <h3 class="demo-card__title">Прогресс</h3>
-              <tk-progress-bar label="Профиль заполнен" value="30"></tk-progress-bar>
-              <tk-progress-bar label="Синхронизация" indeterminate></tk-progress-bar>
-              <p class="demo-card__hint">Определённый и неопределённый треки с вежливыми объявлениями.</p>
-            </div>
-            <div class="demo-card">
-              <h3 class="demo-card__title">Спиннер</h3>
-              <div class="demo-row">
-                <tk-spinner size="16" label="Загружаем"></tk-spinner>
-                <tk-spinner size="24" label="Загружаем"></tk-spinner>
-                <tk-spinner size="32" label="Загружаем"></tk-spinner>
-              </div>
-              <p class="demo-card__hint">Объявляется как «занято», замирает слоем reduced-motion.</p>
-            </div>
-            <div class="demo-card">
-              <h3 class="demo-card__title">Скелет</h3>
-              <div class="demo-row">
-                <tk-skeleton variant="circle" width="56px" height="56px"></tk-skeleton>
-                <tk-skeleton width="180px" height="20px"></tk-skeleton>
-              </div>
-              <tk-skeleton variant="rect" height="96px"></tk-skeleton>
-              <p class="demo-card__hint">Загрузочные заглушки, совпадающие с макетом загруженного состояния.</p>
-            </div>
-            <div class="demo-card">
-              <h3 class="demo-card__title">Аватар</h3>
-              <div class="demo-row">
                 <tk-avatar
                   name="Мария Оганова"
                   src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23CBCFD3'/%3E%3Ccircle cx='32' cy='26' r='12' fill='white'/%3E%3Cpath d='M10 60c4-12 12-18 22-18s18 6 22 18' fill='white'/%3E%3C/svg%3E"
                 ></tk-avatar>
                 <tk-avatar name="Иван Петров"></tk-avatar>
                 <tk-avatar name="Ольга Тарасова" size="32px"></tk-avatar>
+                <tk-rating value="4.5"></tk-rating>
               </div>
-              <p class="demo-card__hint">Картинки, инициалы как фолбэк и пустые декоративные состояния.</p>
+              <p class="demo-card__hint">Шесть тонов бейджа, аватары с фолбэком на инициалы, read-only рейтинг — семейство данных в документации покрывает и таблицы, и списки параметров, и котировки.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">График</h3>
+              <tk-chart id="landing-chart" reference="102" badge></tk-chart>
+              <p class="demo-card__hint">Статичные SVG-чарты прямо из кита: массив точек на входе — графика на выходе, role="img" с производной подписью. Никакой чарт-библиотеки в вашем бандле.</p>
+            </div>
+            <div class="demo-card">
+              <h3 class="demo-card__title">Обратная связь и загрузка</h3>
+              <tk-progress-bar label="Профиль заполнен" value="30"></tk-progress-bar>
+              <tk-progress-bar label="Синхронизация" indeterminate></tk-progress-bar>
+              <div class="demo-row">
+                <tk-spinner size="24" label="Загружаем"></tk-spinner>
+                <tk-skeleton width="140px" height="20px"></tk-skeleton>
+                <tk-button variant="secondary" size="compact" data-toast="Шаблон сохранён" data-toast-action="Открыть">Показать тост</tk-button>
+              </div>
+              <p class="demo-card__hint">Прогресс с вежливыми объявлениями, спиннеры, замирающие слоем reduced-motion, скелеты под макет — и один общий overlay-контроллер за тостами, модалками, тултипами и поповерами.</p>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- 5 · Совместимость со стеками -->
-      <section class="section" id="stack">
+      <!-- 5 · Архитектура -->
+      <section class="section" id="architecture">
+        <div class="site-container">
+          <h2 class="section__title">От дизайн-источника до React-пропсов — один конвейер</h2>
+          <p class="section__lead">
+            В ките ничего не синхронизируется руками. Каждый слой генерируется из
+            нижележащего и гейтится в CI — так 56 компонентов держат один дизайн-язык
+            релиз за релизом.
+          </p>
+          <ol class="arch">
+            <li class="arch__step">
+              <div class="arch__meta">
+                <span class="arch__num">01</span>
+                <span class="arch__pkg">packages/tokens · DESIGN.md</span>
+              </div>
+              <div class="arch__body">
+                <h3 class="arch__title">Дизайн-источник</h3>
+                <p class="arch__text">
+                  Отступы, типографическая шкала, цвет, радиусы и движение измерены на
+                  эталонных поверхностях и сведены в единый DESIGN-источник. CI падает
+                  на захардкоженных значениях внутри пакетов — дрейф не проходит.
+                </p>
+              </div>
+            </li>
+            <li class="arch__step">
+              <div class="arch__meta">
+                <span class="arch__num">02</span>
+                <span class="arch__pkg">pillkit-tokens · pillkit-tj-tokens</span>
+              </div>
+              <div class="arch__body">
+                <h3 class="arch__title">Токеновый слой</h3>
+                <p class="arch__text">
+                  258 CSS custom properties (151 --tk-* + 107 --tj-*) компилируются в
+                  обычный CSS: светлая и настоящая тёмная тема в одном слое, ноль
+                  рантайм-JavaScript на пути темизации.
+                </p>
+              </div>
+            </li>
+            <li class="arch__step">
+              <div class="arch__meta">
+                <span class="arch__num">03</span>
+                <span class="arch__pkg">pillkit-components · pillkit-tj-components</span>
+              </div>
+              <div class="arch__body">
+                <h3 class="arch__title">Компоненты</h3>
+                <p class="arch__text">
+                  56 Lit 3 custom elements (46 tk-* + 10 tj-*) в shadow DOM —
+                  TypeScript, семантика APG и один общий overlay-контроллер для всего,
+                  что всплывает над страницей.
+                </p>
+              </div>
+            </li>
+            <li class="arch__step">
+              <div class="arch__meta">
+                <span class="arch__num">04</span>
+                <span class="arch__pkg">pillkit-react · pillkit-tj-react</span>
+              </div>
+              <div class="arch__body">
+                <h3 class="arch__title">React-поверхность</h3>
+                <p class="arch__text">
+                  51 обёртка генерируется из Custom Elements Manifest: типизированные
+                  пропсы, развёрнутые полезные нагрузки событий, React 18 и 19.
+                  React-API не может разойтись с Lit-ядром.
+                </p>
+              </div>
+            </li>
+            <li class="arch__step">
+              <div class="arch__meta">
+                <span class="arch__num">05</span>
+                <span class="arch__pkg">pillkit-docs</span>
+              </div>
+              <div class="arch__body">
+                <h3 class="arch__title">Документация и гейты</h3>
+                <p class="arch__text">
+                  Storybook 10 с API-справочником и заметками о доступности по каждому
+                  тегу — и 2&nbsp;755 автоматических визуальных и axe-проверок против
+                  закоммиченных базлайнов на каждом пуше.
+                </p>
+              </div>
+            </li>
+          </ol>
+          <p class="grid-note">
+            Два независимых семейства: банковский регистр (tk-*) и редакционный
+            суб-кит (tj-*) не делят ни код, ни токены — берите одно, не вытаскивая
+            второе.
+          </p>
+        </div>
+      </section>
+
+      <!-- 6 · Совместимость со стеками -->
+      <section class="section section--muted" id="stack">
         <div class="site-container">
           <h2 class="section__title">Фреймворк-агностичен по построению</h2>
           <p class="section__lead">
@@ -306,8 +395,8 @@
         </div>
       </section>
 
-      <!-- 6 · Почему профессионально -->
-      <section class="section section--muted" id="why">
+      <!-- 7 · Почему профессионально -->
+      <section class="section" id="why">
         <div class="site-container">
           <h2 class="section__title">Сделано как производственная инфраструктура</h2>
           <p class="section__lead">
@@ -364,8 +453,8 @@
         </div>
       </section>
 
-      <!-- 7 · Где применять -->
-      <section class="section" id="where">
+      <!-- 8 · Где применять -->
+      <section class="section section--muted" id="where">
         <div class="site-container">
           <h2 class="section__title">Где применять</h2>
           <p class="section__lead">
@@ -405,8 +494,8 @@
         </div>
       </section>
 
-      <!-- 8 · Вкус API -->
-      <section class="section section--muted" id="taste">
+      <!-- 9 · Вкус API -->
+      <section class="section" id="taste">
         <div class="site-container">
           <h2 class="section__title">Вкус API</h2>
           <p class="section__lead">
@@ -438,7 +527,7 @@
         </div>
       </section>
 
-      <!-- 9 · Финальный CTA -->
+      <!-- 10 · Финальный CTA -->
       <section class="cta-band">
         <div class="site-container">
           <h2 class="cta-band__title">Посмотрите вживую в документации.</h2>
