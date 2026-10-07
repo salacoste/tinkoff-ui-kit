@@ -763,6 +763,16 @@ video {
   .hero {
     padding-block: var(--tk-space-64) var(--tk-space-48);
   }
+
+  /* Kitchen-sink demo cards carry wide component rows (tables, promo rails,
+     tab strips) whose intrinsic min-content exceeds the narrow-viewport
+     track. Below desktop the CARD — not the page — absorbs the bleed: the
+     track may shrink (min-width 0) and wide demos scroll inside the frame.
+     Desktop layout (>= 901px) is untouched (Pages-QA 2026-10-07). */
+  .demo-card {
+    min-width: 0;
+    overflow-x: auto;
+  }
 }
 
 @media (max-width: 640px) {

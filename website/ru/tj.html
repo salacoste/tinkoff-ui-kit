@@ -4,6 +4,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>pillkit — витрина редакционного семейства ТЖ</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23FFDD2D'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23333333'/%3E%3C/svg%3E"
+    />
     <script type="module" src="/src/tj.ts"></script>
     <style>
       /*
@@ -83,10 +87,22 @@
         margin: 0 0 var(--tj-space-16);
         font-size: var(--tj-text-article-body-size);
         line-height: var(--tj-text-article-body-leading);
-        color: var(--tj-color-ink-300);
+        color: var(--tj-color-ink-200);
       }
       .tjp-code {
         font-family: var(--tk-font-mono);
+      }
+      /* Заголовок демки рубрики: контуру страницы нужен h4 (секция h2 →
+         карточка h3 → демо h4 — демка симулирует целую страницу, чей
+         собственный h1 пропускал бы уровни); стилизация ::slotted(h1)
+         компонента воспроизведена токенами дословно — рендер идентичен. */
+      .tjp-rubric-h1 {
+        margin: 0;
+        font-family: var(--tj-font-ui);
+        font-size: var(--tj-text-rubric-h1-size);
+        font-weight: var(--tj-text-rubric-h1-weight);
+        line-height: var(--tj-text-rubric-h1-leading);
+        color: var(--tj-color-ink-100);
       }
       /* Секция рубрики. */
       .tj-stage {
@@ -127,7 +143,7 @@
         margin: 0 0 var(--tj-space-24);
         font-size: var(--tj-text-cta-label-size);
         line-height: var(--tj-text-cta-label-leading);
-        color: var(--tj-color-ink-300);
+        color: var(--tj-color-ink-200);
       }
       .tj-article__actions {
         display: flex;
@@ -164,7 +180,7 @@
         margin: var(--tj-space-16) 0 0;
         font-size: var(--tj-text-cta-label-size);
         line-height: var(--tj-text-cta-label-leading);
-        color: var(--tj-color-ink-300);
+        color: var(--tj-color-ink-200);
       }
       @media (max-width: 900px) {
         .tj-grid {
@@ -272,7 +288,7 @@
                   <tj-rubric-header>
                     <img slot="cover" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1180 215'><rect width='1180' height='215' fill='gray'/><circle cx='920' cy='215' r='150' fill='silver'/><circle cx='260' cy='215' r='110' fill='darkgray'/></svg>" alt="" />
                     <img slot="mark" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='30' fill='dimgray'/><circle cx='50' cy='50' r='22' fill='white'/></svg>" alt="" />
-                    <h1>Новости</h1>
+                    <h4 class="tjp-rubric-h1">Новости</h4>
                     <p>Рассказываем всё важное и объясняем, как оно влияет на жизнь</p>
                   </tj-rubric-header>
                 </div>

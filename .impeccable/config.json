@@ -9,6 +9,12 @@
         "value": "cubic-bezier(0.35, 1.3, 0.25, 1)",
         "createdAt": "2026-09-22T02:51:28.063Z",
         "reason": "Phase-1 faithful recreation: this IS the reference site's extracted expressive-entrance motion curve (tokens layer, values trace to DESIGN.md motion notes); Phase 2 may revisit per PRODUCT.md"
+      },
+      {
+        "rule": "bounce-easing",
+        "value": "cubic-bezier(.35, 1.3, .25, 1)",
+        "createdAt": "2026-10-07T13:57:27.000Z",
+        "reason": "Minified twin of the entry above: production builds (esbuild/lightningcss) emit the same curve without leading zeros, and the value matcher normalizes whitespace/case only — the waiver must carry both spellings (Pages-QA live-scan finding, 2026-10-07)"
       }
     ]
   }
