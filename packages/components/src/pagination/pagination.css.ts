@@ -93,9 +93,14 @@ export const paginationStyles = css`
     background: var(--tk-color-surface-field);
   }
 
-  /* --- The numbers row: centered list; every interactive box ≥44×44. --- */
+  /* --- The numbers row: centered list; every interactive box ≥44×44. The
+     row WRAPS: the 5-number window + ellipsis + both chevrons ≈ 430px of
+     unwrappable hit boxes, and in a narrower host (a card on the showcase
+     grid) the centered row would spill symmetrically past the host's own
+     edges — wrapping keeps every box inside the component's box. --- */
   .pages {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
     gap: var(--tk-space-4);
